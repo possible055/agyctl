@@ -1,0 +1,75 @@
+{
+  "original": {
+    "binary": "$BINARY",
+    "channel": "antigravity",
+    "app_version": null,
+    "version_source": "unknown",
+    "binary_sha256": "4ead7a9211fb7daca7ce54bd79e5a3d995a8bbeef4dff5a3f2e3d2722ad26462",
+    "compat": {
+      "status": "unverified",
+      "entry_id": null
+    },
+    "patch_state": {
+      "kind": "original",
+      "func_va": "0x140001100",
+      "ids": null,
+      "limit": null,
+      "format": "pe",
+      "arch": "x86-64"
+    },
+    "language_server_running": "$RUNNING",
+    "sibling_backup": {
+      "path": "$SIBLING",
+      "exists": false,
+      "verified": false
+    },
+    "repo_backup": {
+      "path": "$REPO_BACKUP",
+      "exists": false,
+      "verified": false
+    }
+  },
+  "patched": {
+    "binary": "$BINARY",
+    "channel": "antigravity",
+    "app_version": null,
+    "version_source": "unknown",
+    "binary_sha256": "d1d9dbe38007e23f385783664531b83c8ba9e43af1e39ebc158ba86e96423831",
+    "compat": {
+      "status": "unverified",
+      "entry_id": null
+    },
+    "patch_state": {
+      "kind": "patched",
+      "func_va": "0x140001100",
+      "ids": [
+        1318,
+        1319,
+        1320,
+        1400,
+        1401,
+        1402,
+        1403,
+        1404,
+        1405,
+        1417,
+        1418,
+        1419
+      ],
+      "limit": 500000,
+      "format": "pe",
+      "arch": "x86-64"
+    },
+    "language_server_running": "$RUNNING",
+    "sibling_backup": {
+      "path": "$SIBLING",
+      "exists": true,
+      "verified": true
+    },
+    "repo_backup": {
+      "path": "$REPO_BACKUP",
+      "exists": true,
+      "verified": true
+    }
+  }
+}

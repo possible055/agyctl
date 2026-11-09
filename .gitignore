@@ -1,0 +1,42 @@
+# Package managers / dependencies
+node_modules/
+
+# Build / Distribution
+/target/
+/build/
+/dist/
+*.exe
+*.tsbuildinfo
+
+# IDE / Editor / AI agent
+.vscode/
+.cursor/
+.claude/
+.codex/
+.codebuddy/
+.kilocode/
+.kiro/
+.kilo/
+.gemini/
+.agent/
+.agents/
+.augment/
+.junie/
+.zcode/
+AGENTS.md
+CLAUDE.md
+
+# Logs / Env
+*.log
+.env
+.env.*
+!.env.example
+.envrc
+
+# Local
+/backups/
+*.asar
+/var/
+/vendor-src/
+/knowledge/
+/nul

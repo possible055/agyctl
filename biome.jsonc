@@ -1,0 +1,39 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": ["**/*.js", "**/*.mjs", "**/*.cjs", "!scripts/vendor"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": { "quoteStyle": "single" }
+  },
+  "linter": {
+    "rules": {
+      "preset": "recommended",
+      "style": { "useTemplate": "off" }
+    }
+  },
+  "overrides": [
+    {
+      // Capsule sources are fragments concatenated into one script by capsule:build,
+      // so a declaration in one file is often used only by another.
+      "includes": ["src/capsule/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedVariables": "off",
+            // The capsule is injected as a self-contained browser script; a Node
+            // builtin import would break webFrame.executeJavaScript.
+            "noNodejsModules": "error"
+          }
+        }
+      }
+    }
+  ]
+}

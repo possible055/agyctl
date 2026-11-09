@@ -1,0 +1,125 @@
+minimum_pre_commit_version: "4.5.0"
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [pre-commit]
+
+# Hooks run file hygiene, security, formatting, type checks, and test suites.
+# Correctness hooks are gated by `files:` so they only run when relevant paths
+# are staged; each suite runs at most once per commit.
+repos:
+  # revs are frozen to commit SHAs (not tags): a tagged ref could be moved to
+  # different code; these SHAs cannot. Keep the tag in the comment in sync.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # v6.0.0
+    hooks:
+      - id: check-yaml
+        name: Repository / YAML syntax
+        stages: [pre-commit]
+      - id: check-toml
+        name: Repository / TOML syntax
+        stages: [pre-commit]
+      - id: check-json
+        name: Repository / JSON syntax
+        # tsconfig files are JSONC; TypeScript allows comments there.
+        exclude: '^tsconfig(\.[^/]+)?\.json$'
+        stages: [pre-commit]
+      - id: end-of-file-fixer
+        name: Repository / Final newline
+        stages: [pre-commit]
+      - id: trailing-whitespace
+        name: Repository / Trailing whitespace
+        stages: [pre-commit]
+      - id: mixed-line-ending
+        name: Repository / LF line endings
+        args: ["--fix=lf"]
+        stages: [pre-commit]
+      - id: check-added-large-files
+        name: Repository / Large files
+        args: ["--maxkb=5000"]
+        # The localization review ledger is a deliberate tracked data asset.
+        exclude: '^compat/localization/reviews\.json$'
+        stages: [pre-commit]
+      - id: check-merge-conflict
+        name: Repository / Merge conflict markers
+        stages: [pre-commit]
+      - id: check-case-conflict
+        name: Repository / Case conflicts
+        stages: [pre-commit]
+      - id: check-shebang-scripts-are-executable
+        name: Repository / Executable scripts
+        stages: [pre-commit]
+      - id: detect-private-key
+        name: Repository / Private keys
+        stages: [pre-commit]
+
+  # gitleaks-system runs the gitleaks found on PATH; rev only pins the hook definition.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: 83d9cd684c87d95d656c1458ef04895a7f1cbd8e # v8.30.1
+    hooks:
+      - id: gitleaks-system
+        name: Repository / Staged secrets
+        pass_filenames: false
+        stages: [pre-commit, pre-push]
+
+  - repo: https://github.com/crate-ci/typos
+    rev: ef3265d70a75c507b4c110d855cdfab6ce90d4bf # v1.52.0
+    hooks:
+      - id: typos
+        name: Repository / Spelling
+        args: [--force-exclude]
+        stages: [pre-commit]
+
+  - repo: local
+    hooks:
+      - id: biome-check
+        name: JavaScript / Format and lint
+        entry: npx --no -- biome check --write --error-on-warnings --no-errors-on-unmatched --files-ignore-unknown=true
+        language: system
+        types: [javascript]
+        stages: [pre-commit]
+
+      - id: gofmt
+        name: Go / Format
+        entry: gofmt -w
+        language: system
+        types: [go]
+        stages: [pre-commit]
+
+      - id: typecheck
+        name: TypeScript / Type check
+        entry: npm run typecheck -s
+        language: system
+        pass_filenames: false
+        files: ^(src|tests|scripts)/.*\.(ts|tsx|mjs|cjs|js)$|^tsconfig[^/]*\.json$|^package(-lock)?\.json$
+        stages: [pre-commit]
+
+      - id: capsule-typecheck
+        name: Capsule / Type check
+        entry: npm run capsule:typecheck -s
+        language: system
+        pass_filenames: false
+        files: ^(src/capsule/|src/plugin/lib/|src/localization/).*\.(ts|tsx|mjs|js)$|^tsconfig\.capsule\.json$
+        stages: [pre-commit]
+
+      - id: node-tests
+        name: Node / Tests
+        entry: npm test
+        language: system
+        pass_filenames: false
+        files: ^(src|scripts|tests|compat)/|^package(-lock)?\.json$|^tsconfig[^/]*\.json$
+        stages: [pre-commit]
+
+      - id: localization-tests
+        name: Localization / Tests
+        entry: npm run test:localization -s
+        language: system
+        pass_filenames: false
+        files: ^(src/localization/|src/plugin/lib/locale|src/capsule/i18n\.js|scripts/(lib/)?localization|compat/localization/|tests/node/(locale|localization|runtime-startup)|tests/electron/localization/)
+        stages: [pre-commit]
+
+      - id: go-tests
+        name: Go / Tests
+        entry: go -C src/agyctl test ./internal/...
+        language: system
+        pass_filenames: false
+        files: ^(src/agyctl/.*\.go|compat/(versions|install-layout)\.json)$
+        stages: [pre-commit]

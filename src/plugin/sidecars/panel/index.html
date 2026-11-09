@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>agyctl</title>
+  <style>
+    :root {
+      --background: #0d0d0f;
+      --foreground: #e9e9ec;
+      --card: #17171a;
+      --border: rgba(255, 255, 255, 0.08);
+      --muted-foreground: #8d8d96;
+      --hover: color-mix(in srgb, var(--foreground) 6%, transparent);
+      --selected: color-mix(in srgb, var(--foreground) 11%, transparent);
+      --track: color-mix(in srgb, var(--foreground) 8%, transparent);
+
+      --c-prompt: #4f8ff7;
+      --c-cache: #8b7cf6;
+      --c-thinking: #22b8cf;
+      --c-output: #34c38f;
+      --c-warn: #f2b84b;
+
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --font-sans: "Google Sans Flex", "Google Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Consolas, Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+
+    html {
+      background: var(--background);
+      scrollbar-color: color-mix(in srgb, var(--foreground) 24%, transparent) transparent;
+      scrollbar-width: thin;
+    }
+    option { background: var(--card); color: var(--foreground); }
+
+    body {
+      background: var(--background) !important;
+      color: var(--foreground) !important;
+      font: 13px/1.5 var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    button, input, select { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    :focus-visible { outline: 2px solid color-mix(in srgb, var(--foreground) 55%, transparent); outline-offset: 2px; }
+
+    .app { max-width: 640px; margin: 0 auto; padding: 14px 14px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+    .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .brand { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+    .brand .product { color: var(--muted-foreground); font-weight: 400; margin-left: 6px; font-size: 12px; }
+    .icon-btn {
+      width: 28px; height: 28px; border: 0; border-radius: 999px; background: transparent; color: var(--muted-foreground);
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .icon-btn:hover { background: var(--hover); color: var(--foreground); }
+    .icon-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .icon-btn[data-busy="true"] svg { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .segmented { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--track); }
+    .segmented button {
+      flex: 1; border: 0; background: transparent; color: var(--muted-foreground);
+      padding: 5px 10px; border-radius: 7px; white-space: nowrap;
+    }
+    .segmented button:hover { color: var(--foreground); }
+    .segmented button[aria-selected="true"], .segmented button[aria-pressed="true"] { background: var(--selected); color: var(--foreground); }
+    .segmented.small { padding: 2px; border-radius: 8px; }
+    .segmented.small button { padding: 2px 9px; font-size: 12px; border-radius: 6px; }
+
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .muted { color: var(--muted-foreground); }
+    .small { font-size: 12px; }
+    .num { font-variant-numeric: tabular-nums; }
+    .error { color: var(--c-warn); font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .error:empty { display: none; }
+
+    .view { display: flex; flex-direction: column; gap: 18px; }
+    .block { display: flex; flex-direction: column; gap: 8px; }
+    .block-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .block-head h2 { font-size: 13px; font-weight: 500; }
+
+    .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .tile { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; min-width: 0; }
+    .tile .label { color: var(--muted-foreground); font-size: 12px; }
+    .tile .value { font-size: 24px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; overflow-wrap: anywhere; }
+    .tile .sub { color: var(--muted-foreground); font-size: 12px; }
+
+    .stack { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: var(--track); gap: 1px; }
+    .stack span { min-width: 0; }
+    .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; font-size: 12px; }
+    .legend div { display: flex; justify-content: space-between; gap: 8px; }
+    .legend .key { color: var(--muted-foreground); display: inline-flex; align-items: center; gap: 6px; }
+    .dot { width: 7px; height: 7px; border-radius: 2px; display: inline-block; }
+
+    .bars { display: flex; align-items: flex-end; gap: 3px; height: 56px; }
+    .bars span { flex: 1; min-height: 2px; border-radius: 2px 2px 0 0; background: color-mix(in srgb, var(--foreground) 22%, transparent); }
+    .bars span[data-today="true"] { background: var(--foreground); }
+    .bars span[data-empty="true"] { background: var(--track); }
+    .axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted-foreground); }
+
+    .meter-row { display: flex; flex-direction: column; gap: 3px; padding-bottom: 4px; }
+    .meter-row .line { display: flex; justify-content: space-between; gap: 8px; }
+    .meter-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .meter { height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
+    .meter span { display: block; height: 100%; background: color-mix(in srgb, var(--foreground) 45%, transparent); border-radius: 2px; }
+
+    .list { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
+    .item { padding: 9px 2px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+    .item .line { display: flex; justify-content: space-between; gap: 12px; }
+    .item .title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .item .line > :last-child { flex-shrink: 0; }
+    .empty { color: var(--muted-foreground); font-size: 12px; padding: 10px 2px; }
+
+    .search { flex: 1; min-width: 140px; }
+    input[type="text"], input[type="number"], input[type="search"], select {
+      width: 100%; min-width: 0; padding: 6px 10px; border-radius: var(--radius-md);
+      border: 1px solid var(--border); background: var(--background);
+    }
+    select { width: auto; }
+
+    .group { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+    .group > * + * { border-top: 1px solid var(--border); }
+    .row { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .row.stacked { flex-direction: column; align-items: stretch; gap: 8px; }
+    .row .text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .row .desc { color: var(--muted-foreground); font-size: 12px; overflow-wrap: anywhere; }
+    .row .control { flex-shrink: 0; }
+    .row .control input[type="number"] { width: 86px; }
+    .group-title { font-size: 13px; font-weight: 500; margin: 0 2px -8px; }
+
+    .button {
+      border: 1px solid var(--border); background: var(--hover); border-radius: var(--radius-md); padding: 6px 12px; white-space: nowrap;
+    }
+    .button:hover:not(:disabled) { background: var(--selected); }
+    .button.primary { background: var(--foreground); color: var(--background); border-color: transparent; }
+    .button.primary:hover:not(:disabled) { opacity: .88; background: var(--foreground); }
+    .button.compact { padding: 3px 9px; font-size: 12px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+    .field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted-foreground); min-width: 0; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
+    .check input { margin-top: 3px; accent-color: var(--foreground); }
+
+    .price-list { display: flex; flex-direction: column; }
+    .price-entry { display: flex; flex-direction: column; gap: 4px; padding: 8px 0; }
+    .price-entry + .price-entry { border-top: 1px solid var(--border); }
+    .price-entry .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .price-model { font: 12px var(--font-mono); overflow-wrap: anywhere; }
+    .price-rates { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 2px 14px; font-size: 12px; color: var(--muted-foreground); }
+    details > summary { cursor: pointer; color: var(--muted-foreground); font-size: 12px; list-style: none; }
+    details > summary::before { content: '›'; display: inline-block; margin-right: 6px; transition: transform .15s; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { margin-bottom: 6px; }
+
+    .status-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 12px; }
+    .status-grid dt { color: var(--muted-foreground); }
+    .status-grid dd { overflow-wrap: anywhere; }
+    .job-output { white-space: pre-wrap; font: 11px/1.6 var(--font-mono); overflow-wrap: anywhere; color: var(--muted-foreground); }
+
+    @media (max-width: 380px) {
+      .tiles, .legend, .field-grid { grid-template-columns: 1fr; }
+      .price-rates { grid-template-columns: auto auto; }
+      .app { padding: 10px 10px 20px; }
+    }
+  </style>
+</head>
+<body style="visibility: hidden">
+  <div class="app">
+    <header class="top">
+      <div class="brand">agyctl<span class="product" id="product-label"></span></div>
+      <button class="icon-btn" id="btn-refresh" type="button" title="立即更新" aria-label="立即更新">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+          <path d="M3 3v5h5" />
+          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+          <path d="M21 21v-5h-5" />
+        </svg>
+      </button>
+    </header>
+
+    <nav class="segmented" role="tablist" aria-label="agyctl">
+      <button type="button" id="tab-overview" role="tab" aria-controls="view-overview" aria-selected="true" data-i18n="tabOverview">總覽</button>
+      <button type="button" id="tab-sessions" role="tab" aria-controls="view-sessions" aria-selected="false" data-i18n="tabSessions">會話</button>
+      <button type="button" id="tab-settings" role="tab" aria-controls="view-settings" aria-selected="false" data-i18n="tabSettings">設定</button>
+    </nav>
+
+    <div class="toolbar" id="range-bar">
+      <span class="muted small" id="scope-label">—</span>
+      <div class="segmented small" role="group" id="range-picker">
+        <button type="button" id="range-today" aria-pressed="false" data-i18n="rangeToday">今天</button>
+        <button type="button" id="range-week" aria-pressed="false" data-i18n="rangeWeek">7 天</button>
+        <button type="button" id="range-all" aria-pressed="true" data-i18n="rangeAll">全部</button>
+      </div>
+    </div>
+
+    <main>
+      <section class="view" id="view-overview" role="tabpanel" aria-labelledby="tab-overview">
+        <div class="tiles">
+          <div class="tile">
+            <div class="label" data-i18n="totalTokens">總 token</div>
+            <div class="value num" id="total-tokens">—</div>
+            <div class="sub" id="total-requests">—</div>
+          </div>
+          <div class="tile">
+            <div class="label" data-i18n="estimatedCost">估計費用</div>
+            <div class="value num" id="total-cost">—</div>
+            <div class="sub" id="cost-note">—</div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="stack" id="mix-bar">
+            <span id="mix-uncached" style="background: var(--c-prompt)"></span>
+            <span id="mix-cached" style="background: var(--c-cache)"></span>
+            <span id="mix-thinking" style="background: var(--c-thinking)"></span>
+            <span id="mix-output" style="background: var(--c-output)"></span>
+          </div>
+          <div class="legend">
+            <div><span class="key"><i class="dot" style="background: var(--c-prompt)"></i><span data-i18n="uncached">未快取輸入</span></span><span class="num" id="mix-uncached-value">—</span></div>
+            <div><span class="key"><i class="dot" style="background: var(--c-cache)"></i><span data-i18n="cached">快取讀取</span></span><span class="num" id="mix-cached-value">—</span></div>
+            <div><span class="key"><i class="dot" style="background: var(--c-thinking)"></i><span data-i18n="thinking">思考</span></span><span class="num" id="mix-thinking-value">—</span></div>
+            <div><span class="key"><i class="dot" style="background: var(--c-output)"></i><span data-i18n="output">輸出</span></span><span class="num" id="mix-output-value">—</span></div>
+          </div>
+          <div class="muted small" id="cache-rate">—</div>
+        </div>
+
+        <div class="block">
+          <div class="block-head"><h2 data-i18n="dailyTitle">每日用量</h2><span class="muted small" data-i18n="dailyHint">近 14 天 token</span></div>
+          <div class="bars" id="daily-bars"></div>
+          <div class="axis"><span id="daily-start"></span><span id="daily-end"></span></div>
+        </div>
+
+        <div class="block">
+          <div class="block-head"><h2 data-i18n="modelsTitle">模型</h2><span class="muted small" data-i18n="modelsHint">依 token 排序</span></div>
+          <div class="block" id="model-list"></div>
+        </div>
+
+        <div>
+          <p class="muted small" id="usage-status" role="status">—</p>
+          <p class="error" id="usage-error" role="status"></p>
+        </div>
+      </section>
+
+      <section class="view" id="view-sessions" role="tabpanel" aria-labelledby="tab-sessions" hidden>
+        <div class="toolbar">
+          <input class="search" id="session-search" type="search" autocomplete="off" spellcheck="false" placeholder="搜尋標題或專案" data-i18n-placeholder="searchPlaceholder">
+          <select id="session-sort" aria-label="排序">
+            <option value="recent" data-i18n="sortRecent">最近使用</option>
+            <option value="tokens" data-i18n="sortTokens">token 最多</option>
+            <option value="cost" data-i18n="sortCost">費用最高</option>
+          </select>
+        </div>
+        <div class="list" id="session-list"></div>
+      </section>
+
+      <section class="view" id="view-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
+        <h2 class="group-title" data-i18n="generalTitle">一般</h2>
+        <div class="group">
+          <div class="row">
+            <div class="text"><span data-i18n="language">語言</span></div>
+            <select class="control" id="setting-lang" aria-label="Language">
+              <option value="zh-Hant-TW">繁體中文</option>
+              <option value="zh-Hans-CN">简体中文</option>
+              <option value="ja-JP">日本語</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="text"><span data-i18n="pollInterval">更新間隔</span><span class="desc" data-i18n="pollIntervalHint">面板開啟時每隔幾秒重新讀取（10–300）</span></div>
+            <div class="control actions"><input id="setting-interval" type="number" min="10" max="300" step="1" value="10" aria-label="Seconds"><span class="muted small" id="interval-feedback" role="status"></span></div>
+          </div>
+        </div>
+
+        <h2 class="group-title" data-i18n="pricingTitle">模型價格</h2>
+        <div class="group">
+          <div class="row">
+            <div class="text"><span data-i18n="customPrices">自訂價格</span><span class="desc" data-i18n="pricingHint">美元／每百萬 token。會套用到所有用量估算，包含歷史會話。</span></div>
+            <button class="button compact control" type="button" id="btn-add-price" data-i18n="addPrice">新增</button>
+          </div>
+          <form class="row stacked" id="price-form" hidden>
+            <label class="field"><span data-i18n="priceModel">模型別名或系列</span><input id="price-model" type="text" maxlength="128" spellcheck="false" autocomplete="off" placeholder="gemini-3.8-flash-n" required></label>
+            <div class="field-grid">
+              <label class="field"><span data-i18n="priceInput">輸入</span><input id="price-input" type="number" min="0" step="any" required></label>
+              <label class="field"><span data-i18n="priceCache">快取讀取</span><input id="price-cache" type="number" min="0" step="any" required></label>
+              <label class="field"><span data-i18n="priceOutput">輸出</span><input id="price-output" type="number" min="0" step="any" required></label>
+              <label class="field"><span data-i18n="priceThinking">思考</span><input id="price-thinking" type="number" min="0" step="any" required></label>
+            </div>
+            <div class="actions"><button class="button primary compact" id="btn-save-price" type="submit" disabled data-i18n="savePrice">儲存</button><button class="button compact" id="btn-cancel-price" type="button" data-i18n="cancel">取消</button><span class="muted small" id="pricing-feedback" role="status"></span></div>
+          </form>
+          <div class="row stacked" id="price-list-row">
+            <div class="price-list" id="price-list"></div>
+            <details>
+              <summary data-i18n="builtinPrices">內建價格</summary>
+              <div class="price-list" id="builtin-price-list"></div>
+            </details>
+            <p class="error" id="pricing-error" role="status"></p>
+            <div class="actions" id="pricing-repair-row" hidden>
+              <button class="button compact" id="btn-repair-price" type="button" data-i18n="pricingRepair">修復</button>
+              <span class="muted small" id="pricing-damage-note"></span>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="group-title" data-i18n="patchesTitle">Client modifications</h2>
+        <div class="group">
+          <div class="row stacked">
+            <p class="muted small" data-i18n="modifyHint"></p>
+            <pre class="job-output" id="modify-commands">npm run capsule:install
+npm run localization -- select &lt;locale&gt;
+npm run host-patch -- plan
+npm run limit:status</pre>
+            <p class="muted small" id="limit-diagnostics"></p>
+            <p class="error" id="management-error" role="status"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const $ = (id) => document.getElementById(id);
+      /* AGYCTL_LOCALE_RUNTIME */
+
+      const PRODUCT_NAMES = { insiders: 'Insiders', hub: 'Antigravity' };
+
+      let localeBinding;
+      try {
+        localeBinding = initializePanelLocale(window, document, navigator, localStorage);
+      } catch (error) {
+        document.body.textContent = `agyctl: ${error.message}`;
+        document.body.style.visibility = 'visible';
+        throw error;
+      }
+      const localeState = localeBinding.state;
+      let currentLang = localeState.locale;
+      const VIEW_KEY = 'agyctl_view';
+      const RANGE_KEY = 'agyctl_range';
+      const VIEW_NAMES = ['overview', 'sessions', 'settings'];
+      const RANGE_NAMES = ['today', 'week', 'all'];
+      let activeView = 'overview';
+      let activeRange = 'all';
+      try {
+        const savedView = localStorage.getItem(VIEW_KEY);
+        if (VIEW_NAMES.includes(savedView)) activeView = savedView;
+        const savedRange = localStorage.getItem(RANGE_KEY);
+        if (RANGE_NAMES.includes(savedRange)) activeRange = savedRange;
+      } catch (e) {}
+      let usageData = null;
+      let usageInFlight = false;
+      let usageError = '';
+      let pricingData = null;
+      let pricingInFlight = false;
+      let pricingSaving = false;
+      let pricingDirty = false;
+      let pricingDamage = null;
+      let editingModel = null;
+      let settingsData = null;
+      let pollIntervalMs = 10000;
+
+      function t() {
+        return localeMessages(currentLang, 'panel');
+      }
+
+      function applyLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = currentLang;
+        const dict = t();
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const value = dict[el.getAttribute('data-i18n')];
+          if (typeof value === 'string') el.textContent = value;
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+          const value = dict[el.getAttribute('data-i18n-placeholder')];
+          if (typeof value === 'string') el.placeholder = value;
+        });
+        $('btn-refresh').title = dict.refreshTitle;
+        $('btn-refresh').setAttribute('aria-label', dict.refreshTitle);
+        $('setting-lang').setAttribute('aria-label', dict.language);
+        $('setting-interval').setAttribute('aria-label', dict.pollInterval);
+        $('session-search').setAttribute('aria-label', dict.searchPlaceholder);
+        $('session-sort').setAttribute('aria-label', dict.sessionSort);
+        $('setting-lang').value = currentLang;
+        renderUsage();
+        if (pricingData) renderPricing();
+        if (pricingDamage) showPricingDamage();
+        if (diagnostics) renderDiagnostics();
+      }
+
+      async function request(url, data, allowError = false) {
+        const headers = { 'Content-Type': 'application/json' };
+        const token = new URLSearchParams(window.location.search).get('token');
+        if (token) headers['X-Sidecar-Token'] = token;
+        if (data !== undefined) headers['X-Agyctl-Action'] = '1';
+        const response = await fetch(url, {
+          headers,
+          ...(data === undefined ? {} : { method: 'POST', body: JSON.stringify(data) }),
+          signal: AbortSignal.timeout(125000)
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const result = await response.json();
+        if (!allowError && result.error) throw new Error(result.error);
+        return result;
+      }
+
+      function isNumber(value) {
+        return typeof value === 'number' && Number.isFinite(value);
+      }
+
+      function count(value) {
+        return isNumber(value) ? formatLocaleNumber(value, currentLang) : '—';
+      }
+
+      function compact(value) {
+        if (!isNumber(value)) return '—';
+        return formatLocaleNumber(value, currentLang, { notation: 'compact', maximumFractionDigits: 1 });
+      }
+
+      function money(value) {
+        if (!isNumber(value)) return '—';
+        if (value === 0) return '$0';
+        if (value < 0.01) return '<$0.01';
+        return formatLocaleNumber(value, currentLang, { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function percent(value) {
+        return isNumber(value) ? `${formatLocaleNumber(value * 100, currentLang, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%` : '—';
+      }
+
+      function clockTime(value) {
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? '—' : formatLocaleDate(date, currentLang, { hour: '2-digit', minute: '2-digit' });
+      }
+
+      function relativeTime(value) {
+        const time = Date.parse(value);
+        if (!Number.isFinite(time)) return null;
+        const seconds = (time - Date.now()) / 1000;
+        const format = new Intl.RelativeTimeFormat(currentLang, { numeric: 'auto' });
+        for (const [unit, size] of [['day', 86400], ['hour', 3600], ['minute', 60]]) {
+          if (Math.abs(seconds) >= size) return format.format(Math.round(seconds / size), unit);
+        }
+        return format.format(0, 'minute');
+      }
+
+      function shortDay(day) {
+        const [, month, date] = day.split('-');
+        return `${Number(month)}/${Number(date)}`;
+      }
+
+      function element(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+
+      function line(left, right, leftClass = '', rightClass = '') {
+        const row = element('div', 'line');
+        row.append(element('span', leftClass, left), element('span', rightClass, right));
+        return row;
+      }
+
+      function rangeTotals() {
+        return usageData?.ranges?.[activeRange] || null;
+      }
+
+      function sessionItem(session) {
+        const totals = session.ranges?.[activeRange] || {};
+        const item = element('div', 'item');
+        item.title = session.title || session.id;
+        const meta = [session.workspace, relativeTime(session.lastActiveAt),
+          session.subagents ? t().subagents(session.subagents) : null].filter(Boolean).join(' · ');
+        item.append(
+          line(session.title || t().untitled, usageData?.repricing ? '—' : money(totals.costUsd), 'title', 'num'),
+          line(meta, compact(totals.totalTokens), 'muted small title', 'muted small num')
+        );
+        return item;
+      }
+
+      function fillList(container, nodes, emptyText) {
+        container.textContent = '';
+        if (!nodes.length) container.appendChild(element('p', 'empty', emptyText));
+        for (const node of nodes) container.appendChild(node);
+      }
+
+      function sessionsInRange() {
+        return (usageData?.conversations || []).filter(session => (session.ranges?.[activeRange]?.requests || 0) > 0);
+      }
+
+      function renderOverview() {
+        const dict = t();
+        const totals = rangeTotals();
+        $('total-tokens').textContent = compact(totals?.totalTokens);
+        $('total-tokens').title = count(totals?.totalTokens);
+        $('total-requests').textContent = totals ? dict.requests(count(totals.requests)) : '—';
+        $('total-cost').textContent = usageData?.repricing ? '—' : money(totals?.costUsd);
+        $('cost-note').textContent = usageData?.repricing ? dict.repricing
+          : totals?.unpricedRequests ? dict.unpriced(count(totals.unpricedRequests)) : dict.estimate;
+
+        const parts = { uncached: 'uncachedTokens', cached: 'cachedTokens', thinking: 'thinkingTokens', output: 'outputTokens' };
+        for (const [name, key] of Object.entries(parts)) {
+          const share = totals?.totalTokens ? totals[key] / totals.totalTokens : 0;
+          $(`mix-${name}`).style.width = `${(share * 100).toFixed(2)}%`;
+          $(`mix-${name}-value`).textContent = compact(totals?.[key]);
+          $(`mix-${name}-value`).title = count(totals?.[key]);
+        }
+        const prompt = totals ? totals.uncachedTokens + totals.cachedTokens : 0;
+        $('cache-rate').textContent = totals?.requests
+          ? dict.cacheRate(percent(prompt ? totals.cachedTokens / prompt : null), count(totals.requests)) : dict.noUsage;
+
+        const bars = $('daily-bars');
+        bars.textContent = '';
+        const daily = usageData?.daily || [];
+        const peak = Math.max(0, ...daily.map(day => day.totalTokens));
+        daily.forEach((day, index) => {
+          const bar = element('span');
+          bar.style.height = peak ? `${Math.max(3, (day.totalTokens / peak) * 100)}%` : '3%';
+          bar.dataset.today = String(index === daily.length - 1);
+          bar.dataset.empty = String(!day.totalTokens);
+          bar.title = `${shortDay(day.day)} · ${compact(day.totalTokens)} · ${usageData?.repricing ? '—' : money(day.costUsd)}`;
+          bars.appendChild(bar);
+        });
+        $('daily-start').textContent = daily.length ? shortDay(daily[0].day) : '';
+        $('daily-end').textContent = daily.length ? shortDay(daily.at(-1).day) : '';
+
+        const models = totals?.models || [];
+        const topTokens = models[0]?.totalTokens || 0;
+        fillList($('model-list'), models.slice(0, 8).map(model => {
+          const row = element('div', 'meter-row');
+          const meter = element('div', 'meter');
+          const fill = element('span');
+          fill.style.width = `${topTokens ? (model.totalTokens / topTokens) * 100 : 0}%`;
+          meter.appendChild(fill);
+          row.append(
+            line(model.model, usageData?.repricing ? '—' : money(model.costUsd), 'name', 'num'),
+            meter,
+            line(`${compact(model.totalTokens)} · ${dict.requests(count(model.requests))}`,
+              totals.totalTokens ? percent(model.totalTokens / totals.totalTokens) : '', 'muted small', 'muted small num')
+          );
+          return row;
+        }), dict.noModels);
+
+
+        const status = [];
+        if (usageData?.refreshing && !usageData.updatedAt) status.push(dict.loading);
+        else if (usageData?.updatedAt) status.push(dict.updatedAt(clockTime(usageData.updatedAt)));
+        const unreadable = (usageData?.coverage?.failed || 0) + (usageData?.coverage?.unscanned || 0);
+        if (unreadable && !usageData.refreshing) status.push(dict.unreadable(count(unreadable)));
+        $('usage-status').textContent = status.join(' · ') || '—';
+        $('usage-error').textContent = usageError
+          || (usageData?.status === 'error' && !usageData.refreshing ? usageData.error || '' : '');
+      }
+
+      function renderSessions() {
+        const query = String($('session-search').value || '').trim().toLowerCase();
+        const sort = $('session-sort').value || 'recent';
+        let sessions = sessionsInRange();
+        if (query) {
+          sessions = sessions.filter(session => [session.title, session.workspace, session.id]
+            .some(value => String(value || '').toLowerCase().includes(query)));
+        }
+        const metric = { tokens: 'totalTokens', cost: 'costUsd' }[sort];
+        if (metric) sessions = [...sessions].sort((a, b) => (b.ranges[activeRange][metric] || 0) - (a.ranges[activeRange][metric] || 0));
+        fillList($('session-list'), sessions.map(sessionItem), t().noSessions);
+      }
+
+      function renderUsage() {
+        const dict = t();
+        for (const range of RANGE_NAMES) $(`range-${range}`).setAttribute('aria-pressed', String(range === activeRange));
+        $('product-label').textContent = PRODUCT_NAMES[usageData?.product] || '';
+        const totals = rangeTotals();
+        $('scope-label').textContent = totals ? dict.sessionsCount(count(totals.conversations)) : '—';
+        $('btn-refresh').setAttribute('data-busy', String(Boolean(usageData?.refreshing) && activeView !== 'settings'));
+        renderOverview();
+        renderSessions();
+      }
+
+      async function fetchUsage(force = false) {
+        if (usageInFlight) return;
+        usageInFlight = true;
+        try {
+          usageData = await request(force ? '/api/usage/refresh' : '/api/usage', force ? {} : undefined);
+          usageError = '';
+        } catch (error) {
+          usageError = error.message;
+        } finally {
+          usageInFlight = false;
+          renderUsage();
+        }
+      }
+
+      const priceFields = { input: 'price-input', cacheRead: 'price-cache', output: 'price-output', thinking: 'price-thinking' };
+
+      function updatePricingButtons() {
+        $('btn-save-price').disabled = !pricingData || pricingSaving;
+        $('btn-save-price').textContent = pricingSaving ? t().saving : t().savePrice;
+        $('btn-cancel-price').disabled = pricingSaving;
+        $('btn-add-price').disabled = pricingSaving;
+        document.querySelectorAll('[data-price-action]').forEach(button => { button.disabled = pricingSaving; });
+      }
+
+      function resetPriceForm() {
+        editingModel = null;
+        pricingDirty = false;
+        $('price-model').value = '';
+        for (const id of Object.values(priceFields)) $(id).value = '';
+        $('price-form').hidden = true;
+        updatePricingButtons();
+      }
+
+      function openPriceForm(price, existing) {
+        if (pricingSaving) return;
+        if (pricingDirty) {
+          $('pricing-error').textContent = t().pricingUnsaved;
+          return;
+        }
+        editingModel = existing ? price.model
+          : price ? pricingData.prices.find(item => item.model.toLowerCase() === price.model.toLowerCase())?.model ?? null : null;
+        pricingDirty = Boolean(price);
+        $('price-model').value = price?.model ?? '';
+        for (const [key, id] of Object.entries(priceFields)) $(id).value = price ? String(price[key]) : '';
+        $('price-form').hidden = false;
+        $('pricing-feedback').textContent = '';
+        $('pricing-error').textContent = '';
+        updatePricingButtons();
+        $('price-model').focus();
+      }
+
+      function renderPriceList(id, prices, custom) {
+        const list = $(id);
+        list.textContent = '';
+        if (!prices.length && custom) list.appendChild(element('p', 'empty', t().noCustomPrices));
+        for (const price of prices) {
+          const entry = element('div', 'price-entry');
+          const header = element('div', 'head');
+          const name = element('code', 'price-model', price.model);
+          const actions = element('div', 'actions');
+          const edit = element('button', 'button compact', custom ? t().editPrice : t().customizePrice);
+          edit.type = 'button';
+          edit.dataset.priceAction = 'edit';
+          edit.addEventListener('click', () => openPriceForm(price, custom));
+          actions.appendChild(edit);
+          if (custom) {
+            const remove = element('button', 'button compact', t().deletePrice);
+            remove.type = 'button';
+            remove.dataset.priceAction = 'delete';
+            remove.addEventListener('click', async () => {
+              if (pricingSaving) return;
+              if (pricingDirty && editingModel !== price.model) {
+                $('pricing-error').textContent = t().pricingUnsaved;
+                return;
+              }
+              try {
+                await persistPricing(pricingData.prices.filter(item => item.model !== price.model));
+              } catch (error) { $('pricing-error').textContent = error.message; }
+            });
+            actions.appendChild(remove);
+          }
+          header.append(name, actions);
+          const rates = element('div', 'price-rates');
+          for (const [key, label] of Object.entries({ input: 'priceInput', cacheRead: 'priceCache', output: 'priceOutput', thinking: 'priceThinking' })) {
+            rates.appendChild(element('span', '', `${t()[label]} $${price[key]}`));
+          }
+          entry.append(header, rates);
+          list.appendChild(entry);
+        }
+      }
+
+      function renderPricing() {
+        renderPriceList('price-list', pricingData.prices, true);
+        renderPriceList('builtin-price-list', pricingData.defaults || [], false);
+        updatePricingButtons();
+      }
+
+      function broadcastPricing() {
+        window.parent?.postMessage({ type: 'AGYCTL_PRICING_CHANGED', prices: pricingData.prices, revision: pricingData.revision }, '*');
+      }
+
+      async function loadPricing(manual = false) {
+        if (pricingInFlight || pricingSaving) return;
+        if (pricingDirty) {
+          if (manual) $('pricing-error').textContent = t().pricingUnsaved;
+          return;
+        }
+        pricingInFlight = true;
+        const revision = pricingData?.revision;
+        try {
+          const result = await request('/api/pricing');
+          if (result.pricingDamaged) {
+            pricingDamage = { recoveryToken: result.recoveryToken, status: result.status };
+            if (Array.isArray(result.prices) && typeof result.revision === 'string') {
+              if (!pricingSaving && !(pricingData && (pricingDirty || pricingData.revision !== revision))) {
+                pricingData = result;
+                renderPricing();
+              }
+            }
+            showPricingDamage();
+            return;
+          }
+          pricingDamage = null;
+          $('pricing-repair-row').hidden = true;
+          if (!Array.isArray(result.prices) || typeof result.revision !== 'string') throw new Error(t().pricingInvalidResponse);
+          if (pricingSaving || (pricingData && (pricingDirty || pricingData.revision !== revision))) return;
+          pricingData = result;
+          renderPricing();
+          broadcastPricing();
+          $('pricing-error').textContent = '';
+        } catch (error) {
+          $('pricing-error').textContent = error.message;
+        } finally { pricingInFlight = false; }
+      }
+
+      function showPricingDamage() {
+        $('pricing-error').textContent = t().pricingDamaged;
+        $('pricing-damage-note').textContent = t().pricingRepairHint;
+        $('pricing-repair-row').hidden = false;
+      }
+
+      async function repairSavedPricing() {
+        if (pricingSaving || pricingDirty) {
+          if (pricingDirty) $('pricing-error').textContent = t().pricingUnsaved;
+          return;
+        }
+        if (!pricingDamage?.recoveryToken) return;
+        pricingSaving = true;
+        $('pricing-error').textContent = '';
+        $('pricing-feedback').textContent = t().saving;
+        updatePricingButtons();
+        try {
+          const result = await request('/api/pricing/repair', {
+            prices: pricingData?.prices ?? [],
+            recoveryToken: pricingDamage.recoveryToken,
+          });
+          if (!Array.isArray(result.prices) || typeof result.revision !== 'string') throw new Error(t().pricingInvalidResponse);
+          pricingData = result;
+          pricingDamage = null;
+          $('pricing-repair-row').hidden = true;
+          resetPriceForm();
+          renderPricing();
+          broadcastPricing();
+          $('pricing-feedback').textContent = t().pricesSaved;
+        } catch (error) {
+          $('pricing-error').textContent = error.message;
+        } finally {
+          pricingSaving = false;
+          updatePricingButtons();
+        }
+      }
+
+      async function persistPricing(prices) {
+        if (!pricingData || pricingSaving) throw new Error(t().pricingNotLoaded);
+        pricingSaving = true;
+        $('pricing-error').textContent = '';
+        $('pricing-feedback').textContent = t().saving;
+        updatePricingButtons();
+        try {
+          const result = await request('/api/pricing', { prices, revision: pricingData.revision });
+          if (!Array.isArray(result.prices) || typeof result.revision !== 'string') throw new Error(t().pricingInvalidResponse);
+          pricingData = result;
+          resetPriceForm();
+          renderPricing();
+          broadcastPricing();
+          $('pricing-feedback').textContent = t().pricesSaved;
+        } catch (error) {
+          $('pricing-feedback').textContent = '';
+          throw error;
+        } finally {
+          pricingSaving = false;
+          updatePricingButtons();
+        }
+      }
+
+      function populateSettings(settings) {
+        settingsData = settings;
+        pollIntervalMs = settings.pollIntervalSeconds * 1000;
+        $('setting-interval').value = settings.pollIntervalSeconds;
+      }
+
+      async function loadSettings() {
+        try {
+          populateSettings((await request('/api/settings')).settings);
+        } catch (error) {
+          $('interval-feedback').textContent = error.message;
+        }
+      }
+
+      async function saveInterval() {
+        const seconds = Number($('setting-interval').value);
+        if (!Number.isInteger(seconds) || seconds < 10 || seconds > 300) {
+          $('interval-feedback').textContent = t().intervalInvalid;
+          return;
+        }
+        if (!settingsData || seconds === settingsData.pollIntervalSeconds) return;
+        $('interval-feedback').textContent = t().saving;
+        try {
+          populateSettings((await request('/api/settings', { pollIntervalSeconds: seconds })).settings);
+          $('interval-feedback').textContent = t().saved;
+        } catch (error) {
+          $('interval-feedback').textContent = error.message;
+        }
+      }
+
+      let diagnostics = null;
+      async function loadDiagnostics() {
+        try {
+          diagnostics = await request('/api/diagnostics');
+          renderDiagnostics();
+        } catch (error) {
+          $('management-error').textContent = error.message;
+        }
+      }
+
+      function renderDiagnostics() {
+        $('limit-diagnostics').textContent = [
+          t().limitDiagnostics,
+          diagnostics.error,
+          ...diagnostics.conversations.map(row => row.id.slice(0, 8) + ': ' + (row.error || row.limits.join(', ') || '—'))
+        ].filter(Boolean).join(' ');
+      }
+
+      function selectView(view) {
+        activeView = view;
+        if (view === 'settings') void loadDiagnostics();
+        try { localStorage.setItem(VIEW_KEY, view); } catch (e) {}
+        for (const name of VIEW_NAMES) {
+          $(`view-${name}`).hidden = name !== view;
+          $(`tab-${name}`).setAttribute('aria-selected', String(name === view));
+        }
+        $('range-bar').hidden = view === 'settings';
+        clearTimeout(pollTimer);
+        pollLoop();
+      }
+
+      function selectRange(range) {
+        activeRange = range;
+        try { localStorage.setItem(RANGE_KEY, range); } catch (e) {}
+        renderUsage();
+      }
+
+      window.addEventListener('message', (event) => {
+        if (event.source !== window.parent) return;
+        if (event.data?.type === 'theme-change' && event.data.payload?.cssVariables) {
+          for (const [key, value] of Object.entries(event.data.payload.cssVariables)) {
+            document.documentElement.style.setProperty(key, value);
+          }
+        }
+      });
+
+      const POLL_HIDDEN_MS = 30_000;
+      let pollTimer = null;
+      function pollLoop() {
+        if (activeView === 'settings') {
+          void loadPricing();
+        } else {
+          void fetchUsage();
+        }
+        const delay = activeView !== 'settings' && usageData?.refreshing ? 2000 : pollIntervalMs;
+        pollTimer = setTimeout(pollLoop, document.hidden ? Math.max(POLL_HIDDEN_MS, delay) : delay);
+      }
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          clearTimeout(pollTimer);
+          pollLoop();
+        }
+      });
+
+      $('btn-refresh').addEventListener('click', () => {
+        if (activeView === 'settings') {
+          void loadPricing(true);
+          void loadDiagnostics();
+        } else {
+          void fetchUsage(true);
+        }
+      });
+
+      for (const view of VIEW_NAMES) $(`tab-${view}`).addEventListener('click', () => selectView(view));
+      for (const range of RANGE_NAMES) $(`range-${range}`).addEventListener('click', () => selectRange(range));
+      $('session-search').addEventListener('input', renderSessions);
+      $('session-sort').addEventListener('change', renderSessions);
+      $('setting-lang').addEventListener('change', () => localeBinding.select($('setting-lang').value));
+      $('setting-interval').addEventListener('change', () => { void saveInterval(); });
+      $('btn-add-price').addEventListener('click', () => openPriceForm(null, false));
+      $('price-form').addEventListener('input', () => {
+        pricingDirty = true;
+        $('pricing-feedback').textContent = '';
+        updatePricingButtons();
+      });
+      $('price-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        try {
+          if (!pricingData || pricingSaving) return;
+          const model = $('price-model').value.trim();
+          const price = { model };
+          for (const [key, id] of Object.entries(priceFields)) {
+            const raw = $(id).value.trim();
+            const value = Number(raw);
+            if (!raw || !Number.isFinite(value) || value < 0) throw new Error(t().pricingInvalidRate);
+            price[key] = value;
+          }
+          if (!model || model.length > 128 || /[\x00-\x1f\x7f]/.test(model)) throw new Error(t().pricingInvalidModel);
+          const prices = pricingData.prices.filter(item => item.model !== editingModel);
+          if (prices.some(item => item.model.toLowerCase() === model.toLowerCase())) throw new Error(t().pricingDuplicate);
+          await persistPricing([...prices, price]);
+        } catch (error) { $('pricing-error').textContent = error.message; }
+      });
+      $('btn-cancel-price').addEventListener('click', () => {
+        resetPriceForm();
+        $('pricing-error').textContent = '';
+        void loadPricing(true);
+      });
+      $('btn-repair-price').addEventListener('click', () => { void repairSavedPricing(); });
+      localeState.subscribe(applyLanguage);
+      function startPanel() {
+        applyLanguage(localeState.locale);
+        document.body.style.visibility = 'visible';
+        selectView(activeView);
+        void loadSettings();
+        if (activeView !== 'settings') void loadPricing();
+      }
+      if (localeBinding.ready) {
+        localeBinding.ready.then(startPanel).catch(error => {
+          document.body.textContent = error.message;
+          document.body.style.visibility = 'visible';
+        });
+      } else startPanel();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "entries": [
+    {
+      "id": "win-insiders-1.0.20261103110059",
+      "app_version": "1.0.20261103110059",
+      "channel": "antigravity-insiders",
+      "platform": "win32",
+      "binary_name": "language_server.exe",
+      "binary_size": 188926976,
+      "binary_sha256": "ec9d5f4a1d357fce6a260395c658759bac863c022225336d2acab819932f4c1f",
+      "func": "utils.ClampCheckpointConfigForModelInfo",
+      "func_size": 128,
+      "orig_body_hex": "4885c074644885db745f83780c00751c486353144881fa409c00007f0531d290eb074881c2c063ffff89500c8b531485d27e1589d629ca39f10f42f20f1f400039700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3c3cccccccccccccccccccccccccccccccccccccccccccc",
+      "orig_body_sha256": "048bdf996a4261a772de3029774d32e830c87a153e2647eb22642cce0f0277a4",
+      "verified_at": "2026-11-04",
+      "notes": "Windows Insiders client; original body captured from language_server.exe (sha256 above) before patching; patched live and behavior verified via the panel's read-only conversation diagnostics (checkpoint max_token_limit 500000 on targeted models).",
+      "arch": "x86-64"
+    },
+    {
+      "id": "linux-hub-2.29.0",
+      "app_version": "2.29.0",
+      "channel": "antigravity",
+      "platform": "linux",
+      "binary_name": "language_server",
+      "binary_size": 195948944,
+      "binary_sha256": "cac05cef325e91df2f86215ba01ecdabd85fc6629057e0eb5eb59b0c51bf0419",
+      "func": "utils.ClampCheckpointConfigForModelInfo",
+      "func_size": 128,
+      "orig_body_hex": "4885c074644885db745f83780c00751c486353144881fa409c00007f0531d290eb074881c2c063ffff89500c8b531485d27e1589d629ca39f10f42f20f1f400039700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3c3cccccccccccccccccccccccccccccccccccccccccccc",
+      "orig_body_sha256": "048bdf996a4261a772de3029774d32e830c87a153e2647eb22642cce0f0277a4",
+      "verified_at": "2026-11-08",
+      "notes": "Hub 2.29.0 linux-x64 language_server; the recorded body is byte-identical to the live-verified Insiders entry. Static and dry-run verification only; live behavioral verification is pending a Linux environment.",
+      "arch": "x86-64"
+    }
+  ]
+}

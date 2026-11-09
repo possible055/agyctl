@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "report_id": "<REPORT_ID>",
+  "generated_at": "<GENERATED_AT>",
+  "target": {
+    "source": "feed",
+    "channel": "hub",
+    "platform": "win-x64",
+    "version": "2.29.0",
+    "execution_id": "5723181030440960",
+    "asset_url": "https://storage.googleapis.com/antigravity-public/antigravity-hub/2.29.0-5723181030440960/windows-x64/Antigravity-x64.exe",
+    "asset_sha256": "944b109bcb377f9f94f86eeea7cfa9315d4b42d84fb9d5bad689058fc11c12ba",
+    "ls_sha256": "c98e7c331da5bcc37002a550e7d625b4c636f775fa2804f73777c6a500e1c3d5",
+    "asar_sha256": "290e1b7a1caa430a0c5367c7b433e8d284e2ca5d0b305e91e5ce8ec926f43283"
+  },
+  "app": {
+    "name": "antigravity",
+    "version": "2.29.0",
+    "main": "dist/main.js"
+  },
+  "capabilities": {
+    "context": {
+      "verdict": "pass",
+      "checks": [
+        "patch target ok (original, size 0x80)",
+        "context hooks present: 4/4",
+        "256000-clamp byte pair in utils.GetCheckpointConfig: 1"
+      ],
+      "patch_supported": true
+    },
+    "models": {
+      "verdict": "pass",
+      "checks": [
+        "MODEL_PLACEHOLDER: 3381",
+        "model_profiles: 2",
+        "GetAvailableModels: 56",
+        "ListAvailableModels: 27"
+      ]
+    },
+    "ui": {
+      "verdict": "pass",
+      "checks": [
+        "package.json: name=antigravity version=2.29.0 main=dist/main.js",
+        "dist/main.js present",
+        "dist/preload.js exposes the webFrame.executeJavaScript hook surface",
+        ".unpacked sidecar present (347 files) — repack unpack options rebuildable"
+      ],
+      "app": {
+        "name": "antigravity",
+        "version": "2.29.0",
+        "main": "dist/main.js"
+      }
+    }
+  },
+  "overall": "compatible",
+  "tree": {
+    "app_root": "<EXTRACT_ROOT>/944b109bcb377f9f94f86eeea7cfa9315d4b42d84fb9d5bad689058fc11c12ba/Antigravity-x64-app",
+    "asar": "<EXTRACT_ROOT>/944b109bcb377f9f94f86eeea7cfa9315d4b42d84fb9d5bad689058fc11c12ba/Antigravity-x64-app/resources/app.asar",
+    "unpacked_dir": "<EXTRACT_ROOT>/944b109bcb377f9f94f86eeea7cfa9315d4b42d84fb9d5bad689058fc11c12ba/Antigravity-x64-app/resources/app.asar.unpacked",
+    "ls_exe": "<EXTRACT_ROOT>/944b109bcb377f9f94f86eeea7cfa9315d4b42d84fb9d5bad689058fc11c12ba/Antigravity-x64-app/resources/bin/language_server.exe"
+  },
+  "fingerprint": {
+    "symbols": {
+      "utils.ClampCheckpointConfigForModelInfo": {
+        "entryoff": 24562912,
+        "size": 128
+      },
+      "utils.GetCheckpointConfig": {
+        "entryoff": 24561024,
+        "size": 1344
+      },
+      "config.applyFeatureProviderCheckpointOverrideConfig": {
+        "entryoff": 26181152,
+        "size": 512
+      },
+      "config.selectCheckpointExperimentKey": {
+        "entryoff": 26180672,
+        "size": 480
+      }
+    },
+    "arch": "x86-64",
+    "clamp": {
+      "kind": "original",
+      "size": 128,
+      "body_sha256": "048bdf996a4261a772de3029774d32e830c87a153e2647eb22642cce0f0277a4",
+      "body_hex": "4885c074644885db745f83780c00751c486353144881fa409c00007f0531d290eb074881c2c063ffff89500c8b531485d27e1589d629ca39f10f42f20f1f400039700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3c3cccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "gate_3a_clamp256k": 1,
+    "markers": {
+      "MODEL_PLACEHOLDER": 3381,
+      "model_profiles": 2,
+      "GetAvailableModels": 56,
+      "ListAvailableModels": 27
+    }
+  }
+}

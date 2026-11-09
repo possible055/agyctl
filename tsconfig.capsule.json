@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "skipLibCheck": true,
+    // The typecheck covers the capsule modules and the lib modules they import,
+    // and owns cross-module semantics that concatenation could otherwise hide.
+    "noImplicitAny": false,
+    "strict": false,
+    "strictNullChecks": false,
+    "useUnknownInCatchVariables": false
+  },
+  "include": [
+    "src/capsule/capsule-window.d.ts",
+    "src/capsule/entry.js",
+    "src/capsule/i18n.js",
+    "src/capsule/anchors.js",
+    "src/capsule/styles.js",
+    "src/capsule/host-ui.js",
+    "src/capsule/main.js",
+    "src/plugin/lib/metrics-core.mjs",
+    "src/plugin/lib/pricing-core.mjs",
+    "src/plugin/lib/poll-policy.mjs",
+    "src/plugin/lib/upstream-contract.mjs",
+    "src/plugin/lib/locale.mjs",
+    "src/plugin/lib/locale-state.mjs"
+  ]
+}

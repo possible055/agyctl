@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "skipLibCheck": true,
+    "useUnknownInCatchVariables": false,
+    "verbatimModuleSyntax": true
+  },
+  "include": ["contracts.ts", "cli.ts", "logging.ts", "host/**/*.ts", "build/**/*.ts"]
+}

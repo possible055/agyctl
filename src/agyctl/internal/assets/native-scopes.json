@@ -1,0 +1,5 @@
+{
+  "layout": ["compat/install-layout.json"],
+  "limit": ["compat/install-layout.json", "compat/versions.json"],
+  "check": ["compat/versions.json", "compat/localization/profiles.json"]
+}

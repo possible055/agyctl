@@ -1,0 +1,6 @@
+{
+  "name": "agyctl",
+  "version": "0.1.0",
+  "description": "agyctl: cross-session token usage, cost estimates, quotas, settings, and patch management (Zero CDP)",
+  "logo": "assets/logo.svg"
+}

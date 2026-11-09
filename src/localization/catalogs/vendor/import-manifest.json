@@ -1,0 +1,305 @@
+{
+  "dispositions": {
+    "ja-JP": {
+      "conflictPending": 2,
+      "emptyValue": 0,
+      "identicalValue": 24,
+      "pending": 780
+    },
+    "zh-Hans-CN": {
+      "conflictPending": 27,
+      "emptyValue": 1,
+      "identicalValue": 10,
+      "pending": 4300
+    },
+    "zh-Hant-TW": {
+      "conflictPending": 515,
+      "emptyValue": 1,
+      "identicalValue": 12,
+      "pending": 3901
+    }
+  },
+  "inline": [
+    {
+      "dynamicRules": [
+        {
+          "id": "greeting",
+          "occurrences": 4
+        },
+        {
+          "id": "delete-project",
+          "occurrences": 4
+        },
+        {
+          "id": "active-conversations",
+          "occurrences": 8
+        },
+        {
+          "id": "archived-conversations",
+          "occurrences": 0
+        },
+        {
+          "id": "select-environment",
+          "occurrences": 0
+        },
+        {
+          "id": "tray-open-prefix",
+          "occurrences": 1
+        }
+      ],
+      "file": "antigravity2-cn/localization_engine.js",
+      "locale": "zh-Hans-CN",
+      "maps": [
+        {
+          "classification": "inline-map",
+          "keys": 10
+        },
+        {
+          "classification": "menu",
+          "keys": 52
+        },
+        {
+          "classification": "tray",
+          "keys": 3
+        },
+        {
+          "classification": "inline-map",
+          "keys": 6
+        },
+        {
+          "classification": "inline-map",
+          "keys": 6
+        },
+        {
+          "classification": "inline-map",
+          "keys": 20
+        },
+        {
+          "classification": "inline-map",
+          "keys": 20
+        }
+      ],
+      "project": "antigravity2-cn",
+      "sha256": "e5993b84f755b426145727b56365cd0f6667db420bd1faff959a240ae0805815"
+    },
+    {
+      "dynamicRules": [
+        {
+          "id": "greeting",
+          "occurrences": 4
+        },
+        {
+          "id": "delete-project",
+          "occurrences": 4
+        },
+        {
+          "id": "active-conversations",
+          "occurrences": 8
+        },
+        {
+          "id": "archived-conversations",
+          "occurrences": 0
+        },
+        {
+          "id": "select-environment",
+          "occurrences": 0
+        },
+        {
+          "id": "tray-open-prefix",
+          "occurrences": 1
+        }
+      ],
+      "file": "antigravity2-cn/localization_engine.js",
+      "locale": "zh-Hant-TW",
+      "maps": [
+        {
+          "classification": "inline-map",
+          "keys": 64
+        },
+        {
+          "classification": "menu",
+          "keys": 52
+        },
+        {
+          "classification": "tray",
+          "keys": 3
+        }
+      ],
+      "project": "antigravity2-cn",
+      "sha256": "e5993b84f755b426145727b56365cd0f6667db420bd1faff959a240ae0805815"
+    },
+    {
+      "dynamicRules": [
+        {
+          "id": "greeting",
+          "occurrences": 1
+        },
+        {
+          "id": "delete-project",
+          "occurrences": 2
+        },
+        {
+          "id": "active-conversations",
+          "occurrences": 2
+        },
+        {
+          "id": "archived-conversations",
+          "occurrences": 2
+        },
+        {
+          "id": "select-environment",
+          "occurrences": 3
+        },
+        {
+          "id": "tray-open-prefix",
+          "occurrences": 0
+        }
+      ],
+      "file": "antigravity2.0-zh-tw/localization_engine.js",
+      "locale": "zh-Hant-TW",
+      "maps": [
+        {
+          "classification": "menu",
+          "keys": 40
+        },
+        {
+          "classification": "tray",
+          "keys": 3
+        }
+      ],
+      "project": "antigravity2.0-zh-tw",
+      "sha256": "7eaba215522cb41c16dd9ed8b3cab759e51b7cd512d5a7e9e913ca85cfe577c3"
+    },
+    {
+      "dynamicRules": [
+        {
+          "id": "greeting",
+          "occurrences": 0
+        },
+        {
+          "id": "delete-project",
+          "occurrences": 2
+        },
+        {
+          "id": "active-conversations",
+          "occurrences": 2
+        },
+        {
+          "id": "archived-conversations",
+          "occurrences": 2
+        },
+        {
+          "id": "select-environment",
+          "occurrences": 0
+        },
+        {
+          "id": "tray-open-prefix",
+          "occurrences": 0
+        }
+      ],
+      "file": "antigravity2.0-ja-jp/localization_engine.js",
+      "locale": "ja-JP",
+      "maps": [
+        {
+          "classification": "menu",
+          "keys": 40
+        },
+        {
+          "classification": "tray",
+          "keys": 3
+        }
+      ],
+      "project": "antigravity2.0-ja-jp",
+      "sha256": "d9a79aa74097d162122a2bdde9cc0a4412fcd833c1d9f18ec15ca5a70b76d65d"
+    }
+  ],
+  "jsonSources": [
+    {
+      "commit": "e412cba67f813b1c77c217b41fd553a755553ce3",
+      "crossFileConflictingKeys": 27,
+      "directory": "dicts",
+      "files": 12,
+      "locale": "zh-Hans-CN",
+      "manifestSha256": "b33c1c895f0e608afa9a463e005a82223107b634b02c4931efa6c300453b044a",
+      "parsedEntries": 4442,
+      "physicalPairs": 4444,
+      "project": "antigravity2-cn",
+      "role": "primary",
+      "uniqueKeys": 4338,
+      "withinFileDuplicateKeys": 2
+    },
+    {
+      "commit": "e412cba67f813b1c77c217b41fd553a755553ce3",
+      "crossFileConflictingKeys": 37,
+      "directory": "dicts_tw",
+      "files": 12,
+      "locale": "zh-Hant-TW",
+      "manifestSha256": "3744d742ab89aba6d61235ae4ca05f12857a8279c24eda1d31aa662d494358a3",
+      "parsedEntries": 4442,
+      "physicalPairs": 4442,
+      "project": "antigravity2-cn",
+      "role": "supplement",
+      "uniqueKeys": 4338,
+      "withinFileDuplicateKeys": 0
+    },
+    {
+      "commit": "d33f9c81294050019d8d056904fb336bb7e536c8",
+      "crossFileConflictingKeys": 1,
+      "directory": "dicts",
+      "files": 6,
+      "locale": "zh-Hant-TW",
+      "manifestSha256": "8d93e319b947c0a9a0b6487d95be1eae8f1aab9aad6cc293c37db342a0930284",
+      "parsedEntries": 1058,
+      "physicalPairs": 1058,
+      "project": "antigravity2.0-zh-tw",
+      "role": "primary",
+      "uniqueKeys": 1050,
+      "withinFileDuplicateKeys": 0
+    },
+    {
+      "commit": "43b80071268e0ce405f02938d3e82bfdb340601d",
+      "crossFileConflictingKeys": 2,
+      "directory": "dicts",
+      "files": 6,
+      "locale": "ja-JP",
+      "manifestSha256": "9eb2ed287a512c6e9d177837152eaa742de2f0a766335ebbef4bd38342cf851f",
+      "parsedEntries": 814,
+      "physicalPairs": 814,
+      "project": "antigravity2.0-ja-jp",
+      "role": "primary",
+      "uniqueKeys": 806,
+      "withinFileDuplicateKeys": 0
+    }
+  ],
+  "license": "MIT",
+  "schemaVersion": 1,
+  "union": {
+    "combinedTw": {
+      "keys": 4429,
+      "missingFromUnion": [
+        " when working in this project."
+      ]
+    },
+    "keys": 4430,
+    "perLocale": {
+      "ja-JP": {
+        "missing": 3624,
+        "present": 806
+      },
+      "zh-Hans-CN": {
+        "missing": 92,
+        "present": 4338
+      },
+      "zh-Hant-TW": {
+        "missing": 1,
+        "present": 4429
+      }
+    },
+    "twMerge": {
+      "cnSupplementOnly": 3379,
+      "commonKeys": 959,
+      "conflictingValues": 487,
+      "independentOnly": 91
+    }
+  }
+}

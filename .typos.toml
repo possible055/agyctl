@@ -1,0 +1,33 @@
+[default]
+# Windows tasklist filter flags in process probes; spelled /FO, /NH, /FI.
+extend-ignore-re = [
+  "'/FO'",
+  '"/FO"',
+  "'/NH'",
+  '"/NH"',
+  "'/FI'",
+  '"/FI"',
+  # Upstream content-hash message IDs (e.g. hub.ui.<hex>, web.dynamic.<hex>,
+  # static.gap.<hex>, workbench.nls.transparecyRequired.<hex>): dotted
+  # identifiers that end in a hex hash. Keys must match upstream bytes
+  # including upstream typos, and the hex suffix is not prose.
+  '([a-zA-Z0-9]+\.)+[0-9a-f]{12,}',
+]
+
+[default.extend-words]
+# Upstream bytes quoted verbatim: the upstream message key really is spelled
+# "transparecyRequired", and minified identifiers (Ba, ba.push, classNam)
+# appear inside recorded AST annotations and data-testid reasons.
+transparecy = "transparecy"
+Ba = "Ba"
+ba = "ba"
+Nam = "Nam"
+
+[type.go.extend-words]
+# ELF relocation records with explicit addends: SHT_RELA and .rela.dyn.
+rela = "rela"
+
+[files]
+# Imported upstream localization snapshots: keys and values must match upstream
+# bytes, including upstream typos and truncated keys. Authored catalogs stay checked.
+extend-exclude = ["src/localization/catalogs/vendor/"]

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "useUnknownInCatchVariables": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2023",
+    "types": ["node"],
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/plugin/sidecars/panel/telemetry.mjs",
+    "src/plugin/sidecars/panel/usage.mjs",
+    "src/plugin/sidecars/panel/settings.mjs",
+    "src/plugin/sidecars/panel/limit-diagnostics.mjs",
+    "src/plugin/sidecars/panel/pricing.mjs",
+    "src/plugin/sidecars/panel/contracts.d.ts",
+    "src/capsule/host-feature.ts",
+    "src/capsule/served-bundle.ts",
+    "src/capsule/preload-hook.ts"
+  ]
+}

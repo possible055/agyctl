@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </defs>
+  <!-- Background Rounded Rect -->
+  <rect width="48" height="48" rx="12" fill="#18181b" />
+  <!-- Outer Scanning Ring -->
+  <circle cx="24" cy="24" r="17" fill="none" stroke="url(#grad1)" stroke-width="2.5" stroke-dasharray="80 30" stroke-linecap="round" />
+  <!-- Inner Speed Ring -->
+  <circle cx="24" cy="24" r="11" fill="none" stroke="url(#grad2)" stroke-width="2.5" stroke-dasharray="45 25" stroke-linecap="round" transform="rotate(-45 24 24)" />
+  <!-- Center Ray Spark -->
+  <path d="M24 16 L25.5 22.5 L32 24 L25.5 25.5 L24 32 L22.5 25.5 L16 24 L22.5 22.5 Z" fill="#f8fafc" />
+</svg>

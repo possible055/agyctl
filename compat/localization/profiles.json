@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "note": "Historical source identities are evidence, not a version allowlist. Structurally unique reviewed adapter contracts qualify unknown builds with warnings; current transaction hashes remain mandatory. Profiles remain probe-only until real-client acceptance.",
+  "profiles": [
+    {
+      "profileId": "hub-win-x64-2.29.0-290e1b7a",
+      "status": "probe-only",
+      "product": "hub",
+      "channel": "stable",
+      "platform": "win32-x64",
+      "version": "2.29.0",
+      "electron": "44.5.1",
+      "adapterVersion": "2",
+      "installerSha256": "944b109bcb377f9f94f86eeea7cfa9315d4b42d84fb9d5bad689058fc11c12ba",
+      "exeSha256": "946aa7ebe4c3a82069423cebf849b1e8fc0b3fb7a58a5a2cc264f44c46a422e0",
+      "asarSha256": "290e1b7a1caa430a0c5367c7b433e8d284e2ca5d0b305e91e5ce8ec926f43283",
+      "lsSha256": "c98e7c331da5bcc37002a550e7d625b4c636f775fa2804f73777c6a500e1c3d5",
+      "nlsHelper": {
+        "calleeName": "Fu"
+      },
+      "assets": {
+        "index.html": {
+          "sha256": "118dcfc4e881a41715f2f363ced8ae9afa6b4d7c1acf312da194cb6fab50f768",
+          "size": 3798
+        },
+        "main.js": {
+          "sha256": "8d1196a22cd3eb9779e8faf5c31eb732d3df8d9d037b685733ed4e3d6cdfb5a2",
+          "size": 11187917
+        }
+      },
+      "hostAdapter": {
+        "file": "dist/utils.js",
+        "sha256": "277c626bedc704f12927eee26836350078835eb43ae1847cdc346b0be21b2d9d",
+        "anchor": "win.loadURL = (targetUrl, options) => hubWcv.webContents.loadURL(targetUrl, options);"
+      },
+      "limits": {
+        "maxEntryBytes": 26214400,
+        "maxEntries": 4096,
+        "maxTotalBytes": 536870912
+      },
+      "nativeAdapterVersion": "2"
+    },
+    {
+      "profileId": "hub-win-x64-2.29.1-a6bfd456",
+      "status": "probe-only",
+      "product": "hub",
+      "channel": "stable",
+      "platform": "win32-x64",
+      "version": "2.29.1",
+      "electron": "44.5.1",
+      "adapterVersion": "2",
+      "installerSha256": "a842b73218cb35e029e8425a28c79a388280e03d389c50fd93ff75af1a7f50bb",
+      "exeSha256": "b236e5fbcbfcd67a99d2969a8858ab9708d27a52b86ef5ad282e46825f4a7a03",
+      "asarSha256": "a6bfd4567c2560495860e895c8894106ed40782e4a31e459713fec1cc2a0d02b",
+      "lsSha256": "dd122c1937d353f44920f306d36dee5542e036f8a9d4771373d6b2fc5d500dbb",
+      "nlsHelper": {
+        "calleeName": "Fu"
+      },
+      "assets": {
+        "index.html": {
+          "sha256": "118dcfc4e881a41715f2f363ced8ae9afa6b4d7c1acf312da194cb6fab50f768",
+          "size": 3798
+        },
+        "main.js": {
+          "sha256": "eec7297695f3b4f25d4e92f5f9d0bc4efeec86523cddcddddefc3410c5efe37a",
+          "size": 11188738
+        }
+      },
+      "hostAdapter": {
+        "file": "dist/utils.js",
+        "sha256": "277c626bedc704f12927eee26836350078835eb43ae1847cdc346b0be21b2d9d",
+        "anchor": "win.loadURL = (targetUrl, options) => hubWcv.webContents.loadURL(targetUrl, options);"
+      },
+      "limits": {
+        "maxEntryBytes": 26214400,
+        "maxEntries": 4096,
+        "maxTotalBytes": 536870912
+      },
+      "nativeAdapterVersion": "2"
+    },
+    {
+      "profileId": "hub-darwin-arm64-2.29.1-a6bfd456",
+      "status": "probe-only",
+      "product": "hub",
+      "channel": "stable",
+      "platform": "darwin-arm64",
+      "version": "2.29.1",
+      "electron": "44.5.1",
+      "adapterVersion": "2",
+      "installerSha256": "250f213a0f0fcd2bbb3c283739cf6a9a36cae4f024b47df4874d67ebc023ed60",
+      "exeSha256": "7517e69d8261a9657abfd610f1bbcc04628d1cb59d03caf6037943eae6e27040",
+      "asarSha256": "a6bfd4567c2560495860e895c8894106ed40782e4a31e459713fec1cc2a0d02b",
+      "lsSha256": "4fc02a11d38ec400543ea47d00bb1d4922de26476758e1ab5c116defc3a2d206",
+      "nlsHelper": {
+        "calleeName": "Fu"
+      },
+      "assets": {
+        "index.html": {
+          "sha256": "118dcfc4e881a41715f2f363ced8ae9afa6b4d7c1acf312da194cb6fab50f768",
+          "size": 3798
+        },
+        "main.js": {
+          "sha256": "eec7297695f3b4f25d4e92f5f9d0bc4efeec86523cddcddddefc3410c5efe37a",
+          "size": 11188738
+        }
+      },
+      "hostAdapter": {
+        "file": "dist/utils.js",
+        "sha256": "277c626bedc704f12927eee26836350078835eb43ae1847cdc346b0be21b2d9d",
+        "anchor": "win.loadURL = (targetUrl, options) => hubWcv.webContents.loadURL(targetUrl, options);"
+      },
+      "limits": {
+        "maxEntryBytes": 26214400,
+        "maxEntries": 4096,
+        "maxTotalBytes": 536870912
+      },
+      "nativeAdapterVersion": "2"
+    },
+    {
+      "profileId": "hub-linux-x64-2.29.1-a6bfd456",
+      "status": "probe-only",
+      "product": "hub",
+      "channel": "stable",
+      "platform": "linux-x64",
+      "version": "2.29.1",
+      "electron": "44.5.1",
+      "adapterVersion": "2",
+      "installerSha256": "4678604251391feab8ab77e6e5a523e350be689810f338c74d5edce690e43fa3",
+      "exeSha256": "9155dd17c16f0edeaadb74db4fd91e2730511cca83e8b130d59bab57aa4d4e4b",
+      "asarSha256": "a6bfd4567c2560495860e895c8894106ed40782e4a31e459713fec1cc2a0d02b",
+      "lsSha256": "c666de77661e557a893ca7a30d9f4b280857b1870d357b07b9fb761730edfc26",
+      "nlsHelper": {
+        "calleeName": "Fu"
+      },
+      "assets": {
+        "index.html": {
+          "sha256": "118dcfc4e881a41715f2f363ced8ae9afa6b4d7c1acf312da194cb6fab50f768",
+          "size": 3798
+        },
+        "main.js": {
+          "sha256": "eec7297695f3b4f25d4e92f5f9d0bc4efeec86523cddcddddefc3410c5efe37a",
+          "size": 11188738
+        }
+      },
+      "hostAdapter": {
+        "file": "dist/utils.js",
+        "sha256": "277c626bedc704f12927eee26836350078835eb43ae1847cdc346b0be21b2d9d",
+        "anchor": "win.loadURL = (targetUrl, options) => hubWcv.webContents.loadURL(targetUrl, options);"
+      },
+      "limits": {
+        "maxEntryBytes": 26214400,
+        "maxEntries": 4096,
+        "maxTotalBytes": 536870912
+      },
+      "nativeAdapterVersion": "2"
+    }
+  ]
+}

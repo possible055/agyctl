@@ -1,0 +1,1584 @@
+{
+  "schemaVersion": 1,
+  "license": "MIT",
+  "review": "Context-reviewed native presentation strings; translations require product UI acceptance. Native edit evidence is generated against the transaction original, not a historical digest.",
+  "messages": [
+    {
+      "id": "common.cancel",
+      "original": "Cancel",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "buttons: ['Cancel', 'Quit']"
+        },
+        {
+          "file": "dist/webauthn.js",
+          "anchor": "buttons: [...accountLabels, 'Cancel']"
+        },
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "buttons: [...snapshot.map(({ label }) => label), 'Cancel']"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "取消",
+        "zh-Hans-CN": "取消",
+        "ja-JP": "キャンセル"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "common.ok",
+      "original": "OK",
+      "contexts": [
+        {
+          "file": "dist/updater.js",
+          "anchor": "buttons: ['OK']"
+        },
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "buttons: ['OK']"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "確定",
+        "zh-Hans-CN": "确定",
+        "ja-JP": "OK"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "device.connectTitle",
+      "original": "Connect a device",
+      "contexts": [
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "title: 'Connect a device'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連接裝置",
+        "zh-Hans-CN": "连接设备",
+        "ja-JP": "デバイスを接続"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "device.hidRequest",
+      "original": "{0} wants to connect to a HID device",
+      "contexts": [
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "message: `${origin} wants to connect to a ${KIND_NOUNS[kind]}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 想要連接 HID 裝置",
+        "zh-Hans-CN": "{0} 想要连接 HID 设备",
+        "ja-JP": "{0} が HID デバイスへの接続を求めています"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "device.noneFound",
+      "original": "No compatible devices found.",
+      "contexts": [
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "'No compatible devices found.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "找不到相容的裝置。",
+        "zh-Hans-CN": "找不到兼容的设备。",
+        "ja-JP": "対応するデバイスが見つかりません。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "device.select",
+      "original": "Select a device:",
+      "contexts": [
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "'Select a device:'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "選取裝置：",
+        "zh-Hans-CN": "选择设备：",
+        "ja-JP": "デバイスを選択してください："
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "device.serialRequest",
+      "original": "{0} wants to connect to a serial port",
+      "contexts": [
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "message: `${origin} wants to connect to a ${KIND_NOUNS[kind]}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 想要連接序列埠",
+        "zh-Hans-CN": "{0} 想要连接串口",
+        "ja-JP": "{0} がシリアルポートへの接続を求めています"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "device.unknown",
+      "original": "Unknown device",
+      "contexts": [
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "d.name?.trim() || 'Unknown device'"
+        },
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "d.productName ?? 'Unknown device'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "未知裝置",
+        "zh-Hans-CN": "未知设备",
+        "ja-JP": "不明なデバイス"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "device.usbRequest",
+      "original": "{0} wants to connect to a USB device",
+      "contexts": [
+        {
+          "file": "dist/deviceChooser.js",
+          "anchor": "message: `${origin} wants to connect to a ${KIND_NOUNS[kind]}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 想要連接 USB 裝置",
+        "zh-Hans-CN": "{0} 想要连接 USB 设备",
+        "ja-JP": "{0} が USB デバイスへの接続を求めています"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.close",
+      "original": "Close Window",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "關閉視窗",
+        "zh-Hans-CN": "关闭窗口",
+        "ja-JP": "ウィンドウを閉じる"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.copy",
+      "original": "Copy",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        },
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "{ role: 'copy', enabled:"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "複製",
+        "zh-Hans-CN": "复制",
+        "ja-JP": "コピー"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.cut",
+      "original": "Cut",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        },
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "{ role: 'cut', enabled:"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "剪下",
+        "zh-Hans-CN": "剪切",
+        "ja-JP": "切り取り"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.delete",
+      "original": "Delete",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "刪除",
+        "zh-Hans-CN": "删除",
+        "ja-JP": "削除"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.edit",
+      "original": "Edit",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "編輯",
+        "zh-Hans-CN": "编辑",
+        "ja-JP": "編集"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.file",
+      "original": "File",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "檔案",
+        "zh-Hans-CN": "文件",
+        "ja-JP": "ファイル"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.forceReload",
+      "original": "Force Reload",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "強制重新載入",
+        "zh-Hans-CN": "强制重新加载",
+        "ja-JP": "強制再読み込み"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.help",
+      "original": "Help",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "說明",
+        "zh-Hans-CN": "帮助",
+        "ja-JP": "ヘルプ"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.minimize",
+      "original": "Minimize",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "最小化",
+        "zh-Hans-CN": "最小化",
+        "ja-JP": "最小化"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.paste",
+      "original": "Paste",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        },
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "{ role: 'paste', enabled:"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "貼上",
+        "zh-Hans-CN": "粘贴",
+        "ja-JP": "貼り付け"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.pasteAndMatchStyle",
+      "original": "Paste and Match Style",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "貼上並符合樣式",
+        "zh-Hans-CN": "粘贴并匹配样式",
+        "ja-JP": "スタイルを合わせて貼り付け"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.redo",
+      "original": "Redo",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "重做",
+        "zh-Hans-CN": "重做",
+        "ja-JP": "やり直す"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.reload",
+      "original": "Reload",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "重新載入",
+        "zh-Hans-CN": "重新加载",
+        "ja-JP": "再読み込み"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.resetZoom",
+      "original": "Actual Size",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "實際大小",
+        "zh-Hans-CN": "实际大小",
+        "ja-JP": "実際のサイズ"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.selectAll",
+      "original": "Select All",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        },
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "{ role: 'selectAll', enabled:"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "全選",
+        "zh-Hans-CN": "全选",
+        "ja-JP": "すべて選択"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.toggleDevTools",
+      "original": "Toggle Developer Tools",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "切換開發人員工具",
+        "zh-Hans-CN": "切换开发者工具",
+        "ja-JP": "デベロッパーツールを切り替え"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.toggleFullscreen",
+      "original": "Toggle Full Screen",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "切換全螢幕",
+        "zh-Hans-CN": "切换全屏",
+        "ja-JP": "全画面表示を切り替え"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.undo",
+      "original": "Undo",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "復原",
+        "zh-Hans-CN": "撤销",
+        "ja-JP": "元に戻す"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.view",
+      "original": "View",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "檢視",
+        "zh-Hans-CN": "视图",
+        "ja-JP": "表示"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.window",
+      "original": "Window",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "視窗",
+        "zh-Hans-CN": "窗口",
+        "ja-JP": "ウィンドウ"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.zoomIn",
+      "original": "Zoom In",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "放大",
+        "zh-Hans-CN": "放大",
+        "ja-JP": "拡大"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "menu.zoomOut",
+      "original": "Zoom Out",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "縮小",
+        "zh-Hans-CN": "缩小",
+        "ja-JP": "縮小"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "nav.docs",
+      "original": "Docs",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "label: 'Docs'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "說明文件",
+        "zh-Hans-CN": "文档",
+        "ja-JP": "ドキュメント"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "nav.newWindow",
+      "original": "New Window",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "label: 'New Window'"
+        },
+        {
+          "file": "dist/menu.js",
+          "anchor": "label: 'New Window'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "新增視窗",
+        "zh-Hans-CN": "新建窗口",
+        "ja-JP": "新しいウィンドウ"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "passkey.choose",
+      "original": "Choose a Passkey",
+      "contexts": [
+        {
+          "file": "dist/webauthn.js",
+          "anchor": "title: 'Choose a Passkey'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "選擇通行金鑰",
+        "zh-Hans-CN": "选择通行密钥",
+        "ja-JP": "パスキーを選択"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "passkey.selectAccount",
+      "original": "Select a passkey account to continue:",
+      "contexts": [
+        {
+          "file": "dist/webauthn.js",
+          "anchor": "detail: 'Select a passkey account to continue:'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "選取通行金鑰帳戶以繼續：",
+        "zh-Hans-CN": "选择通行密钥账户以继续：",
+        "ja-JP": "続行するパスキーのアカウントを選択してください："
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "passkey.signIn",
+      "original": "Sign in to {0}",
+      "contexts": [
+        {
+          "file": "dist/webauthn.js",
+          "anchor": "message: `Sign in to ${rpLabel}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "登入 {0}",
+        "zh-Hans-CN": "登录 {0}",
+        "ja-JP": "{0} にログイン"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.certificateDetails",
+      "original": "Certificate details",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Certificate details'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "憑證詳細資料",
+        "zh-Hans-CN": "证书详情",
+        "ja-JP": "証明書の詳細"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.connectionInfoMenu",
+      "original": "Connection info…",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Connection info…'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連線資訊…",
+        "zh-Hans-CN": "连接信息…",
+        "ja-JP": "接続情報…"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.connectionInfoTitle",
+      "original": "Connection info",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Connection info'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連線資訊",
+        "zh-Hans-CN": "连接信息",
+        "ja-JP": "接続情報"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.dangerous",
+      "original": "⚠ Not secure",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'⚠ Not secure'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "⚠ 不安全",
+        "zh-Hans-CN": "⚠ 不安全",
+        "ja-JP": "⚠ 保護されていません"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.error",
+      "original": "Error: {0}",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "`Error: ${state.certificateError}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "錯誤：{0}",
+        "zh-Hans-CN": "错误：{0}",
+        "ja-JP": "エラー：{0}"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.insecureDetail",
+      "original": "You should not enter any sensitive information on this site (for example, passwords or credit cards), because it could be stolen by attackers.",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'You should not enter any sensitive information on this site (for ' +\n        'example, passwords or credit cards), because it could be stolen by ' +\n        'attackers.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "請勿在此網站輸入任何機密資訊（例如密碼或信用卡資料），以免遭攻擊者竊取。",
+        "zh-Hans-CN": "请勿在此网站输入任何敏感信息（例如密码或信用卡信息），以免被攻击者窃取。",
+        "ja-JP": "このサイトでは、パスワードやクレジットカード情報などの機密情報を入力しないでください。攻撃者に盗まれるおそれがあります。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.insecureTitle",
+      "original": "Your connection to this site is not secure",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Your connection to this site is not secure'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "您與此網站的連線不安全",
+        "zh-Hans-CN": "您与此网站的连接不安全",
+        "ja-JP": "このサイトへの接続は保護されていません"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.issuedBy",
+      "original": "Issued by: {0}",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "`Issued by: ${certificate.issuer}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "核發者：{0}",
+        "zh-Hans-CN": "颁发者：{0}",
+        "ja-JP": "発行者：{0}"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.issuedTo",
+      "original": "Issued to: {0}",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "`Issued to: ${certificate.subjectName}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "核發給：{0}",
+        "zh-Hans-CN": "颁发给：{0}",
+        "ja-JP": "発行先：{0}"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.notSecure",
+      "original": "Not secure",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Not secure'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "不安全",
+        "zh-Hans-CN": "不安全",
+        "ja-JP": "保護されていません"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.protocol",
+      "original": "Protocol: {0}",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "`Protocol: ${certificate.protocol}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "通訊協定：{0}",
+        "zh-Hans-CN": "协议：{0}",
+        "ja-JP": "プロトコル：{0}"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.secureDetail",
+      "original": "Your information (for example, passwords or credit card numbers) is private when it is sent to this site.",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Your information (for example, passwords or credit card numbers) is ' +\n            'private when it is sent to this site.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "傳送至此網站的資訊（例如密碼或信用卡號碼）會受到保護。",
+        "zh-Hans-CN": "发送到此网站的信息（例如密码或信用卡号码）会受到保护。",
+        "ja-JP": "このサイトに送信するパスワードやクレジットカード番号などの情報は保護されます。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.secureTitle",
+      "original": "Connection is secure",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Connection is secure'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連線安全",
+        "zh-Hans-CN": "连接安全",
+        "ja-JP": "接続は保護されています"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.thisPage",
+      "original": "This page",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'This page'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "此頁面",
+        "zh-Hans-CN": "此页面",
+        "ja-JP": "このページ"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.unavailable",
+      "original": "Connection security information is not available for this page",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Connection security information is not available for this page'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法取得此頁面的連線安全資訊",
+        "zh-Hans-CN": "无法获取此页面的连接安全信息",
+        "ja-JP": "このページの接続のセキュリティ情報を取得できません"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.unknownDate",
+      "original": "unknown",
+      "translations": {
+        "zh-Hant-TW": "不明",
+        "zh-Hans-CN": "未知",
+        "ja-JP": "不明"
+      },
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "new Date(ms).toLocaleString() : 'unknown'"
+        }
+      ],
+      "escapeContext": "Electron presentation string, not HTML. Certificate dates use the selected native locale."
+    },
+    {
+      "id": "security.validCertificate",
+      "original": "Certificate is valid",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "'Certificate is valid'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "憑證有效",
+        "zh-Hans-CN": "证书有效",
+        "ja-JP": "証明書は有効です"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.validFrom",
+      "original": "Valid from: {0}",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "`Valid from: ${formatDate(certificate.validFromMs)}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "有效起始日期：{0}",
+        "zh-Hans-CN": "生效日期：{0}",
+        "ja-JP": "有効期間の開始：{0}"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "security.validUntil",
+      "original": "Valid until: {0}",
+      "contexts": [
+        {
+          "file": "dist/webviewPopupSecurity.js",
+          "anchor": "`Valid until: ${formatDate(certificate.validToMs)}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "有效截止日期：{0}",
+        "zh-Hans-CN": "到期日期：{0}",
+        "ja-JP": "有効期間の終了：{0}"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "session.quit",
+      "original": "Quit",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "label: 'Quit'"
+        },
+        {
+          "file": "dist/main.js",
+          "anchor": "buttons: ['Cancel', 'Quit']"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "結束",
+        "zh-Hans-CN": "退出",
+        "ja-JP": "終了"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "session.quitConfirmDetail",
+      "original": "There may be agents or background tasks running.",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "detail: 'There may be agents or background tasks running.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "可能仍有代理或背景工作正在執行。",
+        "zh-Hans-CN": "可能仍有代理或后台任务正在运行。",
+        "ja-JP": "エージェントやバックグラウンドタスクが実行中の可能性があります。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "session.quitConfirmMessage",
+      "original": "Are you sure you want to quit?",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "message: 'Are you sure you want to quit?'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "確定要結束嗎？",
+        "zh-Hans-CN": "确定要退出吗？",
+        "ja-JP": "終了してもよろしいですか？"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "session.quitConfirmTitle",
+      "original": "Confirm Quit",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "title: 'Confirm Quit'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "確認結束",
+        "zh-Hans-CN": "确认退出",
+        "ja-JP": "終了の確認"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "startup.binaryMissingMessage",
+      "original": "language_server binary not found at:\n{0}\n\nPlease build set a valid location.",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "`language_server binary not found at:\\n${languageServer_1.LS_BINARY}\\n\\nPlease build set a valid location.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "在以下位置找不到 language_server 執行檔：\n{0}\n\n請先建置，或設定有效的位置。",
+        "zh-Hans-CN": "在以下位置找不到 language_server 可执行文件：\n{0}\n\n请先构建，或设置有效的位置。",
+        "ja-JP": "次の場所に language_server 実行ファイルが見つかりません：\n{0}\n\nビルドするか、有効な場所を設定してください。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "startup.binaryMissingTitle",
+      "original": "Binary not found",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "showErrorBox('Binary not found', msg)"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "找不到執行檔",
+        "zh-Hans-CN": "找不到可执行文件",
+        "ja-JP": "実行ファイルが見つかりません"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "startup.failedTitle",
+      "original": "Startup failed",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "showErrorBox('Startup failed', msg)"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "啟動失敗",
+        "zh-Hans-CN": "启动失败",
+        "ja-JP": "起動に失敗しました"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "startup.openedLocally",
+      "original": "Antigravity opened on Windows instead.",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "detail: 'Antigravity opened on Windows instead.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "已改在 Windows 上開啟 Antigravity。",
+        "zh-Hans-CN": "已改在 Windows 上打开 Antigravity。",
+        "ja-JP": "代わりに Windows 上で Antigravity を開きました。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "startup.wslFailedMessage",
+      "original": "Failed to install the server into WSL distro \"{0}\":\n{1}",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "`Failed to install the server into WSL distro \"${WSL_DISTRO}\":\\n${err.message}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法將伺服器安裝至 WSL 發行版「{0}」：\n{1}",
+        "zh-Hans-CN": "无法将服务器安装到 WSL 发行版“{0}”：\n{1}",
+        "ja-JP": "WSL ディストリビューション「{0}」にサーバーをインストールできませんでした：\n{1}"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "startup.wslFailedTitle",
+      "original": "WSL setup failed",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "showErrorBox('WSL setup failed', msg)"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "WSL 設定失敗",
+        "zh-Hans-CN": "WSL 设置失败",
+        "ja-JP": "WSL のセットアップに失敗しました"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "startup.wslMissingMessage",
+      "original": "The WSL distro \"{0}\" is no longer installed.",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "message: `The WSL distro \"${WSL_DISTRO}\" is no longer installed.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "WSL 發行版「{0}」已不再安裝於此電腦。",
+        "zh-Hans-CN": "WSL 发行版“{0}”已不再安装于此电脑。",
+        "ja-JP": "WSL ディストリビューション「{0}」はインストールされていません。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "startup.wslMissingTitle",
+      "original": "WSL distro not found",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "title: 'WSL distro not found'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "找不到 WSL 發行版",
+        "zh-Hans-CN": "找不到 WSL 发行版",
+        "ja-JP": "WSL ディストリビューションが見つかりません"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "tray.agentsRunning",
+      "format": "icu",
+      "original": "{0, plural, =0 {No agents running} one {# agent running} other {# agents running}}",
+      "translations": {
+        "zh-Hant-TW": "{0, plural, =0 {沒有執行中的代理} other {# 個代理執行中}}",
+        "zh-Hans-CN": "{0, plural, =0 {没有运行中的代理} other {# 个代理运行中}}",
+        "ja-JP": "{0, plural, =0 {実行中のエージェントはありません} other {# 件のエージェントが実行中}}"
+      },
+      "contexts": [
+        {
+          "file": "dist/tray.js",
+          "anchor": "updateTrayAgentCount(count)"
+        },
+        {
+          "file": "dist/tray.js",
+          "anchor": "updateTrayAgentCount(count)"
+        },
+        {
+          "file": "dist/tray.js",
+          "anchor": "updateTrayAgentCount(count)"
+        }
+      ],
+      "escapeContext": "Electron label; precompiled ICU plural formatting; numeric count evaluated once."
+    },
+    {
+      "id": "tray.openApplication",
+      "original": "Open {0}",
+      "contexts": [
+        {
+          "file": "dist/main.js",
+          "anchor": "label: `Open ${electron_1.app.getName()}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "開啟 {0}",
+        "zh-Hans-CN": "打开 {0}",
+        "ja-JP": "{0} を開く"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "update.checkForUpdates",
+      "original": "Check for Updates",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "label: updater_1.MenuUpdateStep.CheckForUpdates"
+        },
+        {
+          "file": "dist/updater.js",
+          "anchor": "item.label = step;"
+        },
+        {
+          "file": "dist/updater.js",
+          "anchor": "title: 'Check for Updates'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "檢查更新",
+        "zh-Hans-CN": "检查更新",
+        "ja-JP": "アップデートを確認"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "update.checking",
+      "original": "Checking for Updates...",
+      "contexts": [
+        {
+          "file": "dist/updater.js",
+          "anchor": "item.label = step;"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在檢查更新…",
+        "zh-Hans-CN": "正在检查更新…",
+        "ja-JP": "アップデートを確認中…"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "update.downloading",
+      "original": "Downloading Update...",
+      "contexts": [
+        {
+          "file": "dist/updater.js",
+          "anchor": "item.label = step;"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在下載更新…",
+        "zh-Hans-CN": "正在下载更新…",
+        "ja-JP": "アップデートをダウンロード中…"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "update.noUpdates",
+      "original": "No updates available",
+      "contexts": [
+        {
+          "file": "dist/updater.js",
+          "anchor": "message: 'No updates available'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "目前沒有可用的更新",
+        "zh-Hans-CN": "目前没有可用的更新",
+        "ja-JP": "利用可能なアップデートはありません"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "update.restart",
+      "original": "Restart to Update",
+      "contexts": [
+        {
+          "file": "dist/updater.js",
+          "anchor": "item.label = step;"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "重新啟動以更新",
+        "zh-Hans-CN": "重启以更新",
+        "ja-JP": "再起動して更新"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wizard.appIcon",
+      "original": "Antigravity Icon",
+      "contexts": [
+        {
+          "file": "dist/ideInstall/wizardHtml.js",
+          "anchor": "alt=\"Antigravity Icon\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "Antigravity 圖示",
+        "zh-Hans-CN": "Antigravity 图标",
+        "ja-JP": "Antigravity のアイコン"
+      },
+      "escapeContext": "HTML text or double-quoted attribute; escape &, <, > and double quote before template interpolation; preserve existing handlers and bold element"
+    },
+    {
+      "id": "wizard.downloadIde",
+      "original": "Download the Antigravity IDE",
+      "contexts": [
+        {
+          "file": "dist/ideInstall/wizardHtml.js",
+          "anchor": "<span>Download the Antigravity IDE</span>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "下載 Antigravity IDE",
+        "zh-Hans-CN": "下载 Antigravity IDE",
+        "ja-JP": "Antigravity IDE をダウンロード"
+      },
+      "escapeContext": "HTML text or double-quoted attribute; escape &, <, > and double quote before template interpolation; preserve existing handlers and bold element"
+    },
+    {
+      "id": "wizard.explanationAfterIde",
+      "original": ".",
+      "contexts": [
+        {
+          "file": "dist/ideInstall/wizardHtml.js",
+          "anchor": "<p>Antigravity has been redesigned to put agents first with new capabilities. If you'd still like a code editor, you can download it as a separate app named <b>Antigravity IDE</b>.</p>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "。",
+        "zh-Hans-CN": "。",
+        "ja-JP": " をダウンロードできます。"
+      },
+      "escapeContext": "HTML text or double-quoted attribute; escape &, <, > and double quote before template interpolation; preserve existing handlers and bold element"
+    },
+    {
+      "id": "wizard.explanationBeforeIde",
+      "original": "Antigravity has been redesigned to put agents first with new capabilities. If you'd still like a code editor, you can download it as a separate app named ",
+      "contexts": [
+        {
+          "file": "dist/ideInstall/wizardHtml.js",
+          "anchor": "<p>Antigravity has been redesigned to put agents first with new capabilities. If you'd still like a code editor, you can download it as a separate app named <b>Antigravity IDE</b>.</p>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "Antigravity 已重新設計，以代理為核心並加入新功能。如果您仍需要程式碼編輯器，可下載獨立應用程式 ",
+        "zh-Hans-CN": "Antigravity 已重新设计，以代理为核心并加入新功能。如果您仍需要代码编辑器，可下载独立应用 ",
+        "ja-JP": "Antigravity はエージェントを中心に新機能を備えた設計へと生まれ変わりました。コードエディターが必要な場合は、別アプリの "
+      },
+      "escapeContext": "HTML text or double-quoted attribute; escape &, <, > and double quote before template interpolation; preserve existing handlers and bold element"
+    },
+    {
+      "id": "wizard.explore",
+      "original": "Explore the new Antigravity",
+      "contexts": [
+        {
+          "file": "dist/ideInstall/wizardHtml.js",
+          "anchor": ">Explore the new Antigravity</button>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "探索全新的 Antigravity",
+        "zh-Hans-CN": "探索全新的 Antigravity",
+        "ja-JP": "新しい Antigravity を使ってみる"
+      },
+      "escapeContext": "HTML text or double-quoted attribute; escape &, <, > and double quote before template interpolation; preserve existing handlers and bold element"
+    },
+    {
+      "id": "wizard.settingUp",
+      "original": "Setting up…",
+      "contexts": [
+        {
+          "file": "dist/ideInstall/wizardHtml.js",
+          "anchor": ">Setting up…</div>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在設定…",
+        "zh-Hans-CN": "正在设置…",
+        "ja-JP": "セットアップ中…"
+      },
+      "escapeContext": "HTML text or double-quoted attribute; escape &, <, > and double quote before template interpolation; preserve existing handlers and bold element"
+    },
+    {
+      "id": "wizard.title",
+      "original": "Welcome to Antigravity",
+      "contexts": [
+        {
+          "file": "dist/ideInstall/wizardHtml.js",
+          "anchor": "<title>Welcome to Antigravity</title>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "歡迎使用 Antigravity",
+        "zh-Hans-CN": "欢迎使用 Antigravity",
+        "ja-JP": "Antigravity へようこそ"
+      },
+      "escapeContext": "HTML text or double-quoted attribute; escape &, <, > and double quote before template interpolation; preserve existing handlers and bold element"
+    },
+    {
+      "id": "wizard.welcome",
+      "original": "Welcome to the new Antigravity!",
+      "contexts": [
+        {
+          "file": "dist/ideInstall/wizardHtml.js",
+          "anchor": "<h1>Welcome to the new Antigravity!</h1>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "歡迎使用全新的 Antigravity！",
+        "zh-Hans-CN": "欢迎使用全新的 Antigravity！",
+        "ja-JP": "新しい Antigravity へようこそ！"
+      },
+      "escapeContext": "HTML text or double-quoted attribute; escape &, <, > and double quote before template interpolation; preserve existing handlers and bold element"
+    },
+    {
+      "id": "workspace.cannotOpenFolder",
+      "original": "Cannot open folder",
+      "contexts": [
+        {
+          "file": "dist/ipcHandlers.js",
+          "anchor": "showErrorBox('Cannot open folder', t.error)"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法開啟資料夾",
+        "zh-Hans-CN": "无法打开文件夹",
+        "ja-JP": "フォルダーを開けません"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "workspace.open",
+      "original": "Open workspace",
+      "contexts": [
+        {
+          "file": "dist/ipcHandlers.js",
+          "anchor": "title: 'Open workspace'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "開啟工作區",
+        "zh-Hans-CN": "打开工作区",
+        "ja-JP": "ワークスペースを開く"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "workspace.openMultiple",
+      "original": "Open workspaces",
+      "contexts": [
+        {
+          "file": "dist/ipcHandlers.js",
+          "anchor": "title: 'Open workspaces'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "開啟多個工作區",
+        "zh-Hans-CN": "打开多个工作区",
+        "ja-JP": "複数のワークスペースを開く"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "workspace.selectDownloadFolder",
+      "original": "Select Download Folder",
+      "contexts": [
+        {
+          "file": "dist/ipcHandlers.js",
+          "anchor": "title: 'Select Download Folder'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "選取下載資料夾",
+        "zh-Hans-CN": "选择下载文件夹",
+        "ja-JP": "ダウンロード先フォルダーを選択"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wsl.cannotOpenLocation",
+      "original": "This location cannot be opened in WSL: {0}",
+      "contexts": [
+        {
+          "file": "dist/wsl.js",
+          "anchor": "`This location cannot be opened in WSL: ${winPath}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法在 WSL 中開啟此位置：{0}",
+        "zh-Hans-CN": "无法在 WSL 中打开此位置：{0}",
+        "ja-JP": "WSL でこの場所を開けません：{0}"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wsl.connect",
+      "original": "Connect to WSL",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "label: 'Connect to WSL'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連線至 WSL",
+        "zh-Hans-CN": "连接到 WSL",
+        "ja-JP": "WSL に接続"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wsl.downloadingBinary",
+      "original": "Downloading the Antigravity binary…",
+      "contexts": [
+        {
+          "file": "dist/wsl.js",
+          "anchor": "'Downloading the Antigravity binary\\u2026'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在下載 Antigravity 執行檔…",
+        "zh-Hans-CN": "正在下载 Antigravity 可执行文件…",
+        "ja-JP": "Antigravity の実行ファイルをダウンロード中…"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wsl.installing",
+      "original": "Installing into {0}…",
+      "contexts": [
+        {
+          "file": "dist/wsl.js",
+          "anchor": "`Installing into ${distro}\\u2026`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在安裝至 {0}…",
+        "zh-Hans-CN": "正在安装到 {0}…",
+        "ja-JP": "{0} にインストール中…"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wsl.otherDistroFolder",
+      "original": "This folder belongs to the WSL distro \"{0}\", but this window is connected to \"{1}\".",
+      "contexts": [
+        {
+          "file": "dist/wsl.js",
+          "anchor": "`This folder belongs to the WSL distro \"${unc[1]}\", but this window is connected to \"${distro}\".`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "此資料夾屬於 WSL 發行版「{0}」，但此視窗連線至「{1}」。",
+        "zh-Hans-CN": "此文件夹属于 WSL 发行版“{0}”，但此窗口连接到“{1}”。",
+        "ja-JP": "このフォルダーは WSL ディストリビューション「{0}」に属していますが、このウィンドウは「{1}」に接続しています。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wsl.reopenLocally",
+      "original": "Reopen Locally",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "label: 'Reopen Locally'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "在本機重新開啟",
+        "zh-Hans-CN": "在本地重新打开",
+        "ja-JP": "ローカルで開き直す"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wsl.settingUp",
+      "original": "Setting up WSL: {0}",
+      "contexts": [
+        {
+          "file": "dist/provisionSplash.js",
+          "anchor": "<div>Setting up WSL: ${escapeHtml(distro)}</div>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在設定 WSL：{0}",
+        "zh-Hans-CN": "正在设置 WSL：{0}",
+        "ja-JP": "WSL をセットアップ中：{0}"
+      },
+      "escapeContext": "HTML text; format dynamic distro before escapeHtml; later status uses JSON.stringify then textContent"
+    },
+    {
+      "id": "wsl.windowsFolderTitle",
+      "original": "Folder is on the Windows filesystem",
+      "contexts": [
+        {
+          "file": "dist/ipcHandlers.js",
+          "anchor": "message: 'Folder is on the Windows filesystem'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "資料夾位於 Windows 檔案系統",
+        "zh-Hans-CN": "文件夹位于 Windows 文件系统",
+        "ja-JP": "フォルダーは Windows ファイルシステム上にあります"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "wsl.windowsFolderWarning",
+      "original": "This folder is on the Windows filesystem. Accessing it from WSL (via /mnt) can be slow — for best performance keep projects inside the WSL filesystem.",
+      "contexts": [
+        {
+          "file": "dist/wsl.js",
+          "anchor": "'This folder is on the Windows filesystem. Accessing it from WSL (via /mnt) can be slow — for best performance keep projects inside the WSL filesystem.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "此資料夾位於 Windows 檔案系統。從 WSL（透過 /mnt）存取可能較慢；為獲得最佳效能，請將專案保留在 WSL 檔案系統內。",
+        "zh-Hans-CN": "此文件夹位于 Windows 文件系统。从 WSL（通过 /mnt）访问可能较慢；为获得最佳性能，请将项目保留在 WSL 文件系统内。",
+        "ja-JP": "このフォルダーは Windows ファイルシステム上にあります。WSL から /mnt 経由でアクセスすると遅くなる場合があります。最適なパフォーマンスを得るには、プロジェクトを WSL ファイルシステム内に保存してください。"
+      },
+      "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    }
+  ]
+}

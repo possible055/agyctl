@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "platforms": {
+    "win32": {
+      "resources": "resources",
+      "language_server": "language_server.exe",
+      "channels": [
+        {
+          "channel": "insiders",
+          "product": "Antigravity - Insiders",
+          "root": "{localAppData}/Programs/antigravity-insiders",
+          "executable": "Antigravity - Insiders.exe"
+        },
+        {
+          "channel": "antigravity",
+          "product": "Antigravity",
+          "root": "{localAppData}/Programs/antigravity",
+          "executable": "Antigravity.exe"
+        }
+      ]
+    },
+    "darwin": {
+      "resources": "Resources",
+      "language_server": "language_server",
+      "channels": [
+        {
+          "channel": "insiders",
+          "product": "Antigravity - Insiders",
+          "root": "/Applications/Antigravity - Insiders.app/Contents",
+          "executable": "MacOS/Antigravity - Insiders"
+        },
+        {
+          "channel": "antigravity",
+          "product": "Antigravity",
+          "root": "/Applications/Antigravity.app/Contents",
+          "executable": "MacOS/Antigravity"
+        }
+      ]
+    },
+    "linux": {
+      "resources": "resources",
+      "language_server": "language_server",
+      "channels": [
+        {
+          "channel": "insiders",
+          "product": "Antigravity - Insiders",
+          "root": "/opt/antigravity-insiders",
+          "executable": "antigravity-insiders"
+        },
+        {
+          "channel": "antigravity",
+          "product": "Antigravity",
+          "root": "/opt/antigravity",
+          "executable": "antigravity"
+        }
+      ]
+    }
+  },
+  "targets": {
+    "windows/amd64": {
+      "goos": "windows",
+      "goarch": "amd64",
+      "nodePlatform": "win32",
+      "nodeArch": "x64",
+      "feed": "win-x64",
+      "releaseDirectory": "windows-x64",
+      "channelFile": "latest-x64-win.yml"
+    },
+    "darwin/arm64": {
+      "goos": "darwin",
+      "goarch": "arm64",
+      "nodePlatform": "darwin",
+      "nodeArch": "arm64",
+      "feed": "darwin-arm64",
+      "releaseDirectory": "darwin-arm",
+      "channelFile": "latest-arm64-mac.yml"
+    },
+    "linux/amd64": {
+      "goos": "linux",
+      "goarch": "amd64",
+      "nodePlatform": "linux",
+      "nodeArch": "x64",
+      "feed": "linux-x64",
+      "releaseDirectory": "linux-x64",
+      "channelFile": "latest-x64-linux.yml"
+    }
+  }
+}

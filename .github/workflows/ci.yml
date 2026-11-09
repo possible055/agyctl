@@ -1,0 +1,271 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 4 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  scope:
+    name: Select checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      node: ${{ steps.scope.outputs.node }}
+      go: ${{ steps.scope.outputs.go }}
+      packaging: ${{ steps.scope.outputs.packaging }}
+      dependencies: ${{ steps.scope.outputs.dependencies }}
+      govulncheck: ${{ steps.scope.outputs.govulncheck }}
+      checks: ${{ steps.scope.outputs.checks }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Verify selection and required-gate contracts
+        run: node --test .github/ci.test.mjs
+      - name: Select affected checks
+        id: scope
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node .github/ci.mjs scope
+
+  repository:
+    name: Repository security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.13.7'
+          enable-cache: false
+      - name: Install verified repository scanners
+        run: |
+          mkdir -p "$RUNNER_TEMP/ci-bin"
+          curl --fail --silent --show-error --location https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz --output "$RUNNER_TEMP/gitleaks.tar.gz"
+          printf '%s  %s\n' '551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb' "$RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP/ci-bin" gitleaks
+          curl --fail --silent --show-error --location https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz --output "$RUNNER_TEMP/actionlint.tar.gz"
+          printf '%s  %s\n' '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8' "$RUNNER_TEMP/actionlint.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP/ci-bin" actionlint
+          echo "$RUNNER_TEMP/ci-bin" >> "$GITHUB_PATH"
+      - name: Scan complete Git history for secrets
+        run: gitleaks git --redact --no-banner .
+      - name: Validate workflow syntax and expressions
+        run: actionlint
+      - name: Audit workflow security without API dependencies
+        run: uvx zizmor==1.32.0 --offline --strict-collection --no-progress .github/
+
+  node:
+    name: Node correctness (Windows)
+    needs: scope
+    if: needs.scope.outputs.node == 'true'
+    runs-on: windows-2025
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Install locked dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run test:prepare
+      - run: npm run test:run
+      - run: npm run test:localization
+      - run: npm run typecheck
+      - run: npm run host:typecheck
+      - run: npm run localization:typecheck
+      - run: npm run capsule:typecheck
+
+  go:
+    name: Go correctness (shared)
+    needs: scope
+    if: needs.scope.outputs.go == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CGO_ENABLED: '0'
+      GO: go
+      GOTOOLCHAIN: local
+      GOFLAGS: -mod=readonly
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: src/agyctl/go.mod
+          cache: false
+      - name: Check Go formatting without rewriting files
+        run: |
+          unformatted="$(gofmt -l src/agyctl)"
+          if [ -n "$unformatted" ]; then
+            printf '%s\n' "$unformatted" >&2
+            exit 1
+          fi
+      - name: Install verified Go linter
+        run: |
+          curl --fail --silent --show-error --location https://github.com/golangci/golangci-lint/releases/download/v2.15.0/golangci-lint-2.15.0-linux-amd64.tar.gz --output "$RUNNER_TEMP/golangci-lint.tar.gz"
+          printf '%s  %s\n' '9b7fe6a6bf6334b98decf8d86b11415ea7889afdabdd1959fdce23af2a9ebcea' "$RUNNER_TEMP/golangci-lint.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/golangci-lint.tar.gz" -C "$RUNNER_TEMP" golangci-lint-2.15.0-linux-amd64/golangci-lint
+          echo "$RUNNER_TEMP/golangci-lint-2.15.0-linux-amd64" >> "$GITHUB_PATH"
+      - name: Lint supported build constraints
+        run: |
+          # Windows-only callers make shared lifecycle helpers appear unused on Linux.
+          # Keep error/static checks on Linux; check whole-application usage on Windows.
+          npm run tools:lint -- --enable-only=errcheck,staticcheck
+          GOOS=windows GOARCH=amd64 npm run tools:lint
+          GOOS=darwin GOARCH=arm64 npm run tools:lint -- --enable-only=errcheck,staticcheck
+      - run: go -C src/agyctl vet ./...
+      - run: go -C src/agyctl test -count=1 ./...
+
+  packaging:
+    name: Native packaging (${{ matrix.target }})
+    needs: scope
+    if: needs.scope.outputs.packaging == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: windows/amd64
+            os: windows-2025
+            goos: windows
+            goarch: amd64
+          - target: darwin/arm64
+            os: macos-15
+            goos: darwin
+            goarch: arm64
+          - target: linux/amd64
+            os: ubuntu-24.04
+            goos: linux
+            goarch: amd64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      CGO_ENABLED: '0'
+      GO: go
+      GOOS: ${{ matrix.goos }}
+      GOARCH: ${{ matrix.goarch }}
+      GOTOOLCHAIN: local
+      GOFLAGS: -mod=readonly
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: src/agyctl/go.mod
+          cache: false
+      - name: Require a native runner for the selected target
+        run: node --input-type=module -e 'import assert from "node:assert/strict"; assert.equal(({win32:"windows"})[process.platform] ?? process.platform, process.env.GOOS); assert.equal(({x64:"amd64"})[process.arch] ?? process.arch, process.env.GOARCH);'
+      - name: Verify OS boundaries not exercised by the Linux shared suite
+        if: runner.os != 'Linux'
+        run: go -C src/agyctl test -count=1 ./internal/fsx ./internal/layout ./internal/assets ./internal/winproc
+      - run: npm ci --ignore-scripts
+      - name: Build agyctl for the target
+        run: npm run tools:build
+      - name: Smoke-test the built executable
+        run: npm run limit:versions
+
+  dependencies:
+    name: npm advisories
+    needs: scope
+    if: needs.scope.outputs.dependencies == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install verified OSV-Scanner
+        run: |
+          mkdir -p "$RUNNER_TEMP/osv-bin"
+          curl --fail --silent --show-error --location https://github.com/google/osv-scanner/releases/download/v2.7.0/osv-scanner_linux_amd64 --output "$RUNNER_TEMP/osv-bin/osv-scanner"
+          printf '%s  %s\n' '160c6253e2922e9e0a6a9771c5c4c40a4b3c6090b34a3cdd5e80c96cc2e4218b' "$RUNNER_TEMP/osv-bin/osv-scanner" | sha256sum --check
+          chmod +x "$RUNNER_TEMP/osv-bin/osv-scanner"
+          echo "$RUNNER_TEMP/osv-bin" >> "$GITHUB_PATH"
+      - name: Scan only project lockfiles, including build dependencies
+        run: osv-scanner scan source --lockfile=package-lock.json
+
+  govulncheck:
+    name: Reachable Go vulnerabilities
+    needs: scope
+    if: needs.scope.outputs.govulncheck == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CGO_ENABLED: '0'
+      GOTOOLCHAIN: local
+      GOFLAGS: -mod=readonly
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: src/agyctl/go.mod
+          cache: false
+      - name: Install pinned govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@v1.9.0
+      # Text output preserves the vulnerability exit code; JSON/SARIF modes do not.
+      - name: Scan supported target call graphs
+        working-directory: src/agyctl
+        run: |
+          govulncheck ./...
+          GOOS=windows GOARCH=amd64 govulncheck ./...
+          GOOS=darwin GOARCH=arm64 govulncheck ./...
+
+  required:
+    name: CI passed
+    needs: [scope, repository, node, go, packaging, dependencies, govulncheck]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Require selected checks to succeed, allowing only intentional skips
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: node .github/ci.mjs gate

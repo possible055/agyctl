@@ -1,0 +1,179 @@
+[
+  {
+    "file": "pe-x64.bin",
+    "sha256": "e18747b4ed586b317796a7432a151ec0b630e8f19544de90b339ab7e3dad06fc",
+    "result": {
+      "context": {
+        "verdict": "pass",
+        "checks": [
+          "patch target ok (original, size 0x80)",
+          "context hooks present: 4/4",
+          "256000-clamp byte pair in utils.GetCheckpointConfig: 1"
+        ],
+        "patch_supported": true
+      },
+      "models": {
+        "verdict": "pass",
+        "checks": [
+          "MODEL_PLACEHOLDER: 1",
+          "model_profiles: 1",
+          "GetAvailableModels: 1",
+          "ListAvailableModels: 1"
+        ]
+      },
+      "fingerprint": {
+        "symbols": {
+          "utils.ClampCheckpointConfigForModelInfo": {
+            "entryoff": 0,
+            "size": 128
+          },
+          "utils.GetCheckpointConfig": {
+            "entryoff": 128,
+            "size": 128
+          },
+          "config.applyFeatureProviderCheckpointOverrideConfig": {
+            "entryoff": 256,
+            "size": 128
+          },
+          "config.selectCheckpointExperimentKey": {
+            "entryoff": 384,
+            "size": 16
+          }
+        },
+        "arch": "x86-64",
+        "format": "pe",
+        "clamp": {
+          "kind": "original",
+          "size": 128,
+          "body_sha256": "048bdf996a4261a772de3029774d32e830c87a153e2647eb22642cce0f0277a4",
+          "body_hex": "4885c074644885db745f83780c00751c486353144881fa409c00007f0531d290eb074881c2c063ffff89500c8b531485d27e1589d629ca39f10f42f20f1f400039700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3c3cccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "gate_3a_clamp256k": 1,
+        "markers": {
+          "MODEL_PLACEHOLDER": 1,
+          "model_profiles": 1,
+          "GetAvailableModels": 1,
+          "ListAvailableModels": 1
+        }
+      }
+    }
+  },
+  {
+    "file": "elf-x64.bin",
+    "sha256": "d8ca506610585aeec5aaf49ead47012e5cce821eacd06942e306f40982fd116c",
+    "result": {
+      "context": {
+        "verdict": "pass",
+        "checks": [
+          "patch target ok (original, size 0x80)",
+          "context hooks present: 4/4",
+          "256000-clamp byte pair in utils.GetCheckpointConfig: 1"
+        ],
+        "patch_supported": true
+      },
+      "models": {
+        "verdict": "pass",
+        "checks": [
+          "MODEL_PLACEHOLDER: 1",
+          "model_profiles: 1",
+          "GetAvailableModels: 1",
+          "ListAvailableModels: 1"
+        ]
+      },
+      "fingerprint": {
+        "symbols": {
+          "utils.ClampCheckpointConfigForModelInfo": {
+            "entryoff": 0,
+            "size": 128
+          },
+          "utils.GetCheckpointConfig": {
+            "entryoff": 128,
+            "size": 128
+          },
+          "config.applyFeatureProviderCheckpointOverrideConfig": {
+            "entryoff": 256,
+            "size": 128
+          },
+          "config.selectCheckpointExperimentKey": {
+            "entryoff": 384,
+            "size": 16
+          }
+        },
+        "arch": "x86-64",
+        "format": "elf",
+        "clamp": {
+          "kind": "original",
+          "size": 128,
+          "body_sha256": "048bdf996a4261a772de3029774d32e830c87a153e2647eb22642cce0f0277a4",
+          "body_hex": "4885c074644885db745f83780c00751c486353144881fa409c00007f0531d290eb074881c2c063ffff89500c8b531485d27e1589d629ca39f10f42f20f1f400039700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3c3cccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "gate_3a_clamp256k": 1,
+        "markers": {
+          "MODEL_PLACEHOLDER": 1,
+          "model_profiles": 1,
+          "GetAvailableModels": 1,
+          "ListAvailableModels": 1
+        }
+      }
+    }
+  },
+  {
+    "file": "macho-arm64.bin",
+    "sha256": "84463774b2c5cbe72a40050fc4b3b6994f76e4ffbf882b81d435f566c9754891",
+    "result": {
+      "context": {
+        "verdict": "fail",
+        "checks": [
+          "patch target size 0x80 != 0x90 \u2014 different build layout",
+          "context hooks present: 4/4",
+          "256000-clamp byte pair in utils.GetCheckpointConfig: n/a (arm64)"
+        ],
+        "patch_supported": false
+      },
+      "models": {
+        "verdict": "pass",
+        "checks": [
+          "MODEL_PLACEHOLDER: 1",
+          "model_profiles: 1",
+          "GetAvailableModels: 1",
+          "ListAvailableModels: 1"
+        ]
+      },
+      "fingerprint": {
+        "symbols": {
+          "utils.ClampCheckpointConfigForModelInfo": {
+            "entryoff": 0,
+            "size": 128
+          },
+          "utils.GetCheckpointConfig": {
+            "entryoff": 128,
+            "size": 128
+          },
+          "config.applyFeatureProviderCheckpointOverrideConfig": {
+            "entryoff": 256,
+            "size": 128
+          },
+          "config.selectCheckpointExperimentKey": {
+            "entryoff": 384,
+            "size": 16
+          }
+        },
+        "arch": "arm64",
+        "format": "macho",
+        "clamp": {
+          "kind": "unknown",
+          "size": 128,
+          "body_sha256": "048bdf996a4261a772de3029774d32e830c87a153e2647eb22642cce0f0277a4",
+          "body_hex": "4885c074644885db745f83780c00751c486353144881fa409c00007f0531d290eb074881c2c063ffff89500c8b531485d27e1589d629ca39f10f42f20f1f400039700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3c3cccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "gate_3a_clamp256k": "n/a (arm64)",
+        "markers": {
+          "MODEL_PLACEHOLDER": 1,
+          "model_profiles": 1,
+          "GetAvailableModels": 1,
+          "ListAvailableModels": 1
+        }
+      }
+    }
+  }
+]

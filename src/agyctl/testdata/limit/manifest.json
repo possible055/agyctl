@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "records": [
+    {
+      "action": "patch",
+      "at": "2026-11-06T12:00:00+08:00",
+      "binary_path": "$BINARY",
+      "binary_sha256_before": "4ead7a9211fb7daca7ce54bd79e5a3d995a8bbeef4dff5a3f2e3d2722ad26462",
+      "binary_sha256_after": "d1d9dbe38007e23f385783664531b83c8ba9e43af1e39ebc158ba86e96423831",
+      "backup_sibling": "$SIBLING",
+      "backup_sibling_sha256": "4ead7a9211fb7daca7ce54bd79e5a3d995a8bbeef4dff5a3f2e3d2722ad26462",
+      "repo_backup": "$REPO_BACKUP",
+      "repo_backup_sha256": "4ead7a9211fb7daca7ce54bd79e5a3d995a8bbeef4dff5a3f2e3d2722ad26462",
+      "app_version": "1.0.20261103110059",
+      "compat": "verified",
+      "ids": [
+        1318,
+        1319,
+        1320,
+        1400,
+        1401,
+        1402,
+        1403,
+        1404,
+        1405,
+        1417,
+        1418,
+        1419
+      ],
+      "limit": 500000,
+      "func": "utils.ClampCheckpointConfigForModelInfo",
+      "func_va": "0x140001100"
+    }
+  ]
+}

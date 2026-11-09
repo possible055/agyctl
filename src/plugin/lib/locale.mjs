@@ -1,0 +1,671 @@
+const LOCALES = Object.freeze(['en', 'zh-Hant-TW', 'zh-Hans-CN', 'ja-JP']);
+
+const LOCALE_CATALOGS = {
+  capsule: {
+    en: {
+      langBtn: 'EN',
+      langTitle: 'Switch Language: English',
+      titlebarTitle: 'Session Context Dashboard',
+      titlebarAria: 'agyctl Dashboard',
+      waitingConn: 'Waiting for connection...',
+      waitingGen: 'Waiting for generation...',
+      waitingData: 'Waiting for data...',
+      unknownModel: 'Unknown model',
+      closeTitle: 'Close',
+      agentSwitchAria: 'Agent Switcher',
+      rootAgent: 'Main Agent',
+      subAgent: 'Subagent',
+      compTitle: 'Context Usage',
+      usedLabel: 'used',
+      perfTitle: 'Output Metrics',
+      lblTps: 'Visible Stream Rate',
+      lblOverallTps: 'Generation Throughput',
+      lblRecentTps: 'Confirmed-Complete Avg',
+      lblTtft: 'Time to First Token',
+      lblDuration: 'Generation Time',
+      lblOutTok: 'Output Scale',
+      varTitle: 'Model Aliases',
+      singleModel: 'Single model dispatch',
+      oneModelSum: '1 model',
+      sessTitle: 'Session Totals',
+      sessRequests: 'Requests',
+      sessCostLbl: 'Estimated Cost',
+      pricingLoading: 'Syncing prices',
+      pricingUnavailable: 'Saved prices unavailable',
+      pricingStale: 'Saved prices may be stale',
+      sessUncached: 'Uncached Input',
+      sessCached: 'Cached Input',
+      sessThinking: 'Thinking',
+      sessOutput: 'Output',
+      compEstNote: 'Composition rows are estimated from item counts, not server token counts.',
+      perfEstNote: 'Rates are estimates from Language Server timings, not engine-side model speed.',
+      tipStreamRate: 'Latest generation: visible response tokens / LS streamingDuration.',
+      tipOverallRate:
+        'Latest generation: all output tokens incl. thinking / (TTFT + streamingDuration). One request, not a whole agent task.',
+      tipLowConfidence: 'Window under 1 s: low confidence; buffered delivery can inflate the rate.',
+      tipRecent: (model, stream, overall) =>
+        `Σ tokens / Σ seconds over up to the last 20 ${model} generations that carry a recognized LS stopReason. Unconfirmed generations (often including tool calls) are excluded, so this is a subset, not an average of all generations; the 20-sample window and 1 s flag are presentation choices, not calibrated. Stream: ${stream} · Throughput: ${overall}`,
+      recentSample: (tps, n, sec) => `${tps} tok/s (${n} samples, ${sec}s)`,
+      recentNone: 'no confirmed-complete samples (needs a recognized LS stopReason)',
+      tipPending:
+        'Not confirmed complete by the LS (no recognized stopReason); values may still change.',
+      pendingShort: 'unconfirmed',
+      tipUsed: (used, cap) => `Used ${used} / ${cap} context`,
+      tipCache: (rate) => `Session cache rate: ${rate}%`,
+      durationTitle: (ttft, stream) =>
+        ttft != null && stream != null ? `TTFT ${ttft}s + Stream ${stream}s` : 'TTFT + Stream',
+      variantCount: (c) => `${c} turns`,
+      compMessages: 'Messages',
+      compMcpTools: 'MCP tools',
+      compSystemTools: 'System tools',
+      compSystemPrompt: 'System prompt',
+      compSkills: 'Skills',
+      compMemoryFiles: 'Memory files',
+      compSafetyBuffer: 'Safety buffer',
+      compFree: 'Free',
+    },
+    'zh-Hant-TW': {
+      langBtn: '繁',
+      langTitle: '切換語系：繁體中文',
+      titlebarTitle: '會話上下文詳細儀表板',
+      titlebarAria: 'agyctl 儀表板',
+      waitingConn: '等待連線...',
+      waitingGen: '等待生成...',
+      waitingData: '等待數據...',
+      unknownModel: '未知模型',
+      closeTitle: '關閉',
+      agentSwitchAria: '代理切換選單',
+      rootAgent: '主代理',
+      subAgent: '子代理',
+      compTitle: '背景資訊',
+      usedLabel: '已使用',
+      perfTitle: '輸出資訊',
+      lblTps: '可見串流速率',
+      lblOverallTps: '單次生成吞吐',
+      lblRecentTps: '已確認完成均速',
+      lblTtft: '首字延遲',
+      lblDuration: '本次生成時間',
+      lblOutTok: '本次生成規模',
+      varTitle: '模型別名',
+      singleModel: '單一模型調度',
+      oneModelSum: '1 種模型',
+      sessTitle: '會話累計',
+      sessRequests: '請求',
+      sessCostLbl: '預估總金額',
+      pricingLoading: '價格同步中',
+      pricingUnavailable: '無法取得儲存的價格',
+      pricingStale: '儲存的價格可能已過期',
+      sessUncached: '未緩存輸入',
+      sessCached: '緩存輸入',
+      sessThinking: '思考',
+      sessOutput: '輸出',
+      compEstNote: '成分拆解依自訂項目數估算，非服務端精確分詞。',
+      perfEstNote: '速率為依 Language Server 計時推算的估計值，並非模型引擎端實際速度。',
+      tipStreamRate: '最新一次生成：可見回覆 token ÷ LS streamingDuration。',
+      tipOverallRate:
+        '最新一次生成：全部輸出 token（含思考）÷（TTFT + streamingDuration）。僅單次請求，不是整個代理任務。',
+      tipLowConfidence: '區間短於 1 秒，可信度低；緩衝後整批送出會推高速率。',
+      tipRecent: (model, stream, overall) =>
+        `${model} 最近最多 20 筆帶可辨識 LS stopReason 的生成之 Σtoken ÷ Σ秒。未確認完成的生成（常含工具呼叫）不計入，因此是子集，不是全部生成的平均；20 筆視窗與 1 秒標記為呈現選擇，未經校準。串流：${stream} · 吞吐：${overall}`,
+      recentSample: (tps, n, sec) => `${tps} tok/s（${n} 筆，${sec}s）`,
+      recentNone: '無確認完成的樣本（需可辨識的 LS stopReason）',
+      tipPending: 'LS 尚未確認這次生成已完成（無可辨識的 stopReason），數值可能還會變。',
+      pendingShort: '未確認完成',
+      tipUsed: (used, cap) => `已使用 ${used} / ${cap} 上下文`,
+      tipCache: (rate) => `會話快取率: ${rate}%`,
+      durationTitle: (ttft, stream) =>
+        ttft != null && stream != null ? `TTFT ${ttft}s + 串流 ${stream}s` : 'TTFT + 串流',
+      variantCount: (c) => `${c} 次`,
+      compMessages: '訊息',
+      compMcpTools: 'MCP 工具',
+      compSystemTools: '系統工具',
+      compSystemPrompt: '系統提示詞',
+      compSkills: '技能',
+      compMemoryFiles: '記憶檔案',
+      compSafetyBuffer: '安全緩衝',
+      compFree: '可用',
+    },
+    'zh-Hans-CN': {
+      langBtn: '简',
+      langTitle: '切换语言：简体中文',
+      titlebarTitle: '会话上下文详细仪表盘',
+      titlebarAria: 'agyctl 仪表盘',
+      waitingConn: '等待连接...',
+      waitingGen: '等待生成...',
+      waitingData: '等待数据...',
+      unknownModel: '未知模型',
+      closeTitle: '关闭',
+      agentSwitchAria: '代理切换菜单',
+      rootAgent: '主代理',
+      subAgent: '子代理',
+      compTitle: '上下文信息',
+      usedLabel: '已使用',
+      perfTitle: '输出信息',
+      lblTps: '可见流式速率',
+      lblOverallTps: '单次生成吞吐',
+      lblRecentTps: '已确认完成均速',
+      lblTtft: '首字延迟',
+      lblDuration: '本次生成时间',
+      lblOutTok: '本次生成规模',
+      varTitle: '模型别名',
+      singleModel: '单一模型调度',
+      oneModelSum: '1 种模型',
+      sessTitle: '会话累计',
+      sessRequests: '请求',
+      sessCostLbl: '预估总金额',
+      pricingLoading: '价格同步中',
+      pricingUnavailable: '无法取得保存的价格',
+      pricingStale: '保存的价格可能已过期',
+      sessUncached: '未缓存输入',
+      sessCached: '缓存输入',
+      sessThinking: '思考',
+      sessOutput: '输出',
+      compEstNote: '成分拆解按自定义项数估算，非服务端精确分词。',
+      perfEstNote: '速率为按 Language Server 计时推算的估计值，并非模型引擎端实际速度。',
+      tipStreamRate: '最新一次生成：可见回复 token ÷ LS streamingDuration。',
+      tipOverallRate:
+        '最新一次生成：全部输出 token（含思考）÷（TTFT + streamingDuration）。仅单次请求，不是整个代理任务。',
+      tipLowConfidence: '区间短于 1 秒，可信度低；缓冲后整批发出会推高速率。',
+      tipRecent: (model, stream, overall) =>
+        `${model} 最近最多 20 条带可识别 LS stopReason 的生成之 Σtoken ÷ Σ秒。未确认完成的生成（常含工具调用）不计入，因此是子集，不是全部生成的平均；20 条窗口与 1 秒标记为呈现选择，未经校准。流式：${stream} · 吞吐：${overall}`,
+      recentSample: (tps, n, sec) => `${tps} tok/s（${n} 条，${sec}s）`,
+      recentNone: '无确认完成的样本（需可识别的 LS stopReason）',
+      tipPending: 'LS 尚未确认这次生成已完成（无可识别的 stopReason），数值可能还会变。',
+      pendingShort: '未确认完成',
+      tipUsed: (used, cap) => `已使用 ${used} / ${cap} 上下文`,
+      tipCache: (rate) => `会话缓存率: ${rate}%`,
+      durationTitle: (ttft, stream) =>
+        ttft != null && stream != null ? `TTFT ${ttft}s + 流式 ${stream}s` : 'TTFT + 流式',
+      variantCount: (c) => `${c} 次`,
+      compMessages: '消息',
+      compMcpTools: 'MCP 工具',
+      compSystemTools: '系统工具',
+      compSystemPrompt: '系统提示词',
+      compSkills: '技能',
+      compMemoryFiles: '记忆文件',
+      compSafetyBuffer: '安全缓冲',
+      compFree: '可用',
+    },
+  },
+  panel: {
+    en: {
+      refreshTitle: 'Refresh now',
+      tabOverview: 'Overview',
+      tabSessions: 'Sessions',
+      tabSettings: 'Settings',
+      rangeToday: 'Today',
+      rangeWeek: '7 days',
+      rangeAll: 'All',
+      totalTokens: 'Total tokens',
+      estimatedCost: 'Estimated cost',
+      uncached: 'Uncached input',
+      cached: 'Cache read',
+      thinking: 'Thinking',
+      output: 'Output',
+      dailyTitle: 'Daily usage',
+      dailyHint: 'Tokens, last 14 days',
+      modelsTitle: 'Models',
+      modelsHint: 'By tokens',
+      searchPlaceholder: 'Search title or project',
+      sortRecent: 'Most recent',
+      sortTokens: 'Most tokens',
+      sortCost: 'Highest cost',
+      generalTitle: 'General',
+      language: 'Language',
+      pollInterval: 'Refresh interval',
+      pollIntervalHint: 'Seconds between reads while the panel is open (10–300)',
+      pricingTitle: 'Model prices',
+      customPrices: 'Custom prices',
+      pricingHint: 'USD per million tokens. Applies to every estimate, including past sessions.',
+      addPrice: 'Add',
+      savePrice: 'Save',
+      cancel: 'Cancel',
+      builtinPrices: 'Built-in prices',
+      priceModel: 'Model alias or family',
+      priceInput: 'Input',
+      priceCache: 'Cache read',
+      priceOutput: 'Output',
+      priceThinking: 'Thinking',
+      editPrice: 'Edit',
+      deletePrice: 'Delete',
+      customizePrice: 'Customize',
+      noCustomPrices: 'No custom prices. Known models use built-in prices.',
+      patchesTitle: 'Client modifications',
+      requests: (n) => `${n} requests`,
+      sessionsCount: (n) => `${n} sessions`,
+      subagents: (n) => `${n} subagents`,
+      unpriced: (n) => `${n} requests unpriced`,
+      estimate: 'Estimate from public prices',
+      repricing: 'Recalculating…',
+      cacheRate: (rate, requests) => `Cache hit ${rate} · ${requests} requests`,
+      updatedAt: (time) => `Updated ${time}`,
+      loading: 'Reading sessions…',
+      unreadable: (n) => `${n} sessions couldn't be read`,
+      noUsage: 'No usage in this period.',
+      noSessions: 'No sessions match.',
+      noModels: 'No model usage in this period.',
+      untitled: 'Untitled session',
+      saved: 'Saved',
+      saving: 'Saving…',
+      pricesSaved: 'Saved. Estimates are being recalculated.',
+      pricingUnsaved: 'Save or cancel the current price edit first.',
+      pricingNotLoaded: 'Prices haven’t loaded yet.',
+      pricingInvalidResponse: 'Invalid pricing response',
+      pricingInvalidRate: 'Enter a non-negative number for every price. Zero is allowed.',
+      pricingDamaged: 'The saved pricing file is damaged.',
+      pricingRepairHint:
+        'Repair restores the prices shown below; the damaged file is kept as evidence.',
+      pricingRepair: 'Repair prices',
+      pricingInvalidModel: 'Enter a model alias or family, up to 128 characters.',
+      pricingDuplicate: 'This model already has a custom price.',
+      intervalInvalid: 'Use 10–300 seconds',
+      limitDiagnostics: 'Recent context limits (local DB parsing, not server telemetry):',
+      sessionSort: 'Session order',
+      modifyHint:
+        'Run these in the project folder with Antigravity closed. Each command checks the installed files first and changes nothing it does not recognize. Localization needs a reviewed plan; see docs/operations.md.',
+    },
+    'zh-Hant-TW': {
+      refreshTitle: '立即更新',
+      tabOverview: '總覽',
+      tabSessions: '會話',
+      tabSettings: '設定',
+      rangeToday: '今天',
+      rangeWeek: '7 天',
+      rangeAll: '全部',
+      totalTokens: '總 token',
+      estimatedCost: '估計費用',
+      uncached: '未快取輸入',
+      cached: '快取讀取',
+      thinking: '思考',
+      output: '輸出',
+      dailyTitle: '每日用量',
+      dailyHint: '近 14 天 token',
+      modelsTitle: '模型',
+      modelsHint: '依 token 排序',
+      searchPlaceholder: '搜尋標題或專案',
+      sortRecent: '最近使用',
+      sortTokens: 'token 最多',
+      sortCost: '費用最高',
+      generalTitle: '一般',
+      language: '語言',
+      pollInterval: '更新間隔',
+      pollIntervalHint: '面板開啟時每隔幾秒重新讀取（10–300）',
+      pricingTitle: '模型價格',
+      customPrices: '自訂價格',
+      pricingHint: '美元／每百萬 token。會套用到所有用量估算，包含歷史會話。',
+      addPrice: '新增',
+      savePrice: '儲存',
+      cancel: '取消',
+      builtinPrices: '內建價格',
+      priceModel: '模型別名或系列',
+      priceInput: '輸入',
+      priceCache: '快取讀取',
+      priceOutput: '輸出',
+      priceThinking: '思考',
+      editPrice: '編輯',
+      deletePrice: '刪除',
+      customizePrice: '自訂',
+      noCustomPrices: '尚無自訂價格，已知模型使用內建價格。',
+      patchesTitle: '客戶端修改',
+      requests: (n) => `${n} 次請求`,
+      sessionsCount: (n) => `${n} 個會話`,
+      subagents: (n) => `${n} 個子代理`,
+      unpriced: (n) => `${n} 次請求未估價`,
+      estimate: '依公開價格估算',
+      repricing: '重新計算中…',
+      cacheRate: (rate, requests) => `快取命中 ${rate} · ${requests} 次請求`,
+      updatedAt: (time) => `更新於 ${time}`,
+      loading: '正在讀取會話…',
+      unreadable: (n) => `${n} 個會話無法讀取`,
+      noUsage: '這段期間沒有用量。',
+      noSessions: '沒有符合的會話。',
+      noModels: '這段期間沒有模型用量。',
+      untitled: '未命名會話',
+      saved: '已儲存',
+      saving: '儲存中…',
+      pricesSaved: '已儲存，正在重新計算費用。',
+      pricingUnsaved: '請先儲存或取消目前的價格編輯。',
+      pricingNotLoaded: '價格尚未載入。',
+      pricingInvalidResponse: '價格資料格式不正確',
+      pricingInvalidRate: '每項價格都必須是不小於零的數字，可以填 0。',
+      pricingDamaged: '已儲存的價格檔案已損壞。',
+      pricingRepairHint: '修復會還原下方顯示的價格；損壞的檔案會另行保存作為證據。',
+      pricingRepair: '修復價格',
+      pricingInvalidModel: '請填寫模型別名或系列，最多 128 字元。',
+      pricingDuplicate: '此模型已有自訂價格。',
+      intervalInvalid: '請填 10–300 秒',
+      limitDiagnostics: '最近對話的上下文上限（本機資料庫解析，非伺服器回報）：',
+      sessionSort: '會話排序',
+      modifyHint:
+        '請先關閉 Antigravity，再於專案資料夾執行。每個指令都會先檢查已安裝的檔案，無法辨識的內容一律不修改。介面本機化需要審閱過的計畫，請見 docs/operations.md。',
+    },
+    'zh-Hans-CN': {
+      refreshTitle: '立即更新',
+      tabOverview: '总览',
+      tabSessions: '会话',
+      tabSettings: '设置',
+      rangeToday: '今天',
+      rangeWeek: '7 天',
+      rangeAll: '全部',
+      totalTokens: '总 token',
+      estimatedCost: '估计费用',
+      uncached: '未缓存输入',
+      cached: '缓存读取',
+      thinking: '思考',
+      output: '输出',
+      dailyTitle: '每日用量',
+      dailyHint: '近 14 天 token',
+      modelsTitle: '模型',
+      modelsHint: '按 token 排序',
+      searchPlaceholder: '搜索标题或项目',
+      sortRecent: '最近使用',
+      sortTokens: 'token 最多',
+      sortCost: '费用最高',
+      generalTitle: '常规',
+      language: '语言',
+      pollInterval: '更新间隔',
+      pollIntervalHint: '面板打开时每隔几秒重新读取（10–300）',
+      pricingTitle: '模型价格',
+      customPrices: '自定义价格',
+      pricingHint: '美元／每百万 token。会应用到所有用量估算，包括历史会话。',
+      addPrice: '新增',
+      savePrice: '保存',
+      cancel: '取消',
+      builtinPrices: '内置价格',
+      priceModel: '模型别名或系列',
+      priceInput: '输入',
+      priceCache: '缓存读取',
+      priceOutput: '输出',
+      priceThinking: '思考',
+      editPrice: '编辑',
+      deletePrice: '删除',
+      customizePrice: '自定义',
+      noCustomPrices: '暂无自定义价格，已知模型使用内置价格。',
+      patchesTitle: '客户端修改',
+      requests: (n) => `${n} 次请求`,
+      sessionsCount: (n) => `${n} 个会话`,
+      subagents: (n) => `${n} 个子代理`,
+      unpriced: (n) => `${n} 次请求未估价`,
+      estimate: '按公开价格估算',
+      repricing: '重新计算中…',
+      cacheRate: (rate, requests) => `缓存命中 ${rate} · ${requests} 次请求`,
+      updatedAt: (time) => `更新于 ${time}`,
+      loading: '正在读取会话…',
+      unreadable: (n) => `${n} 个会话无法读取`,
+      noUsage: '这段期间没有用量。',
+      noSessions: '没有符合的会话。',
+      noModels: '这段期间没有模型用量。',
+      untitled: '未命名会话',
+      saved: '已保存',
+      saving: '保存中…',
+      pricesSaved: '已保存，正在重新计算费用。',
+      pricingUnsaved: '请先保存或取消当前的价格编辑。',
+      pricingNotLoaded: '价格尚未加载。',
+      pricingInvalidResponse: '价格数据格式不正确',
+      pricingInvalidRate: '每项价格都必须是不小于零的数字，可以填 0。',
+      pricingDamaged: '已保存的价格文件已损坏。',
+      pricingRepairHint: '修复会还原下方显示的价格；损坏的文件会另行保存作为证据。',
+      pricingRepair: '修复价格',
+      pricingInvalidModel: '请填写模型别名或系列，最多 128 字符。',
+      pricingDuplicate: '此模型已有自定义价格。',
+      intervalInvalid: '请填 10–300 秒',
+      limitDiagnostics: '最近对话的上下文上限（本地数据库解析，非服务器回报）：',
+      sessionSort: '会话排序',
+      modifyHint:
+        '请先关闭 Antigravity，再在项目文件夹中执行。每个命令都会先检查已安装的文件，无法识别的内容一律不修改。界面本地化需要审阅过的计划，请见 docs/operations.md。',
+    },
+  },
+};
+
+LOCALE_CATALOGS.capsule['ja-JP'] = {
+  langBtn: '日',
+  langTitle: '言語を切り替え：日本語',
+  titlebarTitle: 'セッションコンテキストダッシュボード',
+  titlebarAria: 'agyctl ダッシュボード',
+  waitingConn: '接続を待機中...',
+  waitingGen: '生成を待機中...',
+  waitingData: 'データを待機中...',
+  unknownModel: '不明なモデル',
+  closeTitle: '閉じる',
+  agentSwitchAria: 'エージェント切り替え',
+  rootAgent: 'メインエージェント',
+  subAgent: 'サブエージェント',
+  compTitle: 'コンテキスト使用量',
+  usedLabel: '使用済み',
+  perfTitle: '出力情報',
+  lblTps: '表示ストリーム速度',
+  lblOverallTps: '生成スループット',
+  lblRecentTps: '完了確認済み生成の平均速度',
+  lblTtft: '最初のトークンまでの時間',
+  lblDuration: '生成時間',
+  lblOutTok: '出力規模',
+  varTitle: 'モデルエイリアス',
+  singleModel: '単一モデルでの実行',
+  oneModelSum: '1 モデル',
+  sessTitle: 'セッション累計',
+  sessRequests: 'リクエスト',
+  sessCostLbl: '推定費用',
+  pricingLoading: '価格を同期中',
+  pricingUnavailable: '保存済みの価格を取得できません',
+  pricingStale: '保存済みの価格が古い可能性があります',
+  sessUncached: 'キャッシュ未使用の入力',
+  sessCached: 'キャッシュ済み入力',
+  sessThinking: '思考',
+  sessOutput: '出力',
+  compEstNote: '内訳は項目数からの推定であり、サーバーのトークン数ではありません。',
+  perfEstNote:
+    '速度は Language Server の計測時間からの推定であり、モデルエンジン側の実測速度ではありません。',
+  tipStreamRate: '直近の生成：表示された応答トークン数 ÷ LS streamingDuration。',
+  tipOverallRate:
+    '直近の生成：思考を含む全出力トークン数 ÷（TTFT + streamingDuration）。エージェントのタスク全体ではなく、1 回のリクエストです。',
+  tipLowConfidence:
+    '計測区間が 1 秒未満のため信頼性が低く、バッファーからの一括配信で速度が高く出る場合があります。',
+  tipRecent: (model, stream, overall) =>
+    `${model} の直近最大 20 件のうち、認識可能な LS stopReason を持つ生成の Σトークン数 ÷ Σ秒数。未完了の生成（ツール呼び出しを含むことが多い）は除外されるため、全生成の平均ではありません。20 件の窓と 1 秒の目印は表示上の選択であり、校正されていません。ストリーム：${stream} · スループット：${overall}`,
+  recentSample: (tps, n, sec) => `${tps} tok/s（${n} 件、${sec}秒）`,
+  recentNone: '完了確認済みのサンプルなし（認識可能な LS stopReason が必要）',
+  tipPending:
+    'LS による完了確認がありません（認識可能な stopReason なし）。値が変わる可能性があります。',
+  pendingShort: '完了未確認',
+  tipUsed: (used, cap) => `コンテキスト使用量 ${used} / ${cap}`,
+  tipCache: (rate) => `セッションのキャッシュ率：${rate}%`,
+  durationTitle: (ttft, stream) =>
+    ttft != null && stream != null
+      ? `TTFT ${ttft}秒 + ストリーム ${stream}秒`
+      : 'TTFT + ストリーム',
+  variantCount: (c) => `${c} ターン`,
+  compMessages: 'メッセージ',
+  compMcpTools: 'MCP ツール',
+  compSystemTools: 'システムツール',
+  compSystemPrompt: 'システムプロンプト',
+  compSkills: 'スキル',
+  compMemoryFiles: 'メモリーファイル',
+  compSafetyBuffer: '安全バッファー',
+  compFree: '空き',
+};
+
+LOCALE_CATALOGS.panel['ja-JP'] = {
+  refreshTitle: '今すぐ更新',
+  tabOverview: '概要',
+  tabSessions: 'セッション',
+  tabSettings: '設定',
+  rangeToday: '今日',
+  rangeWeek: '7 日間',
+  rangeAll: 'すべて',
+  totalTokens: '合計トークン数',
+  estimatedCost: '推定費用',
+  uncached: 'キャッシュ未使用の入力',
+  cached: 'キャッシュ読み取り',
+  thinking: '思考',
+  output: '出力',
+  dailyTitle: '日別使用量',
+  dailyHint: '直近 14 日間のトークン数',
+  modelsTitle: 'モデル',
+  modelsHint: 'トークン数順',
+  searchPlaceholder: 'タイトルまたはプロジェクトを検索',
+  sortRecent: '最近使用した順',
+  sortTokens: 'トークン数が多い順',
+  sortCost: '費用が高い順',
+  generalTitle: '一般',
+  language: '言語',
+  pollInterval: '更新間隔',
+  pollIntervalHint: 'パネルを開いている間の読み取り間隔（10～300 秒）',
+  pricingTitle: 'モデルの価格',
+  customPrices: 'カスタム価格',
+  pricingHint:
+    '100 万トークンあたりの米ドル価格。過去のセッションを含むすべての推定費用に適用されます。',
+  addPrice: '追加',
+  savePrice: '保存',
+  cancel: 'キャンセル',
+  builtinPrices: '組み込みの価格',
+  priceModel: 'モデルエイリアスまたはファミリー',
+  priceInput: '入力',
+  priceCache: 'キャッシュ読み取り',
+  priceOutput: '出力',
+  priceThinking: '思考',
+  editPrice: '編集',
+  deletePrice: '削除',
+  customizePrice: 'カスタマイズ',
+  noCustomPrices: 'カスタム価格はありません。既知のモデルには組み込みの価格を使用します。',
+  patchesTitle: 'クライアントの変更',
+  requests: (n) => `${n} 件のリクエスト`,
+  sessionsCount: (n) => `${n} セッション`,
+  subagents: (n) => `${n} サブエージェント`,
+  unpriced: (n) => `${n} 件のリクエストの価格が不明`,
+  estimate: '公開価格に基づく推定',
+  repricing: '再計算中…',
+  cacheRate: (rate, requests) => `キャッシュヒット ${rate} · ${requests} 件のリクエスト`,
+  updatedAt: (time) => `更新：${time}`,
+  loading: 'セッションを読み取り中…',
+  unreadable: (n) => `${n} セッションを読み取れませんでした`,
+  noUsage: 'この期間の使用量はありません。',
+  noSessions: '一致するセッションはありません。',
+  noModels: 'この期間のモデル使用量はありません。',
+  untitled: '無題のセッション',
+  saved: '保存済み',
+  saving: '保存中…',
+  pricesSaved: '保存しました。推定費用を再計算しています。',
+  pricingUnsaved: '先に現在の価格編集を保存するかキャンセルしてください。',
+  pricingNotLoaded: '価格はまだ読み込まれていません。',
+  pricingInvalidResponse: '価格の応答が不正です',
+  pricingInvalidRate: '各価格に 0 以上の数値を入力してください。0 も使用できます。',
+  pricingDamaged: '保存済みの価格ファイルが破損しています。',
+  pricingRepairHint:
+    '修復すると下記の価格が復元されます。破損したファイルは証拠として保存されます。',
+  pricingRepair: '価格を修復',
+  pricingInvalidModel: 'モデルエイリアスまたはファミリーを 128 文字以内で入力してください。',
+  pricingDuplicate: 'このモデルには既にカスタム価格があります。',
+  intervalInvalid: '10～300 秒を指定してください',
+  limitDiagnostics:
+    '最近のコンテキスト上限（ローカル DB の解析値。サーバーの計測値ではありません）：',
+  sessionSort: 'セッションの並び順',
+  modifyHint:
+    'Antigravity を終了してから、プロジェクトフォルダーで実行してください。各コマンドは最初にインストール済みファイルを検査し、認識できない内容は変更しません。ローカライズにはレビュー済みの計画が必要です。docs/operations.md を参照してください。',
+};
+
+function normalizeLocale(value) {
+  if (typeof value !== 'string') return null;
+  const tag = value.trim().replaceAll('_', '-');
+  if (!/^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i.test(tag)) return null;
+  const parts = tag.toLowerCase().split('-');
+  if (parts[0] === 'en') return 'en';
+  if (parts[0] === 'ja') return 'ja-JP';
+  if (parts[0] !== 'zh') return null;
+  if (parts.includes('hant')) return 'zh-Hant-TW';
+  if (parts.includes('hans')) return 'zh-Hans-CN';
+  return parts.some((part) => ['tw', 'hk', 'mo'].includes(part)) ? 'zh-Hant-TW' : 'zh-Hans-CN';
+}
+
+/** @param {{ saved?: unknown, host?: unknown, languages?: string[] | string }} [input] */
+function resolveLocale({ saved, host, languages = [] } = {}) {
+  for (const value of [saved, host, ...(Array.isArray(languages) ? languages : [languages])]) {
+    const locale = normalizeLocale(value);
+    if (locale) return locale;
+  }
+  return 'en';
+}
+
+function requireLocale(value) {
+  const locale = normalizeLocale(value);
+  if (!locale) throw new RangeError(`Unsupported locale: ${String(value)}`);
+  return locale;
+}
+
+function localeMessages(locale, surface) {
+  if (!Object.hasOwn(LOCALE_CATALOGS, surface)) {
+    throw new RangeError(`Unknown locale surface: ${String(surface)}`);
+  }
+  return LOCALE_CATALOGS[surface][requireLocale(locale)];
+}
+
+function validateLocaleCatalogs(catalogs = LOCALE_CATALOGS) {
+  function compare(reference, actual, path) {
+    if (typeof actual !== typeof reference || actual === null || Array.isArray(actual)) {
+      throw new TypeError(`Locale message type mismatch: ${path}`);
+    }
+    if (typeof reference === 'string') {
+      if (!actual.trim()) throw new TypeError(`Empty locale message: ${path}`);
+    } else if (typeof reference === 'function') {
+      if (actual.length !== reference.length)
+        throw new TypeError(`Locale parameter arity mismatch: ${path}`);
+    } else if (typeof reference === 'object') {
+      const expected = Object.keys(reference).sort();
+      const keys = Object.keys(actual).sort();
+      if (expected.length !== keys.length || expected.some((key, index) => key !== keys[index])) {
+        throw new TypeError(`Locale message keys mismatch: ${path}`);
+      }
+      for (const key of expected) compare(reference[key], actual[key], `${path}.${key}`);
+    } else {
+      throw new TypeError(`Unsupported locale message type: ${path}`);
+    }
+  }
+  if (!catalogs || Object.keys(catalogs).sort().join(',') !== 'capsule,panel') {
+    throw new TypeError('Locale surfaces must be capsule and panel');
+  }
+  for (const surface of ['capsule', 'panel']) {
+    const entries = catalogs[surface];
+    if (!entries || Object.keys(entries).sort().join(',') !== [...LOCALES].sort().join(',')) {
+      throw new TypeError(`Locale ids mismatch: ${surface}`);
+    }
+    for (const locale of LOCALES)
+      compare(LOCALE_CATALOGS[surface].en, entries[locale], `${surface}.${locale}`);
+  }
+  return true;
+}
+
+/**
+ * @param {number | bigint} value
+ * @param {string} locale
+ * @param {Intl.NumberFormatOptions} [options]
+ */
+function formatLocaleNumber(value, locale, options) {
+  return new Intl.NumberFormat(requireLocale(locale), options).format(value);
+}
+
+/**
+ * @param {number | Date} value
+ * @param {string} locale
+ * @param {Intl.DateTimeFormatOptions} [options]
+ */
+function formatLocaleDate(value, locale, options) {
+  return new Intl.DateTimeFormat(requireLocale(locale), options).format(value);
+}
+
+function freezeLocaleMessages(value) {
+  for (const child of Object.values(value)) {
+    if (child && typeof child === 'object') freezeLocaleMessages(child);
+  }
+  Object.freeze(value);
+}
+
+freezeLocaleMessages(LOCALE_CATALOGS);
+
+export {
+  formatLocaleDate,
+  formatLocaleNumber,
+  LOCALES,
+  localeMessages,
+  normalizeLocale,
+  resolveLocale,
+  validateLocaleCatalogs,
+};
