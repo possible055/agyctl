@@ -128,6 +128,10 @@ jobs:
         with:
           go-version-file: src/agyctl/go.mod
           cache: false
+        env:
+          # setup-go falls back to the go directive when GOTOOLCHAIN=local is
+          # set; override it for this step so the toolchain directive wins.
+          GOTOOLCHAIN: auto
       - name: Check Go formatting without rewriting files
         run: |
           unformatted="$(gofmt -l src/agyctl)"
@@ -192,6 +196,10 @@ jobs:
         with:
           go-version-file: src/agyctl/go.mod
           cache: false
+        env:
+          # setup-go falls back to the go directive when GOTOOLCHAIN=local is
+          # set; override it for this step so the toolchain directive wins.
+          GOTOOLCHAIN: auto
       - name: Require a native runner for the selected target
         run: node --input-type=module -e 'import assert from "node:assert/strict"; assert.equal(({win32:"windows"})[process.platform] ?? process.platform, process.env.GOOS); assert.equal(({x64:"amd64"})[process.arch] ?? process.arch, process.env.GOARCH);'
       - name: Verify OS boundaries not exercised by the Linux shared suite
@@ -241,6 +249,10 @@ jobs:
         with:
           go-version-file: src/agyctl/go.mod
           cache: false
+        env:
+          # setup-go falls back to the go directive when GOTOOLCHAIN=local is
+          # set; override it for this step so the toolchain directive wins.
+          GOTOOLCHAIN: auto
       - name: Install pinned govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@v1.9.0
       # Text output preserves the vulnerability exit code; JSON/SARIF modes do not.
