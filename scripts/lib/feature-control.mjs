@@ -116,23 +116,82 @@ function atomicWrite(filename, document) {
   }
 }
 
-function withLock(key, action) {
+// A holder that dies between acquiring and releasing leaves state.lock behind.
+// Record enough to identify it and reclaim locks that provably have no live
+// holder, so a crashed apply never blocks every future settings operation.
+const LOCK_WRITE_GRACE_MS = 10_000;
+const LOCK_MAX_AGE_MS = 30 * 60_000;
+
+function holderProcessAlive(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return null;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    // EPERM means the process exists but is owned by someone else.
+    return error.code === 'EPERM';
+  }
+}
+
+function readLockHolder(filename) {
+  try {
+    return JSON.parse(fs.readFileSync(filename, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function lockIsStale(filename) {
+  let age;
+  try {
+    age = Date.now() - fs.statSync(filename).mtimeMs;
+  } catch {
+    return true; // vanished between attempts; let the retry acquire it
+  }
+  const holder = readLockHolder(filename);
+  if (!holder) return age > LOCK_WRITE_GRACE_MS;
+  const alive = holderProcessAlive(holder.pid);
+  if (alive === false) return true;
+  // A live or unverifiable holder (e.g. another host's pid) can only be
+  // evicted by age; an operation should never legitimately hold this long.
+  return age > LOCK_MAX_AGE_MS;
+}
+
+export function withLock(key, action) {
   const directory = operationDirectory(key);
   fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
   const filename = path.join(directory, 'state.lock');
+  const token = randomUUID();
   let descriptor;
-  try {
-    descriptor = fs.openSync(filename, 'wx', 0o600);
-  } catch (error) {
-    if (error.code === 'EEXIST')
-      throw failure('OPERATION_BUSY', 'An operation is already being updated; try again');
-    throw error;
+  for (let attempt = 0; ; attempt++) {
+    try {
+      descriptor = fs.openSync(filename, 'wx', 0o600);
+      break;
+    } catch (error) {
+      if (error.code !== 'EEXIST' || attempt > 0 || !lockIsStale(filename))
+        throw failure('OPERATION_BUSY', 'An operation is already being updated; try again');
+      try {
+        fs.unlinkSync(filename);
+      } catch {
+        // Another process reclaimed it first; the retry reports the contention.
+      }
+    }
   }
   try {
+    fs.writeFileSync(
+      descriptor,
+      `${JSON.stringify({ pid: process.pid, token, createdAt: new Date().toISOString() })}\n`,
+    );
     return action(path.join(directory, 'state.json'));
   } finally {
     fs.closeSync(descriptor);
-    fs.unlinkSync(filename);
+    // Unlink only when we still own the lock; after a reclaim race the file
+    // belongs to the successor and deleting it would break their exclusion.
+    try {
+      if (readLockHolder(filename)?.token === token) fs.unlinkSync(filename);
+    } catch {
+      // Unreadable or already gone; nothing to clean.
+    }
   }
 }
 

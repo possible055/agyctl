@@ -1,10 +1,14 @@
 # Architecture
 
 `agyctl` adds usage visibility and optional client modifications to the
-Antigravity 2.31.0 desktop app (stable release). The tools can also discover and
-inspect the development (Insiders) channel. Supported tool targets are Windows
-x86-64, Linux x86-64, and macOS Apple Silicon; discovery coverage does not imply
-that every feature works on every target.
+Antigravity 2.31.x desktop app (stable release). The tools can also discover and
+inspect the development (Insiders) channel. Exact builds are recorded per feature
+in `compat/` (see [limit patch](limit-patch.md),
+[tool-output patch](tool-output-patch.md), and
+[localization](localization.md#current-status)); no feature is admitted by app
+version alone. Supported tool targets are Windows x86-64, Linux x86-64, and macOS
+Apple Silicon; discovery coverage does not imply that every feature works on every
+target.
 
 The project provides:
 

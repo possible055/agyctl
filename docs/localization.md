@@ -16,8 +16,9 @@ messages and never translates Antigravity. See
 
 ## Current status
 
-The development target is Windows x86-64 Antigravity 2.31.0 in `zh-Hant-TW`,
-`zh-Hans-CN`, and `ja-JP`.
+The development target is Windows x86-64 Antigravity 2.31.0 (profile
+`hub-win-x64-2.31.0-03f3d094`) in `zh-Hant-TW`, `zh-Hans-CN`, and `ja-JP`. Older
+profiles for 2.29.x remain in the registry.
 
 Every profile in [profiles.json](../compat/localization/profiles.json) is
 `probe-only`. A `probe-only` profile can enter installation preflight with an
@@ -30,12 +31,14 @@ node -e "for(const p of require('./compat/localization/profiles.json').profiles)
 
 ### Verification status
 
-Isolated Electron contracts exercise production DOM/native preparation, not full
-client acceptance. A recorded manual check on Windows x86-64 Antigravity 2.31.0
-on 2026-11-14 observed translated quit confirmation, workspace picker, and
-zero-agent tray menus in all three locales. Broader UI coverage, startup and
-foreground performance, and the engine's incremental memory cost remain
-unverified; no profile is promoted by these observations.
+- **Automated:** isolated Electron contracts exercise production DOM and native
+  preparation (`npm run test:electron`; see [development](development.md#checks)).
+  They are not full client acceptance.
+- **Manual, recorded 2026-11-14 on Windows x86-64 Antigravity 2.31.0:** translated
+  quit confirmation, workspace picker, and zero-agent tray menus in all three
+  locales.
+- **Unverified:** broader UI coverage, startup and foreground performance, and the
+  engine's incremental memory cost. No profile is promoted by these observations.
 
 ### Catalogs and validation
 
@@ -206,7 +209,7 @@ Covered surfaces: the quit-confirmation dialog, tray items, the application menu
 (matched by stable `role`, so translated labels never determine action identity),
 File/Help items, the updater item and its state machine, startup and WSL error
 dialogs, the provisioning splash, WebAuthn and device-chooser dialogs, workspace
-dialogs, the IDE-install wizard HTML, and the embedded-browser security popup and
+dialogs, and the embedded-browser security popup and
 its edit menu. Message boxes keep their `defaultId`/`cancelId` semantics. The
 messages are listed in
 [native-messages.json](../compat/localization/native-messages.json).

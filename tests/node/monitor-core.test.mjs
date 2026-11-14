@@ -859,3 +859,55 @@ test('upstream contract: executor, trajectory, and sidecar shapes validate once 
     throw new Error('method constants drifted from the wire names');
   }
 });
+
+test('a re-read that invalidates the latest row releases the stale snapshot', () => {
+  const valid = {
+    chatModel: {
+      responseModel: 'gemini-test-n',
+      usage: { inputTokens: '1000', cacheReadTokens: '0', outputTokens: '1050' },
+    },
+  };
+  const reReadAsError = {
+    error: 'context canceled',
+    chatModel: {
+      model: 'MODEL_PLACEHOLDER_M418',
+      modelDisplayName: 'Gemini 4 Argon (Medium)',
+      usage: { model: 'MODEL_PLACEHOLDER_M418', inputTokens: '1000', cacheReadTokens: '0' },
+    },
+  };
+  const agg = mergeGeneratorMetadata(createSessionAgg(), [valid]);
+  const before = metricsFromAgg(agg);
+  if (before.totalUsed !== 2050) {
+    throw new Error(`latest snapshot must drive the display, got ${before.totalUsed}`);
+  }
+
+  // The server re-delivers the same position as an error with zero output.
+  mergeGeneratorMetadata(agg, [reReadAsError], [], 0);
+  if (agg.latestTurn !== null) {
+    throw new Error('the invalidated latest position must not keep the stale snapshot');
+  }
+  if (agg.sumInput !== 1000 || agg.sumResponse !== 0 || agg.requestCount !== 1) {
+    throw new Error(
+      `aggregates must follow the re-read contribution, got ${agg.sumInput}/${agg.sumResponse}/${agg.requestCount}`,
+    );
+  }
+  const during = metricsFromAgg(agg);
+  if (!during.isWaitingGen || during.totalUsed !== 0) {
+    throw new Error(
+      `the display must wait for valid data instead of showing stale tokens: ${JSON.stringify(during)}`,
+    );
+  }
+
+  // A full rebuild over the same server view must agree with the incremental result.
+  const rebuilt = applyFullResync(createSessionAgg(), [reReadAsError]);
+  if (rebuilt.latestTurn !== null || metricsFromAgg(rebuilt).isWaitingGen !== true) {
+    throw new Error('full resync must also drop the invalidated latest row');
+  }
+
+  // The next valid observation at the same position fills the snapshot again.
+  mergeGeneratorMetadata(agg, [valid], [], 0);
+  const after = metricsFromAgg(agg);
+  if (after.isWaitingGen || after.totalUsed !== 2050) {
+    throw new Error(`the next valid row must restore the snapshot: ${JSON.stringify(after)}`);
+  }
+});

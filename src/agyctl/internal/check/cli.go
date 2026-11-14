@@ -403,6 +403,15 @@ func runVersions(o options) (any, int, error) {
 		if e != nil {
 			return nil, 3, e
 		}
+		if o.version != "" {
+			// Same exact-match contract as the multi-platform path: an unknown
+			// --version must fail, not silently return the latest releases.
+			release, e := pickRelease(releases, o.version)
+			if e != nil {
+				return nil, 3, e
+			}
+			releases = []object{release}
+		}
 		rows := []object{}
 		for i, r := range releases {
 			if i >= o.limit {

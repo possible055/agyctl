@@ -187,7 +187,7 @@ func verificationLevels(target *Target) map[string]any {
 	return map[string]any{
 		"static":   "verified " + target.VerifiedAt + " (registered whole-file SHA-256 and byte segments)",
 		"offline":  "verified (the registry recipe reproduces the registered output hash)",
-		"live_app": live + " (capacity targets await live App qualification while qualification is " + target.Qualification + ")",
+		"live_app": live + " (the current live qualification record is docs/tool-output-patch.md; qualification is " + target.Qualification + ")",
 	}
 }
 

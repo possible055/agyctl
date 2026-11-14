@@ -419,6 +419,11 @@ function mergeGeneratorMetadata(agg, entries, customPrices = [], offset = agg?.s
     if (input + cache === 0) continue;
     const variant = typeof cm.responseModel === 'string' ? cm.responseModel.trim() : '';
     if ((turn.error || !variant) && output === 0) {
+      // The server may re-read a row it previously delivered as a valid turn.
+      // The contribution swap above already corrected the aggregates; drop the
+      // now-invalid latest snapshot too, or the display keeps stale data until
+      // the next full resync.
+      if (position === agg.latestPosition) agg.latestTurn = null;
       continue;
     }
 

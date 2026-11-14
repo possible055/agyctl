@@ -12,8 +12,10 @@ independent of the context-limit patch (`agyctl limit`), documented in
 
 The recipe is qualified as `candidate` in
 [tool-output.json](../compat/tool-output.json). The capacity values are
-qualification targets, **not** measured upstream maxima, and live validation in the
-running app is pending (see [Qualification status](#qualification-status)).
+qualification targets, **not** measured upstream maxima; partial live validation
+exists for the two `viewFile` targets on Windows 2.31.2 (see
+[Qualification status](#qualification-status)) and the remaining matrix items are
+still unverified.
 
 ## Registered build
 
@@ -45,23 +47,24 @@ every `patch` plan reproduces before it may write.
 | `CascadeConfig.plannerConfig.toolConfig.grep.maxGrepResults` | 50 | 100 | base default constant |
 | Post-merge step budget floor (`trajectoryConversionConfig.maxTokensPerStep`) | 32,768 | 98,304 | after manager static/dynamic settings merge |
 
-Why these layers (observations from isolated probes recorded 2026-11-14, with no
-installed-file changes, and the inferences drawn from them):
+Why these layers (from isolated probes on the registered build, recorded
+2026-11-14, with no installed-file changes):
 
-- With no settings overriding a field, the effective merged config equals the base
-  defaults (`maxLinesPerView: 800`, `maxBytesPerView: 46080`, `maxGrepResults: 50`).
-  Values set by settings pass through unchanged to the effective config and the
-  legacy grep tool declaration. Raising the base constants therefore changes the
-  effective value only for sessions that do not set these fields explicitly.
-- With the step budget floor at 32,768 (the existing verified post-merge patch),
-  prepared model messages up to 60,078 bytes were delivered intact, and a 16,384
-  budget truncated the same content with a `<truncated … bytes>` marker. The 98,304
-  floor is the 3-byte-per-token approximation intended to carry 128 KiB tool results
-  through the shared message conversion. Whether the real message framing fits is
-  unverified.
-- Inference, not yet validated live: persistence across app restarts, new sessions,
-  subagent roles, and re-discovered MCP tools follows from the two adaptation layers
-  (config constructor constants and the post-merge floor in
+- **Base constants:** with no settings overriding a field, the effective merged
+  config equals the base defaults (`maxLinesPerView: 800`, `maxBytesPerView: 46080`,
+  `maxGrepResults: 50`). Values set by settings pass through unchanged to the
+  effective config and the legacy grep tool declaration, so raising the base
+  constants changes the effective value only for sessions that do not set these
+  fields explicitly.
+- **Step budget floor:** with the floor at 32,768 (the existing verified post-merge
+  patch), prepared model messages up to 60,078 bytes were delivered intact, and a
+  16,384 budget truncated the same content with a `<truncated … bytes>` marker. The
+  98,304 floor is the 3-byte-per-token approximation intended to carry 128 KiB tool
+  results through the shared message conversion; whether the real message framing
+  fits is unverified.
+- **Persistence (inferred, not validated):** survival across app restarts, new
+  sessions, subagent roles, and re-discovered MCP tools follows from the two
+  adaptation layers (config constructor constants and the post-merge floor in
   `(*CascadeManager).getCascadeConfig`).
 
 Out of scope for this recipe:
@@ -167,15 +170,42 @@ registry, parser, or assembler.
 
 ## Qualification status
 
-- **Static:** both input binaries were byte-checked against the external manifest,
-  the recipe was derived from disassembly, and the registered output is reproducible
-  in memory (verified 2026-11-14).
+The recipe stays `candidate`. Nothing below qualifies another build, and a
+successful disk patch does not mean the running app loaded the bytes or that the
+model receives the new capacity; `status` reports disk state only.
+
+**Verified**
+
+- **Static (2026-11-14):** both input binaries were byte-checked against the
+  external manifest, the recipe was derived from disassembly, and the registered
+  output is reproducible in memory.
 - **Offline:** the Go suite covers the registry self-check, fixed-vector
   admission/plan/apply/restore, refusal kinds, shared-lock contention, and
   prepare-record re-entry.
-- **Live app:** pending. Capacity boundaries, UTF-8 continuation, truncation hints,
-  background output, and session persistence must pass before the recipe can be
-  marked `supported`.
+- **Live, partial (2026-11-15, stable-channel Windows 2.31.2):** the patch was
+  applied to the grep-patched input (`1c69b4fc…` → `47a439ef…`, 7 bytes), the client
+  was restarted, and an agent conversation exercised the tools. Results below come
+  from the raw tool payloads in the conversation store, not the agent's summary.
+  - `viewFile.maxLinesPerView=2000`: a 2,100-line file read as `lines 1-2000 of 2100`
+    (previously 800).
+  - `viewFile.maxBytesPerView=131072`: files larger than the limit were cut at 131072
+    bytes with a continuation hint naming `ByteOffset=131072`; a ranged read
+    (`startLine=1995 endLine=2005`) returned exactly those lines; resuming at
+    `ByteOffset=131072` delivered the remainder with no duplicated or lost lines and
+    no U+FFFD, including Chinese text and emoji across the boundary.
+  - Non-target regression: the edit tool and `run_command` were unchanged (the
+    `run_command` preview keeps head and tail with a middle-elision notice and
+    points at the full output file; that is upstream behavior).
 
-A successful disk patch does not mean the running app loaded the bytes or that the
-model receives the new capacity; `status` reports disk state only.
+**Not applicable on this build:** the running engine's toolset does not expose the
+legacy `grep_search` tool, so `grep.maxGrepResults=100` has no live execution path;
+the value is a patched constant with no observed effect.
+
+**Still unverified** (all must pass before the recipe can be marked `supported`):
+MCP multi-block output, the background-output branch, `perTool` values (never
+patched), exact boundary values (1,999/2,000/2,001 lines; 131,071/131,072/131,073
+bytes), settings persistence beyond one session, and subagent boundary inheritance.
+
+**To reproduce a live check:** apply the patch, restart the client, read a file larger
+than the limits from an agent conversation, and inspect the raw `steps` payloads in
+`~/.gemini/antigravity/conversations/<conversation>.db`.

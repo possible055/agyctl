@@ -8,7 +8,7 @@ import test from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import vm from 'node:vm';
 import { planSidecarCleanup } from '../../scripts/lib/client-processes.mjs';
-import { validateFeatureApply } from '../../scripts/lib/feature-control.mjs';
+import { validateFeatureApply, withLock } from '../../scripts/lib/feature-control.mjs';
 import { normalizeModelCatalog, readModelEnum } from '../../scripts/lib/model-catalog.mjs';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
@@ -469,4 +469,62 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
   assert.equal(drifted.code, 'REVISION_CHANGED');
   assert.deepEqual(fs.readFileSync(binary), original);
   assert.deepEqual(fs.readFileSync(asarPath), archive);
+});
+
+test('the feature operation lock records its holder and reclaims crashed holders', () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-lock-'));
+  const previousHome = process.env.AGYCTL_HOME;
+  process.env.AGYCTL_HOME = home;
+  try {
+    const key = 'b'.repeat(64);
+    const directory = path.join(home, 'management', 'features', key);
+    const lockFile = path.join(directory, 'state.lock');
+    fs.mkdirSync(directory, { recursive: true });
+
+    // A lock from a process that no longer exists is reclaimed and the action runs.
+    fs.writeFileSync(
+      lockFile,
+      `${JSON.stringify({ pid: 999_999_999, token: 'dead', createdAt: new Date().toISOString() })}\n`,
+    );
+    assert.equal(
+      withLock(key, (statePath) => path.basename(statePath)),
+      'state.json',
+    );
+    assert.equal(fs.existsSync(lockFile), false, 'a successful run removes its own lock');
+
+    // A live holder keeps the lock exclusive.
+    fs.writeFileSync(
+      lockFile,
+      `${JSON.stringify({ pid: process.pid, token: 'live', createdAt: new Date().toISOString() })}\n`,
+    );
+    assert.throws(() => withLock(key, () => {}), { code: 'OPERATION_BUSY' });
+
+    // An unparsable lock is only reclaimed after the write grace period.
+    fs.writeFileSync(lockFile, '');
+    assert.throws(() => withLock(key, () => {}), { code: 'OPERATION_BUSY' });
+    const old = Date.now() / 1000 - 60;
+    fs.utimesSync(lockFile, old, old);
+    assert.equal(
+      withLock(key, () => 'reclaimed'),
+      'reclaimed',
+    );
+
+    // Release never deletes a successor's lock: a holder that lost ownership
+    // during the action leaves the replacement lock alone.
+    fs.writeFileSync(
+      lockFile,
+      `${JSON.stringify({ pid: 999_999_999, token: 'ours', createdAt: new Date().toISOString() })}\n`,
+    );
+    withLock(key, () =>
+      fs.writeFileSync(
+        lockFile,
+        `${JSON.stringify({ pid: process.pid, token: 'successor', createdAt: new Date().toISOString() })}\n`,
+      ),
+    );
+    assert.equal(JSON.parse(fs.readFileSync(lockFile, 'utf8')).token, 'successor');
+  } finally {
+    if (previousHome === undefined) delete process.env.AGYCTL_HOME;
+    else process.env.AGYCTL_HOME = previousHome;
+    fs.rmSync(home, { recursive: true, force: true });
+  }
 });

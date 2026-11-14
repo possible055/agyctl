@@ -9,6 +9,7 @@ import path from 'node:path';
 import test from 'node:test';
 import vm from 'node:vm';
 import { parse } from 'acorn';
+import { engineRequirePath } from '../../dist/localization/bundle/feature-provider.mjs';
 import {
   BuildError,
   buildArtifact,
@@ -1549,4 +1550,37 @@ test('unknown source observation and preparation do not claim profile admission'
   assert.equal(invalid.status, 1, invalid.stdout + invalid.stderr);
   assert.equal(JSON.parse(invalid.stdout).code, 'PROFILE_INVALID');
   assert.equal(fs.existsSync(path.join(invalidHome, 'localization', 'artifacts')), false);
+});
+
+test('the host engine require resolves from every injected member depth', () => {
+  // dist/*.js members sit beside dist/agyctl-localization/.
+  assert.equal(
+    engineRequirePath('dist/main.js'),
+    "require('./agyctl-localization/host-engine.js')",
+  );
+  // Nested members must step up one level or Node resolves a wrong directory.
+  // No current target nests below dist/, but a nested member would fail with
+  // MODULE_NOT_FOUND without the extra step, so the depth contract stays guarded
+  // for any future nested member.
+  assert.equal(
+    engineRequirePath('dist/nested/member.js'),
+    "require('../agyctl-localization/host-engine.js')",
+  );
+  assert.equal(
+    path.posix.normalize(
+      path.posix.join(
+        path.posix.dirname('dist/nested/member.js'),
+        '../agyctl-localization/host-engine.js',
+      ),
+    ),
+    'dist/agyctl-localization/host-engine.js',
+  );
+  const database = JSON.parse(fs.readFileSync('compat/localization/profiles.json', 'utf8'));
+  for (const profile of database.profiles) {
+    assert.match(profile.hostAdapter.file, /^dist\/[^/]+\.js$/, profile.hostAdapter.file);
+    assert.equal(
+      engineRequirePath(profile.hostAdapter.file),
+      "require('./agyctl-localization/host-engine.js')",
+    );
+  }
 });

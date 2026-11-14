@@ -1827,3 +1827,60 @@ func TestFuseWireParsing(t *testing.T) {
 		}
 	})
 }
+
+func TestRunVersionsSinglePlatformHonorsVersionFilter(t *testing.T) {
+	releases := []map[string]any{
+		{"version": "1.2.0", "execution_id": "exec-1"},
+		{"version": "1.3.0", "execution_id": "exec-2"},
+	}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(releases)
+	}))
+	defer server.Close()
+	original := releaseURLs["hub"]
+	releaseURLs["hub"] = server.URL
+	defer func() { releaseURLs["hub"] = original }()
+
+	config, err := layout.Load(repoRoot(t), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Without --version the single-platform path lists the latest releases.
+	result, code, err := runVersions(options{targets: config, channel: "hub", platforms: []string{"win-x64"}, limit: 5})
+	if err != nil || code != 0 {
+		t.Fatalf("unfiltered run=%v code=%d error=%v", result, code, err)
+	}
+	parsed, ok := result.(object)
+	if !ok {
+		t.Fatalf("unfiltered result=%#v", result)
+	}
+	rows, ok := parsed["releases"].([]object)
+	if !ok || len(rows) != 2 {
+		t.Fatalf("unfiltered rows=%d, want 2", len(rows))
+	}
+
+	// An existing --version resolves exactly that release with its asset URL.
+	result, code, err = runVersions(options{targets: config, channel: "hub", platforms: []string{"win-x64"}, limit: 5, version: "1.3.0"})
+	if err != nil || code != 0 {
+		t.Fatalf("filtered run=%v code=%d error=%v", result, code, err)
+	}
+	parsed, ok = result.(object)
+	if !ok {
+		t.Fatalf("filtered result=%#v", result)
+	}
+	rows, ok = parsed["releases"].([]object)
+	if !ok || len(rows) != 1 || str(rows[0]["version"]) != "1.3.0" {
+		t.Fatalf("filtered rows=%#v, want only 1.3.0", rows)
+	}
+	if !strings.Contains(str(rows[0]["url"]), "1.3.0-exec-2") || !strings.Contains(str(rows[0]["url"]), "Antigravity-x64.exe") {
+		t.Fatalf("filtered url=%q", str(rows[0]["url"]))
+	}
+
+	// An unknown --version fails instead of silently returning the latest releases.
+	_, code, err = runVersions(options{targets: config, channel: "hub", platforms: []string{"win-x64"}, limit: 5, version: "0.0.0"})
+	if code != 3 || err == nil || !strings.Contains(err.Error(), "0.0.0") {
+		t.Fatalf("unknown version code=%d error=%v", code, err)
+	}
+}

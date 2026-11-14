@@ -3,8 +3,8 @@ import { ComposerError, LOCALIZATION_BRIDGE_MARKER, isSha256 } from '../../host/
 import { sha256, sha256File } from '../../host/hash.js';
 import type { AdapterEdit, LocalizationFeatureInput } from '../../host/inputs.js';
 import type { AsarEngineLike, HostFeature } from '../../host/features.js';
-import { buildReviewedNativeEdits } from './native-adapters.js';
-export { buildReviewedNativeEdits } from './native-adapters.js';
+import { buildReviewedNativeEdits, engineRequirePath } from './native-adapters.js';
+export { buildReviewedNativeEdits, engineRequirePath } from './native-adapters.js';
 
 export interface LocalizationProfile {
   profileId: string;

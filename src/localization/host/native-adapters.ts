@@ -11,10 +11,18 @@ interface NativeEdit extends AdapterEdit {
   end: number;
 }
 
-const engine = "require('./agyctl-localization/host-engine.js')";
-const text = (id: string, original: string) => `${engine}.nativeText(${JSON.stringify(id)}, ${JSON.stringify(original)})`;
-const format = (id: string, original: string, values: string) => `${engine}.nativeFormat(${JSON.stringify(id)}, ${JSON.stringify(original)}, [${values}])`;
+// The host engine runtime is installed at dist/agyctl-localization/, so the
+// require path depends on the target member's depth below dist/ — nested
+// members (for example dist/nested/member.js) must step up one extra level.
+const ENGINE_TOKEN = '__AGYCTL_ENGINE__';
+const text = (id: string, original: string) => `${ENGINE_TOKEN}.nativeText(${JSON.stringify(id)}, ${JSON.stringify(original)})`;
+const format = (id: string, original: string, values: string) => `${ENGINE_TOKEN}.nativeFormat(${JSON.stringify(id)}, ${JSON.stringify(original)}, [${values}])`;
 const htmlText = (expression: string) => `(${expression}).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')`;
+/** Relative require specifier for the host engine runtime from a patched member. */
+export function engineRequirePath(file: string): string {
+  const levels = file.split('/').length - 1;
+  return `require('${levels > 1 ? '../' : './'}agyctl-localization/host-engine.js')`;
+}
 
 const roleLabels: Record<string, [string, string]> = {
   filemenu: ['menu.file', 'File'], editmenu: ['menu.edit', 'Edit'], viewmenu: ['menu.view', 'View'],
@@ -49,7 +57,8 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
     const start = content.indexOf(anchor);
     if (start < 0 || content.indexOf(anchor, start + 1) >= 0)
       throw new ComposerError('SOURCE_MISMATCH', `Native capability anchor ${start < 0 ? 'missing' : 'ambiguous'} in ${file}: ${anchor.slice(0, 120)}`);
-    edits.push({ file, anchor, replaceAnchor: replacement, messageIds, sourceSha256: sha256(Buffer.from(content)), start, end: start + anchor.length });
+    const resolved = replacement.replaceAll(ENGINE_TOKEN, engineRequirePath(file));
+    edits.push({ file, anchor, replaceAnchor: resolved, messageIds, sourceSha256: sha256(Buffer.from(content)), start, end: start + anchor.length });
   }
   function property(file: string, key: string, original: string, id: string) {
     const anchor = `${key}: '${original}'`;
@@ -59,7 +68,7 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
     edit(file, anchor, text(id, original), [id]);
   }
 
-  edit('dist/main.js', 'const electron_1 = require("electron");', `const electron_1 = require("electron");\n${engine}.initializeHostRuntime();`);
+  edit('dist/main.js', 'const electron_1 = require("electron");', `const electron_1 = require("electron");\n${ENGINE_TOKEN}.initializeHostRuntime();`);
   for (const [key, original, id] of [
     ['title', 'Confirm Quit', 'session.quitConfirmTitle'], ['message', 'Are you sure you want to quit?', 'session.quitConfirmMessage'],
     ['detail', 'There may be agents or background tasks running.', 'session.quitConfirmDetail'],
@@ -67,7 +76,7 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
     ['label', 'New Window', 'nav.newWindow'], ['label', 'Quit', 'session.quit'],
   ]) property('dist/main.js', key, original, id);
   edit('dist/main.js', "buttons: ['Cancel', 'Quit']", `buttons: [${text('common.cancel', 'Cancel')}, ${text('session.quit', 'Quit')}]`, ['common.cancel', 'session.quit']);
-  edit('dist/main.js', "label: 'No agents running'", `label: ${engine}.nativeAgentsRunning(0)`, ['tray.agentsRunning']);
+  edit('dist/main.js', "label: 'No agents running'", `label: ${ENGINE_TOKEN}.nativeAgentsRunning(0)`, ['tray.agentsRunning']);
   edit('dist/main.js', 'label: `Open ${electron_1.app.getName()}`', `label: ${format('tray.openApplication', 'Open {0}', 'electron_1.app.getName()')}`, ['tray.openApplication']);
   edit('dist/main.js', 'message: `The WSL distro "${WSL_DISTRO}" is no longer installed.`', `message: ${format('startup.wslMissingMessage', 'The WSL distro "{0}" is no longer installed.', 'WSL_DISTRO')}`, ['startup.wslMissingMessage']);
   for (const [original, id] of [['Binary not found', 'startup.binaryMissingTitle'], ['WSL setup failed', 'startup.wslFailedTitle'], ['Startup failed', 'startup.failedTitle']])
@@ -81,7 +90,7 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
   edit('dist/menu.js', "addItemToSubmenu(menu, 'File', 1,", "addItemToSubmenu(menu, 'filemenu', 1,");
   edit('dist/menu.js', "addItemToSubmenu(menu, 'File', 2,", "addItemToSubmenu(menu, 'filemenu', 2,");
   edit('dist/menu.js', 'appMenu.items.find((item) => item.label === submenuLabel)', 'appMenu.items.find((item) => item.role?.toLowerCase() === submenuLabel)');
-  const roleVisitor = `const agyctlRoleLabels = ${JSON.stringify(roleLabels)};\n    const agyctlLocalizeMenu = (target) => { for (const item of target.items) { const entry = agyctlRoleLabels[item.role?.toLowerCase()]; if (entry) { const original = item.label || entry[1]; let translated = ${engine}.nativeText(entry[0], original); const mnemonic = /(?:^|[^&])&([^&])/.exec(original)?.[1]; if (mnemonic && !translated.includes('&')) translated += ' (&' + mnemonic + ')'; item.label = translated; } if (item.submenu) agyctlLocalizeMenu(item.submenu); } };\n    agyctlLocalizeMenu(menu);`;
+  const roleVisitor = `const agyctlRoleLabels = ${JSON.stringify(roleLabels)};\n    const agyctlLocalizeMenu = (target) => { for (const item of target.items) { const entry = agyctlRoleLabels[item.role?.toLowerCase()]; if (entry) { const original = item.label || entry[1]; let translated = ${ENGINE_TOKEN}.nativeText(entry[0], original); const mnemonic = /(?:^|[^&])&([^&])/.exec(original)?.[1]; if (mnemonic && !translated.includes('&')) translated += ' (&' + mnemonic + ')'; item.label = translated; } if (item.submenu) agyctlLocalizeMenu(item.submenu); } };\n    agyctlLocalizeMenu(menu);`;
   edit('dist/menu.js', '    if (!menu) {\n        return;\n    }', `    if (!menu) {\n        return;\n    }\n    ${roleVisitor}`, Object.values(roleLabels).map(([id]) => id));
   edit('dist/menu.js', 'label: updater_1.MenuUpdateStep.CheckForUpdates', `label: ${text('update.checkForUpdates', 'Check for Updates')}`, ['update.checkForUpdates']);
   edit('dist/menu.js', 'updater_1.updateActions[menuItem.label]', 'updater_1.updateActions[updater_1.getMenuUpdateStep()]');
@@ -92,7 +101,7 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
   property('dist/updater.js', 'title', 'Check for Updates', 'update.checkForUpdates');
   property('dist/updater.js', 'message', 'No updates available', 'update.noUpdates');
   edit('dist/updater.js', "buttons: ['OK']", `buttons: [${text('common.ok', 'OK')}], defaultId: 0, cancelId: 0`, ['common.ok']);
-  edit('dist/tray.js', "(count > 0 ? `${count}` : 'No') +\n                    ' agent' +\n                    (count === 1 ? '' : 's') +\n                    ' running'", `${engine}.nativeAgentsRunning(count)`, ['tray.agentsRunning']);
+  edit('dist/tray.js', "(count > 0 ? `${count}` : 'No') +\n                    ' agent' +\n                    (count === 1 ? '' : 's') +\n                    ' running'", `${ENGINE_TOKEN}.nativeAgentsRunning(count)`, ['tray.agentsRunning']);
 
   property('dist/ipcHandlers.js', 'title', 'Open workspace', 'workspace.open');
   property('dist/ipcHandlers.js', 'title', 'Open workspaces', 'workspace.openMultiple');
@@ -112,19 +121,6 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
   property('dist/webauthn.js', 'detail', 'Select a passkey account to continue:', 'passkey.selectAccount');
   edit('dist/webauthn.js', 'message: `Sign in to ${rpLabel}`', `message: ${format('passkey.signIn', 'Sign in to {0}', 'rpLabel')}`, ['passkey.signIn']);
   edit('dist/webauthn.js', "buttons: [...accountLabels, 'Cancel']", `buttons: [...accountLabels, ${text('common.cancel', 'Cancel')}]`, ['common.cancel']);
-
-  const wizard = 'dist/ideInstall/wizardHtml.js';
-  edit(wizard, '<html lang="en">', `<html lang="\${${engine}.nativeCatalogLocale() ?? 'en'}">`);
-  for (const [anchor, original, id] of [
-    ['<title>Welcome to Antigravity</title>', 'Welcome to Antigravity', 'wizard.title'],
-    ['<h1>Welcome to the new Antigravity!</h1>', 'Welcome to the new Antigravity!', 'wizard.welcome'],
-    ['<span>Download the Antigravity IDE</span>', 'Download the Antigravity IDE', 'wizard.downloadIde'],
-    ['>Explore the new Antigravity</button>', 'Explore the new Antigravity', 'wizard.explore'],
-    ['>Setting up…</div>', 'Setting up…', 'wizard.settingUp'],
-  ]) edit(wizard, anchor, anchor.replace(original, `\${${htmlText(text(id, original))}}`), [id]);
-  const explanation = "Antigravity has been redesigned to put agents first with new capabilities. If you'd still like a code editor, you can download it as a separate app named ";
-  edit(wizard, `<p>${explanation}<b>Antigravity IDE</b>.</p>`, `<p>\${${htmlText(text('wizard.explanationBeforeIde', explanation))}}<b>Antigravity IDE</b>\${${htmlText(text('wizard.explanationAfterIde', '.'))}}</p>`, ['wizard.explanationBeforeIde', 'wizard.explanationAfterIde']);
-  edit(wizard, 'alt="Antigravity Icon"', `alt="\${${htmlText(text('wizard.appIcon', 'Antigravity Icon'))}}"`, ['wizard.appIcon']);
 
   if (source('dist/main.js').includes('require("./deviceChooser")')) {
     const file = 'dist/deviceChooser.js';
@@ -157,7 +153,7 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
       ['`Valid until: ${formatDate(certificate.validToMs)}`', 'Valid until: {0}', 'formatDate(certificate.validToMs)', 'security.validUntil'],
       ['`Protocol: ${certificate.protocol}`', 'Protocol: {0}', 'certificate.protocol', 'security.protocol'],
     ]) edit(file, anchor, format(id, original, value), [id]);
-    edit(file, "new Date(ms).toLocaleString() : 'unknown'", `new Date(ms).toLocaleString(${engine}.nativeCatalogLocale() ?? undefined) : ${text('security.unknownDate', 'unknown')}`, ['security.unknownDate']);
+    edit(file, "new Date(ms).toLocaleString() : 'unknown'", `new Date(ms).toLocaleString(${ENGINE_TOKEN}.nativeCatalogLocale() ?? undefined) : ${text('security.unknownDate', 'unknown')}`, ['security.unknownDate']);
     edit(file, "buttons: ['OK']", `buttons: [${text('common.ok', 'OK')}], defaultId: 0, cancelId: 0`, ['common.ok']);
     for (const role of ['cut', 'copy', 'paste', 'selectAll']) {
       const [id, original] = roleLabels[role.toLowerCase()];
