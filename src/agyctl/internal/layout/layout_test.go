@@ -2,9 +2,11 @@ package layout
 
 import (
 	"encoding/binary"
+	"encoding/json"
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -30,6 +32,108 @@ func assetRootFixture(t *testing.T, files map[string]string) string {
 		}
 	}
 	return root
+}
+
+func TestAppDirSelection(t *testing.T) {
+	config, err := Load(filepath.Join("..", "..", "..", ".."), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	host, err := config.Target(runtime.GOOS, runtime.GOARCH)
+	if err != nil {
+		t.Fatal(err)
+	}
+	platform := config.Platforms[host.NodePlatform]
+	createInstallation := func(root string, channel Channel, complete bool) {
+		t.Helper()
+		files := []string{filepath.Join(platform.Resources, "app.asar")}
+		if complete {
+			files = append(files, filepath.Join(platform.Resources, "bin", platform.LanguageServer), filepath.FromSlash(channel.Executable))
+		}
+		for _, name := range files {
+			filename := filepath.Join(root, name)
+			if err := os.MkdirAll(filepath.Dir(filename), 0755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(filename, []byte("installation data is never executed"), 0600); err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
+	directory := testutil.TempDir(t)
+	for index := range platform.Channels {
+		platform.Channels[index].Root = filepath.Join(directory, platform.Channels[index].Channel)
+		createInstallation(platform.Channels[index].Root, platform.Channels[index], true)
+	}
+	config.Platforms[host.NodePlatform] = platform
+	data, err := json.Marshal(config)
+	if err != nil {
+		t.Fatal(err)
+	}
+	root := assetRootFixture(t, map[string]string{"compat/install-layout.json": string(data)})
+	for _, channel := range platform.Channels {
+		t.Run(channel.Channel, func(t *testing.T) {
+			selected := filepath.Join(directory, "unrelated-portable-"+channel.Channel)
+			createInstallation(selected, channel, true)
+			t.Setenv("AGYCTL_APP_DIR", selected)
+			for _, discover := range []func(string, *assets.Snapshot) ([]Target, error){Candidates, LocateFrom} {
+				targets, err := discover(root, nil)
+				if err != nil || len(targets) != 1 || targets[0].Root != selected || targets[0].Channel != channel.Channel {
+					t.Fatalf("targets=%+v error=%v", targets, err)
+				}
+			}
+			defaults, err := DefaultCandidates(root, nil)
+			if err != nil || len(defaults) != 2 || defaults[0].Root != platform.Channels[0].Root || defaults[1].Root != platform.Channels[1].Root {
+				t.Fatalf("defaults=%+v error=%v", defaults, err)
+			}
+		})
+	}
+	incomplete := filepath.Join(directory, "incomplete")
+	createInstallation(incomplete, platform.Channels[0], false)
+	ambiguous := filepath.Join(directory, "ambiguous")
+	for _, channel := range platform.Channels {
+		createInstallation(ambiguous, channel, true)
+	}
+	rows := []struct{ name, value, reason string }{
+		{"empty", "", "absolute"},
+		{"relative", "relative-installation", "absolute"},
+		{"missing", filepath.Join(directory, "missing"), "no such file"},
+		{"incomplete", incomplete, "no such file"},
+		{"ambiguous", ambiguous, "ambiguous"},
+	}
+	for _, row := range []struct{ name, reason string }{
+		{filepath.Join(platform.Resources, "app.asar"), "no such file"},
+		{filepath.FromSlash(platform.Channels[0].Executable), "missing or ambiguous"},
+	} {
+		name := row.name
+		selected := filepath.Join(directory, "missing-"+filepath.Base(name))
+		createInstallation(selected, platform.Channels[0], true)
+		if err := os.Remove(filepath.Join(selected, name)); err != nil {
+			t.Fatal(err)
+		}
+		rows = append(rows, struct{ name, value, reason string }{"missing-" + name, selected, row.reason})
+	}
+	for _, row := range rows {
+		t.Run(row.name, func(t *testing.T) {
+			t.Setenv("AGYCTL_APP_DIR", row.value)
+			for _, discover := range []func(string, *assets.Snapshot) ([]Target, error){Candidates, LocateFrom} {
+				_, err := discover(root, nil)
+				if err == nil || !strings.Contains(err.Error(), "AGYCTL_APP_DIR") {
+					t.Fatalf("expected AGYCTL_APP_DIR %s refusal, got %v", row.reason, err)
+				}
+				if row.reason == "no such file" && !errors.Is(err, os.ErrNotExist) {
+					t.Fatalf("expected missing installation file, got %v", err)
+				}
+				if row.reason != "no such file" && !strings.Contains(err.Error(), row.reason) {
+					t.Fatalf("expected AGYCTL_APP_DIR %s refusal, got %v", row.reason, err)
+				}
+			}
+			defaults, err := DefaultCandidates(root, nil)
+			if err != nil || len(defaults) != 2 {
+				t.Fatalf("invalid environment must not affect explicit-path defaults: targets=%+v error=%v", defaults, err)
+			}
+		})
+	}
 }
 
 func layoutFixture(t *testing.T) string {

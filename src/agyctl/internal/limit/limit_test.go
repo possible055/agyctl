@@ -383,10 +383,57 @@ func TestTargetForBinarySelectsOnlyItsInstallation(t *testing.T) {
 		{name: "not a directory prefix match", binary: candidates[0].LanguageServer + ".copy", want: winproc.Target{BinaryPath: candidates[0].LanguageServer + ".copy"}},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			if got := targetForBinary(test.binary, candidates); got != test.want {
-				t.Fatalf("process target = %+v, want %+v", got, test.want)
+			if got, err := targetForBinary(test.binary, candidates); err != nil || got != test.want {
+				t.Fatalf("process target = %+v, want %+v, error=%v", got, test.want, err)
 			}
 		})
+	}
+}
+
+func TestCustomBinaryRetainsItsPairedClient(t *testing.T) {
+	root, err := filepath.EvalSymlinks(testutil.TempDir(t))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defaultRoot := filepath.Join(root, "default")
+	selectedRoot := filepath.Join(root, "stable-2.29")
+	binary := filepath.Join(selectedRoot, "resources", "bin", "language_server.exe")
+	executable := filepath.Join(selectedRoot, "Antigravity.exe")
+	candidates := []layout.Target{{
+		Root:           defaultRoot,
+		LanguageServer: filepath.Join(defaultRoot, "resources", "bin", "language_server.exe"),
+		Executable:     filepath.Join(defaultRoot, "Antigravity.exe"),
+	}}
+	if err := os.MkdirAll(filepath.Dir(binary), 0700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(executable, []byte("client identity fixture, never executed"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	want := winproc.Target{BinaryPath: binary, ExecutablePath: executable}
+	if got, err := targetForBinary(binary, candidates); err != nil || got != want {
+		t.Fatalf("custom process target = %+v, want %+v, error=%v", got, want, err)
+	}
+	if err := os.Remove(executable); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := targetForBinary(binary, candidates); err == nil || !strings.Contains(err.Error(), "paired client executable not found") {
+		t.Fatalf("missing paired executable error = %v", err)
+	}
+	if err := os.WriteFile(executable, []byte("client identity fixture, never executed"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	insiders := filepath.Join(selectedRoot, "Antigravity - Insiders.exe")
+	if err := os.WriteFile(insiders, []byte("client identity fixture, never executed"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	candidates = append(candidates, layout.Target{
+		Root:           defaultRoot,
+		LanguageServer: candidates[0].LanguageServer,
+		Executable:     filepath.Join(defaultRoot, "Antigravity - Insiders.exe"),
+	})
+	if _, err := targetForBinary(binary, candidates); err == nil || !strings.Contains(err.Error(), "ambiguous paired client") {
+		t.Fatalf("ambiguous paired executable error = %v", err)
 	}
 }
 
@@ -500,6 +547,46 @@ func TestFixedVectorManifestRestoreAndUnrecordedBackup(t *testing.T) {
 	}
 }
 
+func TestLegacyZeroIDPatchAndUnrecordedRestore(t *testing.T) {
+	reg, original := fixtures(t)
+	directory := testutil.TempDir(t)
+	binary := filepath.Join(directory, "language_server.bin")
+	s := store{directory: filepath.Join(directory, "state")}
+	if err := os.WriteFile(binary, original, 0600); err != nil {
+		t.Fatal(err)
+	}
+	o, err := parseOptions([]string{"patch", "--ids", "0"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	preview, err := patch(binary, o, reg, s, nil)
+	want := []ModelLimit{{ID: 0, Limit: DefaultLimit}}
+	if err != nil || !reflect.DeepEqual(preview["model_limits"], want) {
+		t.Fatalf("legacy zero-ID preview = %v (%v)", preview, err)
+	}
+	plan := preview["plan"].(Plan)
+	if _, err = patchBinary(binary, original, ApplyPatch(original, plan), fsx.SHA256(original), "", "unverified", []int{0}, DefaultLimit, plan, s, ""); err != nil {
+		t.Fatal(err)
+	}
+	reported, err := status(binary, reg, s, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	summary := reported.(map[string]any)
+	if summary["settings_state"] != "applied" || !reflect.DeepEqual(summary["patch_state"].(map[string]any)["model_limits"], want) {
+		t.Fatalf("legacy zero-ID status = %+v", summary)
+	}
+	if err = os.Remove(s.path()); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = restoreBinary(binary, reg, s, ""); err != nil {
+		t.Fatal(err)
+	}
+	if actual, err := fsx.Hash(binary); err != nil || actual != fsx.SHA256(original) {
+		t.Fatalf("legacy zero-ID restored SHA = %s (%v)", actual, err)
+	}
+}
+
 func TestFixedVectorStatusJSONContract(t *testing.T) {
 	reg, original := fixtures(t)
 	goldenData, err := os.ReadFile(filepath.Join("..", "..", "testdata", "limit", "status.json"))
@@ -558,6 +645,20 @@ func TestFixedVectorStatusJSONContract(t *testing.T) {
 				report["path"] = placeholder
 			}
 		}
+		patchState := actual["patch_state"].(map[string]any)
+		if kind == "patched" {
+			decoded, _ := json.Marshal(patchState["model_limits"])
+			want, _ := json.Marshal(uniformLimits(ids, DefaultLimit))
+			if !bytes.Equal(decoded, want) || actual["settings_state"] != "applied" || actual["saved_settings"] == nil {
+				t.Fatalf("additive settings contract = %s", data)
+			}
+		} else if patchState["model_limits"] != nil || actual["settings_state"] != "not-configured" || actual["saved_settings"] != nil {
+			t.Fatalf("original settings contract = %s", data)
+		}
+		delete(patchState, "model_limits")
+		delete(patchState, "encoding")
+		delete(actual, "saved_settings")
+		delete(actual, "settings_state")
 		if !reflect.DeepEqual(actual, expected[kind]) {
 			t.Fatalf("%s status = %s; want %+v", kind, data, expected[kind])
 		}

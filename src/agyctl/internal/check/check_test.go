@@ -390,6 +390,25 @@ func TestASARContract(t *testing.T) {
 	if got, err := probeAsar(path, ""); got != nil || err == nil || errorType(err) != "FileNotFoundError" {
 		t.Fatalf("unpacked I/O failure was swallowed: %#v, %v", got, err)
 	}
+	t.Run("unpacked member refuses symbolic links", func(t *testing.T) {
+		put(t, path, raw)
+		external := filepath.Join(dir, "outside.node")
+		put(t, external, []byte("outside"))
+		member := filepath.Join(path+".unpacked", "native.node")
+		if err := os.Remove(member); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.Symlink(external, member); err != nil {
+			t.Skipf("symbolic links unavailable: %v", err)
+		}
+		archive, err := openAsar(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got, err := archive.read("native.node"); got != nil || err == nil || errorType(err) != "AsarError" || !strings.Contains(err.Error(), "regular file") {
+			t.Fatalf("linked unpacked member = %q, %v", got, err)
+		}
+	})
 }
 
 func TestFeedAndDownloadContract(t *testing.T) {
@@ -640,6 +659,70 @@ func TestPatchedBodyClassification(t *testing.T) {
 	}
 }
 
+func TestLinkedPatchScreening(t *testing.T) {
+	data := fixture(t, "pe-x64.bin")
+	im, err := imageText(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	functions, err := locateFunctions(data, []string{funcClamp})
+	if err != nil {
+		t.Fatal(err)
+	}
+	f := functions[funcClamp]
+	if f == nil || f.Size != 128 || f.Entryoff+128+8 >= im.size-64 {
+		t.Fatalf("fixture cannot hold linked patch: function=%+v text=%+v", f, im)
+	}
+	first, second := im.size-64, im.size-32
+	body := linkedPatchTemplate()
+	binary.LittleEndian.PutUint32(body[16:20], uint32(first-f.Entryoff-20))
+	copy(data[im.offset+f.Entryoff:], body)
+	for index, position := range []uint64{first, second} {
+		node := data[im.offset+position-8 : im.offset+position+16]
+		copy(node[:8], bytes.Repeat([]byte{0xcc}, 8))
+		binary.LittleEndian.PutUint32(node[8:12], uint32(1318+index))
+		binary.LittleEndian.PutUint32(node[12:16], uint32(300000+index*200000))
+		binary.LittleEndian.PutUint32(node[16:20], 0)
+		if index == 0 {
+			binary.LittleEndian.PutUint32(node[16:20], uint32(second-first))
+		}
+		copy(node[20:24], "AGL2")
+	}
+	filename := filepath.Join(testutil.TempDir(t), "linked.bin")
+	for _, row := range []struct {
+		name string
+		edit func([]byte)
+		kind string
+	}{
+		{"valid", nil, "ours-patched"},
+		{"duplicate id", func(b []byte) { binary.LittleEndian.PutUint32(b[im.offset+second:], 1318) }, "unknown"},
+		{"cycle", func(b []byte) { binary.LittleEndian.PutUint32(b[im.offset+second+8:], ^uint32(31)) }, "unknown"},
+		{"missing magic", func(b []byte) { b[im.offset+first+12] = 0 }, "unknown"},
+		{"zero limit", func(b []byte) { binary.LittleEndian.PutUint32(b[im.offset+first+4:], 0) }, "unknown"},
+		{"out of bounds", func(b []byte) { binary.LittleEndian.PutUint32(b[im.offset+f.Entryoff+16:], 0x7fffffff) }, "unknown"},
+		{"changed body", func(b []byte) { b[im.offset+f.Entryoff+40] ^= 1 }, "unknown"},
+	} {
+		t.Run(row.name, func(t *testing.T) {
+			input := bytes.Clone(data)
+			if row.edit != nil {
+				row.edit(input)
+			}
+			put(t, filename, input)
+			result, err := probeLS(filename, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			clamp := obj(obj(result["fingerprint"])["clamp"])
+			if clamp["kind"] != row.kind {
+				t.Fatalf("clamp=%+v", clamp)
+			}
+			if row.kind == "ours-patched" {
+				jsonEqual(t, clamp["model_limits"], []object{{"id": 1318, "limit": 300000}, {"id": 1319, "limit": 500000}})
+			}
+		})
+	}
+}
+
 func TestCLIFlagsContract(t *testing.T) {
 	o, e := parseOptions("assets", []string{"--json", "--work-dir", "work", "check", "--channel=hub", "--platform", "win-x64", "--platform=linux-x64", "--version", "2.29.0", "--matrix", "--skip-download", "--keep-work", "--reports-dir", "reports"})
 	if e != nil {
@@ -661,6 +744,7 @@ func TestCLIFlagsContract(t *testing.T) {
 }
 
 func TestExplicitInstallationProductBinding(t *testing.T) {
+	t.Setenv("AGYCTL_APP_DIR", "invalid-relative-root")
 	root := testutil.TempDir(t)
 	install := filepath.Join(root, "selected")
 	platform := runtime.GOOS
@@ -688,11 +772,51 @@ func TestExplicitInstallationProductBinding(t *testing.T) {
 	if err != nil || selected.Channel != "insiders" || selected.Product != "Antigravity - Insiders" {
 		t.Fatalf("selected=%+v error=%v", selected, err)
 	}
+	caseVariant := filepath.Join(root, "SELECTED")
+	put(t, filepath.Join(caseVariant, resources, "app.asar"), validAsar(t))
+	selected, err = findInstall(options{root: root, install: caseVariant})
+	wantProduct := ""
+	if runtime.GOOS == "windows" {
+		wantProduct = "Antigravity - Insiders"
+	}
+	if err != nil || selected.Product != wantProduct {
+		t.Fatalf("case-variant installation=%+v want product=%q error=%v", selected, wantProduct, err)
+	}
 	other := filepath.Join(root, "unknown")
 	put(t, filepath.Join(other, resources, "app.asar"), validAsar(t))
 	selected, err = findInstall(options{root: root, install: other, channel: "insiders"})
 	if err != nil || selected.Product != "" {
 		t.Fatalf("unknown root inferred product from channel: %+v error=%v", selected, err)
+	}
+}
+
+func TestLocalDiscoveryRequiresOneInstallation(t *testing.T) {
+	root := testutil.TempDir(t)
+	config, err := layout.Load(repoRoot(t), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	platform, err := config.Target(runtime.GOOS, runtime.GOARCH)
+	if err != nil {
+		t.Fatal(err)
+	}
+	p := config.Platforms[platform.NodePlatform]
+	for index := range p.Channels {
+		p.Channels[index].Root = filepath.Join(root, fmt.Sprintf("install-%d", index))
+		put(t, filepath.Join(p.Channels[index].Root, p.Resources, "app.asar"), validAsar(t))
+	}
+	config.Platforms[platform.NodePlatform] = p
+	data, err := json.Marshal(config)
+	if err != nil {
+		t.Fatal(err)
+	}
+	put(t, filepath.Join(root, "compat", "install-layout.json"), data)
+	if _, err = findInstall(options{root: root}); err == nil || !strings.Contains(err.Error(), "multiple Antigravity installations") {
+		t.Fatalf("ambiguous discovery error=%v", err)
+	}
+	selected, err := findInstall(options{root: root, channel: "antigravity"})
+	if err != nil || selected.Channel != "antigravity" || selected.Root != p.Channels[1].Root {
+		t.Fatalf("channel selection=%+v error=%v", selected, err)
 	}
 }
 

@@ -148,6 +148,14 @@
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
     .check input { margin-top: 3px; accent-color: var(--foreground); }
+    .feature-switch { display: flex; align-items: center; gap: 10px; }
+    .feature-switch input, .model-limit-row input[type="checkbox"] { accent-color: var(--foreground); width: 17px; height: 17px; }
+    .model-limit-row { display: grid; grid-template-columns: 20px minmax(0, 1fr) minmax(100px, 160px); gap: 10px; align-items: center; }
+    .model-limit-row + .model-limit-row { margin-top: 8px; }
+    .model-limit-name { overflow-wrap: anywhere; }
+    .model-limit-display { margin-right: 6px; }
+    .model-effort { display: inline-block; padding: 0 6px; border-radius: 9999px; font-size: 10px; line-height: 16px; color: var(--muted-foreground); background: var(--track); border: 1px solid var(--border); vertical-align: 1px; }
+    .feature-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 
     .price-list { display: flex; flex-direction: column; }
     .price-entry { display: flex; flex-direction: column; gap: 4px; padding: 8px 0; }
@@ -309,18 +317,26 @@
           </div>
         </div>
 
-        <h2 class="group-title" data-i18n="patchesTitle">Client modifications</h2>
-        <div class="group">
-          <div class="row stacked">
-            <p class="muted small" data-i18n="modifyHint"></p>
-            <pre class="job-output" id="modify-commands">npm run capsule:install
-npm run localization -- select &lt;locale&gt;
-npm run host-patch -- plan
-npm run limit:status</pre>
-            <p class="muted small" id="limit-diagnostics"></p>
-            <p class="error" id="management-error" role="status"></p>
+        <div class="feature-heading"><h2 class="group-title" data-i18n="patchesTitle">補丁</h2><span class="muted small" id="feature-installation"></span></div>
+        <form class="group" id="feature-form">
+          <div class="row">
+            <label class="feature-switch"><input id="feature-capsule" type="checkbox" disabled><span data-i18n="featureCapsule">輸入框膠囊</span></label>
           </div>
-        </div>
+          <div class="row">
+            <label class="feature-switch"><input id="feature-localization" type="checkbox" disabled><span data-i18n="featureLocalization">介面語言</span></label>
+            <select id="feature-locale" disabled aria-label="介面語言"><option value="en">English</option><option value="zh-Hant-TW">繁體中文</option><option value="zh-Hans-CN">简体中文</option><option value="ja-JP">日本語</option></select>
+          </div>
+          <div class="row stacked">
+            <label class="feature-switch"><input id="feature-limit" type="checkbox" disabled><span data-i18n="featureContext">模型上下文上限</span></label>
+            <div id="model-limits"></div>
+            <p class="muted small" id="model-catalog-status" role="status"></p>
+          </div>
+          <div class="row stacked">
+            <div class="actions"><button type="submit" class="button primary" id="btn-apply-features" disabled data-i18n="featureApply">儲存設定</button><button type="button" class="button compact" id="btn-reload-features" data-i18n="featureReload">重新讀取</button><button type="button" class="button compact" id="btn-cancel-features" hidden data-i18n="cancel">取消</button><span class="muted small" id="feature-status" role="status"></span></div>
+            <p class="muted small" id="feature-draft-command"></p>
+            <p class="error" id="feature-error" role="alert"></p>
+          </div>
+        </form>
       </section>
     </main>
   </div>
@@ -366,6 +382,12 @@ npm run limit:status</pre>
       let pricingDamage = null;
       let editingModel = null;
       let settingsData = null;
+      let featureSnapshot = null;
+      let featureDraftRevision = null;
+      let featureRows = [];
+      let featureDirty = false;
+      let featureInFlight = false;
+      let featureSubmitting = false;
       let pollIntervalMs = 10000;
 
       function t() {
@@ -394,7 +416,8 @@ npm run limit:status</pre>
         renderUsage();
         if (pricingData) renderPricing();
         if (pricingDamage) showPricingDamage();
-        if (diagnostics) renderDiagnostics();
+        renderModelRows();
+        updateFeatureControls();
       }
 
       async function request(url, data, allowError = false) {
@@ -409,7 +432,11 @@ npm run limit:status</pre>
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const result = await response.json();
-        if (!allowError && result.error) throw new Error(result.error);
+        if (!allowError && result.error) {
+          const error = new Error(result.error);
+          error.code = result.code;
+          throw error;
+        }
         return result;
       }
 
@@ -811,27 +838,158 @@ npm run limit:status</pre>
         }
       }
 
-      let diagnostics = null;
-      async function loadDiagnostics() {
-        try {
-          diagnostics = await request('/api/diagnostics');
-          renderDiagnostics();
-        } catch (error) {
-          $('management-error').textContent = error.message;
+      function featureBusy() {
+        return ['waiting', 'preparing', 'applying'].includes(featureSnapshot?.operation?.state);
+      }
+
+      function updateFeatureControls() {
+        const disabled = !featureSnapshot || featureBusy() || featureSubmitting;
+        for (const id of ['feature-capsule', 'feature-localization', 'feature-limit']) $(id).disabled = disabled;
+        $('feature-locale').disabled = disabled || !$('feature-localization').checked;
+        $('feature-locale').setAttribute('aria-label', t().featureLocalization);
+        $('btn-apply-features').disabled = disabled || !featureDirty;
+        $('btn-reload-features').disabled = featureInFlight || featureSubmitting || featureBusy();
+        const operation = featureSnapshot?.operation;
+        $('btn-cancel-features').hidden = !['waiting', 'preparing'].includes(operation?.state);
+        $('btn-cancel-features').disabled = featureSubmitting;
+        const draft = featureSnapshot?.draft;
+        $('feature-status').textContent = operation
+          ? (t().featureStates[operation.state] || '')
+          : draft
+            ? t().featureDraftSaved
+            : '';
+        $('feature-draft-command').textContent = draft?.commands?.apply ?? '';
+        for (const row of featureRows) {
+          if (!row.controls) continue;
+          row.controls.enabled.disabled = disabled || !$('feature-limit').checked || row.id === null;
+          row.controls.limit.disabled = disabled || !$('feature-limit').checked || !row.enabled || row.id === null;
         }
       }
 
-      function renderDiagnostics() {
-        $('limit-diagnostics').textContent = [
-          t().limitDiagnostics,
-          diagnostics.error,
-          ...diagnostics.conversations.map(row => row.id.slice(0, 8) + ': ' + (row.error || row.limits.join(', ') || '—'))
-        ].filter(Boolean).join(' ');
+      function markFeaturesDirty() {
+        featureDirty = true;
+        $('feature-error').textContent = '';
+        updateFeatureControls();
+      }
+
+      function renderModelRows() {
+        const container = $('model-limits');
+        container.textContent = '';
+        for (const row of featureRows) {
+          const node = element('div', 'model-limit-row');
+          const enabled = element('input');
+          enabled.type = 'checkbox';
+          enabled.checked = row.enabled;
+          enabled.setAttribute('aria-label', t().featureModelEnabled);
+          enabled.addEventListener('change', () => { row.enabled = enabled.checked; markFeaturesDirty(); });
+          node.append(enabled);
+          const name = element('div', 'model-limit-name');
+          const displayName = row.baseName || row.name || t().featureUnknownModel(row.id);
+          name.append(element('span', 'model-limit-display', displayName));
+          if (row.effort) name.append(element('span', 'model-effort', row.effort[0].toUpperCase() + row.effort.slice(1)));
+          const sameBase = (other) => other !== row && (other.baseName || other.name) === (row.baseName || row.name) && (other.effort ?? null) === (row.effort ?? null);
+          if (row.alias && featureRows.some(sameBase))
+            name.append(element('div', 'muted small', row.alias));
+          if (row.id === null) name.append(element('div', 'muted small', t().featureUnmappedModel));
+          else if (row.available === false) name.append(element('div', 'muted small', t().featureUnavailableModel));
+          node.append(name);
+          const field = element('label', 'field');
+          const input = element('input');
+          input.type = 'number';
+          input.min = '256000';
+          input.max = '896000';
+          input.step = '1';
+          input.value = row.limit;
+          input.setAttribute('aria-label', `${row.name || t().featureUnknownModel(row.id)} · ${t().featureTokenLimit}`);
+          input.addEventListener('input', () => { row.limit = input.value; markFeaturesDirty(); });
+          field.append(element('span', '', t().featureTokenLimit), input);
+          node.append(field);
+          container.appendChild(node);
+          row.controls = { enabled, limit: input };
+        }
+        updateFeatureControls();
+      }
+
+      function populateFeatures(snapshot) {
+        $('feature-capsule').checked = snapshot.features.capsule.enabled;
+        $('feature-localization').checked = snapshot.features.localization.enabled;
+        $('feature-locale').value = snapshot.features.localization.locale || currentLang;
+        $('feature-limit').checked = snapshot.features.limit.enabled;
+        const limits = snapshot.features.limit.modelLimits.length
+          ? snapshot.features.limit.modelLimits : snapshot.features.limit.savedModelLimits;
+        const values = new Map(limits.map(({ id, limit }) => [id, limit]));
+        const known = new Set();
+        featureRows = [];
+        for (const model of snapshot.catalog?.models || []) {
+          if (model.id !== null && known.has(model.id)) continue;
+          known.add(model.id);
+          featureRows.push({ ...model, enabled: model.id !== null && values.has(model.id),
+            id: model.id === null ? null : String(model.id), limit: String(values.get(model.id) ?? 256000) });
+        }
+        for (const [id, limit] of values) if (!known.has(id))
+          featureRows.push({ enabled: true, id: String(id), name: null, limit: String(limit) });
+        $('model-catalog-status').textContent = snapshot.catalog?.status === 'available'
+          ? '' : t().featureModelsUnavailable;
+        featureDraftRevision = snapshot.revision;
+        featureDirty = false;
+        renderModelRows();
+      }
+
+      async function loadFeatures(reset = false) {
+        if (featureInFlight) return;
+        featureInFlight = true;
+        updateFeatureControls();
+        try {
+          const snapshot = await request(reset ? '/api/features?fresh=1' : '/api/features');
+          const justApplied = featureBusy() && snapshot.operation?.state === 'succeeded';
+          featureSnapshot = snapshot;
+          $('feature-installation').textContent = `Antigravity ${snapshot.installation.version}`;
+          if (reset || !featureDirty || justApplied) populateFeatures(snapshot);
+          $('feature-error').textContent = snapshot.operation?.state === 'failed'
+            ? (t().featureErrors[snapshot.operation.code] || t().featureApplyFailed) : '';
+        } catch (error) {
+          $('feature-error').textContent = t().featureReadFailed;
+        } finally {
+          featureInFlight = false;
+          updateFeatureControls();
+        }
+      }
+
+      async function applyFeatures(event) {
+        event.preventDefault();
+        if (!featureSnapshot || featureBusy() || featureSubmitting || !featureDirty) return;
+        try {
+          const enabled = $('feature-limit').checked;
+          const modelLimits = enabled ? featureRows.filter(row => row.enabled).map(row => {
+            if (!/^\d+$/.test(row.id) || !/^\d+$/.test(row.limit)) throw new Error(t().featureInvalidLimits);
+            const id = Number(row.id), limit = Number(row.limit);
+            if (!Number.isInteger(id) || id < 0 || id > 2147483647 || !Number.isInteger(limit) || limit < 256000 || limit > 896000) throw new Error(t().featureInvalidLimits);
+            return { id, limit };
+          }).sort((a, b) => a.id - b.id) : [];
+          if (enabled && (!modelLimits.length || new Set(modelLimits.map(row => row.id)).size !== modelLimits.length)) throw new Error(t().featureInvalidLimits);
+          featureSubmitting = true;
+          updateFeatureControls();
+          const result = await request('/api/features/apply', {
+            revision: featureDraftRevision,
+            capsule: $('feature-capsule').checked,
+            localization: { enabled: $('feature-localization').checked, locale: $('feature-locale').value },
+            limit: { enabled, modelLimits }
+          });
+          featureSnapshot.operation = result.operation;
+          featureSnapshot.draft = result.draft;
+          featureDirty = false;
+          $('feature-error').textContent = '';
+        } catch (error) {
+          $('feature-error').textContent = error.message === t().featureInvalidLimits
+            ? error.message : (t().featureErrors[error.code] || t().featureApplyFailed);
+        } finally {
+          featureSubmitting = false;
+          updateFeatureControls();
+        }
       }
 
       function selectView(view) {
         activeView = view;
-        if (view === 'settings') void loadDiagnostics();
         try { localStorage.setItem(VIEW_KEY, view); } catch (e) {}
         for (const name of VIEW_NAMES) {
           $(`view-${name}`).hidden = name !== view;
@@ -862,6 +1020,7 @@ npm run limit:status</pre>
       function pollLoop() {
         if (activeView === 'settings') {
           void loadPricing();
+          void loadFeatures();
         } else {
           void fetchUsage();
         }
@@ -878,7 +1037,7 @@ npm run limit:status</pre>
       $('btn-refresh').addEventListener('click', () => {
         if (activeView === 'settings') {
           void loadPricing(true);
-          void loadDiagnostics();
+          void loadFeatures(true);
         } else {
           void fetchUsage(true);
         }
@@ -890,6 +1049,19 @@ npm run limit:status</pre>
       $('session-sort').addEventListener('change', renderSessions);
       $('setting-lang').addEventListener('change', () => localeBinding.select($('setting-lang').value));
       $('setting-interval').addEventListener('change', () => { void saveInterval(); });
+      for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-locale']) $(id).addEventListener('change', markFeaturesDirty);
+      $('feature-form').addEventListener('submit', applyFeatures);
+      $('btn-reload-features').addEventListener('click', () => { void loadFeatures(true); });
+      $('btn-cancel-features').addEventListener('click', async () => {
+        if (featureSubmitting || !featureSnapshot?.operation) return;
+        featureSubmitting = true;
+        updateFeatureControls();
+        try {
+          const result = await request('/api/features/cancel', { id: featureSnapshot.operation.id });
+          featureSnapshot.operation = result.operation;
+        } catch (error) { $('feature-error').textContent = t().featureErrors[error.code] || t().featureApplyFailed; }
+        finally { featureSubmitting = false; updateFeatureControls(); }
+      });
       $('btn-add-price').addEventListener('click', () => openPriceForm(null, false));
       $('price-form').addEventListener('input', () => {
         pricingDirty = true;

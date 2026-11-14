@@ -1,4 +1,6 @@
+import { cancelFeatureApply, queueFeatureApply, readFeatures } from './feature-control.mjs';
 import { readContextLimitDiagnostics } from './limit-diagnostics.mjs';
+import { readLimitStatus } from './limit-status.mjs';
 import { renderPanelPage } from './page.mjs';
 import { readPricingStatus, repairPricing, savePricing } from './pricing.mjs';
 import { readSettings, saveSettings } from './settings.mjs';
@@ -7,10 +9,12 @@ import { getUsageOverview } from './usage.mjs';
 // 動態嘗試載入 sidecar_sdk (Antigravity 運行時自動解析)
 let SidecarApp;
 let SidecarResponse;
+let productionSdk = false;
 try {
   const sdk = await import('sidecar_sdk');
   SidecarApp = sdk.SidecarApp;
   SidecarResponse = sdk.Response;
+  productionSdk = true;
 } catch (e) {
   if (
     e.code !== 'ERR_MODULE_NOT_FOUND' ||
@@ -102,6 +106,17 @@ try {
 
 const app = new SidecarApp();
 
+app.api(
+  '/api/limit-status',
+  async () =>
+    new SidecarResponse(JSON.stringify(await readLimitStatus()), {
+      contentType: 'application/json; charset=utf-8',
+      status: 200,
+      headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' },
+    }),
+  'GET',
+);
+
 // 靜態頁面路由
 app.page('/', () => renderPanelPage());
 
@@ -109,9 +124,38 @@ const handle = (action) => async (data) => {
   try {
     return await action(data);
   } catch (error) {
-    return { error: error.message };
+    return {
+      error: error.message,
+      ...(typeof error.code === 'string' ? { code: error.code } : {}),
+    };
   }
 };
+
+const featureAction = (action) =>
+  handle((data) => {
+    if (productionSdk && !process.env.ANTIGRAVITY_SIDECAR_UI_TOKEN?.trim()) {
+      throw Object.assign(new Error('Patch controls are unavailable in this host'), {
+        code: 'FEATURE_UNAVAILABLE',
+      });
+    }
+    return action(data);
+  });
+
+app.api(
+  '/api/features',
+  handle((data) => readFeatures({ fresh: data?.fresh === '1' || data?.fresh === true })),
+  'GET',
+);
+app.api(
+  '/api/features/apply',
+  featureAction((data) => queueFeatureApply(data)),
+  'POST',
+);
+app.api(
+  '/api/features/cancel',
+  featureAction((data) => cancelFeatureApply(data)),
+  'POST',
+);
 
 app.api(
   '/api/usage',

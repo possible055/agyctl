@@ -16,6 +16,7 @@ import {
 import { uninstallCapsule } from '../../scripts/capsule-uninstall.mjs';
 import { replaceFileTransaction } from '../../scripts/lib/file-transaction.mjs';
 import { inspectPlugin, installPlugin } from '../../scripts/plugin-install.mjs';
+import { uninstallPlugin } from '../../scripts/plugin-uninstall.mjs';
 import { writeServedLanguageServer } from './helpers/synthetic-ls.mjs';
 
 const require = createRequire(import.meta.url);
@@ -391,20 +392,71 @@ test('plugin install replaces the package atomically and preserves the previous 
   const second = writePackage('second', 'export const marker = 2;\n');
   const target = path.join(root, 'config', 'plugins', 'agyctl');
 
-  assert.equal(installPlugin({ sourceDir: first, targetDir: target }).changed, true);
-  assert.equal(installPlugin({ sourceDir: first, targetDir: target }).changed, false);
+  const repositoryRoot = path.join(root, 'repository');
+  const env = {
+    AGYCTL_APP_DIR: path.join(root, 'selected-client'),
+    AGYCTL_HOME: path.join(root, 'state'),
+  };
+  const options = { repositoryRoot, env, targetDir: target };
+  assert.throws(
+    () =>
+      installPlugin({ ...options, sourceDir: first, env: { AGYCTL_APP_DIR: 'relative-client' } }),
+    /AGYCTL_APP_DIR must be an absolute installation root/,
+  );
+  assert.equal(fs.existsSync(target), false);
+  const installed = installPlugin({ ...options, sourceDir: first });
+  assert.equal(installed.changed, true);
+  const locator = JSON.parse(fs.readFileSync(path.join(target, 'agyctl-tools.json'), 'utf8'));
+  assert.deepEqual(locator, { repositoryRoot, ...env });
+  assert.equal(installPlugin({ ...options, sourceDir: first }).changed, false);
 
-  const updated = installPlugin({ sourceDir: second, targetDir: target });
+  const updated = installPlugin({ ...options, sourceDir: second });
   assert.equal(updated.changed, true);
-  assert.equal(inspectPlugin(target).sha256, inspectPlugin(second).sha256);
-  assert.equal(inspectPlugin(updated.previousPath).sha256, inspectPlugin(first).sha256);
+  assert.equal(inspectPlugin(target).sha256, updated.sha256);
+  assert.equal(
+    fs.readFileSync(path.join(target, 'sidecars/panel/main.mjs'), 'utf8'),
+    'export const marker = 2;\n',
+  );
+  assert.equal(inspectPlugin(updated.previousPath).sha256, installed.sha256);
+  assert.deepEqual(
+    JSON.parse(fs.readFileSync(path.join(updated.previousPath, 'agyctl-tools.json'), 'utf8')),
+    locator,
+  );
 
   fs.rmSync(path.join(second, 'plugin.json'));
-  assert.throws(
-    () => installPlugin({ sourceDir: second, targetDir: target }),
-    /missing plugin\.json/,
-  );
+  assert.throws(() => installPlugin({ ...options, sourceDir: second }), /missing plugin\.json/);
   assert.equal(inspectPlugin(target).sha256, updated.sha256);
+});
+
+test('plugin uninstall moves the package aside and preserves it for inspection', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-plugin-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const source = path.join(root, 'source');
+  fs.mkdirSync(path.join(source, 'sidecars', 'panel'), { recursive: true });
+  fs.writeFileSync(
+    path.join(source, 'plugin.json'),
+    JSON.stringify({ name: 'agyctl', version: '1.0.0' }),
+  );
+  fs.writeFileSync(path.join(source, 'sidecars', 'panel', 'main.mjs'), 'export {};\n');
+  fs.writeFileSync(path.join(source, 'sidecars', 'panel', 'sidecar.json'), '{}');
+  const target = path.join(root, 'config', 'plugins', 'agyctl');
+
+  assert.deepEqual(uninstallPlugin({ targetDir: target }), {
+    installed: false,
+    path: target,
+    changed: false,
+  });
+
+  const digest = installPlugin({ sourceDir: source, targetDir: target }).sha256;
+  const removed = uninstallPlugin({ targetDir: target });
+  assert.equal(removed.changed, true);
+  assert.equal(fs.existsSync(target), false);
+  assert.equal(inspectPlugin(removed.removedPath).sha256, digest);
+  assert.deepEqual(uninstallPlugin({ targetDir: target }), {
+    installed: false,
+    path: target,
+    changed: false,
+  });
 });
 
 test('capsule install refuses a client whose web bundle lost an anchor before any write', async (t) => {

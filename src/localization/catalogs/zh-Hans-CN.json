@@ -3,7 +3,7 @@
   "formatLocale": "zh-CN",
   "provenance": {
     "kind": "vendor",
-    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor antigravity2-cn candidates; the New Conversation conflict (新建对话/新建会话) resolves to 新建对话 (menu_nav context matches the command surface). C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order)."
+    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor antigravity2-cn candidates; the New Conversation conflict (新建对话/新建会话) resolves to 新建对话 (menu_nav context matches the command surface). C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order). DOM acceptance additions for the 2.31.0 reviewed surfaces are authored translations."
   },
   "messages": {
     "workbench.hover.statusBar.background": {
@@ -7343,7 +7343,7 @@
       "reviewed": true
     },
     "additional.ui.1d432f58690c": {
-      "value": "对话",
+      "value": "会话列表",
       "reviewed": true
     },
     "additional.ui.63251b499acf": {
@@ -7659,11 +7659,11 @@
       "reviewed": true
     },
     "additional.ui.e288f8c522f9": {
-      "value": "没有可用的插件。",
+      "value": "没有可用插件。",
       "reviewed": true
     },
     "additional.ui.bd5f13ed6e2f": {
-      "value": "探索市场中的其他自定义项",
+      "value": "探索市场中的其他自定义功能",
       "reviewed": true
     },
     "additional.ui.9da6e51922a4": {
@@ -7711,7 +7711,7 @@
       "reviewed": true
     },
     "additional.ui.d942a3b7a330": {
-      "value": "连接账号，让智能体运行自动化任务。",
+      "value": "连接账户，让智能体能运行自动化任务。",
       "reviewed": true
     },
     "additional.ui.274c093398e9": {
@@ -7735,7 +7735,7 @@
       "reviewed": true
     },
     "additional.ui.2213674d8004": {
-      "value": "自定义项",
+      "value": "自定义设置",
       "reviewed": true
     },
     "additional.ui.15951a57699d": {
@@ -10123,7 +10123,7 @@
       "reviewed": true
     },
     "static.gap.cd2aeb6df4f4": {
-      "value": "常规",
+      "value": "通用常规",
       "reviewed": true
     },
     "static.gap.783fd65c2248": {
@@ -10143,7 +10143,7 @@
       "reviewed": true
     },
     "static.gap.8356dab278e8": {
-      "value": "了解详情",
+      "value": "了解更多",
       "reviewed": true
     },
     "static.gap.816511b2e60c": {
@@ -10155,11 +10155,11 @@
       "reviewed": true
     },
     "static.gap.6d38a3aa8500": {
-      "value": "关闭",
+      "value": "忽略",
       "reviewed": true
     },
     "static.gap.4100064f592e": {
-      "value": "对话",
+      "value": "会话列表",
       "reviewed": true
     },
     "static.gap.278e2a477c54": {
@@ -10263,19 +10263,19 @@
       "reviewed": true
     },
     "static.gap.30fdfb5081b2": {
-      "value": "技能",
+      "value": "技能预设",
       "reviewed": true
     },
     "static.gap.379a5808eeb8": {
-      "value": "自定义项",
+      "value": "自定义设置",
       "reviewed": true
     },
     "static.gap.4b9cd3533797": {
-      "value": "智能体",
+      "value": "Agent",
       "reviewed": true
     },
     "static.gap.712f6dc53ac8": {
-      "value": "子智能体",
+      "value": "子 Agent",
       "reviewed": true
     },
     "static.gap.d33449bcba70": {
@@ -10675,7 +10675,7 @@
       "reviewed": true
     },
     "static.gap.8512843009a3": {
-      "value": "计划审核策略",
+      "value": "计划审查策略",
       "reviewed": true
     },
     "static.gap.e5573e37f93d": {
@@ -10959,7 +10959,7 @@
       "reviewed": true
     },
     "static.gap.ad469d6ebb2e": {
-      "value": "智能体尝试操作不在允许列表中的部分网站",
+      "value": "Agent 尝试与部分不在允许列表中的网站交互",
       "reviewed": true
     },
     "static.gap.7b92c12c25c2": {
@@ -11527,7 +11527,7 @@
       "reviewed": true
     },
     "static.gap.2279d2d11bab": {
-      "value": "没有可用的插件。",
+      "value": "没有可用插件。",
       "reviewed": true
     },
     "static.gap.0262fbbfdbea": {
@@ -11567,7 +11567,7 @@
       "reviewed": true
     },
     "static.gap.5e00e60b5ba3": {
-      "value": "探索市场中的其他自定义项",
+      "value": "探索市场中的其他自定义功能",
       "reviewed": true
     },
     "static.gap.f487af730ac9": {
@@ -11719,11 +11719,11 @@
       "reviewed": true
     },
     "static.gap.a27b1c89c7f6": {
-      "value": "提出旁支问题，不打断主对话",
+      "value": "提出附加问题，不打断主要对话",
       "reviewed": true
     },
     "static.gap.9e518d180a6b": {
-      "value": "删除旁支问题",
+      "value": "删除附加问题",
       "reviewed": true
     },
     "static.gap.5f9db04b3d71": {
@@ -11923,7 +11923,7 @@
       "reviewed": true
     },
     "static.gap.a2c688f050e4": {
-      "value": "+ 添加议题策略",
+      "value": "+ 添加 Issue 策略",
       "reviewed": true
     },
     "static.gap.8bcf55a37970": {
@@ -11991,7 +11991,7 @@
       "reviewed": true
     },
     "static.gap.98aa06438f88": {
-      "value": "连接账号",
+      "value": "连接",
       "reviewed": true
     },
     "web.dynamic.dc640abd4cf0d6c6": {
@@ -12343,7 +12343,7 @@
       "reviewed": true
     },
     "web.dynamic.ff84641ed06fef4f": {
-      "value": "评论对象： ",
+      "value": "评论对象：",
       "reviewed": true
     },
     "web.dynamic.ae5291c673bdcb68": {
@@ -13088,10 +13088,6 @@
     },
     "web.dynamic.8734eddd2ca8c27d": {
       "value": "将于 {0} 后重置",
-      "reviewed": true
-    },
-    "web.dynamic.d2077bde840baab2": {
-      "value": "文件超出 20 MB 的显示上限（{0} MB）。",
       "reviewed": true
     },
     "web.dynamic.b5f27c050cde6d32": {
@@ -14618,10 +14614,6 @@
       "value": "需要手动确认：{0}",
       "reviewed": true
     },
-    "web.dynamic.90aa62f65eb057bd": {
-      "value": "嗨，{0}，今天要完成什么？",
-      "reviewed": true
-    },
     "web.dynamic.0a586ab59e4773bc": {
       "value": "使用 {0} 选择模型",
       "reviewed": true
@@ -14920,14 +14912,6 @@
     },
     "web.dynamic.a1a8d2ed8dc8704a": {
       "value": "嗨，{0}，今天要构建什么？",
-      "reviewed": true
-    },
-    "web.dynamic.5515778e51e23738": {
-      "value": "欢迎回来，{0}。要从哪里继续？",
-      "reviewed": true
-    },
-    "web.dynamic.4fb8a526799c61fa": {
-      "value": "很高兴见到你，{0}。接下来要做什么？",
       "reviewed": true
     },
     "web.dynamic.e8b4f6443778a215": {
@@ -15744,6 +15728,114 @@
     },
     "account.loginRequired": {
       "value": "请登录以使用智能体。",
+      "reviewed": true
+    },
+    "hub.ui.askAnythingMention": {
+      "value": "随意提问，用 @ 提及",
+      "reviewed": true
+    },
+    "hub.ui.slashForActions": {
+      "value": "，用 / 执行动作",
+      "reviewed": true
+    },
+    "notifications.preferences.prompt": {
+      "value": "选择是否在智能体需要你处理或完成任务时接收通知。",
+      "reviewed": true
+    },
+    "notifications.preferences.promptGemini": {
+      "value": "允许 Gemini 在智能体需要你处理或完成任务时通知你。",
+      "reviewed": true
+    },
+    "settings.permissions.conversationsDescription": {
+      "value": "配置智能体在本地和远程对话中可执行的操作。了解详情。",
+      "reviewed": true
+    },
+    "settings.shortcuts.searchPlaceholder": {
+      "value": "搜索快捷键…",
+      "reviewed": true
+    },
+    "projects.selectFolders": {
+      "value": "选择文件夹",
+      "reviewed": true
+    },
+    "projects.addFolder": {
+      "value": "添加文件夹",
+      "reviewed": true
+    },
+    "projects.selectResources": {
+      "value": "选择资源",
+      "reviewed": true
+    },
+    "projects.addResource": {
+      "value": "添加资源",
+      "reviewed": true
+    },
+    "settings.queue.sendImmediately": {
+      "value": "立即发送",
+      "reviewed": true
+    },
+    "settings.queue.queueMessage": {
+      "value": "将消息加入队列",
+      "reviewed": true
+    },
+    "nav.giveFeedback": {
+      "value": "提供反馈",
+      "reviewed": true
+    },
+    "projects.createNew": {
+      "value": "创建新项目",
+      "reviewed": true
+    },
+    "projects.options": {
+      "value": "项目选项",
+      "reviewed": true
+    },
+    "projects.newConversation": {
+      "value": "在项目中新建对话",
+      "reviewed": true
+    },
+    "settings.layout.knowledgeWork": {
+      "value": "知识工作",
+      "reviewed": true
+    },
+    "settings.layout.softwareEngineering": {
+      "value": "软件工程",
+      "reviewed": true
+    },
+    "settings.layout.knowledgeDescription": {
+      "value": "适合研究、写作和日常任务的简化界面。",
+      "reviewed": true
+    },
+    "settings.layout.softwareDescription": {
+      "value": "适合编程、开发者工具和代理管理的完整界面。",
+      "reviewed": true
+    },
+    "settings.permissions.heading": {
+      "value": "权限",
+      "reviewed": true
+    },
+    "settings.models.heading": {
+      "value": "模型",
+      "reviewed": true
+    },
+    "settings.permissions.descriptionBeforeLink": {
+      "value": "设置代理在本地和远程对话中可执行的操作。",
+      "reviewed": true
+    },
+    "session.pinConversation": {
+      "value": "置顶对话",
+      "reviewed": true
+    },
+    "settings.planInstruction.type": {
+      "value": "输入",
+      "reviewed": true
+    },
+    "settings.planInstruction.andSelect": {
+      "value": "并选择",
+      "reviewed": true
+    },
+    "session.emptyConversations": {
+      "value": "暂无对话",
       "reviewed": true
     }
   }

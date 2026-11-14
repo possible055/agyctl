@@ -99,7 +99,13 @@ jobs:
       - run: npm run lint
       - run: npm run test:prepare
       - run: npm run test:run
-      - run: npm run test:localization
+      - run: npm run test:localization:run
+      - name: Install the locked Electron runtime
+        run: node node_modules/electron/install.js
+      - name: Require three-locale isolated localization contracts
+        env:
+          AGYCTL_REQUIRE_ELECTRON: '1'
+        run: node --test tests/electron/localization/runner.test.mjs
       - run: npm run typecheck
       - run: npm run host:typecheck
       - run: npm run localization:typecheck

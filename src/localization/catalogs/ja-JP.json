@@ -3,7 +3,7 @@
   "formatLocale": "ja-JP",
   "provenance": {
     "kind": "vendor",
-    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor ja candidates (antigravity2-ja dictionary); every adopted value was present in the vendor catalog. C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order)."
+    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor ja candidates (antigravity2-ja dictionary); every adopted value was present in the vendor catalog. C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order). DOM acceptance additions for the 2.31.0 reviewed surfaces are authored translations."
   },
   "messages": {
     "workbench.hover.statusBar.background": {
@@ -7171,7 +7171,7 @@
       "reviewed": true
     },
     "additional.ui.c0334bae1053": {
-      "value": "標準設定に戻す",
+      "value": "デフォルトに戻す",
       "reviewed": true
     },
     "additional.ui.e27913f26e3f": {
@@ -7343,11 +7343,11 @@
       "reviewed": true
     },
     "additional.ui.1d432f58690c": {
-      "value": "会話",
+      "value": "会話一覧",
       "reviewed": true
     },
     "additional.ui.63251b499acf": {
-      "value": "フィードバックを送信",
+      "value": "フィードバックを提供する",
       "reviewed": true
     },
     "additional.ui.cc37714b1df6": {
@@ -7391,7 +7391,7 @@
       "reviewed": true
     },
     "additional.ui.b74f69d31541": {
-      "value": "サイドパネルで開く",
+      "value": "サイドペインで開く",
       "reviewed": true
     },
     "additional.ui.55d04950b307": {
@@ -7659,11 +7659,11 @@
       "reviewed": true
     },
     "additional.ui.e288f8c522f9": {
-      "value": "利用できるプラグインがありません。",
+      "value": "利用可能なプラグインがありません。",
       "reviewed": true
     },
     "additional.ui.bd5f13ed6e2f": {
-      "value": "マーケットプレイスの他のカスタマイズ項目を見る",
+      "value": "マーケットプレイスのほかのカスタマイズを探す",
       "reviewed": true
     },
     "additional.ui.9da6e51922a4": {
@@ -7711,7 +7711,7 @@
       "reviewed": true
     },
     "additional.ui.d942a3b7a330": {
-      "value": "エージェントが自動化を実行できるように、アカウントを接続してください。",
+      "value": "アカウントを接続すると、エージェントが自動化を実行できます。",
       "reviewed": true
     },
     "additional.ui.274c093398e9": {
@@ -10159,7 +10159,7 @@
       "reviewed": true
     },
     "static.gap.4100064f592e": {
-      "value": "会話",
+      "value": "会話一覧",
       "reviewed": true
     },
     "static.gap.278e2a477c54": {
@@ -10179,7 +10179,7 @@
       "reviewed": true
     },
     "static.gap.dcdfd31bcd9d": {
-      "value": "ログアウト",
+      "value": "サインアウト",
       "reviewed": true
     },
     "static.gap.3ab164291819": {
@@ -10219,7 +10219,7 @@
       "reviewed": true
     },
     "static.gap.0910253274bd": {
-      "value": "サイドバーを切り替え",
+      "value": "サイドバーの切り替え",
       "reviewed": true
     },
     "static.gap.f254f551a7ce": {
@@ -10303,7 +10303,7 @@
       "reviewed": true
     },
     "static.gap.edc1dc4437f7": {
-      "value": "成果物",
+      "value": "アーティファクト",
       "reviewed": true
     },
     "static.gap.b8aaf08d3704": {
@@ -10515,7 +10515,7 @@
       "reviewed": true
     },
     "static.gap.d910da5ed7d6": {
-      "value": "Linux 用 Windows サブシステム（WSL）",
+      "value": "Windows Subsystem for Linux",
       "reviewed": true
     },
     "static.gap.c678d3f8f63f": {
@@ -10675,7 +10675,7 @@
       "reviewed": true
     },
     "static.gap.8512843009a3": {
-      "value": "計画のレビュー方針",
+      "value": "プランのレビュー方針",
       "reviewed": true
     },
     "static.gap.e5573e37f93d": {
@@ -10891,7 +10891,7 @@
       "reviewed": true
     },
     "static.gap.0c41a48be956": {
-      "value": "補佐役（Chief of Staff）のキャンバス",
+      "value": "Chief of Staff キャンバス",
       "reviewed": true
     },
     "static.gap.8daf254a696f": {
@@ -11155,7 +11155,7 @@
       "reviewed": true
     },
     "static.gap.8526a2ee7e23": {
-      "value": "読み込み中…",
+      "value": "読み込み中...",
       "reviewed": true
     },
     "static.gap.3d167004ce3e": {
@@ -11527,7 +11527,7 @@
       "reviewed": true
     },
     "static.gap.2279d2d11bab": {
-      "value": "利用できるプラグインがありません。",
+      "value": "利用可能なプラグインがありません。",
       "reviewed": true
     },
     "static.gap.0262fbbfdbea": {
@@ -11567,7 +11567,7 @@
       "reviewed": true
     },
     "static.gap.5e00e60b5ba3": {
-      "value": "マーケットプレイスの他のカスタマイズ項目を見る",
+      "value": "マーケットプレイスのほかのカスタマイズを探す",
       "reviewed": true
     },
     "static.gap.f487af730ac9": {
@@ -11719,11 +11719,11 @@
       "reviewed": true
     },
     "static.gap.a27b1c89c7f6": {
-      "value": "メインの会話を中断せずに補足の質問をする",
+      "value": "メインの会話を中断せずに追加の質問をする",
       "reviewed": true
     },
     "static.gap.9e518d180a6b": {
-      "value": "補足の質問を削除",
+      "value": "追加の質問を削除",
       "reviewed": true
     },
     "static.gap.5f9db04b3d71": {
@@ -11919,11 +11919,11 @@
       "reviewed": true
     },
     "static.gap.635d6b02fc6b": {
-      "value": "課題",
+      "value": "Issue",
       "reviewed": true
     },
     "static.gap.a2c688f050e4": {
-      "value": "+ 課題のポリシーを追加",
+      "value": "+ Issue ポリシーを追加",
       "reviewed": true
     },
     "static.gap.8bcf55a37970": {
@@ -11991,7 +11991,7 @@
       "reviewed": true
     },
     "static.gap.98aa06438f88": {
-      "value": "アカウントを接続",
+      "value": "接続",
       "reviewed": true
     },
     "web.dynamic.dc640abd4cf0d6c6": {
@@ -12343,7 +12343,7 @@
       "reviewed": true
     },
     "web.dynamic.ff84641ed06fef4f": {
-      "value": "コメント対象： ",
+      "value": "コメントの対象：",
       "reviewed": true
     },
     "web.dynamic.ae5291c673bdcb68": {
@@ -13088,10 +13088,6 @@
     },
     "web.dynamic.8734eddd2ca8c27d": {
       "value": "{0} 後にリセット",
-      "reviewed": true
-    },
-    "web.dynamic.d2077bde840baab2": {
-      "value": "ファイルが表示上限の 20 MB を超えています（{0} MB）。",
       "reviewed": true
     },
     "web.dynamic.b5f27c050cde6d32": {
@@ -14618,10 +14614,6 @@
       "value": "手動での確認が必要です：{0}",
       "reviewed": true
     },
-    "web.dynamic.90aa62f65eb057bd": {
-      "value": "こんにちは、{0} さん。今日は何をしましょうか？",
-      "reviewed": true
-    },
     "web.dynamic.0a586ab59e4773bc": {
       "value": "{0} でモデルを選択",
       "reviewed": true
@@ -14920,14 +14912,6 @@
     },
     "web.dynamic.a1a8d2ed8dc8704a": {
       "value": "{0} さん、今日は何を作りましょうか？",
-      "reviewed": true
-    },
-    "web.dynamic.5515778e51e23738": {
-      "value": "おかえりなさい、{0} さん。どこから再開しましょうか？",
-      "reviewed": true
-    },
-    "web.dynamic.4fb8a526799c61fa": {
-      "value": "こんにちは、{0} さん。次は何をしましょうか？",
       "reviewed": true
     },
     "web.dynamic.e8b4f6443778a215": {
@@ -15744,6 +15728,114 @@
     },
     "account.loginRequired": {
       "value": "エージェントを使うにはログインしてください。",
+      "reviewed": true
+    },
+    "hub.ui.askAnythingMention": {
+      "value": "何でも質問、@ でメンション",
+      "reviewed": true
+    },
+    "hub.ui.slashForActions": {
+      "value": "、/ でアクション",
+      "reviewed": true
+    },
+    "notifications.preferences.prompt": {
+      "value": "エージェントが対応を求めているときやタスクを完了したときに通知を受け取るかどうかを選択します。",
+      "reviewed": true
+    },
+    "notifications.preferences.promptGemini": {
+      "value": "エージェントが対応を求めているときやタスクを完了したときに Gemini からの通知を許可します。",
+      "reviewed": true
+    },
+    "settings.permissions.conversationsDescription": {
+      "value": "ローカルおよびリモートの会話でエージェントが実行できる操作を設定します。詳細を見る。",
+      "reviewed": true
+    },
+    "settings.shortcuts.searchPlaceholder": {
+      "value": "ショートカットを検索…",
+      "reviewed": true
+    },
+    "projects.selectFolders": {
+      "value": "フォルダーを選択",
+      "reviewed": true
+    },
+    "projects.addFolder": {
+      "value": "フォルダーを追加",
+      "reviewed": true
+    },
+    "projects.selectResources": {
+      "value": "リソースを選択",
+      "reviewed": true
+    },
+    "projects.addResource": {
+      "value": "リソースを追加",
+      "reviewed": true
+    },
+    "settings.queue.sendImmediately": {
+      "value": "今すぐ送信",
+      "reviewed": true
+    },
+    "settings.queue.queueMessage": {
+      "value": "メッセージをキューに追加",
+      "reviewed": true
+    },
+    "nav.giveFeedback": {
+      "value": "フィードバックを送信",
+      "reviewed": true
+    },
+    "projects.createNew": {
+      "value": "新しいプロジェクトを作成",
+      "reviewed": true
+    },
+    "projects.options": {
+      "value": "プロジェクトのオプション",
+      "reviewed": true
+    },
+    "projects.newConversation": {
+      "value": "プロジェクトで新しい会話",
+      "reviewed": true
+    },
+    "settings.layout.knowledgeWork": {
+      "value": "ナレッジワーク",
+      "reviewed": true
+    },
+    "settings.layout.softwareEngineering": {
+      "value": "ソフトウェアエンジニアリング",
+      "reviewed": true
+    },
+    "settings.layout.knowledgeDescription": {
+      "value": "調査、執筆、日常の作業向けのシンプルなインターフェース。",
+      "reviewed": true
+    },
+    "settings.layout.softwareDescription": {
+      "value": "コーディング、開発者ツール、エージェント管理向けのフルインターフェース。",
+      "reviewed": true
+    },
+    "settings.permissions.heading": {
+      "value": "権限",
+      "reviewed": true
+    },
+    "settings.models.heading": {
+      "value": "モデル",
+      "reviewed": true
+    },
+    "settings.permissions.descriptionBeforeLink": {
+      "value": "ローカルとリモートの会話でエージェントに許可する操作を設定します。",
+      "reviewed": true
+    },
+    "session.pinConversation": {
+      "value": "会話を固定",
+      "reviewed": true
+    },
+    "settings.planInstruction.type": {
+      "value": "入力：",
+      "reviewed": true
+    },
+    "settings.planInstruction.andSelect": {
+      "value": "、選択：",
+      "reviewed": true
+    },
+    "session.emptyConversations": {
+      "value": "会話はまだありません",
       "reviewed": true
     }
   }

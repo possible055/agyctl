@@ -8,10 +8,12 @@ import { collectFiles, sha256 } from './lib/files.mjs';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const defaultPluginDir = path.join(os.homedir(), '.gemini', 'config', 'plugins', 'agyctl');
 
-function readPackage(sourceDir) {
+function readPackage(sourceDir, locator) {
   const entries = new Map(
     collectFiles(sourceDir, ['.']).map((file) => [file.path.replace(/^\.\//, ''), file.content]),
   );
+  if (locator)
+    entries.set('agyctl-tools.json', Buffer.from(`${JSON.stringify(locator, null, 2)}\n`));
   for (const required of [
     'plugin.json',
     'sidecars/panel/main.mjs',
@@ -49,8 +51,23 @@ export function inspectPlugin(directory = defaultPluginDir) {
 export function installPlugin({
   sourceDir = path.join(repoRoot, 'src', 'plugin'),
   targetDir = defaultPluginDir,
+  repositoryRoot = repoRoot,
+  env = process.env,
 } = {}) {
-  const source = readPackage(path.resolve(sourceDir));
+  const locator = { repositoryRoot: path.resolve(repositoryRoot) };
+  for (const key of ['AGYCTL_APP_DIR', 'AGYCTL_HOME']) {
+    if (env[key] !== undefined) {
+      if (!env[key].trim()) throw new Error(`${key} must not be empty`);
+      if (
+        key === 'AGYCTL_APP_DIR' &&
+        (!path.isAbsolute(env[key]) ||
+          (process.platform === 'win32' && path.parse(env[key]).root.length <= 1))
+      )
+        throw new Error('AGYCTL_APP_DIR must be an absolute installation root');
+      locator[key] = path.resolve(env[key]);
+    }
+  }
+  const source = readPackage(path.resolve(sourceDir), locator);
   const target = path.resolve(targetDir);
   if (target === path.parse(target).root)
     throw new Error('Plugin target cannot be a filesystem root');
@@ -66,7 +83,10 @@ export function installPlugin({
     for (const [relative, bytes] of source.entries) {
       const destination = path.join(staging, relative);
       fs.mkdirSync(path.dirname(destination), { recursive: true });
-      fs.writeFileSync(destination, bytes, { flag: 'wx' });
+      fs.writeFileSync(destination, bytes, {
+        flag: 'wx',
+        mode: relative === 'agyctl-tools.json' ? 0o600 : 0o666,
+      });
     }
     if (inspectPlugin(staging).sha256 !== source.sha256)
       throw new Error('Staged plugin verification failed');

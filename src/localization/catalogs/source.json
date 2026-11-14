@@ -284,7 +284,11 @@
             "selected": "会話一覧"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.1d432f58690c",
+        "static.gap.4100064f592e"
+      ]
     },
     "nav.provideFeedback": {
       "messageId": "nav.provideFeedback",
@@ -345,7 +349,10 @@
             "selected": "フィードバックを提供する"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.63251b499acf"
+      ]
     },
     "common.dismiss": {
       "messageId": "common.dismiss",
@@ -406,7 +413,10 @@
             "selected": "閉じる"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.6d38a3aa8500"
+      ]
     },
     "common.learnMore": {
       "messageId": "common.learnMore",
@@ -467,7 +477,10 @@
             "selected": "詳細を見る"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.8356dab278e8"
+      ]
     },
     "common.loading": {
       "messageId": "common.loading",
@@ -528,7 +541,10 @@
             "selected": "読み込み中..."
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.8526a2ee7e23"
+      ]
     },
     "common.cancel": {
       "messageId": "common.cancel",
@@ -1400,7 +1416,10 @@
             "selected": "サイドバーの切り替え"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.0910253274bd"
+      ]
     },
     "nav.zoomIn": {
       "messageId": "nav.zoomIn",
@@ -1705,7 +1724,10 @@
             "selected": "サインアウト"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.dcdfd31bcd9d"
+      ]
     },
     "settings.general": {
       "messageId": "settings.general",
@@ -1766,7 +1788,10 @@
             "selected": "一般"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.cd2aeb6df4f4"
+      ]
     },
     "tools.terminal": {
       "messageId": "tools.terminal",
@@ -2010,7 +2035,10 @@
             "selected": "スキル"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.30fdfb5081b2"
+      ]
     },
     "tools.rules": {
       "messageId": "tools.rules",
@@ -2326,7 +2354,10 @@
         "0": "user display name"
       },
       "surface": "composer.greeting",
-      "critical": false
+      "critical": false,
+      "aliases": [
+        "web.dynamic.90aa62f65eb057bd"
+      ]
     },
     "composer.greeting.welcome": {
       "messageId": "composer.greeting.welcome",
@@ -2348,7 +2379,10 @@
         "0": "user display name"
       },
       "surface": "composer.greeting",
-      "critical": false
+      "critical": false,
+      "aliases": [
+        "web.dynamic.5515778e51e23738"
+      ]
     },
     "composer.greeting.goodToSeeYou": {
       "messageId": "composer.greeting.goodToSeeYou",
@@ -2359,7 +2393,10 @@
         "0": "user display name"
       },
       "surface": "composer.greeting",
-      "critical": false
+      "critical": false,
+      "aliases": [
+        "web.dynamic.4fb8a526799c61fa"
+      ]
     },
     "composer.fileTooLarge": {
       "messageId": "composer.fileTooLarge",
@@ -2370,7 +2407,10 @@
         "0": "rounded file size in MB"
       },
       "surface": "composer.attachments",
-      "critical": false
+      "critical": false,
+      "aliases": [
+        "web.dynamic.d2077bde840baab2"
+      ]
     },
     "session.ephemeralForkAborted": {
       "messageId": "session.ephemeralForkAborted",
@@ -4232,7 +4272,10 @@
             "selected": "エージェント"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.4b9cd3533797"
+      ]
     },
     "hub.ui.33866ac35e69f8f5": {
       "messageId": "hub.ui.33866ac35e69f8f5",
@@ -4967,7 +5010,10 @@
             "selected": "メインの会話を中断せずに追加の質問をする"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.a27b1c89c7f6"
+      ]
     },
     "hub.ui.f02f9e7a7e64b375": {
       "messageId": "hub.ui.f02f9e7a7e64b375",
@@ -9162,7 +9208,10 @@
             "selected": "追加の質問を削除"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.9e518d180a6b"
+      ]
     },
     "hub.ui.45989de49fb7f66d": {
       "messageId": "hub.ui.45989de49fb7f66d",
@@ -10814,7 +10863,11 @@
             "selected": "マーケットプレイスのほかのカスタマイズを探す"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.bd5f13ed6e2f",
+        "static.gap.5e00e60b5ba3"
+      ]
     },
     "hub.ui.c7c95aff98a44f0c": {
       "messageId": "hub.ui.c7c95aff98a44f0c",
@@ -13530,7 +13583,10 @@
             "selected": "Issue"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.635d6b02fc6b"
+      ]
     },
     "hub.ui.fed7de0835e017e6": {
       "messageId": "hub.ui.fed7de0835e017e6",
@@ -16389,7 +16445,11 @@
             "selected": "利用可能なプラグインがありません。"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.e288f8c522f9",
+        "static.gap.2279d2d11bab"
+      ]
     },
     "hub.ui.932df926348ae587": {
       "messageId": "hub.ui.932df926348ae587",
@@ -23126,7 +23186,10 @@
             "selected": "サブエージェント"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.712f6dc53ac8"
+      ]
     },
     "hub.ui.64115d5b9c794c92": {
       "messageId": "hub.ui.64115d5b9c794c92",
@@ -23635,7 +23698,10 @@
             "selected": "エージェントが許可リストにないサイトを操作しようとしました"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.ad469d6ebb2e"
+      ]
     },
     "hub.ui.8da997253a7d70a3": {
       "messageId": "hub.ui.8da997253a7d70a3",
@@ -28861,7 +28927,10 @@
             "selected": "ショートカットを追加"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.352520caed74"
+      ]
     },
     "hub.ui.0f01d14cacf01cb8": {
       "messageId": "hub.ui.0f01d14cacf01cb8",
@@ -30071,7 +30140,10 @@
             "selected": "アーティファクト"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.edc1dc4437f7"
+      ]
     },
     "hub.ui.96009dfb68011605": {
       "messageId": "hub.ui.96009dfb68011605",
@@ -32267,7 +32339,10 @@
             "selected": "アカウントを接続すると、エージェントが自動化を実行できます。"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.d942a3b7a330"
+      ]
     },
     "hub.ui.b9e5955b1823ff4c": {
       "messageId": "hub.ui.b9e5955b1823ff4c",
@@ -40194,7 +40269,10 @@
             "selected": "その他の操作"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.f8d46c2570e7"
+      ]
     },
     "hub.ui.325aca453408679f": {
       "messageId": "hub.ui.325aca453408679f",
@@ -45067,7 +45145,10 @@
             "selected": "デフォルトに戻す"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.c0334bae1053"
+      ]
     },
     "hub.ui.4adde09f9ab83b3d": {
       "messageId": "hub.ui.4adde09f9ab83b3d",
@@ -52340,7 +52421,10 @@
             "selected": "+ Issue ポリシーを追加"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.a2c688f050e4"
+      ]
     },
     "hub.ui.65490824df04920d": {
       "messageId": "hub.ui.65490824df04920d",
@@ -55771,7 +55855,10 @@
             "selected": "Chief of Staff キャンバス"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.0c41a48be956"
+      ]
     },
     "hub.ui.b0c9153817ebbb2e": {
       "messageId": "hub.ui.b0c9153817ebbb2e",
@@ -56783,7 +56870,11 @@
             "selected": "接続"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.369fcecb4370",
+        "static.gap.98aa06438f88"
+      ]
     },
     "hub.ui.ba184bd099132ae3": {
       "messageId": "hub.ui.ba184bd099132ae3",
@@ -57138,7 +57229,11 @@
             "selected": "会話履歴"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.de7df85d9021",
+        "static.gap.0604190d1352"
+      ]
     },
     "hub.ui.ca6722cd00cf503a": {
       "messageId": "hub.ui.ca6722cd00cf503a",
@@ -58007,7 +58102,11 @@
             "selected": "カスタマイズ"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.2213674d8004",
+        "static.gap.379a5808eeb8"
+      ]
     },
     "hub.ui.7e0167c27d01b8b3": {
       "messageId": "hub.ui.7e0167c27d01b8b3",
@@ -59196,7 +59295,10 @@
             "selected": "ショートカットを編集"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.ea64fa9cf92d"
+      ]
     },
     "hub.ui.927299fb5adf59de": {
       "messageId": "hub.ui.927299fb5adf59de",
@@ -64738,7 +64840,10 @@
             "selected": "その他の操作"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.98eea4c1c21f"
+      ]
     },
     "hub.ui.8f67d39144863481": {
       "messageId": "hub.ui.8f67d39144863481",
@@ -67179,7 +67284,10 @@
             "selected": "サイドペインで開く"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.b74f69d31541"
+      ]
     },
     "hub.ui.29d976fa5d4c15c4": {
       "messageId": "hub.ui.29d976fa5d4c15c4",
@@ -67809,7 +67917,10 @@
             "selected": "プランのレビュー方針"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.8512843009a3"
+      ]
     },
     "hub.ui.76915c7c8693ccf2": {
       "messageId": "hub.ui.76915c7c8693ccf2",
@@ -69359,7 +69470,10 @@
             "selected": "ショートカットを削除"
           }
         }
-      }
+      },
+      "aliases": [
+        "additional.ui.3dc4d508c00e"
+      ]
     },
     "hub.ui.5001089426af3043": {
       "messageId": "hub.ui.5001089426af3043",
@@ -75917,7 +76031,10 @@
             "selected": "Windows Subsystem for Linux"
           }
         }
-      }
+      },
+      "aliases": [
+        "static.gap.d910da5ed7d6"
+      ]
     },
     "hub.ui.bb5e09e708fd3556": {
       "messageId": "hub.ui.bb5e09e708fd3556",
@@ -102471,7 +102588,10 @@
             "selected": "コメントの対象："
           }
         }
-      }
+      },
+      "aliases": [
+        "web.dynamic.ff84641ed06fef4f"
+      ]
     },
     "static.gap.7456ba18e554": {
       "messageId": "static.gap.7456ba18e554",
@@ -114960,13 +115080,6 @@
       "surface": "hub.reviewed",
       "description": "Reviewed UI sentence from the returned/assigned UI sentence. Preserve the numbered values and their evaluation; component arguments keep their identity, handlers, key, and ref."
     },
-    "web.dynamic.d2077bde840baab2": {
-      "messageId": "web.dynamic.d2077bde840baab2",
-      "format": "icu",
-      "defaultMessage": "File exceeds the 20MB display limit ({0}MB).",
-      "surface": "hub.reviewed",
-      "description": "Reviewed UI sentence from the error property. Preserve the numbered values and their evaluation; component arguments keep their identity, handlers, key, and ref."
-    },
     "web.dynamic.b5f27c050cde6d32": {
       "messageId": "web.dynamic.b5f27c050cde6d32",
       "format": "icu",
@@ -117634,13 +117747,6 @@
       "surface": "hub.reviewed",
       "description": "Reviewed UI sentence from the returned/assigned UI sentence. Preserve the numbered values and their evaluation; component arguments keep their identity, handlers, key, and ref."
     },
-    "web.dynamic.90aa62f65eb057bd": {
-      "messageId": "web.dynamic.90aa62f65eb057bd",
-      "format": "icu",
-      "defaultMessage": "Hi {0}, what can we get done today?",
-      "surface": "hub.reviewed",
-      "description": "Reviewed UI sentence from the returned/assigned UI sentence. Preserve the numbered values and their evaluation; component arguments keep their identity, handlers, key, and ref."
-    },
     "web.dynamic.0a586ab59e4773bc": {
       "messageId": "web.dynamic.0a586ab59e4773bc",
       "format": "icu",
@@ -118163,20 +118269,6 @@
       "messageId": "web.dynamic.a1a8d2ed8dc8704a",
       "format": "icu",
       "defaultMessage": "Hey {0}, what should we build today?",
-      "surface": "hub.reviewed",
-      "description": "Reviewed UI sentence from the named property. Preserve the numbered values and their evaluation; component arguments keep their identity, handlers, key, and ref."
-    },
-    "web.dynamic.5515778e51e23738": {
-      "messageId": "web.dynamic.5515778e51e23738",
-      "format": "icu",
-      "defaultMessage": "Welcome back, {0}. Where should we pick up?",
-      "surface": "hub.reviewed",
-      "description": "Reviewed UI sentence from the named property. Preserve the numbered values and their evaluation; component arguments keep their identity, handlers, key, and ref."
-    },
-    "web.dynamic.4fb8a526799c61fa": {
-      "messageId": "web.dynamic.4fb8a526799c61fa",
-      "format": "icu",
-      "defaultMessage": "Good to see you, {0}. What's next?",
       "surface": "hub.reviewed",
       "description": "Reviewed UI sentence from the named property. Preserve the numbered values and their evaluation; component arguments keep their identity, handlers, key, and ref."
     },
@@ -119670,6 +119762,225 @@
           }
         }
       }
+    },
+    "hub.ui.askAnythingMention": {
+      "messageId": "hub.ui.askAnythingMention",
+      "format": "plain",
+      "defaultMessage": "Ask anything, @ to mention",
+      "surface": "hub.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "hub.ui.slashForActions": {
+      "messageId": "hub.ui.slashForActions",
+      "format": "plain",
+      "defaultMessage": ", / for actions",
+      "surface": "hub.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "notifications.preferences.prompt": {
+      "messageId": "notifications.preferences.prompt",
+      "format": "plain",
+      "defaultMessage": "Choose whether to be notified when the agent needs your attention or completes a task.",
+      "surface": "notifications.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "notifications.preferences.promptGemini": {
+      "messageId": "notifications.preferences.promptGemini",
+      "format": "plain",
+      "defaultMessage": "Allow Gemini to notify you when the agent needs your attention or completes a task.",
+      "surface": "notifications.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "settings.permissions.conversationsDescription": {
+      "messageId": "settings.permissions.conversationsDescription",
+      "format": "plain",
+      "defaultMessage": "Configure what the agent can do in local and remote conversations. Learn more.",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "settings.shortcuts.searchPlaceholder": {
+      "messageId": "settings.shortcuts.searchPlaceholder",
+      "format": "plain",
+      "defaultMessage": "Search shortcuts...",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "projects.selectFolders": {
+      "messageId": "projects.selectFolders",
+      "format": "plain",
+      "defaultMessage": "Select Folder(s)",
+      "surface": "projects.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "projects.addFolder": {
+      "messageId": "projects.addFolder",
+      "format": "plain",
+      "defaultMessage": "Add Folder",
+      "surface": "projects.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "projects.selectResources": {
+      "messageId": "projects.selectResources",
+      "format": "plain",
+      "defaultMessage": "Select Resource(s)",
+      "surface": "projects.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "projects.addResource": {
+      "messageId": "projects.addResource",
+      "format": "plain",
+      "defaultMessage": "Add Resource",
+      "surface": "projects.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "settings.queue.sendImmediately": {
+      "messageId": "settings.queue.sendImmediately",
+      "format": "plain",
+      "defaultMessage": "Send Immediately",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "settings.queue.queueMessage": {
+      "messageId": "settings.queue.queueMessage",
+      "format": "plain",
+      "defaultMessage": "Queue Message",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "nav.giveFeedback": {
+      "messageId": "nav.giveFeedback",
+      "format": "plain",
+      "defaultMessage": "Give Feedback",
+      "surface": "nav.commands",
+      "critical": false,
+      "aliases": [
+        "nav.provideFeedback"
+      ],
+      "description": "Authored translations for the reviewed 2.31.0 DOM display surface; this canonical message requires its own locale entry."
+    },
+    "projects.createNew": {
+      "messageId": "projects.createNew",
+      "format": "plain",
+      "defaultMessage": "Create New Project",
+      "surface": "projects.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned sidebar action accessible names observed in Windows Antigravity 2.31.0; never applies to project or conversation names."
+    },
+    "projects.options": {
+      "messageId": "projects.options",
+      "format": "plain",
+      "defaultMessage": "Project options",
+      "surface": "projects.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned sidebar action accessible names observed in Windows Antigravity 2.31.0; never applies to project or conversation names."
+    },
+    "projects.newConversation": {
+      "messageId": "projects.newConversation",
+      "format": "plain",
+      "defaultMessage": "New Conversation in Project",
+      "surface": "projects.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned sidebar action accessible names observed in Windows Antigravity 2.31.0; never applies to project or conversation names."
+    },
+    "settings.layout.knowledgeWork": {
+      "messageId": "settings.layout.knowledgeWork",
+      "format": "plain",
+      "defaultMessage": "Knowledge Work",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned settings text observed in Windows Antigravity 2.31.0. The permission introduction is a separate Text node preceding its existing Learn more link; no element or link rewrite."
+    },
+    "settings.layout.softwareEngineering": {
+      "messageId": "settings.layout.softwareEngineering",
+      "format": "plain",
+      "defaultMessage": "Software Engineering",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned settings text observed in Windows Antigravity 2.31.0. The permission introduction is a separate Text node preceding its existing Learn more link; no element or link rewrite."
+    },
+    "settings.layout.knowledgeDescription": {
+      "messageId": "settings.layout.knowledgeDescription",
+      "format": "plain",
+      "defaultMessage": "Simplified interface for research, writing, and everyday tasks.",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned settings text observed in Windows Antigravity 2.31.0. The permission introduction is a separate Text node preceding its existing Learn more link; no element or link rewrite."
+    },
+    "settings.layout.softwareDescription": {
+      "messageId": "settings.layout.softwareDescription",
+      "format": "plain",
+      "defaultMessage": "Full interface for coding, developer tools, and managing agents.",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned settings text observed in Windows Antigravity 2.31.0. The permission introduction is a separate Text node preceding its existing Learn more link; no element or link rewrite."
+    },
+    "settings.permissions.heading": {
+      "messageId": "settings.permissions.heading",
+      "format": "plain",
+      "defaultMessage": "Permissions",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned settings text observed in Windows Antigravity 2.31.0. The permission introduction is a separate Text node preceding its existing Learn more link; no element or link rewrite."
+    },
+    "settings.models.heading": {
+      "messageId": "settings.models.heading",
+      "format": "plain",
+      "defaultMessage": "Models",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned settings text observed in Windows Antigravity 2.31.0. The permission introduction is a separate Text node preceding its existing Learn more link; no element or link rewrite."
+    },
+    "settings.permissions.descriptionBeforeLink": {
+      "messageId": "settings.permissions.descriptionBeforeLink",
+      "format": "plain",
+      "defaultMessage": "Configure what the agent can do in local and remote conversations.",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Authored translations for application-owned settings text observed in Windows Antigravity 2.31.0. The permission introduction is a separate Text node preceding its existing Learn more link; no element or link rewrite."
+    },
+    "session.pinConversation": {
+      "messageId": "session.pinConversation",
+      "format": "plain",
+      "defaultMessage": "Pin conversation",
+      "surface": "session.commands",
+      "critical": false,
+      "description": "Authored translations for the reviewed Windows Antigravity 2.31.0 conversation-pin-button accessible name; not the conversation title."
+    },
+    "settings.planInstruction.type": {
+      "messageId": "settings.planInstruction.type",
+      "format": "plain",
+      "defaultMessage": "Type",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Context-restricted fragment in the Windows Antigravity 2.31.0 settings plan instruction: a span in an application dialog whose only element children are code tokens / and plan, in order. Translate only existing Text nodes; preserve code nodes and action identity. Not a general translation for Type."
+    },
+    "settings.planInstruction.andSelect": {
+      "messageId": "settings.planInstruction.andSelect",
+      "format": "plain",
+      "defaultMessage": "and select",
+      "surface": "settings.reviewed",
+      "critical": false,
+      "description": "Context-restricted fragment in the Windows Antigravity 2.31.0 settings plan instruction: a span in an application dialog whose only element children are code tokens / and plan, in order. Translate only existing Text nodes; preserve code nodes and action identity. Not a general translation for Type."
+    },
+    "session.emptyConversations": {
+      "messageId": "session.emptyConversations",
+      "format": "plain",
+      "defaultMessage": "No conversations yet",
+      "surface": "session.commands",
+      "critical": false,
+      "description": "Authored translations for the fixed empty-project conversation status observed in Windows Antigravity 2.31.0 sidebar; not a project or conversation name."
     }
   }
 }

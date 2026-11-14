@@ -3,7 +3,7 @@
   "formatLocale": "zh-TW",
   "provenance": {
     "kind": "vendor",
-    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor antigravity2.0-zh-tw candidates; the two conflicts (New Window, Learn more) resolve to the primary-project values recorded in source.json. C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order)."
+    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor antigravity2.0-zh-tw candidates; the two conflicts (New Window, Learn more) resolve to the primary-project values recorded in source.json. C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order). DOM acceptance additions for the 2.31.0 reviewed surfaces are authored translations."
   },
   "messages": {
     "workbench.hover.statusBar.background": {
@@ -7159,15 +7159,15 @@
       "reviewed": true
     },
     "additional.ui.ea64fa9cf92d": {
-      "value": "編輯快捷鍵",
+      "value": "編輯快速鍵",
       "reviewed": true
     },
     "additional.ui.3dc4d508c00e": {
-      "value": "移除快捷鍵",
+      "value": "移除快速鍵",
       "reviewed": true
     },
     "additional.ui.352520caed74": {
-      "value": "新增快捷鍵",
+      "value": "新增快速鍵",
       "reviewed": true
     },
     "additional.ui.c0334bae1053": {
@@ -7343,7 +7343,7 @@
       "reviewed": true
     },
     "additional.ui.1d432f58690c": {
-      "value": "對話",
+      "value": "對話清單",
       "reviewed": true
     },
     "additional.ui.63251b499acf": {
@@ -7587,7 +7587,7 @@
       "reviewed": true
     },
     "additional.ui.f8d46c2570e7": {
-      "value": "更多動作",
+      "value": "更多操作",
       "reviewed": true
     },
     "additional.ui.398b870cf3a9": {
@@ -7659,11 +7659,11 @@
       "reviewed": true
     },
     "additional.ui.e288f8c522f9": {
-      "value": "沒有可用的外掛程式。",
+      "value": "沒有可用的外掛。",
       "reviewed": true
     },
     "additional.ui.bd5f13ed6e2f": {
-      "value": "探索市集中的其他自訂項目",
+      "value": "探索市集中的其他自訂功能",
       "reviewed": true
     },
     "additional.ui.9da6e51922a4": {
@@ -7671,7 +7671,7 @@
       "reviewed": true
     },
     "additional.ui.98eea4c1c21f": {
-      "value": "更多動作",
+      "value": "更多操作",
       "reviewed": true
     },
     "additional.ui.7cd3bc2fc162": {
@@ -7711,7 +7711,7 @@
       "reviewed": true
     },
     "additional.ui.d942a3b7a330": {
-      "value": "連結帳戶，讓代理執行自動化工作。",
+      "value": "連結帳戶，讓代理能執行自動化工作。",
       "reviewed": true
     },
     "additional.ui.274c093398e9": {
@@ -7731,11 +7731,11 @@
       "reviewed": true
     },
     "additional.ui.de7df85d9021": {
-      "value": "對話紀錄",
+      "value": "對話記錄",
       "reviewed": true
     },
     "additional.ui.2213674d8004": {
-      "value": "自訂項目",
+      "value": "自訂設定",
       "reviewed": true
     },
     "additional.ui.15951a57699d": {
@@ -10143,7 +10143,7 @@
       "reviewed": true
     },
     "static.gap.8356dab278e8": {
-      "value": "進一步瞭解",
+      "value": "深入了解",
       "reviewed": true
     },
     "static.gap.816511b2e60c": {
@@ -10155,11 +10155,11 @@
       "reviewed": true
     },
     "static.gap.6d38a3aa8500": {
-      "value": "關閉",
+      "value": "忽略",
       "reviewed": true
     },
     "static.gap.4100064f592e": {
-      "value": "對話",
+      "value": "對話清單",
       "reviewed": true
     },
     "static.gap.278e2a477c54": {
@@ -10263,19 +10263,19 @@
       "reviewed": true
     },
     "static.gap.30fdfb5081b2": {
-      "value": "技能",
+      "value": "技能預設",
       "reviewed": true
     },
     "static.gap.379a5808eeb8": {
-      "value": "自訂項目",
+      "value": "自訂設定",
       "reviewed": true
     },
     "static.gap.4b9cd3533797": {
-      "value": "代理",
+      "value": "Agent",
       "reviewed": true
     },
     "static.gap.712f6dc53ac8": {
-      "value": "子代理",
+      "value": "子 Agent",
       "reviewed": true
     },
     "static.gap.d33449bcba70": {
@@ -10303,7 +10303,7 @@
       "reviewed": true
     },
     "static.gap.edc1dc4437f7": {
-      "value": "成品",
+      "value": "產物",
       "reviewed": true
     },
     "static.gap.b8aaf08d3704": {
@@ -10675,7 +10675,7 @@
       "reviewed": true
     },
     "static.gap.8512843009a3": {
-      "value": "計畫審閱政策",
+      "value": "計畫審查政策",
       "reviewed": true
     },
     "static.gap.e5573e37f93d": {
@@ -10959,7 +10959,7 @@
       "reviewed": true
     },
     "static.gap.ad469d6ebb2e": {
-      "value": "代理嘗試操作不在允許清單中的部分網站",
+      "value": "Agent 嘗試與部分不在允許清單中的網站互動",
       "reviewed": true
     },
     "static.gap.7b92c12c25c2": {
@@ -11527,7 +11527,7 @@
       "reviewed": true
     },
     "static.gap.2279d2d11bab": {
-      "value": "沒有可用的外掛程式。",
+      "value": "沒有可用的外掛。",
       "reviewed": true
     },
     "static.gap.0262fbbfdbea": {
@@ -11567,7 +11567,7 @@
       "reviewed": true
     },
     "static.gap.5e00e60b5ba3": {
-      "value": "探索市集中的其他自訂項目",
+      "value": "探索市集中的其他自訂功能",
       "reviewed": true
     },
     "static.gap.f487af730ac9": {
@@ -11583,7 +11583,7 @@
       "reviewed": true
     },
     "static.gap.0604190d1352": {
-      "value": "對話紀錄",
+      "value": "對話記錄",
       "reviewed": true
     },
     "static.gap.72362ab2045a": {
@@ -11719,11 +11719,11 @@
       "reviewed": true
     },
     "static.gap.a27b1c89c7f6": {
-      "value": "提出旁支問題，不中斷主要對話",
+      "value": "提出附加問題，不中斷主要對話",
       "reviewed": true
     },
     "static.gap.9e518d180a6b": {
-      "value": "刪除旁支問題",
+      "value": "刪除附加問題",
       "reviewed": true
     },
     "static.gap.5f9db04b3d71": {
@@ -11923,7 +11923,7 @@
       "reviewed": true
     },
     "static.gap.a2c688f050e4": {
-      "value": "+ 新增議題政策",
+      "value": "+ 新增 Issue 政策",
       "reviewed": true
     },
     "static.gap.8bcf55a37970": {
@@ -11991,7 +11991,7 @@
       "reviewed": true
     },
     "static.gap.98aa06438f88": {
-      "value": "連結帳戶",
+      "value": "連線",
       "reviewed": true
     },
     "web.dynamic.dc640abd4cf0d6c6": {
@@ -12343,7 +12343,7 @@
       "reviewed": true
     },
     "web.dynamic.ff84641ed06fef4f": {
-      "value": "留言對象： ",
+      "value": "留言對象：",
       "reviewed": true
     },
     "web.dynamic.ae5291c673bdcb68": {
@@ -13088,10 +13088,6 @@
     },
     "web.dynamic.8734eddd2ca8c27d": {
       "value": "將於 {0} 後重設",
-      "reviewed": true
-    },
-    "web.dynamic.d2077bde840baab2": {
-      "value": "檔案超過 20 MB 的顯示上限（{0} MB）。",
       "reviewed": true
     },
     "web.dynamic.b5f27c050cde6d32": {
@@ -14618,10 +14614,6 @@
       "value": "需要手動確認：{0}",
       "reviewed": true
     },
-    "web.dynamic.90aa62f65eb057bd": {
-      "value": "嗨，{0}，今天要完成什麼？",
-      "reviewed": true
-    },
     "web.dynamic.0a586ab59e4773bc": {
       "value": "使用 {0} 選取模型",
       "reviewed": true
@@ -14920,14 +14912,6 @@
     },
     "web.dynamic.a1a8d2ed8dc8704a": {
       "value": "嗨，{0}，今天要打造什麼？",
-      "reviewed": true
-    },
-    "web.dynamic.5515778e51e23738": {
-      "value": "歡迎回來，{0}。要從哪裡繼續？",
-      "reviewed": true
-    },
-    "web.dynamic.4fb8a526799c61fa": {
-      "value": "很高興見到你，{0}。接下來要做什麼？",
       "reviewed": true
     },
     "web.dynamic.e8b4f6443778a215": {
@@ -15744,6 +15728,114 @@
     },
     "account.loginRequired": {
       "value": "請登入以使用代理。",
+      "reviewed": true
+    },
+    "hub.ui.askAnythingMention": {
+      "value": "隨意提問，用 @ 提及",
+      "reviewed": true
+    },
+    "hub.ui.slashForActions": {
+      "value": "，用 / 執行動作",
+      "reviewed": true
+    },
+    "notifications.preferences.prompt": {
+      "value": "選擇是否在代理程式需要你處理或完成工作時接收通知。",
+      "reviewed": true
+    },
+    "notifications.preferences.promptGemini": {
+      "value": "允許 Gemini 在代理程式需要你處理或完成工作時通知你。",
+      "reviewed": true
+    },
+    "settings.permissions.conversationsDescription": {
+      "value": "設定代理程式在本機與遠端對話中可執行的操作。瞭解詳情。",
+      "reviewed": true
+    },
+    "settings.shortcuts.searchPlaceholder": {
+      "value": "搜尋快速鍵…",
+      "reviewed": true
+    },
+    "projects.selectFolders": {
+      "value": "選取資料夾",
+      "reviewed": true
+    },
+    "projects.addFolder": {
+      "value": "新增資料夾",
+      "reviewed": true
+    },
+    "projects.selectResources": {
+      "value": "選取資源",
+      "reviewed": true
+    },
+    "projects.addResource": {
+      "value": "新增資源",
+      "reviewed": true
+    },
+    "settings.queue.sendImmediately": {
+      "value": "立即傳送",
+      "reviewed": true
+    },
+    "settings.queue.queueMessage": {
+      "value": "將訊息加入佇列",
+      "reviewed": true
+    },
+    "nav.giveFeedback": {
+      "value": "提供意見回饋",
+      "reviewed": true
+    },
+    "projects.createNew": {
+      "value": "建立新專案",
+      "reviewed": true
+    },
+    "projects.options": {
+      "value": "專案選項",
+      "reviewed": true
+    },
+    "projects.newConversation": {
+      "value": "在專案中新增對話",
+      "reviewed": true
+    },
+    "settings.layout.knowledgeWork": {
+      "value": "知識工作",
+      "reviewed": true
+    },
+    "settings.layout.softwareEngineering": {
+      "value": "軟體工程",
+      "reviewed": true
+    },
+    "settings.layout.knowledgeDescription": {
+      "value": "適合研究、寫作及日常工作的精簡介面。",
+      "reviewed": true
+    },
+    "settings.layout.softwareDescription": {
+      "value": "適合程式開發、開發工具及代理管理的完整介面。",
+      "reviewed": true
+    },
+    "settings.permissions.heading": {
+      "value": "權限",
+      "reviewed": true
+    },
+    "settings.models.heading": {
+      "value": "模型",
+      "reviewed": true
+    },
+    "settings.permissions.descriptionBeforeLink": {
+      "value": "設定代理在本機與遠端對話中可執行的操作。",
+      "reviewed": true
+    },
+    "session.pinConversation": {
+      "value": "釘選對話",
+      "reviewed": true
+    },
+    "settings.planInstruction.type": {
+      "value": "輸入",
+      "reviewed": true
+    },
+    "settings.planInstruction.andSelect": {
+      "value": "並選取",
+      "reviewed": true
+    },
+    "session.emptyConversations": {
+      "value": "尚無對話",
       "reviewed": true
     }
   }

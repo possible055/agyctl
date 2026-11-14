@@ -33,6 +33,22 @@ export function conversationProducts() {
 /** @param {boolean} [force] @param {string|null} [conversationId] @param {AbortSignal} [signal] @returns {Promise<import("./contracts.js").Endpoint>} */
 export async function discoverLanguageServer(force = false, conversationId = null, signal) {
   signal?.throwIfAborted();
+  const envAddr = process.env.ANTIGRAVITY_LS_ADDRESS;
+  const envToken = process.env.ANTIGRAVITY_CSRF_TOKEN;
+  if (envAddr !== undefined || envToken !== undefined) {
+    if (!envAddr || !envToken)
+      throw new Error('ANTIGRAVITY_LS_ADDRESS and ANTIGRAVITY_CSRF_TOKEN must be set together');
+    const { host, port } = parseHostPort(envAddr);
+    cachedLsEndpoint = {
+      host,
+      port,
+      protocol: 'http:',
+      csrfToken: envToken,
+      source: 'env',
+    };
+    lastDiscoveryTime = Date.now();
+    return cachedLsEndpoint;
+  }
   const preferredProduct = conversationId
     ? conversationProducts().find((product) =>
         fs.existsSync(path.join(product.conversationDir, `${conversationId}.db`)),
@@ -41,32 +57,13 @@ export async function discoverLanguageServer(force = false, conversationId = nul
   if (
     !force &&
     cachedLsEndpoint &&
+    cachedLsEndpoint.source !== 'env' &&
     (!preferredProduct ||
       !cachedLsEndpoint.product ||
       cachedLsEndpoint.product === preferredProduct) &&
     Date.now() - lastDiscoveryTime < DISCOVERY_CACHE_TTL
   ) {
     return cachedLsEndpoint;
-  }
-
-  // 1. 優先檢查環境變數
-  const envAddr = process.env.ANTIGRAVITY_LS_ADDRESS;
-  const envToken = process.env.ANTIGRAVITY_CSRF_TOKEN;
-  if (envAddr && envToken) {
-    try {
-      const { host, port } = parseHostPort(envAddr);
-      cachedLsEndpoint = {
-        host,
-        port,
-        protocol: 'http:',
-        csrfToken: envToken,
-        source: 'env',
-      };
-      lastDiscoveryTime = Date.now();
-      return cachedLsEndpoint;
-    } catch {
-      // 無效的環境變數位址維持原行為：靜默跳過，改走日誌探索。
-    }
   }
 
   // 2. 搜尋日誌檔案

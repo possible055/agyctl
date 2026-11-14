@@ -2,6 +2,8 @@
 
 [`workflows/ci.yml`](workflows/ci.yml) defines **CI**. [`ci.mjs`](ci.mjs) selects affected jobs and evaluates the required gate; [`ci.test.mjs`](ci.test.mjs) checks those contracts.
 
+This file is not named `README.md`: GitHub gives `.github/README.md` priority over the repository README on the repository home page, which would shadow the project README.
+
 ## Required check
 
 Require **CI passed** in branch protection or a ruleset. It requires successful selection and repository security, success for every selected job, and an intentional skip for every unselected job. A missing, cancelled, or unexpectedly skipped job fails the gate.
@@ -35,7 +37,7 @@ Native packaging builds only the Go tool, so Host, localization, capsule, and pa
 | --- | --- | --- |
 | Select checks | Ubuntu 24.04 | Selection/gate contract tests and changed-path selection |
 | Repository security | Ubuntu 24.04 | Full-history Gitleaks, actionlint, offline zizmor |
-| Node correctness | Windows 2025 x64 | Biome, Host/Capsule artifact preparation once, core Node suite, localization build and suite, panel/Host/localization/Capsule typechecks |
+| Node correctness | Windows 2025 x64 | Biome, Host/Capsule/localization artifact preparation once, core Node and localization suites, required three-locale Electron localization contracts, panel/Host/localization/Capsule typechecks |
 | Go correctness (shared) | Ubuntu 24.04 x64 | Formatting, lint under all supported build constraints, vet, full Go suite once |
 | Native packaging | Windows 2025 x64, macOS 15 Apple Silicon, Ubuntu 24.04 x64 | Assert native runner target; Windows/macOS OS-boundary packages; build the tool for the target; smoke-test `limit:versions` |
 | npm advisories | Ubuntu 24.04 | OSV-Scanner on `package-lock.json` |
@@ -46,15 +48,15 @@ The native matrix explicitly sets `GOOS`, `GOARCH`, and `CGO_ENABLED=0`. It admi
 
 Windows/macOS boundary checks cover `fsx`, `layout`, `assets`, and `winproc`; Linux is covered by the shared suite when Go sources change. The generic full suite is not repeated on every native target.
 
-These checks use synthetic/local fixtures, not downloaded installers or a live Antigravity client. Native packaging success does not qualify client patching, signing, or localization. Live-client cases report SKIP when prerequisites are absent; SKIP is not a pass. `test:electron` remains optional and is not run by this workflow.
+These checks use synthetic/local fixtures, not downloaded installers or a live Antigravity client. Native packaging success does not qualify client patching, signing, or localization. Live-client cases report SKIP when prerequisites are absent; SKIP is not a pass. The Node job explicitly installs the locked Electron runtime and runs the localization Host/bootstrap and DOM contracts for all three locales with `AGYCTL_REQUIRE_ELECTRON=1`; missing or unusable Electron fails instead of skipping. The broader `test:electron` command, including Capsule scenarios, remains a separate local check. npm's other lifecycle scripts remain disabled.
 
 ## Local workflow
 
-Run `npm ci` and, optionally, `uvx pre-commit install`. No project Python environment or `uv sync` is needed. Hooks perform changed-file hygiene/formatting and repository security only; broad suites and artifact builds are not commit/push hooks.
+Run `npm ci` and, optionally, `uvx pre-commit install`. No project Python environment or `uv sync` is needed. Commit hooks perform changed-file hygiene/formatting, secret scanning, and the type checks and test suites selected by the `files:` patterns in [.pre-commit-config.yaml](../.pre-commit-config.yaml). The Node and localization test hooks build their required artifacts. Formatting hooks may rewrite files; review the diff afterwards. Push hooks run secret scanning only.
 
 Choose the smallest relevant existing check. Aggregate commands remain convenient:
 
-- `npm test`: build Host and Capsule (`test:prepare`), then run the core Node suite (`test:run`). Localization is built and tested separately by `npm run test:localization`. CI invokes `test:prepare`, `test:run`, and `test:localization` as separate steps.
+- `npm test`: build Host, Capsule, and localization (`test:prepare`), then run the core Node suite (`test:run`). `npm run test:localization` independently builds localization and runs its suite; CI reuses the prepared bundle with `test:localization:run`.
 - `npm run tools:build`: build the native tool for this host (or `GOOS`/`GOARCH`) with `CGO_ENABLED=0 go build -trimpath -buildvcs=false`; see [build outputs](../docs/development.md#build-outputs).
 - `npm run test:vendor-sync`: prepare localization and check the optional vendor snapshot. `test:vendor-sync:run` uses existing artifacts.
 

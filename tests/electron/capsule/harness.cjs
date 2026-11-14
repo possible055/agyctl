@@ -15,6 +15,8 @@ let unavailableRequests = 0;
 let pluginRegistered = false;
 app.setPath('userData', path.join(process.argv[2], 'profile'));
 app.commandLine.appendSwitch('lang', 'ja-JP');
+// Keep requested viewport sizes deterministic under fractional desktop scaling.
+app.commandLine.appendSwitch('force-device-scale-factor', '1');
 protocol.registerSchemesAsPrivileged([
   {
     scheme: 'plugin',

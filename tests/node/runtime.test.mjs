@@ -21,6 +21,19 @@ const turn = (input, model = 'gemini-4-argon') => ({
   },
 });
 
+const diskLimits = {
+  status: 'available',
+  snapshotAt: '2026-11-11T00:00:00.000Z',
+  binary: 'C:/selected/language_server.exe',
+  binarySha256: 'a'.repeat(64),
+  patchKind: 'patched',
+  modelLimits: [{ id: 101, limit: 750000 }],
+  modelNames: { 101: 'Gemini Flash (High)' },
+  settingsState: 'changed',
+  savedModelLimits: [{ id: 101, limit: 500000 }],
+  error: null,
+};
+
 test('unconfirmed capacity stays unknown while server token counts remain available', () => {
   const agg = mergeGeneratorMetadata(createSessionAgg(), [turn(100)]);
   const metrics = metricsFromAgg(agg);
@@ -361,13 +374,10 @@ test('the panel reads usage and settings without writing, and saves only the ref
     panel.allRequests.some((request) => request.options?.method === 'POST'),
     false,
   );
-  const diagnostics = panel.allRequests.find((request) => request.url === '/api/diagnostics');
-  await panel.respond(diagnostics, {
-    source: 'local-executor-metadata',
-    error: null,
-    conversations: [{ id: '7e9ee023-f7ae-4925-89a4-07c520a34101', limits: [500000], error: null }],
-  });
-  assert.match(panel.elements.get('limit-diagnostics').textContent, /7e9ee023: 500000/);
+  assert.equal(
+    panel.allRequests.some((request) => request.url === '/api/features'),
+    true,
+  );
 
   const interval = panel.elements.get('setting-interval');
   interval.value = '15';
@@ -385,12 +395,134 @@ test('the panel reads usage and settings without writing, and saves only the ref
   );
 });
 
-test('the panel page offers client modifications as terminal commands, not buttons', () => {
-  const page = renderPanelPage();
-  assert.match(page, /npm run limit:status/);
-  assert.match(page, /npm run capsule:install/);
-  assert.equal(page.includes('btn-apply-patches'), false);
-  assert.equal(page.includes('/api/management'), false);
+test('feature controls prefill actual settings, preserve edits and queue only the selected values', async () => {
+  const panel = panelHarness('settings');
+  const snapshot = {
+    revision: 'a'.repeat(64),
+    installation: { version: '2.31.0' },
+    operation: null,
+    catalog: {
+      status: 'available',
+      models: [
+        { id: 101, alias: 'flash-high', name: 'Gemini Flash (High)', available: true },
+        { id: 102, alias: 'opus-low', name: 'Claude Opus (Low)', available: false },
+        { id: 103, alias: 'flash-low', name: 'Gemini Flash (High)', available: true },
+        { id: null, alias: 'unknown', name: 'Unmapped model', available: true },
+      ],
+    },
+    features: {
+      capsule: { enabled: true },
+      localization: { enabled: true, locale: 'zh-Hant-TW' },
+      limit: {
+        enabled: true,
+        modelLimits: [
+          { id: 101, limit: 750000 },
+          { id: 102, limit: 900000 },
+        ],
+        savedModelLimits: [],
+      },
+    },
+  };
+  await panel.respond(
+    panel.allRequests.find((request) => request.url === '/api/features'),
+    snapshot,
+  );
+  assert.equal(panel.getElement('feature-capsule').checked, true);
+  assert.equal(panel.getElement('feature-locale').value, 'zh-Hant-TW');
+  const row = panel.getElement('model-limits').children[0];
+  assert.equal(row.children[1].children[0].textContent, 'Gemini Flash (High)');
+  assert.equal(row.children[1].children[1].textContent, 'flash-high');
+  assert.equal(
+    panel.getElement('model-limits').children[2].children[2].children[1].value,
+    '256000',
+  );
+  assert.equal(panel.getElement('model-limits').children[2].children[0].checked, false);
+  assert.equal(panel.getElement('model-limits').children[3].children[0].disabled, true);
+  const limitInput = row.children[2].children[1];
+  assert.equal(limitInput.value, '750000');
+  assert.equal(limitInput.min, '256000');
+  assert.equal(limitInput.max, '896000');
+  for (const invalid of ['255999', '896001']) {
+    limitInput.value = invalid;
+    limitInput.listeners.get('input')();
+    await panel.submit('feature-form');
+    assert.equal(
+      panel.getElement('feature-error').textContent,
+      'Select models and enter whole token limits from 256,000 to 896,000.',
+    );
+    assert.equal(
+      panel.allRequests.some((request) => request.options?.method === 'POST'),
+      false,
+    );
+  }
+  limitInput.value = '880000';
+  limitInput.listeners.get('input')();
+  const secondModel = panel.getElement('model-limits').children[1].children[0];
+  secondModel.checked = false;
+  secondModel.listeners.get('change')();
+  panel.getElement('feature-capsule').checked = false;
+  panel.getElement('feature-capsule').listeners.get('change')();
+  panel.poll();
+  await panel.respond(
+    panel.allRequests.filter((request) => request.url === '/api/features').at(-1),
+    {
+      ...snapshot,
+      revision: 'b'.repeat(64),
+    },
+  );
+  assert.equal(
+    panel.getElement('model-limits').children[0].children[2].children[1].value,
+    '880000',
+  );
+  assert.equal(
+    panel.allRequests.some((request) => request.options?.method === 'POST'),
+    false,
+  );
+  const applying = panel.submit('feature-form');
+  const queued = panel.allRequests.at(-1);
+  assert.equal(queued.url, '/api/features/apply');
+  assert.deepEqual(JSON.parse(queued.options.body), {
+    revision: 'a'.repeat(64),
+    capsule: false,
+    localization: { enabled: true, locale: 'zh-Hant-TW' },
+    limit: { enabled: true, modelLimits: [{ id: 101, limit: 880000 }] },
+  });
+  assert.equal(queued.options.headers['X-Agyctl-Action'], '1');
+  await panel.respond(queued, { operation: { id: 'job-1', state: 'waiting' } });
+  await applying;
+  assert.equal(panel.getElement('btn-apply-features').disabled, true);
+  assert.equal(
+    panel.getElement('feature-status').textContent,
+    'A leftover wait job is still recorded',
+  );
+  const cancelling = panel.click('btn-cancel-features');
+  const cancel = panel.allRequests.at(-1);
+  assert.equal(cancel.url, '/api/features/cancel');
+  assert.deepEqual(JSON.parse(cancel.options.body), { id: 'job-1' });
+  await panel.respond(cancel, { operation: { id: 'job-1', state: 'cancelled' } });
+  await cancelling;
+  assert.equal(panel.getElement('feature-status').textContent, 'Cancelled');
+  assert.equal(panel.getElement('btn-apply-features').disabled, true);
+  const reloading = panel.click('btn-reload-features');
+  await panel.respond(panel.allRequests.at(-1), {
+    ...snapshot,
+    catalog: { status: 'unavailable', models: [] },
+  });
+  await reloading;
+  assert.equal(panel.getElement('model-limits').children.length, 2);
+  assert.equal(
+    panel.getElement('model-limits').children[0].children[1].children[0].textContent,
+    'Unknown model (ID 101)',
+  );
+  assert.equal(
+    panel.getElement('model-limits').children[0].children[2].children[1].value,
+    '750000',
+  );
+  assert.equal(panel.getElement('feature-capsule').disabled, false);
+  assert.equal(
+    panel.getElement('model-catalog-status').textContent,
+    'Could not read the model list. Existing settings are preserved.',
+  );
 });
 
 const capsuleSource = assembleCapsule();
@@ -659,6 +791,19 @@ test('capsule discovers saved prices from a bounded stream and reprices from can
   );
   assert.equal(streamCanceled, true);
   const pricingUrl = 'http://localhost:46123/api/pricing?token=test-pricing-token';
+  const limitRequest = capsule.requests.find(
+    (request) => request.url === 'http://localhost:46123/api/limit-status?token=test-pricing-token',
+  );
+  assert.equal(limitRequest.options.credentials, 'omit');
+  await capsule.finish(limitRequest, diskLimits);
+  assert.equal(capsule.elements.get('cr-sum-limits').textContent, '1 model limits');
+  assert.equal(
+    capsule.elements.get('cr-limits-status').textContent,
+    'Recognized patch candidate limits',
+  );
+  const limitsRow = capsule.elements.get('cr-limits-list').children[0];
+  assert.equal(limitsRow.children[0].children[0].textContent, 'Gemini Flash (High)');
+  assert.equal(limitsRow.children[1].textContent, '750,000');
   const price = { model: 'custom-agent', input: 2, cacheRead: 0, output: 10, thinking: 8 };
   const pricing = () => capsule.requests.filter((request) => request.url === pricingUrl).at(-1);
   const generator = () =>
@@ -682,6 +827,7 @@ test('capsule discovers saved prices from a bounded stream and reprices from can
   capsule.route('/c/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
   await capsule.finish(generator(), { generatorMetadata: [entry] });
   assert.equal(capsule.elements.get('cr-sess-cost').textContent, '$20.00');
+  assert.match(capsule.elements.get('cr-comp-used-ratio').textContent, /\/ —$/);
   await capsule.pollAfter(3100);
   const originalGenerator = generator();
   await capsule.message({

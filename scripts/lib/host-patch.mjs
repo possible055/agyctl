@@ -9,13 +9,13 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { capsuleAnchorTokens, missingAnchorTokens } from './capsule-anchors.mjs';
+import { inspectHostTarget } from './client-target.mjs';
 import { replaceFileTransaction } from './file-transaction.mjs';
 import { loadCapsuleFeature, loadCapsuleServedBundle, loadHostComposer } from './host-build.mjs';
 import {
   agyctlHome,
   backupDir as defaultBackupDir,
   findAsarPath,
-  installedTargets,
   languageServerPath,
 } from './install-paths.mjs';
 
@@ -40,6 +40,10 @@ export function defaultEngineBundlePath() {
 
 export function defaultPreloadBridgePath() {
   return path.join(REPO_ROOT, 'dist', 'localization', 'bundle', 'preload-bridge.cjs');
+}
+
+export function defaultDomEnginePath() {
+  return path.join(REPO_ROOT, 'dist', 'localization', 'bundle', 'dom-engine.js');
 }
 
 export function defaultStateRoot() {
@@ -155,6 +159,7 @@ export function loadLocalizationInputs({
           installationId,
         }),
       ),
+      'dist/agyctl-localization/dom-engine.js': readFileSync(defaultDomEnginePath()),
     };
     if (
       observedSource &&
@@ -198,7 +203,7 @@ export function loadLocalizationInputs({
 function clientRunningWindows(imageName) {
   let stdout;
   try {
-    stdout = execFileSync('tasklist', ['/FO', 'CSV', '/NH', '/FI', `IMAGENAME eq ${imageName}`], {
+    stdout = execFileSync('tasklist', ['/FO', 'CSV', '/NH'], {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
       windowsHide: true,
@@ -206,31 +211,77 @@ function clientRunningWindows(imageName) {
   } catch {
     return 'unknown';
   }
-  return stdout.toLowerCase().includes(imageName.toLowerCase()) ? 'running' : 'closed';
+  const lines = stdout.trim().split(/\r?\n/);
+  let invalid = false;
+  for (const line of lines) {
+    const row = /^"([^"]+)","\d+","[^"]*","\d+","[^"]*"$/.exec(line.trim());
+    if (!row) invalid = true;
+    else if (row[1].toLowerCase() === imageName.toLowerCase()) return 'running';
+  }
+  return invalid ? 'unknown' : 'closed';
 }
 
-function clientRunningPosix(pattern) {
+function clientRunningPosix(executablePath) {
+  let stdout;
   try {
-    execFileSync('pgrep', ['-f', pattern], { stdio: ['ignore', 'pipe', 'ignore'] });
-    return 'running';
-  } catch (error) {
-    if (error.status === 1) return 'closed';
+    // Linux comm may be truncated; candidates need a separate exe lookup.
+    // Darwin comm is argv[0] without arguments. -ww disables width limits.
+    stdout = execFileSync('ps', ['-A', '-ww', '-o', 'pid=,comm='], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+  } catch {
     return 'unknown';
   }
+  if (!stdout.trim()) return 'unknown';
+  const imageName = path.basename(executablePath);
+  let unknown = false;
+  for (const line of stdout.trim().split(/\r?\n/)) {
+    const row = /^(0|[1-9]\d*)\s+(.+)$/.exec(line.trim());
+    if (!row) {
+      unknown = true;
+      continue;
+    }
+    const [, pid, command] = row;
+    if (process.platform === 'linux') {
+      if (command !== imageName && command !== imageName.slice(0, 15)) continue;
+      try {
+        const executable = execFileSync('ps', ['-p', pid, '-ww', '-o', 'exe='], {
+          encoding: 'utf8',
+          stdio: ['ignore', 'pipe', 'ignore'],
+        }).trim();
+        if (executable === executablePath) return 'running';
+        if (!path.isAbsolute(executable) || /[\r\n]/.test(executable)) unknown = true;
+      } catch {
+        unknown = true;
+      }
+    } else {
+      if (command === executablePath || command === imageName) return 'running';
+      if (
+        command === `(${imageName})` ||
+        command === `(${imageName.slice(0, 16)})` ||
+        command === '<defunct>'
+      )
+        unknown = true;
+    }
+  }
+  return unknown ? 'unknown' : 'closed';
 }
 
 /** 'running' | 'closed' | 'unknown' for the client of the installation owning `asarPath`. */
 export function clientProcessState(asarPath) {
-  const target = installedTargets().find(
-    (entry) => path.resolve(entry.asarPath).toLowerCase() === path.resolve(asarPath).toLowerCase(),
-  );
-  if (!target) return { state: 'unknown', imageName: null };
+  let target;
+  try {
+    target = inspectHostTarget(asarPath);
+  } catch {
+    return { state: 'unknown', imageName: null };
+  }
   const imageName = path.basename(target.executablePath);
   return {
     state:
       process.platform === 'win32'
         ? clientRunningWindows(imageName)
-        : clientRunningPosix(imageName),
+        : clientRunningPosix(target.executablePath),
     imageName,
   };
 }
@@ -262,9 +313,7 @@ export function hostPatchIo({
   localizationProfiles: profileOverrides,
   logEvent,
 } = {}) {
-  const target = installedTargets().find(
-    (entry) => path.resolve(entry.asarPath).toLowerCase() === path.resolve(asarPath).toLowerCase(),
-  );
+  const target = executablePath === undefined ? inspectHostTarget(asarPath) : null;
   return {
     asarPath: path.resolve(asarPath),
     backupDir: path.resolve(backupDir),

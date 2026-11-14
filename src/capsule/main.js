@@ -5,6 +5,11 @@
 // timers; the DOM bootstrap statements live in mountCapsule(), which the
 // entry defers until the Host document is ready.
 
+import {
+  limitStatusEntries,
+  limitStatusLines,
+  normalizeLimitStatus,
+} from '../plugin/lib/limit-status-core.mjs';
 import { formatLocaleNumber } from '../plugin/lib/locale.mjs';
 import {
   applyExecutorCapacity,
@@ -16,6 +21,7 @@ import {
   mergeGeneratorMetadata,
   metricsFromAgg,
 } from '../plugin/lib/metrics-core.mjs';
+import { splitModelLabel } from '../plugin/lib/model-label.mjs';
 import { nextPollDelayMs, refreshSchedule } from '../plugin/lib/poll-policy.mjs';
 import { validateCustomPrices } from '../plugin/lib/pricing-core.mjs';
 import {
@@ -63,6 +69,53 @@ const FULL_RESYNC_MS = 10 * 60_000;
 const AGG_LIMIT = 10;
 const PRICING_TTL_MS = 5000;
 const PRICING_DISCOVERY_TTL_MS = 60_000;
+let diskLimitSnapshot = null;
+let diskLimitAttemptAt = null;
+let diskLimitInFlight = null;
+let diskLimitController = null;
+
+export function diskLimitLines() {
+  return limitStatusLines(diskLimitSnapshot, t());
+}
+
+async function syncDiskLimits(endpoint) {
+  if (diskLimitInFlight) return diskLimitInFlight;
+  if (diskLimitAttemptAt !== null && Date.now() - diskLimitAttemptAt < 60000) return;
+  diskLimitAttemptAt = Date.now();
+  const controller = new AbortController();
+  diskLimitController = controller;
+  const timer = setTimeout(() => controller.abort(), 20000);
+  const pending = (async () => {
+    try {
+      const url = new URL(endpoint);
+      url.pathname = url.pathname.replace(/\/api\/pricing$/, '/api/limit-status');
+      const response = await fetch(url.href, {
+        signal: controller.signal,
+        credentials: 'omit',
+        cache: 'no-store',
+        referrerPolicy: 'no-referrer',
+      });
+      if (!response.ok) throw new Error(`Limit status HTTP ${response.status}`);
+      const snapshot = normalizeLimitStatus(await readBoundedJson(response));
+      if (!state.disposed) diskLimitSnapshot = snapshot;
+    } catch (error) {
+      if (!state.disposed)
+        diskLimitSnapshot = {
+          status: 'unavailable',
+          snapshotAt: new Date().toISOString(),
+          error: error.message,
+        };
+    } finally {
+      clearTimeout(timer);
+      if (diskLimitController === controller) diskLimitController = null;
+      updateDisplay(state);
+    }
+  })().finally(() => {
+    if (diskLimitInFlight === pending) diskLimitInFlight = null;
+  });
+  diskLimitInFlight = pending;
+  return pending;
+}
 const STORAGE_KEY_COLLAPSES = 'agyctl_sections_collapse';
 const customPricing = {
   prices: [],
@@ -88,10 +141,11 @@ function loadCollapseState() {
         perf: parsed.perf !== false,
         variants: parsed.variants !== false,
         session: parsed.session !== false,
+        limits: parsed.limits === true,
       };
     }
   } catch {}
-  return { comp: true, perf: true, variants: true, session: true };
+  return { comp: true, perf: true, variants: true, session: true, limits: false };
 }
 
 export function saveCollapseState(s) {
@@ -512,9 +566,11 @@ async function syncPricing(csrf) {
         !customPricing.endpoint ||
         Date.now() - customPricing.discoveredAt >= PRICING_DISCOVERY_TTL_MS
       ) {
+        customPricing.endpoint = null;
         customPricing.endpoint = await discoverPricingEndpoint(csrf, controller.signal);
         customPricing.discoveredAt = Date.now();
       }
+      void syncDiskLimits(customPricing.endpoint);
       const response = await fetch(customPricing.endpoint, {
         signal: controller.signal,
         credentials: 'omit',
@@ -535,8 +591,14 @@ async function syncPricing(csrf) {
         invalidatePricingMetrics();
         void pollMetrics();
       }
-    } catch {
+    } catch (error) {
       if (state.disposed || customPricing.dirty) return;
+      if (!customPricing.endpoint)
+        diskLimitSnapshot = {
+          status: 'unavailable',
+          snapshotAt: new Date().toISOString(),
+          error: error.message,
+        };
       customPricing.endpoint = null;
       customPricing.status = customPricing.revision ? 'stale' : 'unavailable';
     } finally {
@@ -896,6 +958,7 @@ function updateCapsuleRing(capsuleEl, metrics) {
 function updateDisplay(st) {
   if (state.disposed) return;
   const surfaces = mountCapsuleSurfaces();
+  refreshVisibleTooltip();
 
   updateCapsuleRing(surfaces.capsule, st);
 
@@ -916,6 +979,30 @@ export function renderPopoverContent(fallbackSt) {
   /** @type {(id: string) => HTMLElement|null} */
   const $ = (id) => /** @type {HTMLElement|null} */ (popoverEl.querySelector('#' + id));
   const dict = t();
+  const limits = limitStatusEntries(diskLimitSnapshot, dict);
+  const limitsSum = $('cr-sum-limits');
+  if (limitsSum)
+    limitsSum.textContent =
+      limits.kind === 'patched' ? dict.limitsModels(limits.rows.length) : limits.statusText;
+  const limitsStatus = $('cr-limits-status');
+  if (limitsStatus) limitsStatus.textContent = limits.statusText;
+  const limitsList = $('cr-limits-list');
+  const limitsKey = JSON.stringify([
+    currentLang,
+    limits.rows.map((row) => [row.id, row.name, row.effort, row.limit]),
+  ]);
+  if (limitsList && limitsList.dataset.renderKey !== limitsKey) {
+    limitsList.dataset.renderKey = limitsKey;
+    limitsList.textContent = '';
+    for (const row of limits.rows) {
+      const line = buildEl('div', 'cr-crow cr-limits-row');
+      const left = buildEl('div', 'cr-cleft');
+      left.append(buildEl('span', 'cr-vname', row.name));
+      if (row.effort) left.append(buildEl('span', 'cr-effort-badge', row.effort));
+      line.append(left, buildEl('div', 'cr-cright', formatLocaleNumber(row.limit, currentLang)));
+      limitsList.appendChild(line);
+    }
+  }
 
   const activeId =
     state.selectedAgentId && state.agentTree.some((a) => a.id === state.selectedAgentId)
@@ -967,10 +1054,19 @@ export function renderPopoverContent(fallbackSt) {
     }
   }
 
-  // 模型標題
-  $('cr-pop-model').textContent = st.isWaitingGen
+  // 模型標題（模型名與思考強度分開顯示）
+  const modelLabel = st.isWaitingGen
     ? dict.waitingGen
     : st.modelName || st.responseModel || dict.unknownModel;
+  const modelParts = splitModelLabel(modelLabel);
+  $('cr-pop-model').textContent = modelParts.base || modelLabel;
+  const effortBadge = $('cr-pop-effort');
+  if (effortBadge) {
+    effortBadge.textContent = modelParts.effort
+      ? modelParts.effort[0].toUpperCase() + modelParts.effort.slice(1)
+      : '';
+    effortBadge.hidden = !modelParts.effort;
+  }
 
   // === 區塊 1: 背景資訊摘要與內容 ===
   const compUsedPctText = st.pct == null ? '—' : `${formatUiNumber(st.pct)}%`;
@@ -1105,9 +1201,16 @@ export function renderPopoverContent(fallbackSt) {
 
   // === 區塊 3: 模型別名摘要與內容 — 以 DOM API 建構，別名不經 HTML ===
   const vars = st.modelVariants || [];
+  const varParts = vars.map((v) => splitModelLabel(v.name));
   const vlistEl = $('cr-variant-list');
   const varColors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899'];
   const variantsKey = JSON.stringify([currentLang, vars.map((v) => v.name)]);
+  const variantLabel = (index) => {
+    const parts = varParts[index];
+    return parts.effort
+      ? `${parts.base} · ${parts.effort[0].toUpperCase() + parts.effort.slice(1)}`
+      : parts.base || vars[index].name;
+  };
   if (vlistEl && vlistEl.dataset.renderKey !== variantsKey) {
     vlistEl.dataset.renderKey = variantsKey;
     vlistEl.textContent = '';
@@ -1117,13 +1220,14 @@ export function renderPopoverContent(fallbackSt) {
       vlistEl.appendChild(row);
       $('cr-sum-var').textContent = dict.oneModelSum;
     } else {
-      $('cr-sum-var').textContent = `${vars[0].name} · ${formatUiNumber(vars[0].percentage, 0)}%`;
+      $('cr-sum-var').textContent =
+        `${variantLabel(0)} · ${formatUiNumber(vars[0].percentage, 0)}%`;
       vars.forEach((v, idx) => {
         const row = buildEl('div', 'cr-vrow');
         const left = buildEl('div', 'cr-vleft');
         const sq = buildEl('span', 'cr-csq');
         sq.style.background = varColors[idx % varColors.length];
-        left.append(sq, buildEl('span', 'cr-vname', v.name));
+        left.append(sq, buildEl('span', 'cr-vname', variantLabel(idx)));
         const right = buildEl('div', 'cr-vright');
         right.append(
           buildEl('span', 'cr-vcount', dict.variantCount(formatUiNumber(v.count, 0))),
@@ -1135,7 +1239,7 @@ export function renderPopoverContent(fallbackSt) {
     }
   }
   if (vlistEl && vars.length) {
-    $('cr-sum-var').textContent = `${vars[0].name} · ${formatUiNumber(vars[0].percentage, 0)}%`;
+    $('cr-sum-var').textContent = `${variantLabel(0)} · ${formatUiNumber(vars[0].percentage, 0)}%`;
     vars.forEach((v, idx) => {
       const row = vlistEl.children[idx];
       row.querySelector('.cr-vcount').textContent = dict.variantCount(formatUiNumber(v.count, 0));
@@ -1356,6 +1460,7 @@ export function mountCapsule() {
       state.disposed = true;
       cancelRequests();
       customPricing.controller?.abort();
+      diskLimitController?.abort();
       clearTimeout(state.pollTimer);
       subagentObserver.disconnect();
       if (

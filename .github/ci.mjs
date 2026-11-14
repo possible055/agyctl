@@ -13,7 +13,7 @@ export function selectChecks(event, paths = []) {
       file.startsWith('docs/') ||
       file.startsWith('vendor-src/') ||
       /^(README(?:\.[\w-]+)?\.md|AGENTS\.md|LICENSE)$/.test(file) ||
-      file === '.github/README.md'
+      file === '.github/CI.md'
     ) {
       continue;
     }

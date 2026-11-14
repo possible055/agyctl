@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
@@ -115,6 +116,39 @@ test('discovery via env shortcut (deterministic, no network)', async () => {
     else process.env.ANTIGRAVITY_LS_ADDRESS = origAddr;
     if (origToken === undefined) delete process.env.ANTIGRAVITY_CSRF_TOKEN;
     else process.env.ANTIGRAVITY_CSRF_TOKEN = origToken;
+  }
+});
+
+test('invalid or incomplete explicit LS settings refuse instead of discovering another server', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-transport-env-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const transport = new URL('../../src/plugin/sidecars/panel/transport.mjs', import.meta.url).href;
+  const script = `
+    import { discoverLanguageServer } from ${JSON.stringify(transport)};
+    try {
+      await discoverLanguageServer();
+      process.stdout.write(JSON.stringify({ discovered: true }));
+    } catch (error) {
+      process.stdout.write(JSON.stringify({ error: error.message }));
+    }
+  `;
+  for (const [address, token, expected] of [
+    ['http://127.0.0.1:59999', 'test-token', /Invalid LS address/],
+    ['127.0.0.1:59999', undefined, /must be set together/],
+    [undefined, 'test-token', /must be set together/],
+  ]) {
+    const env = { ...process.env, HOME: root, USERPROFILE: root, APPDATA: root };
+    delete env.ANTIGRAVITY_LS_ADDRESS;
+    delete env.ANTIGRAVITY_CSRF_TOKEN;
+    if (address !== undefined) env.ANTIGRAVITY_LS_ADDRESS = address;
+    if (token !== undefined) env.ANTIGRAVITY_CSRF_TOKEN = token;
+    const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], {
+      env,
+      encoding: 'utf8',
+      timeout: 5000,
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(JSON.parse(result.stdout).error, expected);
   }
 });
 

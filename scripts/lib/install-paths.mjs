@@ -40,8 +40,35 @@ export function sha256File(filePath) {
   return h.digest('hex');
 }
 
+const HASH_CACHE_LIMIT = 256;
+const hashCache = new Map();
+
+function hashCacheKey(filePath) {
+  const stat = fs.statSync(filePath);
+  // The atomic replacer preserves size and mtime, so identity fields that
+  // change on file replacement (inode, creation/change times) must join the key.
+  return `${filePath}|${stat.size}|${stat.mtimeMs}|${stat.ctimeMs}|${stat.birthtimeMs}|${stat.ino}`;
+}
+
+// Process-local content hash memoization. Only for read-only identity
+// checks on stable install files; never use where a fresh hash is required.
+export function sha256FileCached(filePath) {
+  const key = hashCacheKey(filePath);
+  const cached = hashCache.get(key);
+  if (cached) return cached;
+  const hash = sha256File(filePath);
+  hashCache.set(key, hash);
+  if (hashCache.size > HASH_CACHE_LIMIT) hashCache.delete(hashCache.keys().next().value);
+  return hash;
+}
+
 export function findAsarPath() {
-  const [target] = installedTargets();
+  const targets = installedTargets();
+  if (targets.length > 1)
+    throw new Error(
+      'Multiple Antigravity installations were found; use host-patch with --asar ABS_PATH',
+    );
+  const [target] = targets;
   if (target) return target.asarPath;
   throw new Error('未找到 Antigravity 安裝之 app.asar');
 }
@@ -164,9 +191,52 @@ export function installationPaths(
   };
 }
 
-export function installedTargets() {
+function appDirTarget(root, platform) {
+  if (!path.isAbsolute(root) || (process.platform === 'win32' && path.parse(root).root.length <= 1))
+    throw new Error('AGYCTL_APP_DIR must be an absolute installation root');
+  root = path.resolve(root);
+  try {
+    fs.readdirSync(root);
+    const readableFile = (filename) => {
+      if (!fs.statSync(filename).isFile())
+        throw new Error(`Expected a regular installation file: ${filename}`);
+      const descriptor = fs.openSync(filename, 'r');
+      try {
+        if (!fs.fstatSync(descriptor).isFile())
+          throw new Error(`Expected a regular installation file: ${filename}`);
+      } finally {
+        fs.closeSync(descriptor);
+      }
+    };
+    const asarPath = path.join(root, platform.resources, 'app.asar');
+    const binaryPath = path.join(root, platform.resources, 'bin', platform.language_server);
+    readableFile(asarPath);
+    readableFile(binaryPath);
+    const channels = platform.channels.filter((channel) => {
+      try {
+        fs.statSync(path.join(root, channel.executable));
+        return true;
+      } catch (error) {
+        if (error.code === 'ENOENT') return false;
+        throw error;
+      }
+    });
+    if (channels.length !== 1)
+      throw new Error('Missing or ambiguous recognized Antigravity channel executable');
+    const [channel] = channels;
+    const executablePath = path.join(root, channel.executable);
+    readableFile(executablePath);
+    return { product: channel.channel, root, asarPath, binaryPath, executablePath };
+  } catch (error) {
+    throw new Error(`AGYCTL_APP_DIR: ${error.message}`, { cause: error });
+  }
+}
+
+export function installedTargets({ ignoreAppDir = false } = {}) {
   supportedTarget();
   const platform = installLayout().platforms[process.platform];
+  if (!ignoreAppDir && Object.hasOwn(process.env, 'AGYCTL_APP_DIR'))
+    return [appDirTarget(process.env.AGYCTL_APP_DIR, platform)];
   const local = process.env.LOCALAPPDATA || path.join(os.homedir(), 'AppData', 'Local');
   return platform.channels
     .map((entry) => {

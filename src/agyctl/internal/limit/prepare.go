@@ -17,19 +17,22 @@ import (
 // is replaced. An authorized patch --apply may complete or consume it;
 // status only describes it and never writes.
 type prepareRecord struct {
-	Schema      int             `json:"schema"`
-	Operation   string          `json:"operation"`
-	Target      string          `json:"target"`
-	OriginalSHA string          `json:"original_sha256"`
-	NewSHA      string          `json:"new_sha256"`
-	Backups     []prepareBackup `json:"backups"`
-	IDs         []int           `json:"ids"`
-	Limit       int             `json:"limit"`
-	AppVersion  string          `json:"app_version,omitempty"`
-	Compat      string          `json:"compat,omitempty"`
-	FuncVA      string          `json:"func_va,omitempty"`
-	CreatedAt   string          `json:"created_at"`
-	Status      string          `json:"status"`
+	SettingsSource string          `json:"settings_source,omitempty"`
+	Schema         int             `json:"schema"`
+	Operation      string          `json:"operation"`
+	Target         string          `json:"target"`
+	OriginalSHA    string          `json:"original_sha256"`
+	NewSHA         string          `json:"new_sha256"`
+	Backups        []prepareBackup `json:"backups"`
+	IDs            []int           `json:"ids"`
+	Limit          int             `json:"limit"`
+	ModelLimits    []ModelLimit    `json:"model_limits,omitempty"`
+	Encoding       string          `json:"encoding,omitempty"`
+	AppVersion     string          `json:"app_version,omitempty"`
+	Compat         string          `json:"compat,omitempty"`
+	FuncVA         string          `json:"func_va,omitempty"`
+	CreatedAt      string          `json:"created_at"`
+	Status         string          `json:"status"`
 }
 
 type prepareBackup struct {
@@ -108,7 +111,7 @@ func (s store) finishFailedReplacement(binary string, cause error) error {
 	return cause
 }
 
-func checkPreparedOperation(prepared *prepareRecord, binary, sha, shaAfter string, ids []int, target int) error {
+func checkPreparedSettings(prepared *prepareRecord, binary, sha, shaAfter string, settings patchSettings) error {
 	key, err := normalized(binary)
 	if err != nil {
 		return err
@@ -119,7 +122,14 @@ func checkPreparedOperation(prepared *prepareRecord, binary, sha, shaAfter strin
 	if prepared.OriginalSHA != sha {
 		return fmt.Errorf("the prepared record expects original hash %s but the installed binary is %s — inspect it with 'limit status' and resolve the prepared record explicitly", prepared.OriginalSHA, sha)
 	}
-	if prepared.NewSHA != shaAfter || !reflect.DeepEqual(prepared.IDs, ids) || prepared.Limit != target {
+	values := prepared.ModelLimits
+	if len(values) == 0 {
+		values = uniformLimits(prepared.IDs, prepared.Limit)
+	}
+	if err := validateSettings(patchSettings{Encoding: prepared.Encoding, ModelLimits: values, IDs: prepared.IDs, Limit: prepared.Limit}); err != nil {
+		return fmt.Errorf("invalid prepared settings: %w", err)
+	}
+	if prepared.NewSHA != shaAfter || !reflect.DeepEqual(values, settings.ModelLimits) || prepared.Encoding != settings.Encoding {
 		return fmt.Errorf("a prepared record holds different settings for this target (ids %v, limit %d) — apply those recorded settings or restore first; refusing to overwrite it", prepared.IDs, prepared.Limit)
 	}
 	return nil
@@ -165,7 +175,7 @@ func (s store) completePrepareRecord(binary, installedSHA string, prepared *prep
 		if err != nil {
 			return err
 		}
-		record := map[string]any{"action": "patch", "at": time.Now().Format(time.RFC3339), "binary_path": path, "binary_sha256_before": prepared.OriginalSHA, "binary_sha256_after": prepared.NewSHA, "backup_sibling": sibling, "backup_sibling_sha256": prepared.OriginalSHA, "repo_backup": repo, "repo_backup_sha256": prepared.OriginalSHA, "app_version": nullable(prepared.AppVersion), "compat": prepared.Compat, "ids": prepared.IDs, "limit": prepared.Limit, "func": Func, "func_va": prepared.FuncVA, "operation": op.id}
+		record := map[string]any{"action": "patch", "at": time.Now().Format(time.RFC3339), "binary_path": path, "binary_sha256_before": prepared.OriginalSHA, "binary_sha256_after": prepared.NewSHA, "backup_sibling": sibling, "backup_sibling_sha256": prepared.OriginalSHA, "repo_backup": repo, "repo_backup_sha256": prepared.OriginalSHA, "app_version": nullable(prepared.AppVersion), "compat": prepared.Compat, "ids": prepared.IDs, "limit": prepared.Limit, "model_limits": prepared.ModelLimits, "encoding": prepared.Encoding, "settings_source": prepared.SettingsSource, "func": Func, "func_va": prepared.FuncVA, "operation": op.id}
 		if err = s.append(record); err != nil {
 			return err
 		}
@@ -203,5 +213,5 @@ func prepareReport(s store, binary, installedSHA string, prepared *prepareRecord
 	default:
 		recovery, action = "target-drift", "the target binary matches neither the recorded original nor prepared hash — inspect it manually before any authorized action"
 	}
-	return map[string]any{"operation": prepared.Operation, "created_at": prepared.CreatedAt, "status": prepared.Status, "original_sha256": prepared.OriginalSHA, "new_sha256": prepared.NewSHA, "ids": prepared.IDs, "limit": prepared.Limit, "backups": backups, "recovery": recovery, "recovery_action": action}, nil
+	return map[string]any{"operation": prepared.Operation, "created_at": prepared.CreatedAt, "status": prepared.Status, "original_sha256": prepared.OriginalSHA, "new_sha256": prepared.NewSHA, "ids": prepared.IDs, "limit": prepared.Limit, "model_limits": prepared.ModelLimits, "encoding": prepared.Encoding, "settings_source": prepared.SettingsSource, "backups": backups, "recovery": recovery, "recovery_action": action}, nil
 }

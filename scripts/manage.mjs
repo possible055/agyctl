@@ -1,79 +1,15 @@
-import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { normalizeLocale } from '../src/plugin/lib/locale.mjs';
 import { runAgyctl } from './lib/agyctl.mjs';
-import {
-  backupDir,
-  inspectedClientTarget,
-  installationPaths,
-  installedTargets,
-  supportedTarget,
-} from './lib/install-paths.mjs';
+import { inspectHostTarget, inspectTarget } from './lib/client-target.mjs';
+import { backupDir, installedTargets } from './lib/install-paths.mjs';
+
+export { inspectTarget } from './lib/client-target.mjs';
 
 const require = createRequire(import.meta.url);
 const { builtinAsar: asar } = require('./vendor/asar-engine.cjs');
-const products = {
-  antigravity: { product: 'antigravity', name: 'Antigravity' },
-  'antigravity-insiders': { product: 'insiders', name: 'Antigravity - Insiders' },
-};
-
-function samePath(first, second) {
-  return process.platform === 'win32'
-    ? first.toLowerCase() === second.toLowerCase()
-    : first === second;
-}
-
-function regularFile(filename) {
-  if (!fs.lstatSync(filename).isFile())
-    throw new Error(`Expected a regular file, not a link or directory: ${filename}`);
-  const canonical = fs.realpathSync(filename);
-  if (!samePath(canonical, path.resolve(filename)))
-    throw new Error(`Installation paths must not redirect through links: ${filename}`);
-  return canonical;
-}
-
-export function inspectTarget(asarPath, { requireFiles = true } = {}) {
-  if (typeof asarPath !== 'string' || !path.isAbsolute(asarPath))
-    throw new Error('Select an absolute app.asar path');
-  const archive = regularFile(asarPath);
-  if (
-    path.basename(archive) !== 'app.asar' ||
-    path.basename(path.dirname(archive)).toLowerCase() !== 'resources'
-  ) {
-    throw new Error('The selected file must be the installed resources/app.asar');
-  }
-  asar.validateArchive(archive);
-  const pkg = JSON.parse(asar.extractFile(archive, 'package.json').toString('utf8'));
-  const identity = Object.hasOwn(products, pkg.name) ? products[pkg.name] : null;
-  if (
-    !identity ||
-    pkg.productName !== identity.name ||
-    typeof pkg.version !== 'string' ||
-    !pkg.version
-  ) {
-    throw new Error('The selected archive has no recognized Antigravity package identity');
-  }
-  const {
-    root: installDir,
-    binaryPath,
-    executablePath,
-  } = installationPaths(path.dirname(archive), identity.product);
-  if (requireFiles) {
-    regularFile(binaryPath);
-    regularFile(executablePath);
-  }
-  return {
-    asarPath: archive,
-    binaryPath,
-    executablePath,
-    installDir,
-    product: identity.product,
-    version: pkg.version,
-  };
-}
-
 export async function prepareManagement({
   asarPath,
   capsule = false,
@@ -87,22 +23,13 @@ export async function prepareManagement({
     (locale !== undefined && (typeof locale !== 'string' || normalizeLocale(locale) !== locale))
   )
     throw new Error('Management preparation requires a canonical --locale for localization');
-  const targets = installedTargets();
   if (asarPath === undefined) {
+    const targets = installedTargets();
     if (targets.length !== 1)
       throw new Error('Select exactly one discovered Antigravity installation');
     asarPath = targets[0].asarPath;
   }
-  if (
-    typeof asarPath !== 'string' ||
-    !path.isAbsolute(asarPath) ||
-    !targets.some((target) => samePath(path.resolve(target.asarPath), path.resolve(asarPath)))
-  )
-    throw new Error('The selected ASAR must match an exact discovered Antigravity installation');
-  const target = inspectTarget(asarPath);
-  const clientTarget = inspectedClientTarget(target.binaryPath);
-  if (clientTarget.id !== supportedTarget().id)
-    throw new Error(`The selected client target ${clientTarget.id} cannot be managed on this host`);
+  const target = inspectHostTarget(asarPath);
   if (!localization) return { ...target, capsule, localization: { status: 'not-selected' } };
   const { prepareLocalizationHostPlan } = await import('./lib/management.mjs');
   return prepareLocalizationHostPlan(target, { locale, capsule });
@@ -135,7 +62,7 @@ export async function managementStatus({ asarPath, localizationPlan, unavailable
     }
   };
   const call = (args) => runAgyctl(args);
-  result.targets = capture('discovery', installedTargets) ?? [];
+  result.targets = capture('discovery', () => installedTargets({ ignoreAppDir: !!asarPath })) ?? [];
   const defaults = capture('limit', () => call(['limit', 'metadata']));
   if (defaults) result.defaults = defaults;
   if (!asarPath) {
@@ -287,7 +214,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       );
     } else
       throw new Error(
-        'Usage: manage.mjs status [--asar ABS_PATH] [--localization-plan ABS_PATH] | prepare [--asar ABS_PATH] [--capsule] [--localization --locale LOCALE] | --host-preflight|--host-apply --asar ABS_PATH --localization-plan ABS_PATH [--capsule]',
+        'Usage: manage.mjs status [--asar ABS_PATH] [--localization-plan ABS_PATH] | prepare [--asar ABS_PATH] [--capsule] [--localization --locale LOCALE] | --host-preflight|--host-apply [--asar ABS_PATH] --localization-plan ABS_PATH [--capsule]',
       );
     console.log(JSON.stringify(result));
   } catch (error) {

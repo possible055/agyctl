@@ -117,6 +117,43 @@
       "nativeAdapterVersion": "2"
     },
     {
+      "profileId": "hub-win-x64-2.31.0-03f3d094",
+      "status": "probe-only",
+      "product": "hub",
+      "channel": "stable",
+      "platform": "win32-x64",
+      "version": "2.31.0",
+      "electron": "44.9.1",
+      "adapterVersion": "2",
+      "exeSha256": "9f26f3863c47b3c6e0e1bbc1a0936c54e484c5a6a2c01823c358390c526e6c9f",
+      "asarSha256": "03f3d09472c08a6225a6c2625d28839781c8e6596b8b6f57ff7ff5d575bdbbb4",
+      "lsSha256": "77b76711786bd78b51a6879fa57e66f9f5d398ac5d369cf8b5b3e2fb5cfc741b",
+      "nlsHelper": {
+        "calleeName": "sr"
+      },
+      "assets": {
+        "index.html": {
+          "sha256": "118dcfc4e881a41715f2f363ced8ae9afa6b4d7c1acf312da194cb6fab50f768",
+          "size": 3798
+        },
+        "main.js": {
+          "sha256": "00c7aa77bcd1f0bce710f98a97be1e10c0b0fe91770d79216c94b47f2e591308",
+          "size": 11871831
+        }
+      },
+      "hostAdapter": {
+        "file": "dist/utils.js",
+        "sha256": "0c4d101773515c827dd91c3b60bdcc4a04591758bb9b4280c46350987c7d17dd",
+        "anchor": "win.loadURL = (targetUrl, options) => hubWcv.webContents.loadURL(targetUrl, options);"
+      },
+      "limits": {
+        "maxEntryBytes": 26214400,
+        "maxEntries": 4096,
+        "maxTotalBytes": 536870912
+      },
+      "nativeAdapterVersion": "2"
+    },
+    {
       "profileId": "hub-linux-x64-2.29.1-a6bfd456",
       "status": "probe-only",
       "product": "hub",

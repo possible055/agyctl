@@ -19,6 +19,8 @@ export const CAPSULE_INPUTS = Object.freeze([
   'plugin/lib/metrics-core.mjs',
   'plugin/lib/poll-policy.mjs',
   'plugin/lib/upstream-contract.mjs',
+  'plugin/lib/limit-status-core.mjs',
+  'plugin/lib/model-label.mjs',
   'plugin/lib/locale.mjs',
   'plugin/lib/locale-state.mjs',
   'capsule/i18n.js',

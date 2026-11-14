@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Coverage, Manifest } from './build/transform.js';
+import type { DomManifest } from './build/dom-artifact.js';
+import type { DomIndex } from './build/dom-index.js';
 import type { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 
 const HASH = /^[a-f0-9]{64}$/;
@@ -27,9 +29,18 @@ function hash(value: unknown, name: string): string {
   return result;
 }
 
-export function decodeManifest(value: unknown): Manifest {
-  const raw = object(value, 'manifest');
-  if (raw.schemaVersion !== 1) throw new ArtifactError('Unsupported artifact manifest schema');
+function integer(value: unknown, name: string): number {
+  if (!Number.isInteger(value) || Number(value) < 1) throw new ArtifactError(`${name} must be a positive integer`);
+  return Number(value);
+}
+
+export type ArtifactManifest = Manifest | DomManifest;
+
+export function isDomManifest(manifest: ArtifactManifest): manifest is DomManifest {
+  return manifest.schemaVersion === 2 && 'format' in manifest && manifest.format === 'dom';
+}
+
+function decodeAstManifest(raw: Record<string, unknown>): Manifest {
   const locale = string(raw.locale, 'locale');
   if (!LOCALES.has(locale)) throw new ArtifactError(`Unsupported artifact locale: ${locale}`);
   if (!Array.isArray(raw.assets) || raw.assets.length === 0) throw new ArtifactError('Artifact has no assets');
@@ -64,6 +75,38 @@ export function decodeManifest(value: unknown): Manifest {
     ...(raw.inventorySha256 === undefined ? {} : { inventorySha256: hash(raw.inventorySha256, 'inventorySha256') }),
     ...(raw.rulesSha256 === undefined ? {} : { rulesSha256: hash(raw.rulesSha256, 'rulesSha256') }),
   };
+}
+
+function decodeDomManifest(raw: Record<string, unknown>): DomManifest {
+  if (raw.format !== 'dom') throw new ArtifactError('Unsupported artifact manifest schema');
+  const locale = string(raw.locale, 'locale');
+  if (!LOCALES.has(locale) || locale === 'en') throw new ArtifactError(`Unsupported DOM artifact locale: ${locale}`);
+  return {
+    schemaVersion: 2,
+    format: 'dom',
+    artifactId: hash(raw.artifactId, 'artifactId'),
+    profileId: string(raw.profileId, 'profileId'),
+    locale,
+    formatLocale: string(raw.formatLocale, 'formatLocale'),
+    engineVersion: integer(raw.engineVersion, 'engineVersion'),
+    engineSha256: hash(raw.engineSha256, 'engineSha256'),
+    scopesVersion: integer(raw.scopesVersion, 'scopesVersion'),
+    indexSha256: hash(raw.indexSha256, 'indexSha256'),
+    catalogSha256: hash(raw.catalogSha256, 'catalogSha256'),
+    adapterVersion: string(raw.adapterVersion, 'adapterVersion'),
+    toolchainSha256: hash(raw.toolchainSha256, 'toolchainSha256'),
+    nativeCatalogSha256: raw.nativeCatalogSha256 === null ? null : hash(raw.nativeCatalogSha256, 'nativeCatalogSha256'),
+    ...(raw.sourceIdentity === undefined ? {} : { sourceIdentity: hash(raw.sourceIdentity, 'sourceIdentity') }),
+    ...(raw.sourceBinarySha256 === undefined ? {} : { sourceBinarySha256: raw.sourceBinarySha256 === null ? null : hash(raw.sourceBinarySha256, 'sourceBinarySha256') }),
+    ...(raw.sourceMainSha256 === undefined ? {} : { sourceMainSha256: hash(raw.sourceMainSha256, 'sourceMainSha256') }),
+  };
+}
+
+export function decodeManifest(value: unknown): ArtifactManifest {
+  const raw = object(value, 'manifest');
+  if (raw.schemaVersion === 1) return decodeAstManifest(raw);
+  if (raw.schemaVersion === 2) return decodeDomManifest(raw);
+  throw new ArtifactError('Unsupported artifact manifest schema');
 }
 
 export interface NativeCatalog {
@@ -140,12 +183,42 @@ export function decodeCoverage(value: unknown, manifest: Manifest): Coverage {
   return raw as unknown as Coverage;
 }
 
+function decodeDomIndex(value: unknown, locale: string): DomIndex {
+  const raw = object(value, 'index');
+  if (raw.schemaVersion !== 1 || raw.locale !== locale) throw new ArtifactError('DOM index schema or locale mismatch');
+  const exactRaw = object(raw.exact, 'index.exact');
+  const exact: DomIndex['exact'] = Object.create(null);
+  for (const [source, entryValue] of Object.entries(exactRaw)) {
+    const entry = object(entryValue, 'index.exact entry');
+    exact[source] = {
+      messageId: string(entry.messageId, 'index.exact.messageId'),
+      translation: string(entry.translation, 'index.exact.translation'),
+    };
+  }
+  if (!Array.isArray(raw.templates)) throw new ArtifactError('DOM index templates are missing');
+  const templates = raw.templates.map((value) => {
+    const entry = object(value, 'index.template');
+    return {
+      id: string(entry.id, 'index.template.id'),
+      messageId: string(entry.messageId, 'index.template.messageId'),
+      prefix: typeof entry.prefix === 'string' ? entry.prefix : (() => { throw new ArtifactError('index.template.prefix must be a string'); })(),
+      suffix: typeof entry.suffix === 'string' ? entry.suffix : (() => { throw new ArtifactError('index.template.suffix must be a string'); })(),
+      translation: string(entry.translation, 'index.template.translation'),
+    };
+  });
+  return { schemaVersion: 1, locale, exact, templates };
+}
+
 /** Verifies every manifest-owned file before an artifact is selected or delivered. */
 export function readValidatedArtifact(directory: string, expected: { artifactId?: string; locale?: string } = {}) {
   const delivery = readArtifactDelivery(directory, expected);
   const { manifest, assets, nativeCatalog } = delivery;
   if ((expected.artifactId && manifest.artifactId !== expected.artifactId) || (expected.locale && manifest.locale !== expected.locale))
     throw new ArtifactError('Artifact identity or locale does not match the approved selection');
+  if (isDomManifest(manifest)) {
+    if (!delivery.index) throw new ArtifactError('DOM artifact has no verified index');
+    return { manifest, coverage: null, assets, body: '', nativeCatalog, index: delivery.index };
+  }
   const read = (file: string, expectedHash: string): Buffer => readHashedFile(directory, file, expectedHash);
   const coverage = decodeCoverage(JSON.parse(read('coverage.json', manifest.coverageSha256).toString('utf8')), manifest);
   if (manifest.inventorySha256) {
@@ -196,7 +269,7 @@ export function readValidatedArtifact(directory: string, expected: { artifactId?
     if (expectedHits.size !== coverage.hits.length || coverage.hits.some((hit) => expectedHits.get(hit.messageId) !== hit.hits)) throw new ArtifactError('Coverage hit totals do not match reviewed rules');
     if (coverage.completeness === 'complete' && coverage.usagePoints.some((point) => point.status === 'unresolved')) throw new ArtifactError('Artifact claims completeness with unresolved usage points');
   } else if (coverage.schemaVersion === 3) throw new ArtifactError('Usage-point coverage has no inventory hash');
-  return { manifest, coverage, assets, body: assets.get('main.js')!.toString('utf8'), nativeCatalog };
+  return { manifest, coverage, assets, body: assets.get('main.js')!.toString('utf8'), nativeCatalog, index: null };
 }
 
 function readHashedFile(directory: string, file: string, expectedHash: string): Buffer {
@@ -212,7 +285,15 @@ function readHashedFile(directory: string, file: string, expectedHash: string): 
 export function readArtifactDelivery(directory: string, expected: { artifactId?: string; locale?: string } = {}) {
   const manifest = decodeManifest(JSON.parse(fs.readFileSync(path.join(directory, 'manifest.json'), 'utf8')));
   if ((expected.artifactId && manifest.artifactId !== expected.artifactId) || (expected.locale && manifest.locale !== expected.locale)) throw new ArtifactError('Artifact identity or locale does not match the approved selection');
+  if (isDomManifest(manifest)) {
+    const index = decodeDomIndex(
+      JSON.parse(readHashedFile(directory, 'index.json', manifest.indexSha256).toString('utf8')),
+      manifest.locale,
+    );
+    const nativeCatalog = manifest.nativeCatalogSha256 === null ? null : decodeNativeCatalog(JSON.parse(readHashedFile(directory, 'native.json', manifest.nativeCatalogSha256).toString('utf8')), manifest.locale);
+    return { manifest, assets: new Map<string, Buffer>(), nativeCatalog, index };
+  }
   const assets = new Map(manifest.assets.map((entry) => [entry.file, readHashedFile(directory, entry.file, entry.sha256)]));
   const nativeCatalog = manifest.nativeCatalogSha256 === null ? null : decodeNativeCatalog(JSON.parse(readHashedFile(directory, 'native.json', manifest.nativeCatalogSha256).toString('utf8')), manifest.locale);
-  return { manifest, assets, nativeCatalog };
+  return { manifest, assets, nativeCatalog, index: null };
 }

@@ -160,13 +160,15 @@ func Assemble(ids []int, target int, funcVA, tableVA uint64) ([]byte, error) {
 }
 
 type Plan struct {
-	TextVA   uint64 `json:"text_va"`
-	FuncVA   uint64 `json:"func_va"`
-	FuncOff  int    `json:"func_off"`
-	TableVA  uint64 `json:"table_va"`
-	TableOff int    `json:"table_off"`
-	Body     []byte `json:"-"`
-	Table    []byte `json:"-"`
+	TextVA      uint64       `json:"text_va"`
+	FuncVA      uint64       `json:"func_va"`
+	FuncOff     int          `json:"func_off"`
+	TableVA     uint64       `json:"table_va"`
+	TableOff    int          `json:"table_off"`
+	Body        []byte       `json:"-"`
+	Table       []byte       `json:"-"`
+	ModelLimits []ModelLimit `json:"model_limits,omitempty"`
+	Nodes       []TableWrite `json:"nodes,omitempty"`
 }
 
 // PlanPatch parses the image and dispatches to the per-architecture planner.
@@ -232,17 +234,22 @@ func ApplyPatch(data []byte, plan Plan) []byte {
 	out := bytes.Clone(data)
 	copy(out[plan.FuncOff:], plan.Body)
 	copy(out[plan.TableOff:], plan.Table)
+	for _, node := range plan.Nodes {
+		copy(out[node.Offset:], node.Data)
+	}
 	return out
 }
 
 type PatchState struct {
-	Kind     string `json:"kind"`
-	FuncVA   uint64 `json:"func_va"`
-	Format   string `json:"format"`
-	Arch     string `json:"arch"`
-	IDs      []int  `json:"ids,omitempty"`
-	Limit    int    `json:"limit,omitempty"`
-	TableOff int    `json:"table_off,omitempty"`
+	Kind        string       `json:"kind"`
+	FuncVA      uint64       `json:"func_va"`
+	Format      string       `json:"format"`
+	Arch        string       `json:"arch"`
+	IDs         []int        `json:"ids,omitempty"`
+	Limit       int          `json:"limit,omitempty"`
+	TableOff    int          `json:"table_off,omitempty"`
+	ModelLimits []ModelLimit `json:"model_limits,omitempty"`
+	Encoding    string       `json:"encoding,omitempty"`
 }
 
 // DetectState parses the image and dispatches to the per-architecture state
@@ -281,6 +288,9 @@ func (im *image) detectStateAMD64(data []byte, state PatchState, originals [][]b
 			return state, nil
 		}
 	}
+	if decoded, ok := im.detectModelPatch(data, state, body); ok {
+		return decoded, nil
+	}
 	base := int(int32(binary.LittleEndian.Uint32(body[15:])))
 	span := int(body[21])
 	disp := int64(int32(binary.LittleEndian.Uint32(body[27:])))
@@ -314,5 +324,6 @@ func (im *image) detectStateAMD64(data []byte, state PatchState, originals [][]b
 	state.IDs = ids
 	state.Limit = target
 	state.TableOff = tableOff
+	state.ModelLimits = uniformLimits(ids, target)
 	return state, nil
 }

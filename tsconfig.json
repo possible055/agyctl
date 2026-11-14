@@ -16,6 +16,7 @@
     "src/plugin/sidecars/panel/usage.mjs",
     "src/plugin/sidecars/panel/settings.mjs",
     "src/plugin/sidecars/panel/limit-diagnostics.mjs",
+    "src/plugin/sidecars/panel/limit-status.mjs",
     "src/plugin/sidecars/panel/pricing.mjs",
     "src/plugin/sidecars/panel/contracts.d.ts",
     "src/capsule/host-feature.ts",

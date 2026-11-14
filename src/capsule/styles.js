@@ -9,6 +9,38 @@ import {
 
 export function capsuleStyles() {
   return `
+      #${TOOLTIP_ID} .cr-disk-limits {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-size: 11px;
+        line-height: 1.5;
+        font-variant-numeric: tabular-nums;
+        margin-top: 4px;
+        padding-top: 4px;
+        border-top: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+      }
+      #${POPOVER_ID} .cr-effort-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 6px;
+        border-radius: 9999px;
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 16px;
+        letter-spacing: 0.02em;
+        color: var(--secondary-foreground, #bcbdc6);
+        background: var(--secondary, rgba(255, 255, 255, 0.075));
+        border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+        flex-shrink: 0;
+      }
+      #${POPOVER_ID} .cr-limits-status {
+        font-size: 11px;
+        color: var(--muted-foreground, #8a8f98);
+        padding: 0 4px 6px;
+      }
+      #${POPOVER_ID} .cr-limits-row .cr-cright {
+        font-variant-numeric: tabular-nums;
+      }
       /* 底部膠囊 (主視窗與子代理視窗共用樣式) */
       #${CAPSULE_ID}, #${SUB_CAPSULE_ID} {
         display: inline-flex;
@@ -59,12 +91,13 @@ export function capsuleStyles() {
         font-weight: 350;
       }
 
-      /* 底部懸浮提示 (簡明 2 行) */
       #${TOOLTIP_ID} {
         position: fixed;
         bottom: 68px;
         z-index: 2147483647;
         padding: 6px 12px;
+        max-width: min(320px, calc(100vw - 20px));
+        box-sizing: border-box;
         border-radius: 8px;
         background: var(--card, #131317);
         color: var(--secondary-foreground, #bcbdc6);

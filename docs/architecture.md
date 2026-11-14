@@ -1,7 +1,9 @@
 # Architecture and Modification Boundaries
 
-`agyctl` adds usage visibility and optional client modifications to
-Antigravity app, with both stable and development channels. The supported tool targets
+`agyctl` adds usage visibility and optional client modifications to the
+Antigravity 2.31.0 desktop app (stable release). Older compatibility records remain
+historical evidence, not current acceptance targets. The tools can still discover and
+inspect the development (Insiders) channel. The supported tool targets
 are Windows x86-64, Linux x86-64, and macOS Apple Silicon.
 
 The main goals are:
@@ -36,10 +38,7 @@ Antigravity Electron main process
 
 This diagram describes the normal local desktop path, not a universal window
 implementation or a WSL/headless deployment. A packaged Windows LS need not be
-the server used by a WSL session. Shell and web-asset identities, upstream member
-paths, observed functions, and reproduction steps belong in
-[the build-specific analysis](upstream-analysis.md#shell-launch-and-window-boundaries),
-not in the architecture contract. Finding shell JavaScript in ASAR must not be
+the server used by a WSL session. Finding shell JavaScript in ASAR must not be
 confused with finding the main chat bundle there.
 
 The project uses Connect JSON requests, not a blanket HTTP/2-only contract.
@@ -56,9 +55,19 @@ See the [Connect protocol reference](https://connectrpc.com/docs/protocol/).
 runtime-provided `sidecar_sdk`. A loopback development shim is used only when
 the SDK is missing and the production sidecar token is absent.
 
-The current panel UI covers historical usage, estimated cost, pricing settings,
-and the CLI commands that modify the client; it never runs them. Live
-per-conversation context/speed display is the capsule's responsibility.
+The panel UI covers historical usage, estimated cost, pricing, and editable patch
+settings. Feature reads and writes go through
+[feature-control.mjs](../src/plugin/sidecars/panel/feature-control.mjs), which
+spawns [feature-control-worker.mjs](../scripts/feature-control-worker.mjs) in the
+checkout; the worker calls [feature-control.mjs](../scripts/lib/feature-control.mjs)
+for installed state and drafts and
+[model-catalog.mjs](../scripts/lib/model-catalog.mjs) for model names (the
+signed-in LS catalog joined to the selected binary's literal model enum; unknown
+mappings are not guessed). Save settings writes a draft only; it is applied by
+`npm run settings:apply` from a terminal after the user quits the client. The
+panel never writes ASAR and never closes or restarts Antigravity. Live
+per-conversation context/speed display is the capsule's responsibility. See
+[patch controls](operations.md#panel-patch-controls).
 
 [usage.mjs](../src/plugin/sidecars/panel/usage.mjs) combines local conversation
 discovery, read-only summary data, and LS trajectory/generator/step RPCs.
@@ -70,9 +79,6 @@ even when the new server belongs to the same product.
 [transport.mjs](../src/plugin/sidecars/panel/transport.mjs) discovers the LS
 through environment values or product logs, obtains CSRF metadata, and makes
 Node HTTP(S) Connect requests. Panel monitoring does not use CDP or patch ASAR.
-Its refresh interval is configurable from 10–300 seconds (default 10); hidden
-refreshes use at least 30 seconds, and a running usage scan is re-read every
-2 seconds. This is not the capsule's 3/5/15-second schedule.
 
 ### Input-toolbar capsule and shared logic
 
@@ -94,37 +100,18 @@ Shared logic and boundary contracts live in:
 | [anchors.js](../src/capsule/anchors.js) | The only definition of the upstream DOM anchors the capsule mounts on; the install-time served-bundle gate derives its tokens from it |
 | [host-ui.js](../src/capsule/host-ui.js) | Capsule element IDs, DOM queries over those anchors, and mount helpers |
 
-[scripts/capsule-build.mjs](../scripts/capsule-build.mjs) assembles those pure
-modules and capsule fragments, in the fixed `CAPSULE_INPUTS` order and without a
-bundler, into `dist/capsule/input-capsule.js`. It is a self-contained classic
-script; edit sources, not the generated bundle. `npm run capsule:install` calls
-the same `assembleCapsule()` in memory instead of reading that file, while the
-reviewed Host `plan` command takes an explicit `--capsule-code` file.
+[scripts/capsule-build.mjs](../scripts/capsule-build.mjs) assembles those
+modules into the self-contained `dist/capsule/input-capsule.js`; see
+[build outputs](development.md#build-outputs).
 
-Language is resolved before mounting: saved preference, declared Host language,
-system language, then English. The canonical IDs are `en`, `zh-Hant-TW`,
-`zh-Hans-CN`, and `ja-JP`; existing `zh-TW`/`zh-CN` preferences are normalized.
-The Host controller decorates only identified agyctl sidecar root frames with a
-locale snapshot, parent origin, and per-frame nonce. Before revealing an embedded
-panel, READY/STATE/ACK messages reconcile its snapshot with the current Host state.
-Messages bind the exact frame, current URL, origin, and nonce. Only the Host saves
-embedded selections; a panel without Host wiring owns its preference independently.
-This bootstrap never waits for LS or saved-price discovery. UI disposal does not
-discard the Host language controller; reinjection subscribes the replacement UI.
+AGY's own interface language (capsule and panel) is one Host-owned state shared
+with embedded panel frames; [page.mjs](../src/plugin/sidecars/panel/page.mjs)
+embeds the same locale modules into the panel. These product messages are separate
+from client localization; see [interface languages](operations.md#interface-languages).
 
-[page.mjs](../src/plugin/sidecars/panel/page.mjs) embeds the same locale modules
-into the panel page before its first render. The browser receives only product
-messages, not vendor dictionaries. The Capsule build checks required message keys,
-parameter arity, and the explicit Japanese vendor mappings in
-[locale-validation.mjs](../src/plugin/lib/locale-validation.mjs). Additional AGY
-messages are authored translations. These product messages are separate from the
-client-localization catalogs described in [localization](localization.md).
-
-Capsule polling normally uses 3 seconds with the popover open, 5 seconds in the
-background, and 15 seconds when hidden. It serializes polls, refreshes executor
-metadata on a 120-second schedule, rereads a bounded generator tail, and
-periodically reconciles from offset zero after 10 minutes. This is not an
-immediate change feed or a full rescan of all conversation history every poll.
+Capsule polling serializes requests, rereads a bounded generator tail, and
+periodically reconciles from offset zero. It is not an immediate change feed or a
+full rescan of all conversation history every poll.
 
 ### What the measurements mean
 
@@ -154,7 +141,7 @@ usage:
 | Panel installation | Plugin directory | Installs project sidecar files; does not modify `app.asar` or LS |
 | Capsule | `app.asar/dist/preload.js`, `dist/input-capsule.js` | Appends a preload hook containing the capsule code and retains a capsule member |
 | Limit patch | Native LS executable | Replaces an admitted x86-64 clamp body and its model-ID table; macOS mutation requires separate qualification |
-| Localization, when qualified | ASAR preload, reviewed adapter targets, `dist/agyctl-localization/*` | Adds a confirmation bridge, host delivery engine, and profile-specific adapter edits; does not rewrite the LS asset archive |
+| Localization, when qualified | ASAR preload, reviewed adapter targets, `dist/agyctl-localization/*` | Adds Hub bootstrap, the DOM engine, native helpers, and profile-specific adapter edits. Does not rewrite the LS asset archive or intercept Hub HTTPS |
 
 The shared [Host Composer](../src/host/compose.ts) implements ASAR
 composition behind the capsule and Host command entry points. It starts from a
@@ -164,12 +151,8 @@ It owns identity, backup/receipt handling, contribution conflicts, and the singl
 archive transaction, not feature-specific admission or code generation.
 [Capsule](../src/capsule/host-feature.ts) and
 [localization](../src/localization/host/feature.ts) provide those contributions.
-Saved contributions are bound by the receipt's `inputsHash`, so retaining a
-feature does not load or rebuild its current implementation.
-The composed preload also records that hash in its managed comment. An
-evidence-only input revision therefore gets a distinct archive hash and immutable
-receipt without changing feature payloads or replacing earlier records. A reviewed
-plan whose complete inputs are already installed is reported as `current`.
+Saved contributions are hash-bound, so retaining a feature does not rebuild it;
+see [Host rules](operations.md#reviewed-host-changes).
 
 The [capsule hook](../src/capsule/preload-hook.ts) embeds the capsule code
 directly in the preload behind the `// [agyctl Host Capsule Feature]` marker and
@@ -192,17 +175,10 @@ capsule visibly mounted.
 
 ### Localization
 
-Localization is an optional Host feature with three separate contracts: an
-offline transform that publishes a hash-bound artifact into tool state, a Host
-contribution that adds a delivery engine, a confirmation bridge, and reviewed
-adapter edits to the ASAR, and a runtime coordinator that serves the prepared
-`/main.js` and native-interface messages on the next launch. Selecting an artifact
-writes only tool state; it does not install the Host feature or prove activation.
-
-Every recorded profile in
-[profiles.json](../compat/localization/profiles.json) is `probe-only`. The
-stages, their gates, the recorded profiles, and the one partial real-client pass
-are described in [localization](localization.md).
+Localization is an optional Host feature: an offline prepare publishes a DOM
+artifact into tool state, the Host contribution adds the bootstrap and reviewed
+native adapter edits to the ASAR, and the runtime injects the DOM engine on the
+next launch. Every profile is `probe-only`; see [localization](localization.md).
 
 ### Limit admission and recovery
 
@@ -214,7 +190,7 @@ function bytes for the detected architecture in
 An unlisted version with known bytes may pass. Only the Insiders Windows x64
 entry records live behavioral observation. The requested limit remains subject
 to the replacement's later clamps and upstream/provider restrictions. See
-[the evidence limits](context-chain-analysis.md#conclusions-that-the-evidence-does-not-support).
+[limit patch](limit-patch.md).
 
 ASAR composition and limit replacement retain original backups and hash-bound
 recovery records. Staging, per-file replacement, and prepare records are not
@@ -224,9 +200,10 @@ hook marker. See [operations.md](operations.md).
 
 ## Compatibility checks and distribution
 
-[compat/install-layout.json](../compat/install-layout.json) defines Hub/Insiders
-paths for Windows, macOS, and Linux. Discovery coverage is not proof that every
-feature works on every OS or architecture.
+[compat/install-layout.json](../compat/install-layout.json) defines the default
+stable (Hub) and Insiders install paths for Windows, macOS, and Linux. The
+documented user target is the Antigravity stable app; discovery coverage is
+not proof that every feature works on every OS or architecture.
 
 The Go [checker](update-check.md) inspects installers and installed files for
 screening. It parses ASAR and executable formats with its own code, but reads the
@@ -256,9 +233,7 @@ execution snapshot or protection against concurrent privileged modification.
 selected target pair (the host by default).
 
 The project runs from a Git checkout: update it with `git pull`, `npm ci`, and
-`npm run plugin:install`. There is no release signing or self-updater. The Python
-reference implementation has been removed. Product code is JS/TS and Go; Python
-is limited to small scripts and isolated developer-tool launchers.
+`npm run plugin:install`. There is no release signing or self-updater.
 
 [operations.md](operations.md) contains the commands and recovery workflow.
 Report tests and static inspection separately from live validation.

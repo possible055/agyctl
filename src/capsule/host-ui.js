@@ -13,6 +13,7 @@ import {
   closePopover,
   collapseState,
   currentLang,
+  diskLimitLines,
   openPopover,
   pollMetrics,
   renderPopoverContent,
@@ -68,10 +69,17 @@ export function refreshVisibleTooltip() {
   const cid = getTargetCid();
   const metrics = (cid && state.metricsByCid.get(cid)) || (isSubagent ? null : state);
   const dict = t();
-  ensureTooltipMounted().innerHTML = `
+  const tooltipEl = ensureTooltipMounted();
+  tooltipEl.innerHTML = `
     <div class="cr-tip-row">${dict.tipUsed(formatUiTokens(metrics?.totalUsed), formatUiTokens(metrics?.capacity))}</div>
     <div class="cr-tip-row">${dict.tipCache(formatUiNumber(metrics?.convCacheRate ?? 0))}</div>
   `;
+  const diskStatus = buildEl('div', 'cr-disk-limits', diskLimitLines().join('\n'));
+  tooltipEl.appendChild(diskStatus);
+  const rect = tooltipTarget.el.getBoundingClientRect();
+  const width = tooltipEl.getBoundingClientRect().width;
+  tooltipEl.style.left = `${Math.max(10, Math.min(window.innerWidth - width - 10, rect.left + (rect.width - width) / 2))}px`;
+  tooltipEl.style.bottom = `${window.innerHeight - rect.top + 6}px`;
 }
 
 export function getRouteCascadeId() {
@@ -139,11 +147,8 @@ function createCapsuleEl(
 
   el.addEventListener('mouseenter', () => {
     const tooltipEl = ensureTooltipMounted();
-    const rect = el.getBoundingClientRect();
     tooltipTarget = { el, getTargetCid, isSubagent };
     refreshVisibleTooltip();
-    tooltipEl.style.left = `${Math.max(10, Math.min(window.innerWidth - 220, rect.left + rect.width / 2 - 110))}px`;
-    tooltipEl.style.bottom = `${window.innerHeight - rect.top + 6}px`;
     tooltipEl.classList.add('visible');
   });
 
@@ -204,6 +209,7 @@ function createPopoverEl() {
         <div class="cr-pop-title-wrap">
           <span class="cr-pop-dot"></span>
           <span id="cr-pop-model" class="cr-pop-model">${dict.waitingConn}</span>
+          <span id="cr-pop-effort" class="cr-effort-badge" hidden></span>
         </div>
         <div class="cr-pop-actions">
           <button id="cr-pop-lang" class="cr-pop-lang-btn" type="button" title="${dict.langTitle}">${dict.langBtn}</button>
@@ -217,6 +223,25 @@ function createPopoverEl() {
 
       <!-- 主代理 / 子代理切換選單 (有子代理時自動顯示) -->
       <div id="cr-agent-switch" class="cr-agent-switch" role="tablist" aria-label="${dict.agentSwitchAria}"></div>
+
+      <!-- 區塊 0: 上下文上限 (可收折，預設收合) -->
+      <div class="cr-collapsible-card collapsed" id="cr-card-limits">
+        <div class="cr-card-head" id="cr-head-limits">
+          <span class="cr-card-title" data-cr-i18n="diskLimitTitle">${dict.diskLimitTitle}</span>
+          <div class="cr-head-right">
+            <span class="cr-head-sum" id="cr-sum-limits">—</span>
+            <svg class="cr-chevron" width="14" height="14" viewBox="0 -960 960 960" fill="currentColor">
+              <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="cr-card-body">
+          <div class="cr-limits-status" id="cr-limits-status"></div>
+          <div class="cr-comp-list" id="cr-limits-list"></div>
+          <div class="cr-est-note" data-cr-i18n="diskLimitScope">${dict.diskLimitScope}</div>
+        </div>
+      </div>
 
       <!-- 區塊 1: 背景資訊 (可收折) -->
       <div class="cr-collapsible-card" id="cr-card-comp">
@@ -450,6 +475,7 @@ function createPopoverEl() {
     });
   }
 
+  bindCardToggle('cr-head-limits', 'cr-card-limits', 'limits');
   bindCardToggle('cr-head-comp', 'cr-card-comp', 'comp');
   bindCardToggle('cr-head-perf', 'cr-card-perf', 'perf');
   bindCardToggle('cr-head-var', 'cr-card-var', 'variants');

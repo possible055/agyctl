@@ -29,6 +29,7 @@ export interface Endpoint {
 }
 
 export interface RpcResponses {
+  GetAvailableModels: { response?: { models?: Record<string, { displayName?: string; model?: string; disabled?: boolean }> } };
   GetAllCascadeTrajectories: { trajectorySummaries?: Record<string, TrajectorySummary> };
   GetCascadeTrajectoryGeneratorMetadata: { generatorMetadata?: import('../../lib/metrics-core.mjs').GeneratorMetadata[] };
   GetCascadeTrajectoryExecutorMetadatas: { executorMetadata?: import('../../lib/metrics-core.mjs').ExecutorMetadata[] };

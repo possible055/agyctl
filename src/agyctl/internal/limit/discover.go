@@ -106,20 +106,66 @@ func asarVersion(path string) (string, error) {
 	return pkg.Version, nil
 }
 
-func targetForBinary(binary string, candidates []layout.Target) winproc.Target {
+func targetForBinary(binary string, candidates []layout.Target) (winproc.Target, error) {
 	target := winproc.Target{BinaryPath: filepath.Clean(binary)}
+	samePath := func(left, right string) bool {
+		if runtime.GOOS == "windows" {
+			return strings.EqualFold(left, right)
+		}
+		return left == right
+	}
 	for _, candidate := range candidates {
 		path := filepath.Clean(candidate.LanguageServer)
-		matches := path == target.BinaryPath
-		if runtime.GOOS == "windows" {
-			matches = strings.EqualFold(path, target.BinaryPath)
-		}
-		if matches {
+		if samePath(path, target.BinaryPath) {
 			target.ExecutablePath = candidate.Executable
-			break
+			return target, nil
 		}
 	}
-	return target
+	matchedLayout := false
+	for _, candidate := range candidates {
+		if candidate.Root == "" {
+			continue
+		}
+		relativeBinary, err := filepath.Rel(candidate.Root, candidate.LanguageServer)
+		if err != nil || !filepath.IsLocal(relativeBinary) {
+			return target, fmt.Errorf("invalid installation layout for %s", candidate.LanguageServer)
+		}
+		selectedRoot := target.BinaryPath
+		for range strings.Split(relativeBinary, string(filepath.Separator)) {
+			selectedRoot = filepath.Dir(selectedRoot)
+		}
+		if !samePath(filepath.Join(selectedRoot, relativeBinary), target.BinaryPath) {
+			continue
+		}
+		matchedLayout = true
+		relativeExecutable, err := filepath.Rel(candidate.Root, candidate.Executable)
+		if err != nil || !filepath.IsLocal(relativeExecutable) {
+			return target, fmt.Errorf("invalid paired executable layout for %s", candidate.Executable)
+		}
+		executable := filepath.Join(selectedRoot, relativeExecutable)
+		info, err := os.Stat(executable)
+		if errors.Is(err, os.ErrNotExist) {
+			continue
+		}
+		if err != nil {
+			return target, err
+		}
+		if !info.Mode().IsRegular() {
+			return target, fmt.Errorf("paired client is not a regular file: %s", executable)
+		}
+		executable, err = resolved(executable)
+		if err != nil {
+			return target, err
+		}
+		if target.ExecutablePath != "" && !samePath(target.ExecutablePath, executable) {
+			return target, fmt.Errorf("ambiguous paired client for %s", binary)
+		}
+		target.ExecutablePath = executable
+	}
+	if matchedLayout && target.ExecutablePath == "" {
+		return target, fmt.Errorf("paired client executable not found for %s", binary)
+	}
+	return target, nil
 }
 
 func appRunning(binary string, candidates []layout.Target) (*bool, error) {
@@ -127,7 +173,11 @@ func appRunning(binary string, candidates []layout.Target) (*bool, error) {
 	if err != nil {
 		return nil, err
 	}
-	state, err := winproc.Inspect(targetForBinary(path, candidates))
+	target, err := targetForBinary(path, candidates)
+	if err != nil {
+		return nil, err
+	}
+	state, err := winproc.Inspect(target)
 	if err != nil {
 		return nil, err
 	}

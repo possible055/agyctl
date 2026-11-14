@@ -146,10 +146,19 @@ func DataRoot() (string, error) {
 	}
 }
 
-// Candidates parses the install layout from the verified snapshot and resolves
-// the per-channel install paths; a nil snapshot falls back to reading the
-// layout file under root (library tests only).
+// Candidates honors AGYCTL_APP_DIR when set, refusing invalid installation roots
+// rather than falling back to the default paths.
 func Candidates(root string, snap *assets.Snapshot) ([]Target, error) {
+	return candidates(root, snap, false)
+}
+
+// DefaultCandidates resolves only the default per-channel paths, ignoring
+// AGYCTL_APP_DIR so callers can give explicit command-line paths precedence.
+func DefaultCandidates(root string, snap *assets.Snapshot) ([]Target, error) {
+	return candidates(root, snap, true)
+}
+
+func candidates(root string, snap *assets.Snapshot, ignoreAppDir bool) ([]Target, error) {
 	config, err := Load(root, snap)
 	if err != nil {
 		return nil, err
@@ -159,6 +168,13 @@ func Candidates(root string, snap *assets.Snapshot) ([]Target, error) {
 		return nil, err
 	}
 	p := config.Platforms[target.NodePlatform]
+	if install, set := os.LookupEnv("AGYCTL_APP_DIR"); set && !ignoreAppDir {
+		selected, err := appDirTarget(install, p)
+		if err != nil {
+			return nil, fmt.Errorf("AGYCTL_APP_DIR: %w", err)
+		}
+		return []Target{selected}, nil
+	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
@@ -174,6 +190,71 @@ func Candidates(root string, snap *assets.Snapshot) ([]Target, error) {
 		result = append(result, Target{TargetID: runtime.GOOS + "/" + runtime.GOARCH, Root: install, Asar: filepath.Join(resources, "app.asar"), LanguageServer: filepath.Join(resources, "bin", p.LanguageServer), Executable: filepath.Join(install, filepath.FromSlash(channel.Executable)), Channel: channel.Channel, Product: channel.Product})
 	}
 	return result, nil
+}
+
+func appDirTarget(root string, platform Platform) (Target, error) {
+	if !filepath.IsAbs(root) {
+		return Target{}, fmt.Errorf("must be an absolute installation root")
+	}
+	root = filepath.Clean(root)
+	if _, err := os.ReadDir(root); err != nil {
+		return Target{}, err
+	}
+	resources := filepath.Join(root, platform.Resources)
+	target := Target{
+		TargetID: runtime.GOOS + "/" + runtime.GOARCH, Root: root,
+		Asar:           filepath.Join(resources, "app.asar"),
+		LanguageServer: filepath.Join(resources, "bin", platform.LanguageServer),
+	}
+	for _, filename := range []string{target.Asar, target.LanguageServer} {
+		if err := readableFile(filename); err != nil {
+			return Target{}, err
+		}
+	}
+	channels := []Channel{}
+	for _, channel := range platform.Channels {
+		_, err := os.Stat(filepath.Join(root, filepath.FromSlash(channel.Executable)))
+		if os.IsNotExist(err) {
+			continue
+		}
+		if err != nil {
+			return Target{}, err
+		}
+		channels = append(channels, channel)
+	}
+	if len(channels) != 1 {
+		return Target{}, fmt.Errorf("missing or ambiguous recognized Antigravity channel executable")
+	}
+	channel := channels[0]
+	target.Executable = filepath.Join(root, filepath.FromSlash(channel.Executable))
+	if err := readableFile(target.Executable); err != nil {
+		return Target{}, err
+	}
+	target.Channel, target.Product = channel.Channel, channel.Product
+	return target, nil
+}
+
+func readableFile(filename string) error {
+	stat, err := os.Stat(filename)
+	if err != nil {
+		return err
+	}
+	if !stat.Mode().IsRegular() {
+		return fmt.Errorf("expected a regular installation file: %s", filename)
+	}
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = file.Close() }()
+	stat, err = file.Stat()
+	if err != nil {
+		return err
+	}
+	if !stat.Mode().IsRegular() {
+		return fmt.Errorf("expected a regular installation file: %s", filename)
+	}
+	return nil
 }
 
 // LocateFrom parses the install layout from the verified snapshot before

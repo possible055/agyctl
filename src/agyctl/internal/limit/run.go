@@ -17,15 +17,17 @@ import (
 )
 
 type options struct {
-	command, binary, ids, out string
-	limit                     int
-	dryRun, apply, json, help bool
+	command, binary, ids, out         string
+	modelLimits                       string
+	resolveSettings, settingsExplicit bool
+	limit                             int
+	dryRun, apply, json, help         bool
 }
 
 var errNoInstall = errors.New("language server binary not found (use --binary)")
 
 func parseOptions(args []string) (options, error) {
-	o := options{command: "patch", ids: DefaultIDs, limit: DefaultLimit}
+	o := options{command: "patch", ids: DefaultIDs, limit: DefaultLimit, resolveSettings: true}
 	if len(args) > 0 {
 		switch args[0] {
 		case "status", "patch", "restore", "versions", "metadata", "verify-state":
@@ -48,6 +50,7 @@ func parseOptions(args []string) (options, error) {
 	}
 	if o.command == "patch" {
 		flags.StringVar(&o.ids, "ids", DefaultIDs, "model ids/ranges")
+		flags.StringVar(&o.modelLimits, "model-limits", "", "complete per-model ID=LIMIT mapping")
 		flags.IntVar(&o.limit, "limit", DefaultLimit, "context token limit")
 		flags.BoolVar(&o.dryRun, "dry-run", false, "do not modify input")
 		flags.StringVar(&o.out, "out", "", "dry-run output path")
@@ -59,6 +62,24 @@ func parseOptions(args []string) (options, error) {
 	}
 	if flags.NArg() > 0 {
 		return o, fmt.Errorf("unexpected argument %q", flags.Arg(0))
+	}
+	hasModels, hasLegacy := false, false
+	flags.Visit(func(f *flag.Flag) {
+		if f.Name == "model-limits" {
+			hasModels = true
+		}
+		if f.Name == "ids" || f.Name == "limit" {
+			hasLegacy = true
+		}
+	})
+	o.settingsExplicit = hasModels || hasLegacy
+	if hasModels && hasLegacy {
+		return o, fmt.Errorf("--model-limits cannot be combined with --ids or --limit")
+	}
+	if hasModels {
+		if _, err := ParseModelLimits(o.modelLimits); err != nil {
+			return o, err
+		}
 	}
 	o.dryRun = o.dryRun || !o.apply
 	return o, nil
@@ -74,7 +95,7 @@ func Run(root string, snap *assets.Snapshot, args []string) (any, int, error) {
 		return failure(o.command, err)
 	}
 	if o.help {
-		return map[string]any{"command": o.command, "commands": []string{"status", "patch", "restore", "versions", "metadata", "verify-state"}, "default_ids": DefaultIDs, "default_limit": DefaultLimit, "patch_flags": []string{"--binary", "--ids", "--limit", "--dry-run", "--out", "--apply", "--in-place", "--json"}}, 0, nil
+		return map[string]any{"command": o.command, "commands": []string{"status", "patch", "restore", "versions", "metadata", "verify-state"}, "default_ids": DefaultIDs, "default_limit": DefaultLimit, "patch_flags": []string{"--binary", "--ids", "--limit", "--model-limits", "--dry-run", "--out", "--apply", "--in-place", "--json"}}, 0, nil
 	}
 	if o.command == "metadata" {
 		return map[string]any{"limitIds": DefaultIDs, "limitTokens": DefaultLimit}, 0, nil
@@ -94,7 +115,12 @@ func Run(root string, snap *assets.Snapshot, args []string) (any, int, error) {
 	if err != nil {
 		return failure(o.command, err)
 	}
-	candidates, err := layout.Candidates(root, snap)
+	var candidates []layout.Target
+	if o.binary != "" {
+		candidates, err = layout.DefaultCandidates(root, snap)
+	} else {
+		candidates, err = layout.Candidates(root, snap)
+	}
 	if err != nil {
 		return failure(o.command, err)
 	}
@@ -177,6 +203,7 @@ func resolveBinary(candidates []layout.Target, override string) (string, error) 
 		}
 		return override, nil
 	}
+	selected := ""
 	for _, candidate := range candidates {
 		stat, err := os.Stat(candidate.LanguageServer)
 		if errors.Is(err, os.ErrNotExist) {
@@ -186,8 +213,14 @@ func resolveBinary(candidates []layout.Target, override string) (string, error) 
 			return "", err
 		}
 		if stat.Mode().IsRegular() {
-			return candidate.LanguageServer, nil
+			if selected != "" {
+				return "", fmt.Errorf("multiple Antigravity installations found; use --binary or AGYCTL_APP_DIR")
+			}
+			selected = candidate.LanguageServer
 		}
+	}
+	if selected != "" {
+		return selected, nil
 	}
 	return "", errNoInstall
 }
@@ -268,7 +301,7 @@ func status(binary string, reg registry, s store, candidates []layout.Target) (a
 		ids = pstate.IDs
 		limit = pstate.Limit
 	}
-	result := map[string]any{"binary": binary, "channel": channelOf(binary), "app_version": nullable(version), "version_source": source, "binary_sha256": sha, "compat": compatResult(compat, entry), "patch_state": map[string]any{"kind": pstate.Kind, "func_va": fmt.Sprintf("%#x", pstate.FuncVA), "format": pstate.Format, "arch": pstate.Arch, "ids": ids, "limit": limit}, "language_server_running": running, "sibling_backup": siblingReport, "repo_backup": repoReport}
+	result := map[string]any{"binary": binary, "channel": channelOf(binary), "app_version": nullable(version), "version_source": source, "binary_sha256": sha, "compat": compatResult(compat, entry), "patch_state": map[string]any{"kind": pstate.Kind, "func_va": fmt.Sprintf("%#x", pstate.FuncVA), "format": pstate.Format, "arch": pstate.Arch, "ids": ids, "limit": limit, "model_limits": pstate.ModelLimits, "encoding": pstate.Encoding}, "language_server_running": running, "sibling_backup": siblingReport, "repo_backup": repoReport}
 	prepared, err := s.loadPrepare(binary)
 	if err != nil {
 		return nil, err
@@ -280,15 +313,19 @@ func status(binary string, reg registry, s store, candidates []layout.Target) (a
 		}
 		result["prepare_record"] = report
 	}
+	record, err := s.last(binary)
+	if err != nil {
+		return nil, err
+	}
+	saved, settingsState, settingsErr := savedSettingsReport(record, pstate)
+	addWarnings(result, settingsErr)
+	result["saved_settings"] = saved
+	result["settings_state"] = settingsState
 	addWarnings(result, versionErr, probeErr)
 	return result, nil
 }
 
 func patch(binary string, o options, reg registry, s store, candidates []layout.Target) (result map[string]any, err error) {
-	ids, err := ParseIDs(o.ids)
-	if err != nil {
-		return nil, err
-	}
 	data, err := os.ReadFile(binary)
 	if err != nil {
 		return nil, err
@@ -300,17 +337,27 @@ func patch(binary string, o options, reg registry, s store, candidates []layout.
 	if err != nil {
 		return nil, err
 	}
-	result = map[string]any{"binary": binary, "ids": ids, "limit": o.limit, "dry_run": o.dryRun, "applied": false, "binary_sha256_before": sha, "compat": compatResult(compat, entry)}
+	settings, settingsSource, err := s.requestedSettings(binary, pstate, o)
+	if err != nil {
+		return nil, err
+	}
+	settings.Source = settingsSource
+	ids := settings.IDs
+	o.limit = settings.Limit
+	result = map[string]any{"binary": binary, "ids": ids, "limit": o.limit, "model_limits": settings.ModelLimits, "settings_source": settingsSource, "dry_run": o.dryRun, "applied": false, "binary_sha256_before": sha, "compat": compatResult(compat, entry)}
 	addWarnings(result, versionErr)
 	if pstate.Kind == "patched" {
-		if reflect.DeepEqual(pstate.IDs, ids) && pstate.Limit == o.limit {
+		if reflect.DeepEqual(pstate.ModelLimits, settings.ModelLimits) {
 			result["already_patched"] = true
 			result["binary_sha256_after"] = sha
 			prepared, prepErr := s.loadPrepare(binary)
 			if prepErr != nil {
 				return nil, prepErr
 			}
-			if prepared != nil {
+			if prepared != nil && !o.dryRun {
+				if err = checkPreparedSettings(prepared, binary, prepared.OriginalSHA, sha, settings); err != nil {
+					return nil, err
+				}
 				if err = s.completePrepareRecord(binary, sha, prepared, result); err != nil {
 					return nil, err
 				}
@@ -332,7 +379,7 @@ func patch(binary string, o options, reg registry, s store, candidates []layout.
 	if pstate.Kind != "original" {
 		return nil, fmt.Errorf("function bytes match no recorded original in the compat registry (%d entries) — refusing", len(reg.Entries))
 	}
-	plan, err := PlanPatch(data, ids, o.limit)
+	plan, err := planSettings(data, settings)
 	if err != nil {
 		return nil, err
 	}
@@ -382,7 +429,7 @@ func patch(binary string, o options, reg registry, s store, candidates []layout.
 	}
 	operationID := ""
 	if prepared != nil {
-		if err = checkPreparedOperation(prepared, binary, sha, fsx.SHA256(out), ids, o.limit); err != nil {
+		if err = checkPreparedSettings(prepared, binary, sha, fsx.SHA256(out), settings); err != nil {
 			return nil, err
 		}
 		operationID = prepared.Operation
@@ -396,7 +443,7 @@ func patch(binary string, o options, reg registry, s store, candidates []layout.
 			err = errors.Join(err, releaseErr)
 		}
 	}()
-	record, err := patchBinary(binary, data, out, sha, version, compat, ids, o.limit, plan, s, op.id)
+	record, err := patchBinarySettings(binary, data, out, sha, version, compat, settings, plan, s, op.id)
 	if err != nil {
 		return nil, err
 	}
@@ -410,13 +457,18 @@ func patch(binary string, o options, reg registry, s store, candidates []layout.
 }
 
 func patchBinary(binary string, data, out []byte, sha, version, compat string, ids []int, target int, plan Plan, s store, operation string) (map[string]any, error) {
+	return patchBinarySettings(binary, data, out, sha, version, compat, patchSettings{IDs: ids, Limit: target, ModelLimits: uniformLimits(ids, target)}, plan, s, operation)
+}
+
+func patchBinarySettings(binary string, data, out []byte, sha, version, compat string, settings patchSettings, plan Plan, s store, operation string) (map[string]any, error) {
+	ids, target := settings.IDs, settings.Limit
 	prepared, err := s.loadPrepare(binary)
 	if err != nil {
 		return nil, err
 	}
 	shaAfter := fsx.SHA256(out)
 	if prepared != nil {
-		if err = checkPreparedOperation(prepared, binary, sha, shaAfter, ids, target); err != nil {
+		if err = checkPreparedSettings(prepared, binary, sha, shaAfter, settings); err != nil {
 			return nil, err
 		}
 	}
@@ -444,7 +496,7 @@ func patchBinary(binary string, data, out []byte, sha, version, compat string, i
 	if err = fsx.EnsureBackup(binary, repo, sha); err != nil {
 		return nil, err
 	}
-	if err = s.writePrepare(prepareRecord{Operation: operation, Target: targetKey, OriginalSHA: sha, NewSHA: shaAfter, Backups: []prepareBackup{{Kind: "sibling", Path: sibling, SHA256: sha}, {Kind: "repo", Path: repo, SHA256: sha}}, IDs: ids, Limit: target, AppVersion: version, Compat: compat, FuncVA: fmt.Sprintf("%#x", plan.FuncVA)}); err != nil {
+	if err = s.writePrepare(prepareRecord{Operation: operation, Target: targetKey, OriginalSHA: sha, NewSHA: shaAfter, Backups: []prepareBackup{{Kind: "sibling", Path: sibling, SHA256: sha}, {Kind: "repo", Path: repo, SHA256: sha}}, IDs: ids, Limit: target, ModelLimits: settings.ModelLimits, Encoding: settings.Encoding, SettingsSource: settings.Source, AppVersion: version, Compat: compat, FuncVA: fmt.Sprintf("%#x", plan.FuncVA)}); err != nil {
 		return nil, err
 	}
 	shaAfter, err = fsx.ReplaceVerified(binary, out, sha)
@@ -455,7 +507,7 @@ func patchBinary(binary string, data, out []byte, sha, version, compat string, i
 	if err != nil {
 		return nil, rollback(binary, data, shaAfter, err)
 	}
-	record := map[string]any{"action": "patch", "at": time.Now().Format(time.RFC3339), "binary_path": path, "binary_sha256_before": sha, "binary_sha256_after": shaAfter, "backup_sibling": sibling, "backup_sibling_sha256": sha, "repo_backup": repo, "repo_backup_sha256": sha, "app_version": nullable(version), "compat": compat, "ids": ids, "limit": target, "func": Func, "func_va": fmt.Sprintf("%#x", plan.FuncVA), "operation": operation}
+	record := map[string]any{"action": "patch", "at": time.Now().Format(time.RFC3339), "binary_path": path, "binary_sha256_before": sha, "binary_sha256_after": shaAfter, "backup_sibling": sibling, "backup_sibling_sha256": sha, "repo_backup": repo, "repo_backup_sha256": sha, "app_version": nullable(version), "compat": compat, "ids": ids, "limit": target, "model_limits": settings.ModelLimits, "encoding": settings.Encoding, "settings_source": settings.Source, "func": Func, "func_va": fmt.Sprintf("%#x", plan.FuncVA), "operation": operation}
 	if err = s.append(record); err != nil {
 		return nil, rollback(binary, data, shaAfter, err)
 	}
@@ -555,7 +607,7 @@ func restoreBinary(binary string, reg registry, s store, operation string) (map[
 		if patched.Kind != "patched" {
 			return nil, fmt.Errorf("no patch record and installed binary is not a recognized patch — refusing")
 		}
-		plan, err := PlanPatch(original, patched.IDs, patched.Limit)
+		plan, err := planSettings(original, settingsFromState(patched))
 		if err != nil {
 			return nil, err
 		}
@@ -590,6 +642,13 @@ func restoreBinary(binary string, reg registry, s store, operation string) (map[
 		version = record["app_version"]
 	}
 	restoreRecord := map[string]any{"action": "restore", "at": time.Now().Format(time.RFC3339), "binary_path": path, "binary_sha256": sha, "source": source, "app_version": version, "operation": operation}
+	if record != nil {
+		for _, key := range []string{"ids", "limit", "model_limits", "encoding"} {
+			if value, ok := record[key]; ok {
+				restoreRecord[key] = value
+			}
+		}
+	}
 	if err = s.append(restoreRecord); err != nil {
 		return nil, rollback(binary, current, sha, err)
 	}

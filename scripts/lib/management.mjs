@@ -78,6 +78,23 @@ function runLocalization(args) {
 }
 
 function summarizeCoverage(coverage) {
+  if (!coverage) {
+    return {
+      locale: null,
+      format: 'dom',
+      probe: false,
+      complete: false,
+      partial: true,
+      replacedMessages: 0,
+      totalReplacements: 0,
+      totalMessages: 0,
+      totalUsagePoints: null,
+      usagePointCounts: {},
+      evidence: null,
+      untranslated: [],
+      unapplied: [],
+    };
+  }
   const usagePointCounts = {};
   for (const point of coverage.usagePoints ?? [])
     usagePointCounts[point.status] = (usagePointCounts[point.status] ?? 0) + 1;
@@ -253,7 +270,9 @@ export async function prepareLocalizationHostPlan(target, { locale, capsule = fa
       profileId: profile.profileId,
       profileStatus: profile.status,
       artifactId: prepared.artifactId,
-      applied: prepared.applied,
+      format: prepared.format ?? 'ast',
+      applied: prepared.applied ?? null,
+      index: prepared.index ?? null,
       warnings: [
         ...new Map(
           [...observed.warnings, ...(prepared.warnings ?? [])].map((warning) => [

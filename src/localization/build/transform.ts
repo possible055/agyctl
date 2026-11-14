@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { parse } from 'acorn';
 import { parse as parseIcu, type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import { BuildError } from './assets.js';
+import { validateCatalogAliases } from './dom-index.js';
 import type { InventoryReport } from './inventory.js';
 
 export interface SourceMessage {
@@ -13,6 +14,8 @@ export interface SourceMessage {
   values?: Record<string, string>;
   surface: string;
   critical?: boolean;
+  /** Legacy message ids merged into this canonical message. */
+  aliases?: string[];
   /** Ships in native.json for the Electron main process helpers (plan §4.3). */
   native?: boolean;
 }
@@ -139,6 +142,7 @@ export function validateSourceCatalog(catalog: SourceCatalog): void {
       throw new BuildError('CATALOG_INVALID', `Message ${messageId} is missing its surface`);
     if (message.format === 'icu') validateIcuMessage(messageId, message.defaultMessage);
   }
+  validateCatalogAliases(catalog);
 }
 
 export function validateTranslations(catalog: SourceCatalog, translations: LocaleTranslations): void {
@@ -146,13 +150,18 @@ export function validateTranslations(catalog: SourceCatalog, translations: Local
   for (const [messageId, entry] of Object.entries(translations.messages)) {
     if (!catalog.messages[messageId])
       throw new BuildError('CATALOG_INVALID', `Translation ${messageId} has no source message`);
-    if (typeof entry.value !== 'string' || !entry.value)
+    if (typeof entry.value !== 'string' || !entry.value.trim())
       throw new BuildError('CATALOG_INVALID', `Translation ${messageId} is empty`);
     if (catalog.messages[messageId].format === 'icu') {
       validateIcuMessage(messageId, entry.value);
       const sourceArguments = icuArguments(parseIcu(catalog.messages[messageId].defaultMessage, { ignoreTag: true }));
       const targetArguments = icuArguments(parseIcu(entry.value, { ignoreTag: true }));
       if (sourceArguments.size !== targetArguments.size || [...sourceArguments].some((name) => !targetArguments.has(name))) throw new BuildError('CATALOG_INVALID', `Message ${messageId} changed its ICU arguments`);
+    } else {
+      const sourceArguments = new Set(catalog.messages[messageId].defaultMessage.match(/\{\d+\}/g));
+      const targetArguments = new Set(entry.value.match(/\{\d+\}/g));
+      if (sourceArguments.size !== targetArguments.size || [...sourceArguments].some((name) => !targetArguments.has(name)))
+        throw new BuildError('CATALOG_INVALID', `Message ${messageId} changed its positional arguments`);
     }
     if (entry.reviewed !== true)
       throw new BuildError('CATALOG_INVALID', `Translation ${messageId} is not reviewed`);
@@ -263,6 +272,10 @@ function literalContext(node: AcornNode, parent: AcornNode | null): string {
 function collectEdits(options: TransformOptions): { edits: Edit[]; applied: Array<{ messageId: string; hits: number }> } {
   const { source, rules, translations, helperCalleeName } = options;
   const probe = translations === undefined;
+  const aliases = new Map<string, string>();
+  if (options.catalog)
+    for (const message of Object.values(options.catalog.messages))
+      for (const alias of message.aliases ?? []) aliases.set(alias, message.messageId);
   const ast = parse(source, { ecmaVersion: 'latest', sourceType: 'script' }) as unknown as AcornNode;
   const callSites: Array<{ node: AcornNode; parent: AcornNode | null }> = [];
   const literals: Array<{ node: AcornNode; parent: AcornNode | null }> = [];
@@ -335,7 +348,8 @@ function collectEdits(options: TransformOptions): { edits: Edit[]; applied: Arra
   for (const rule of rules) {
     if (rule.file !== options.file) continue;
     if (rule.sourceSha256 && rule.sourceSha256 !== sourceDigest) throw new BuildError('SOURCE_MISMATCH', `Usage point ${rule.messageId} belongs to another source`);
-    const translation = probe ? undefined : translations.messages[rule.messageId]?.value;
+    const resolvedId = aliases.get(rule.messageId) ?? rule.messageId;
+    const translation = probe ? undefined : translations.messages[resolvedId]?.value;
     if (!probe && translation === undefined)
       throw new BuildError('CATALOG_INVALID', `No reviewed translation for required message ${rule.messageId}`);
     const hits: Edit[] = [];
@@ -356,7 +370,7 @@ function collectEdits(options: TransformOptions): { edits: Edit[]; applied: Arra
       for (const site of elementMessageSites(rule.originalText)) {
         const { children, values } = site;
         const rebuild = (render: (node: AcornNode) => string) =>
-          `...__AGYCTL_MESSAGE_FORMATTER__.formatMessageParts(${JSON.stringify(rule.messageId)},${JSON.stringify(compileIcuArguments(rule.messageId, translation!, values.length))},${JSON.stringify(translations?.locale)},{${values.map((value, index) => `${JSON.stringify(String(index))}:(${render(value)})`).join(',')}})`;
+          `...__AGYCTL_MESSAGE_FORMATTER__.formatMessageParts(${JSON.stringify(resolvedId)},${JSON.stringify(compileIcuArguments(resolvedId, translation!, values.length))},${JSON.stringify(translations?.locale)},{${values.map((value, index) => `${JSON.stringify(String(index))}:(${render(value)})`).join(',')}})`;
         const replacement = probe ? source.slice(children[0].start, children.at(-1)!.end) : rebuild((value) => source.slice(value.start, value.end));
         if (acceptsContext('elementMessage'))
           hits.push({ start: children[0].start, end: children.at(-1)!.end, replacement, messageId: rule.messageId, expressions: values, ...(!probe ? { rebuild } : {}) });
@@ -386,8 +400,8 @@ function collectEdits(options: TransformOptions): { edits: Edit[]; applied: Arra
         const expressions = node.expressions as AcornNode[] | undefined;
         if (!quasis || !expressions || quasis.length !== expressions.length + 1) continue;
         if (templateSkeleton(quasis) !== rule.originalText) continue;
-        const rebuild = (render: (node: AcornNode) => string) => !probe && options.catalog?.messages[rule.messageId]?.format === 'icu'
-          ? compileTemplateMessage(rule.messageId, translation as string, expressions, source, translations.locale, render)
+        const rebuild = (render: (node: AcornNode) => string) => !probe && options.catalog?.messages[resolvedId]?.format === 'icu'
+          ? compileTemplateMessage(resolvedId, translation as string, expressions, source, translations.locale, render)
           : rebuildTemplate(rule.originalText, probe ? rule.originalText : translation as string, expressions, source, render);
         // Probe mode rebuilds the original skeleton: identity semantics with
         // the same placeholder validation as a real translation.
@@ -395,8 +409,8 @@ function collectEdits(options: TransformOptions): { edits: Edit[]; applied: Arra
           hits.push({
             start: node.start,
             end: node.end,
-          replacement: !probe && options.catalog?.messages[rule.messageId]?.format === 'icu'
-            ? compileTemplateMessage(rule.messageId, translation as string, expressions, source, translations.locale)
+          replacement: !probe && options.catalog?.messages[resolvedId]?.format === 'icu'
+            ? compileTemplateMessage(resolvedId, translation as string, expressions, source, translations.locale)
             : rebuildTemplate(
             rule.originalText,
             probe ? rule.originalText : (translation as string),
@@ -693,7 +707,7 @@ export function buildArtifact(
  * message whose surface is reserved for native display. Empty when the locale
  * has none, so an English/probe artifact ships no native catalog at all.
  */
-function buildNativeJson(catalog: SourceCatalog, translations: LocaleTranslations): { schemaVersion: 1; locale: string; messages: Record<string, string>; compiledMessages: Record<string, ReturnType<typeof parseIcu>> } | null {
+export function buildNativeJson(catalog: SourceCatalog, translations: LocaleTranslations): { schemaVersion: 1; locale: string; messages: Record<string, string>; compiledMessages: Record<string, ReturnType<typeof parseIcu>> } | null {
   const messages: Record<string, string> = {};
   const compiledMessages: Record<string, ReturnType<typeof parseIcu>> = {};
   for (const message of Object.values(catalog.messages)) {

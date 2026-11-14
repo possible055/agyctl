@@ -1,0 +1,191 @@
+import { SCOPES_VERSION } from './contract.js';
+
+export { SCOPES_VERSION };
+
+const APPLICATION_INPUT_SELECTOR =
+  '[data-testid="agent-input-box"] [data-lexical-editor][contenteditable="true"][role="combobox"]';
+const APPLICATION_PAGE_HEADING_SELECTOR =
+  '[data-testid="aux-pane-split"] h1.text-xl.font-medium.text-foreground.select-none.m-0';
+const PAGE_HEADING_MESSAGE_IDS: Record<string, string> = {
+  '/customizations': 'hub.ui.2213674d80047f09',
+  '/sidecars': 'hub.ui.ad1fb9ec0cb3c7a4',
+};
+
+const SIDEBAR_LIST_SELECTOR = '[data-testid="conversation-list-sidebar"]';
+const SIDEBAR_APPLICATION_SELECTOR = [
+  '[data-testid="section-header"] button',
+  'button[data-testid="sidebar-add-project-button"]',
+  'button[data-testid="conversation-archive-button"]',
+  'button[data-testid="conversation-pin-button"]',
+  'button[data-testid="conversation-kebab"]',
+  'div:has(> button[data-testid="project-header"]) + div > button',
+  'div:has(> button[data-testid="project-header"]) + div > a',
+  'span.select-none.opacity-30.h-8.flex.items-center.whitespace-nowrap',
+]
+  .map((selector) => `${SIDEBAR_LIST_SELECTOR} ${selector}`)
+  .join(',');
+
+export const WRITABLE_ROOT_SELECTORS = [
+  'nav',
+  'header',
+  'button',
+  'label',
+  '[role="button"]',
+  '[role="menu"]',
+  '[role="menuitem"]',
+  '[role="dialog"]',
+  '[role="tooltip"]',
+  '[role="listbox"]',
+  '[role="tab"]',
+  '[data-testid="sidebar-nav"]',
+  '[data-testid="sidebar-navigation-items"]',
+  '[data-testid="home-greeting"] > h1',
+  APPLICATION_INPUT_SELECTOR,
+  APPLICATION_PAGE_HEADING_SELECTOR,
+  SIDEBAR_APPLICATION_SELECTOR,
+  'input[placeholder]',
+  'textarea[placeholder]',
+] as const;
+
+export const PROTECTED_SELECTORS = [
+  '[data-testid="planner-response-text"]',
+  '[data-testid="progress-update-response-text"]',
+  '[data-testid="conversation-list"]',
+  SIDEBAR_LIST_SELECTOR,
+  'button[data-testid="project-header"]',
+  '[data-testid="project-header"] button',
+  '[data-testid="conversation-row-sidebar"] > a',
+  '[data-testid="project-selector-item"][data-project-name] > span[title]',
+  '[data-testid="project-selector-trigger"]:has([data-project-icon]) > span.truncate',
+  '[data-testid="workspace-customizations-view"] span.font-medium.truncate',
+  '[data-testid="workspace-customizations-view"] .line-clamp-2',
+  '[data-testid="customizations-installed"] span.font-medium.flex-shrink-0',
+  '[data-testid="customizations-installed"] span.text-muted-foreground.truncate[title]',
+  '[data-testid="doc-row-modal"]',
+  '[role="dialog"]:has([data-testid="doc-row-modal"]) :is(h1,h2,[role="heading"])',
+  '[data-mention-menu] :not([data-testid="menu-category-row"]) > [data-testid="menu-option-label"]',
+  '[data-mention-menu] :not([data-testid="menu-category-row"]) > [data-testid="menu-option-description"]',
+  '[data-mention-menu] :not([data-testid="menu-category-row"]) > [data-testid="menu-option-trailing-label"]',
+  '[data-quotable]',
+  '[data-quotable-inline="true"]',
+  '[contenteditable="true"]',
+  '[contenteditable=""]',
+  '.monaco-editor',
+  '.xterm',
+  'code',
+  'pre',
+] as const;
+
+export const TRANSLATABLE_ATTRIBUTES = ['placeholder', 'title', 'aria-label'] as const;
+export const PROTECTION_ATTRIBUTES = ['data-testid', 'data-project-icon', 'aria-labelledby'] as const;
+
+const PROTECTED_SELECTOR = PROTECTED_SELECTORS.join(',');
+const PROTECTED_SUBTREE_SELECTOR = PROTECTED_SELECTORS.filter(
+  (selector) => selector !== SIDEBAR_LIST_SELECTOR,
+).join(',');
+const WRITABLE_SELECTOR = WRITABLE_ROOT_SELECTORS.join(',');
+
+function hasProtectedAncestor(element: Element): boolean {
+  if (element.closest(PROTECTED_SUBTREE_SELECTOR)) return true;
+  const dialog = element.closest('[role="dialog"]');
+  const labelledBy = dialog?.getAttribute('aria-labelledby');
+  if (!dialog || !labelledBy) return false;
+  const isLabel = labelledBy.split(/\s+/).some((id) => {
+    const label = element.ownerDocument.getElementById(id);
+    return label !== null && label.contains(element);
+  });
+  return isLabel && dialog.querySelector('[data-testid="doc-row-modal"]') !== null;
+}
+
+export function isProtectedNode(node: Node): boolean {
+  const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
+  if (!element) return true;
+  if (hasProtectedAncestor(element)) return true;
+  return Boolean(
+    element.closest(SIDEBAR_LIST_SELECTOR) && !element.closest(SIDEBAR_APPLICATION_SELECTOR),
+  );
+}
+
+export function isProtectedSubtree(node: Node): boolean {
+  const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
+  return !element || hasProtectedAncestor(element);
+}
+
+export function protectionChangeOwner(element: Element): Element | null {
+  if (element.parentElement?.closest(PROTECTED_SUBTREE_SELECTOR)) return null;
+  if (element.matches('[data-testid="doc-row-modal"]')) return element.closest('[role="dialog"]');
+  if (element.hasAttribute('data-project-icon'))
+    return element.closest('[data-testid="project-selector-trigger"]');
+  if (element.matches('[role="dialog"]') && element.querySelector('[data-testid="doc-row-modal"]'))
+    return element;
+  return null;
+}
+
+export function isValueNode(node: Node): boolean {
+  const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
+  return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement;
+}
+
+export function inWritableRoot(node: Node): boolean {
+  if (isProtectedNode(node)) return false;
+  const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
+  if (!element) return false;
+  return Boolean(element.closest(WRITABLE_SELECTOR));
+}
+
+export function isWritableText(node: Node): boolean {
+  if (node.nodeType !== Node.TEXT_NODE) return false;
+  if (isValueNode(node) || isProtectedNode(node)) return false;
+  return inWritableRoot(node);
+}
+
+export function isWritableAttributeHost(node: Node): boolean {
+  if (node.nodeType !== Node.ELEMENT_NODE) return false;
+  const element = node as Element;
+  if (
+    element.matches(
+      '[data-testid="customizations-installed"] .group.relative.flex.items-center.rounded-lg[title]',
+    )
+  )
+    return false;
+  if (element.matches(APPLICATION_INPUT_SELECTOR))
+    return !element.parentElement?.closest(PROTECTED_SELECTOR);
+  return inWritableRoot(node);
+}
+
+export function discoverWritableRoots(document: Document): Element[] {
+  return [...document.querySelectorAll(WRITABLE_SELECTOR)].filter(
+    (element) => isWritableAttributeHost(element),
+  );
+}
+
+export function isPlanInstructionMessage(messageId: string): boolean {
+  return (
+    messageId === 'settings.planInstruction.type' || messageId === 'settings.planInstruction.andSelect'
+  );
+}
+
+export function isAllowedMatchContext(node: Node, messageId: string): boolean {
+  const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
+  const heading = element?.closest(APPLICATION_PAGE_HEADING_SELECTOR);
+  if (heading && !heading.closest('nav,header,[role="dialog"]')) {
+    const pathname = heading.ownerDocument.defaultView?.location.pathname;
+    return typeof pathname === 'string' && PAGE_HEADING_MESSAGE_IDS[pathname] === messageId;
+  }
+  if (!isPlanInstructionMessage(messageId)) return true;
+  if (node.nodeType !== Node.TEXT_NODE || isProtectedNode(node)) return false;
+  const parent = node.parentElement;
+  if (parent?.tagName !== 'SPAN' || !parent.closest('[role="dialog"]')) return false;
+  const children = parent.children;
+  if (
+    children.length !== 2 ||
+    children[0].tagName !== 'CODE' ||
+    children[0].textContent !== '/' ||
+    children[1].tagName !== 'CODE' ||
+    children[1].textContent !== 'plan'
+  )
+    return false;
+  return [...parent.childNodes].every(
+    (child) => child.nodeType === Node.TEXT_NODE || child === children[0] || child === children[1],
+  );
+}

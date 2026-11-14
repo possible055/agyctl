@@ -1,8 +1,9 @@
 // P1 offline builder tests (plan §12.1). Synthetic fixtures cover the
 // reviewed-rule contract; the real sample is parsed read-only when present.
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { execFile, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import { createServer } from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -13,6 +14,7 @@ import {
   buildArtifact,
   buildInventory,
   extractProfileAssets,
+  generateUsageRules,
   loadProfiles,
   loadSampleAssets,
   observeLsSource,
@@ -220,6 +222,113 @@ test('element-child rules replace React children and shared messageIds sum their
   assert.match(result.text, /label: "新增對話"/);
   assert.match(result.text, /\{children: "New Conversation"\}/);
   assert.match(result.text, /call\("New Conversation"\)/);
+});
+
+test('rules:generate derives digest-bound rules and leaves ambiguous text untranslated', () => {
+  // Type: unit / Contract: mechanical rule generation adopts only unique
+  // catalog matches, binds ranges to the observed source digest, and skips
+  // ambiguous or non-display points / Fails when: a generated rule misses its
+  // digest, adopts an ambiguous messageId, or rewrites an 'other' context /
+  // Not covered by: the hand-written rule fixtures above.
+  const source = [
+    'const a = {label: "Save"};',
+    'const b = {title: "Save"};',
+    'const c = "Save";',
+    'const d = Fu("app.name", "Antigravity");',
+    'const e = `Total $' + '{n} items`;',
+    'const f = A.createElement("div", null, "Hi ", name, "!");',
+    'const g = {label: "Ambiguous"};',
+  ].join('\n');
+  const catalog = {
+    schemaVersion: 1,
+    messages: {
+      'common.save': {
+        messageId: 'common.save',
+        format: 'plain',
+        defaultMessage: 'Save',
+        surface: 'common',
+      },
+      'app.name': {
+        messageId: 'app.name',
+        format: 'vscode-nls',
+        upstreamKey: 'app.name',
+        defaultMessage: 'Antigravity',
+        surface: 'app',
+      },
+      'total.items': {
+        messageId: 'total.items',
+        format: 'icu',
+        defaultMessage: 'Total {0} items',
+        surface: 'status',
+      },
+      'greeting.hi': {
+        messageId: 'greeting.hi',
+        format: 'icu',
+        defaultMessage: 'Hi {0}!',
+        surface: 'greeting',
+      },
+      'dup.a': { messageId: 'dup.a', format: 'plain', defaultMessage: 'Ambiguous', surface: 'x' },
+      'dup.b': { messageId: 'dup.b', format: 'plain', defaultMessage: 'Ambiguous', surface: 'x' },
+    },
+  };
+  const locales = [
+    {
+      locale: 'zh-Hant-TW',
+      messages: {
+        'common.save': { value: '儲存', reviewed: true },
+        'app.name': { value: 'Antigravity', reviewed: true },
+        'total.items': { value: '共 {0} 項', reviewed: true },
+        'greeting.hi': { value: '嗨 {0}！', reviewed: true },
+        'dup.a': { value: '甲', reviewed: true },
+        'dup.b': { value: '乙', reviewed: true },
+      },
+    },
+  ];
+  const inventory = buildInventory({
+    file: 'main.js',
+    source,
+    sourceIdentity: '0'.repeat(64),
+    helperCalleeName: 'Fu',
+  });
+  const generated = generateUsageRules({
+    source,
+    inventory,
+    catalog,
+    locales,
+    helperCalleeName: 'Fu',
+  });
+  assert.equal(generated.stats.adoptedPoints, 5);
+  assert.equal(generated.stats.ambiguous, 1);
+  assert.equal(generated.rules.length, 4);
+  for (const rule of generated.rules) assert.equal(rule.sourceSha256, sha256Text(source));
+  const literal = generated.rules.find((rule) => rule.kind === 'literal');
+  assert.equal(literal.messageId, 'common.save');
+  assert.equal(literal.expectedHits, 2);
+  assert.equal(
+    generated.rules.find((rule) => rule.kind === 'nls-default-string').upstreamKey,
+    'app.name',
+  );
+  assert.equal(generated.worklist.ambiguous[0].originalText, 'Ambiguous');
+
+  const formatterRuntime = fs.readFileSync(
+    path.join(process.cwd(), 'dist', 'localization', 'bundle', 'message-runtime.js'),
+    'utf8',
+  );
+  const result = transformAsset({
+    source,
+    file: 'main.js',
+    rules: generated.rules,
+    helperCalleeName: 'Fu',
+    translations: locales[0],
+    catalog,
+    formatterRuntime,
+  });
+  assert.match(result.text, /label: "儲存"/);
+  assert.match(result.text, /title: "儲存"/);
+  assert.match(result.text, /const c = "Save";/);
+  assert.match(result.text, /Fu\("app.name", "Antigravity"\)/);
+  assert.match(result.text, /Ambiguous/);
+  parse(result.text, { ecmaVersion: 'latest' });
 });
 
 test('content-anchored literal rules only replace hits inside their display contexts', () => {
@@ -823,6 +932,67 @@ function buildZip(entries, { corruptCrc = false } = {}) {
   return Buffer.concat([...locals, centralDirectory, eocd]);
 }
 
+test('model and identity reads keep an empty tool-state directory untouched', async (t) => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-readonly-catalog-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const binary = path.join(directory, 'ls.bin');
+  const state = path.join(directory, 'tool-state');
+  fs.writeFileSync(
+    binary,
+    buildZip([{ name: 'main.js', data: 'D.Model={UNSPECIFIED:0,PLACEHOLDER_M318:1318};' }]),
+  );
+  const server = createServer((_request, response) => {
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.end(
+      JSON.stringify({
+        response: {
+          models: {
+            flash: { displayName: 'Fixture Flash', model: 'MODEL_PLACEHOLDER_M318' },
+          },
+        },
+      }),
+    );
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+  const code = `
+    import assert from 'node:assert/strict';
+    import fs from 'node:fs';
+    import path from 'node:path';
+    import { readModelCatalog } from './scripts/lib/model-catalog.mjs';
+    import { sha256FileCached } from './scripts/lib/install-paths.mjs';
+    const catalog = await readModelCatalog(${JSON.stringify(binary)});
+    assert.equal(catalog.status, 'available');
+    assert.equal(catalog.models[0].id, 1318);
+    assert.equal(fs.existsSync(${JSON.stringify(state)}), false, 'model reads must not create tool state');
+    for (let index = 0; index < 16; index++) {
+      const file = path.join(${JSON.stringify(directory)}, 'identity-' + index);
+      fs.writeFileSync(file, 'identity-' + index);
+      sha256FileCached(file);
+    }
+    assert.equal(fs.existsSync(${JSON.stringify(state)}), false, 'identity reads must not create tool state');
+  `;
+  const result = await new Promise((resolve) => {
+    execFile(
+      process.execPath,
+      ['--input-type=module', '-e', code],
+      {
+        cwd: process.cwd(),
+        windowsHide: true,
+        timeout: 15000,
+        env: {
+          ...process.env,
+          AGYCTL_HOME: state,
+          ANTIGRAVITY_LS_ADDRESS: '127.0.0.1:' + server.address().port,
+          ANTIGRAVITY_CSRF_TOKEN: 'fixture-token',
+        },
+      },
+      (error, stdout, stderr) => resolve({ error, stdout, stderr }),
+    );
+  });
+  assert.equal(result.error, null, result.stdout + result.stderr);
+});
+
 function profileFixture(root) {
   const binary = path.join(root, 'ls.bin');
   const mainData = 'const a = Fu("statusBarBackground", "Hover bar color.");\n';
@@ -1168,13 +1338,86 @@ test('the real reviewed sample is parsed and translated deterministically when p
   assert.equal(built.coverage.messages.length, Object.keys(catalog.messages).length);
 });
 
-function runCli(home, args) {
+function runCli(home, args, env = {}) {
   return spawnSync(process.execPath, ['scripts/localization.mjs', ...args], {
     encoding: 'utf8',
     windowsHide: true,
-    env: { ...process.env, AGYCTL_HOME: home },
+    env: { ...process.env, AGYCTL_HOME: home, ...env },
   });
 }
+
+test('localization CLI rejects unsupported and ambiguous arguments before accessing tool state', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-loc-arguments-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const home = path.join(root, 'tool-state');
+  for (const [args, expected] of [
+    [['prepare', '--asar', path.join(root, 'app.asar'), '--probe'], /Unknown argument.*--asar/],
+    [['prepare', '--locale', 'en'], /English is an explicit disable/],
+    [['status', '--locale', 'ja-JP'], /Unknown argument.*--locale/],
+    [
+      ['status', '--installation', 'first', '--installation', 'second'],
+      /Duplicate argument.*--installation/,
+    ],
+    [['inspect', '--ls', 'first', '--sample-dir', 'second'], /cannot be combined/],
+    [['status', 'unexpected'], /Unknown argument.*unexpected/],
+  ]) {
+    const result = runCli(home, [...args, '--json']);
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(JSON.parse(result.stdout).error, expected);
+    assert.equal(fs.existsSync(home), false);
+  }
+});
+
+test('localization status binds runtime evidence to its installation and normalizes Windows paths', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-loc-status-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const local = path.join(root, 'local-app-data');
+  const asarPath = path.join(local, 'Programs', 'antigravity', 'resources', 'app.asar');
+  fs.mkdirSync(path.dirname(asarPath), { recursive: true });
+  fs.writeFileSync(asarPath, 'discovery fixture');
+  const home = path.join(root, 'tool-state');
+  const env = { LOCALAPPDATA: local, AGYCTL_APP_DIR: 'invalid-relative-root' };
+  const installationId = sha256Text(asarPath);
+  const statusPath = path.join(
+    home,
+    'localization',
+    'installations',
+    installationId,
+    'runtime-status.json',
+  );
+  fs.mkdirSync(path.dirname(statusPath), { recursive: true });
+  const snapshot = {
+    schemaVersion: 1,
+    lastKnown: true,
+    runId: 'fixture-run',
+    installationId: 'f'.repeat(64),
+    artifactId: null,
+    locale: null,
+    healthState: 'active',
+    logging: 'active',
+    startedAt: '2026-11-11T00:00:00Z',
+    updatedAt: '2026-11-11T00:00:01Z',
+    terminal: null,
+  };
+  fs.writeFileSync(statusPath, JSON.stringify(snapshot));
+  if (process.platform !== 'win32') {
+    t.skip('The discovered fixture uses the Windows installation layout');
+    return;
+  }
+  const foreign = runCli(home, ['status', '--installation', asarPath, '--json'], env);
+  assert.equal(foreign.status, 0, foreign.stdout + foreign.stderr);
+  const foreignReport = JSON.parse(foreign.stdout);
+  assert.equal(foreignReport.lastKnownRuntime, null);
+  assert.match(foreignReport.lastKnownRuntimeNote, /another installation/);
+
+  fs.writeFileSync(statusPath, JSON.stringify({ ...snapshot, installationId }));
+  const current = runCli(home, ['status', '--installation', asarPath.toUpperCase(), '--json'], env);
+  assert.equal(current.status, 0, current.stdout + current.stderr);
+  const currentReport = JSON.parse(current.stdout);
+  assert.equal(currentReport.asarPath, asarPath);
+  assert.equal(currentReport.lastKnownRuntime.installationId, installationId);
+  assert.equal(currentReport.lastKnownRuntime.healthState, 'active');
+});
 
 test('unknown source observation and preparation do not claim profile admission', (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-loc-source-'));
@@ -1242,6 +1485,30 @@ test('unknown source observation and preparation do not claim profile admission'
   assert.equal(manifest.sourceBinarySha256, null);
   assert.equal(manifest.sourceIdentity, observation.sourceIdentity);
   assert.match(manifest.profileId, /^observed-/);
+  if (process.platform === 'win32') {
+    const local = path.join(root, 'local-app-data');
+    const installation = path.join(local, 'Programs', 'antigravity', 'resources', 'app.asar');
+    fs.mkdirSync(path.dirname(installation), { recursive: true });
+    fs.writeFileSync(installation, 'discovery fixture');
+    const selected = runCli(
+      home,
+      [
+        'select',
+        '--artifact',
+        artifact.artifactId,
+        '--installation',
+        installation.toUpperCase(),
+        '--json',
+      ],
+      { LOCALAPPDATA: local },
+    );
+    assert.equal(selected.status, 0, selected.stdout + selected.stderr);
+    const selection = JSON.parse(
+      fs.readFileSync(JSON.parse(selected.stdout).selectionPath, 'utf8'),
+    );
+    assert.equal(selection.installationId, sha256Text(installation));
+    assert.equal(selection.artifactId, artifact.artifactId);
+  }
   const refusedHome = path.join(root, 'refused-state');
   const refused = runCli(refusedHome, [
     'prepare',
@@ -1255,4 +1522,31 @@ test('unknown source observation and preparation do not claim profile admission'
   assert.equal(refused.status, 1, refused.stdout + refused.stderr);
   assert.equal(JSON.parse(refused.stdout).code, 'SOURCE_MISMATCH');
   assert.equal(fs.existsSync(path.join(refusedHome, 'localization', 'artifacts')), false);
+
+  const renamedMain = main.replaceAll(`${profile.nlsHelper.calleeName}(`, 'RenamedNls(');
+  fs.writeFileSync(path.join(sample, 'main.js'), renamedMain);
+  const renamedObservation = observeSampleSource(sample, {
+    profiles: database.profiles,
+    limits: profile.limits,
+    assetNames: Object.keys(profile.assets),
+  });
+  assert.equal(renamedObservation.nlsHelperCalleeName, 'RenamedNls');
+  assert.equal(renamedObservation.matchedProfileId, null);
+  const renamed = runCli(home, ['prepare', '--probe', '--sample-dir', sample, '--json']);
+  assert.equal(renamed.status, 0, renamed.stdout + renamed.stderr);
+  const renamedArtifact = JSON.parse(renamed.stdout);
+  assert.equal(renamedArtifact.installationQualified, false);
+  assert.deepEqual(renamedArtifact.applied, artifact.applied);
+  assert.notEqual(renamedArtifact.sourceIdentity, artifact.sourceIdentity);
+
+  const requiredRule = (usage.fallbackRules ?? usage.rules).find((rule) => rule.kind === 'literal');
+  fs.writeFileSync(
+    path.join(sample, 'main.js'),
+    renamedMain.replace(JSON.stringify(requiredRule.originalText), '"Changed required default"'),
+  );
+  const invalidHome = path.join(root, 'invalid-state');
+  const invalid = runCli(invalidHome, ['prepare', '--probe', '--sample-dir', sample, '--json']);
+  assert.equal(invalid.status, 1, invalid.stdout + invalid.stderr);
+  assert.equal(JSON.parse(invalid.stdout).code, 'PROFILE_INVALID');
+  assert.equal(fs.existsSync(path.join(invalidHome, 'localization', 'artifacts')), false);
 });

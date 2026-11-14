@@ -1,0 +1,122 @@
+# Language Server Context-Limit Patch
+
+This page describes the modification boundary of `agyctl limit` for the
+Antigravity desktop Language Server. It is not a specification of upstream
+context management. Commands and status readback are in
+[operations](operations.md#per-model-context-settings); component boundaries are
+in [architecture](architecture.md).
+
+## Upstream clamp
+
+The recorded original `utils.ClampCheckpointConfigForModelInfo` body accesses the
+candidate limit at `[rax+0x0c]`. The patch interprets this as
+`CheckpointConfig.MaxTokenLimit`, the model identifier at `[rbx+0x08]`, and the
+model context-window field at `[rbx+0x14]`. These are layout assumptions of the
+admitted machine code, not portable protobuf offsets.
+
+Under that interpretation, the original instructions initialize a zero limit to
+the model window minus `40000`, then apply context/reserve and output clamps. The
+x86-64 replacement reimplements those operations after its model-specific raise;
+it does **not** copy an unchanged original byte tail. See
+[asm.go](../src/agyctl/internal/limit/asm.go).
+
+The project reads
+`executorMetadata[].cascadeConfig.checkpointConfig.maxTokenLimit` from
+`GetCascadeTrajectoryExecutorMetadatas` (`applyExecutorCapacity` in
+[metrics-core.mjs](../src/plugin/lib/metrics-core.mjs)). The panel's
+`readRecentContextLimits` separately parses stored `executor_metadata.data` from
+recent conversation databases
+([limit-diagnostics.mjs](../src/plugin/sidecars/panel/limit-diagnostics.mjs)).
+Neither reconstructs the upstream configuration call graph.
+
+## Modification boundary
+
+The implementation is Go under
+[src/agyctl/internal/limit/](../src/agyctl/internal/limit/).
+
+1. [binary.go](../src/agyctl/internal/limit/binary.go) parses PE and ELF64
+   x86-64 images and Mach-O ARM64 images
+   ([macho.go](../src/agyctl/internal/limit/macho.go)), and locates the target by
+   its Go pclntab symbol. Only x86-64 continues to planning; Mach-O ARM64 reports
+   `unavailable`. On ELF, `runtime.text` can start after the `.text` section, so
+   the Go text base is cross-validated against moduledata and `RELATIVE`
+   relocations before any function address is trusted
+   ([elf.go](../src/agyctl/internal/limit/elf.go)).
+2. [run.go](../src/agyctl/internal/limit/run.go) and `DetectState` in
+   [asm.go](../src/agyctl/internal/limit/asm.go) require the body to equal an
+   original recorded in [versions.json](../compat/versions.json) for the
+   detected architecture. Version labels are diagnostic: an unlisted build with
+   known bytes passes; unknown bytes or a size other than `0x80` are refused.
+3. Legacy `PlanPatch` places a 16-byte model-ID bitset in alignment padding near
+   the function. The per-model planner places one linked 16-byte node per model,
+   each in its own qualified padding slot. Both refuse insufficient padding.
+4. The replacement raises the candidate limit for a matching model before the
+   original clamp logic runs. Legacy uses one floor for the bitset; `linked-v2`
+   reads the floor from the model's node. Neither lowers a larger candidate.
+5. `ApplyPatch` writes only the planned body and table nodes into a copy.
+   Writing the installation additionally requires the stopped-process check,
+   verified backups, a prepare record, and hash-checked replacement.
+
+Legacy defaults are `500000` tokens for model IDs
+`1318-1320,1400-1405,1417-1419` ([asm.go](../src/agyctl/internal/limit/asm.go));
+IDs must fit a 128-wide bitset window. `--model-limits` maps at most 128
+distinct positive int32 IDs to positive int32 floors and cannot be combined with
+`--ids`/`--limit`. IDs are numeric enum targets; no model name is inferred from
+them.
+
+The requested value is a candidate floor before later clamps, **not** a
+guaranteed effective context window. The patch does not change provider limits,
+model access, remote profiles, `GetCheckpointConfig`, or `app.asar`.
+
+### Per-model encoding
+
+The `linked-v2` replacement is exactly 128 bytes: a 48-byte model lookup, the
+existing 79-byte clamp, and one trailing `0xcc`. It preserves the original `RCX`
+reserve argument and uses scratch registers for the lookup, which the Go internal
+ABI permits. See [model_limits.go](../src/agyctl/internal/limit/model_limits.go).
+
+Each 16-byte node stores little-endian `id` (uint32), `limit` (uint32), a signed
+32-bit displacement relative to the node (zero terminates), and `AGL2`. The
+RIP-relative head pointer is the dword at body offsets 16–19, relative to
+function VA + 20. Detection bounds the chain, validates IDs, values, and padding,
+and reconstructs the encoding rather than trusting a marker or saved settings.
+The [checker probe](../src/agyctl/internal/check/probes.go) screens the same
+template independently; it is not the patcher's gate.
+
+### Cave placement
+
+PE and ELF x86-64 scan forward from the target for at least 24 bytes of `0xcc`
+ending at a later function entry. Unknown bytes or an unusable address map are
+refused. macOS mutation stays unavailable until its original bytes, placement,
+and signing strategy are qualified.
+
+## Backup and recovery
+
+These are implemented conditions, not a promise that every failure restores the
+previous installation:
+
+1. `EnsureBackup` checks the source hash and creates a backup exclusively,
+   reusing an existing one only when its hash matches. `patchBinary` can choose
+   `.orig.<original-sha>` when `.orig` belongs to another original. See
+   [fsx.go](../src/agyctl/internal/fsx/fsx.go).
+2. After the sibling and tool-state backups verify, `writePrepare` records the
+   intended original/new hashes and settings. Status can report `recorded`,
+   `applied-not-recorded`, `prepared-not-applied`, or `target-drift`; it does not
+   repair them. See [prepare.go](../src/agyctl/internal/limit/prepare.go).
+3. `ReplaceVerified` checks the installed hash before staging, before
+   replacement, and afterward. A failed post-write check attempts a guarded
+   rollback only when the anomalous contents are stable; it returns
+   `ErrRolledBack` after verification, otherwise `ErrRollbackFailed` with recovery
+   data preserved.
+4. After a verified replacement, path-resolution or manifest-append failures
+   trigger a guarded rollback that requires the target to still match the
+   replacement hash. A verified rollback clears the prepare record; a failed one
+   keeps it.
+5. Restore requires the Language Server stopped and verifies original bytes and
+   backup pairing. With a manifest, current bytes must match the recorded patched
+   hash; without one, a recognized patch must be reproducible from the original
+   backup. An unrelated updated binary is not a restore target.
+
+This is not a guarantee against arbitrary storage failure. The limit patch is
+independent of the Host archive transaction; see
+[recovery boundaries](operations.md#recovery-boundaries).

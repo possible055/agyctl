@@ -212,7 +212,7 @@ func findInstall(o options) (layout.Target, error) {
 			channel = "local"
 		}
 		t := layout.Target{Root: o.install, Asar: filepath.Join(o.install, resources, "app.asar"), LanguageServer: filepath.Join(o.install, resources, "bin", server), Channel: channel}
-		candidates, err := layout.Candidates(o.root, o.snap)
+		candidates, err := layout.DefaultCandidates(o.root, o.snap)
 		if err != nil {
 			return t, err
 		}
@@ -225,7 +225,11 @@ func findInstall(o options) (layout.Target, error) {
 			if err != nil {
 				return t, err
 			}
-			if strings.EqualFold(filepath.Clean(root), filepath.Clean(selected)) {
+			matches := root == selected
+			if runtime.GOOS == "windows" {
+				matches = strings.EqualFold(root, selected)
+			}
+			if matches {
 				t.Channel, t.Product = candidate.Channel, candidate.Product
 				break
 			}
@@ -239,6 +243,7 @@ func findInstall(o options) (layout.Target, error) {
 	if e != nil {
 		return layout.Target{}, e
 	}
+	matches := []layout.Target{}
 	for _, t := range targets {
 		ch := t.Channel
 		if strings.Contains(ch, "insiders") {
@@ -246,8 +251,14 @@ func findInstall(o options) (layout.Target, error) {
 		}
 		if o.channel == "" || o.channel == ch {
 			t.Channel = ch
-			return t, nil
+			matches = append(matches, t)
 		}
+	}
+	if len(matches) > 1 {
+		return layout.Target{}, failure("ValueError", "multiple Antigravity installations found; use --install-dir or AGYCTL_APP_DIR")
+	}
+	if len(matches) == 1 {
+		return matches[0], nil
 	}
 	return layout.Target{}, failure("FileNotFoundError", "no Antigravity installation found")
 }

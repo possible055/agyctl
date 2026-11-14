@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { JsonlEventWriter, createEventSink, type EventSink } from '../../host/logging.js';
 import type { LocalizationEventInput } from '../contracts.js';
-import { decodeManifest, readArtifactDelivery } from '../artifact.js';
+import { decodeManifest, isDomManifest, readArtifactDelivery } from '../artifact.js';
 
 const HEX64 = /^[a-f0-9]{64}$/;
 const LOCALE_ID = /^[\w-]+$/;
@@ -131,10 +131,13 @@ export function decodeSelectionSnapshot(raw: unknown, source: string): Selection
 }
 
 export interface ArtifactManifestProjection {
+  format: 'ast' | 'dom';
   artifactId: string;
   locale: string;
-  sourceMainSha256: string;
-  mainSha256: string;
+  sourceMainSha256: string | null;
+  mainSha256: string | null;
+  engineSha256: string | null;
+  indexSha256: string | null;
 }
 
 export function decodeArtifactManifest(raw: unknown, source: string): ArtifactManifestProjection {
@@ -148,30 +151,49 @@ export function decodeArtifactManifest(raw: unknown, source: string): ArtifactMa
       { cause: error },
     );
   }
+  if (isDomManifest(record)) {
+    return {
+      format: 'dom',
+      artifactId: record.artifactId,
+      locale: record.locale,
+      sourceMainSha256: record.sourceMainSha256 ?? null,
+      mainSha256: null,
+      engineSha256: record.engineSha256,
+      indexSha256: record.indexSha256,
+    };
+  }
   const asset = record.assets.find((entry) => entry.route === '/main.js');
   if (!asset) throw new StartupError('ARTIFACT_INVALID', `${source}: no /main.js asset entry`);
   return {
+    format: 'ast',
     artifactId: record.artifactId,
     locale: record.locale,
     sourceMainSha256: record.sourceMainSha256,
     mainSha256: asset.sha256,
+    engineSha256: null,
+    indexSha256: null,
   };
 }
 
 /** The verified startup binding the coordinator delivers from. */
 export interface StartupSnapshot {
   mode: 'selection';
+  format: 'ast' | 'dom';
   stateRoot: string;
   installationId: string;
   artifactId: string;
   locale: string;
-  sourceMainSha256: string;
-  mainSha256: string;
+  sourceMainSha256: string | null;
+  mainSha256: string | null;
+  engineSha256: string | null;
+  indexSha256: string | null;
 }
 
 /**
  * Resolves the startup binding from the installed runtime config. Selection
- * mode reads and verifies selection.json plus the artifact manifest and its main.js bytes.
+ * mode reads and verifies selection.json plus the artifact manifest and its
+ * format-specific bytes. AST packs still require main.js; DOM packs require
+ * index.json and never treat live /main.js as an enable gate.
  */
 export function resolveStartupSnapshot(
   configDir: string,
@@ -227,12 +249,15 @@ export function resolveStartupSnapshot(
     );
   return {
     mode: 'selection',
+    format: manifest.format,
     stateRoot: config.stateRoot,
     installationId: config.installationId,
     artifactId: selection.artifactId,
     locale: selection.locale,
     sourceMainSha256: manifest.sourceMainSha256,
     mainSha256: manifest.mainSha256,
+    engineSha256: manifest.engineSha256,
+    indexSha256: manifest.indexSha256,
   };
 }
 

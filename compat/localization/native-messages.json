@@ -500,6 +500,22 @@
       "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
     },
     {
+      "id": "menu.zoom",
+      "original": "Zoom",
+      "contexts": [
+        {
+          "file": "dist/menu.js",
+          "anchor": "    if (!menu) {\n        return;\n    }"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "縮放",
+        "zh-Hans-CN": "缩放",
+        "ja-JP": "ズーム"
+      },
+      "escapeContext": "Electron role-based presentation string; preserve the zoom role and action"
+    },
+    {
       "id": "menu.zoomIn",
       "original": "Zoom In",
       "contexts": [

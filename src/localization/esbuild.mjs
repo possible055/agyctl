@@ -44,6 +44,14 @@ const targets = [
     external: ['electron'],
   },
   {
+    entry: 'runtime/engine.ts',
+    out: 'dom-engine.js',
+    format: 'iife',
+    platform: 'browser',
+    external: [],
+    globalName: '__AGYCTL_DOM_ENGINE__',
+  },
+  {
     entry: 'host/feature.ts',
     out: 'feature-provider.mjs',
     format: 'esm',

@@ -11,6 +11,13 @@ each modification feature runs its own exact gate when it is applied; see
 This is a compatibility screening tool, not proof that monitoring, capsule
 mounting, or a larger context window works end to end.
 
+The context probe recognizes the legacy common-floor body and independently
+screens `linked-v2` per-model bodies and their bounded table chain. Recognized
+per-model fingerprints include `clamp.model_limits`; this is still not the
+patcher's full placement, original-backup, or stopped-process gate. Use
+`limit status` for the installed setting readback described in
+[operations](operations.md#per-model-context-settings).
+
 ## Commands
 
 The checker is a CLI-only task; Settings has no report control. From
@@ -24,15 +31,23 @@ npm run tools:build
 
 Skip `npm ci` if dependencies are already installed. Running a checker command
 does not build the executable automatically, and no panel installation is
-required. See the [README](../README.md#check-compatibility).
+required. See the [README](../README.md#compatibility-checker).
 
 ### Inspect an installed client
 
-Choose the target explicitly. Local channel names are `insiders` and
-`antigravity` (Hub), not the downloaded-installer name `hub`:
+The default command inspects the selected Antigravity stable installation
+(`AGYCTL_APP_DIR` when set, otherwise the default path):
 
 ```bash
-npm run update-check:local -- --channel insiders
+npm run update-check:local
+```
+
+Local channel names are `antigravity` (stable/Hub) and `insiders`. The
+downloaded-installer channel for the stable app is `hub`, not `antigravity`.
+To filter a default-path installation by channel:
+
+```bash
+npm run update-check:local -- --channel antigravity
 ```
 
 Use `--install-dir` for an explicit installation root, for example:
@@ -42,10 +57,13 @@ $installDir = Join-Path $env:LOCALAPPDATA 'Programs\antigravity'
 npm run update-check:local -- --install-dir "$installDir"
 ```
 
-Without a target, local checking takes the first detected installation, currently
-Insiders before Hub. The check reads only the selected installed files and never
-contacts a running client, so the same installation yields the same verdict
-whether or not the client is open.
+Without `--install-dir`, local checking uses `AGYCTL_APP_DIR` when set, otherwise
+the default installation paths. `--channel` filters those candidates; several
+matches require an explicit selection instead of taking the first. An invalid
+environment root is an error, not a request to try a different installation.
+See [installation selection](operations.md#installation-selection). The check
+reads only the selected installed files and never contacts a running client,
+so the same installation yields the same verdict whether or not the client is open.
 
 With an explicit installation root, an unreadable or missing LS does not discard
 the ASAR/UI findings. The report retains the ASAR hash, marks context
@@ -129,7 +147,7 @@ other option a command does not list is an error, not ignored
 | Command | Options | Defaults |
 | --- | --- | --- |
 | `versions` | `--channel`, `--platform`, `--version`, `--limit` | All channels and platforms. `--limit` (default 10) applies only to one non-Insiders channel on one platform; Insiders always resolves its current feed |
-| `local` | `--channel insiders\|antigravity`, `--install-dir` | First detected installation, Insiders before Hub |
+| `local` | `--channel insiders\|antigravity`, `--install-dir` | The only matching installation (`AGYCTL_APP_DIR` when set, otherwise the default paths); several matches require `--install-dir` or `AGYCTL_APP_DIR` |
 | `check` | `--channel hub\|insiders`, `--platform` (repeatable), `--matrix`, `--version`, `--skip-download`, `--keep-work` | Hub on the host's own platform |
 | `files` | `--input-dir`, `--keep-work` | `var/update-check/inputs` |
 | `report` | `--file` | The newest saved report |
@@ -194,25 +212,14 @@ installer will extract successfully.
 | Localization | Requires readable `dist/preload.js`; matches either recorded ASAR or LS identity against the snapshot-loaded profile store, yielding pass for verified, warn for probe-only or unlisted | Asset transform admission, a safe adapter edit, or live translated UI |
 | Integrity | Reads the paired Electron executable's fuse wire | A full platform signing/notarization or OS acceptance check |
 
-Context classification compares the clamp body with the original bodies recorded in
-[versions.json](../compat/versions.json), the registry the limit patcher gates on,
-so the two tools cannot disagree about which bytes are original. The checker still
-locates the function with its own parser; the patcher's byte gate remains the
-admission authority. A missing clamp or a size other than the architecture's
-layout (`0x80` x86-64, `0x90` ARM64 inspection) fails; a body that is neither
-a recorded original nor a recognized supported patch warns. Mach-O ARM64
-inspection is independent from mutation admission. The checker retains the
-x86-64 patch recognizer, not the removed Windows/Linux ARM64 implementation.
-The supporting `256000` byte pattern is an x86-64 observation, not a portable
-semantic proof.
-See [probes.go](../src/agyctl/internal/check/probes.go).
-
-For ELF images, Go's `runtime.text` can follow native startup code inside the
-`.text` section. The checker resolves an explicit Go text base or a matching
-`.go.module` record with supported ELF relative relocations before reading
-function bodies. Missing or contradictory base evidence is an error, not an
-assumption that Go code starts at the section boundary. See
-[pclntab_elf.go](../src/agyctl/internal/check/pclntab_elf.go).
+Context classification compares the clamp body with the originals in
+[versions.json](../compat/versions.json), the same registry the limit patcher
+gates on, using its own parser. A missing clamp or unexpected size (`0x80`
+x86-64, `0x90` ARM64) fails; a body that is neither a recorded original nor a
+recognized patch warns. See [probes.go](../src/agyctl/internal/check/probes.go).
+Symbolic-link ASAR members are rejected ([asar.go](../src/agyctl/internal/check/asar.go));
+ELF Go text bases must be proven, not assumed
+([pclntab_elf.go](../src/agyctl/internal/check/pclntab_elf.go)).
 
 Each main capability has `pass`, `warn`, or `fail`; the aggregate maps to
 `compatible`, `needs-review`, or `incompatible`. Probe/input errors are reported
@@ -259,21 +266,13 @@ panel against its own Connect-RPC calls, not by this checker.
 
 ## Resource limits and output
 
-Downloads have a 15-minute total budget, a 60-second idle watchdog, and a 2 GiB byte cap that also applies when the release metadata records no size. Extraction
-shares entry, expanded-byte, per-entry, path-depth, and time budgets across
-stages. In-process extraction checks its shared deadline before and after writes
-and at normal TAR EOF; these cooperative checks cannot interrupt a blocked I/O
-operation before it returns. External 7-Zip additionally has output/process bounds and a storage
-watchdog; this is not a hard filesystem quota, and writes can overshoot between
-watchdog observations. The pinned bootstrap tool hashes are not automatically
-updated. See [extract.go](../src/agyctl/internal/check/extract.go).
+Downloads and extraction run under time, size, and entry budgets; these are
+cooperative bounds, not a hard filesystem quota. See
+[extract.go](../src/agyctl/internal/check/extract.go).
 
-Reports under `var/update-check/reports/` include a unique report identity and
-input hashes. `report` selects the newest generation time, or the report named by
-`--file`. Extraction scratch is normally removed unless `--keep-work` is
-requested; removal retries briefly because a scanner on Windows can hold a freshly
-extracted file; verified downloads and
-saved reports remain for reuse/review. None belongs in a release commit.
+`report` selects the newest saved report, or the one named by `--file`.
+Extraction scratch is removed unless `--keep-work` is given; verified downloads
+and reports stay under `var/` for reuse and are never committed.
 
 `npm run tools:test` runs the Go suites, including synthetic executable/archive
 fixtures and checker cases. Passing those tests does not qualify an actual new

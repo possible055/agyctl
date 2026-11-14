@@ -77,6 +77,8 @@ const PROPERTY_CONTEXTS: Record<string, ContextKey> = {
   'aria-label': 'ariaLabel',
   title: 'title',
   placeholder: 'placeholder',
+  sidebarLabel: 'label',
+  description: 'title',
 };
 
 function emptyContexts(): InventoryContextCounts {
@@ -153,6 +155,13 @@ export function buildInventory(options: {
       const key = record.key as Record<string, unknown> | null;
       const name = typeof key?.name === 'string' ? key.name : typeof key?.value === 'string' ? key.value : null;
       nextContext = (name && PROPERTY_CONTEXTS[name]) || 'other';
+    } else if (
+      type === 'ConditionalExpression' ||
+      type === 'LogicalExpression' ||
+      type === 'AssignmentExpression' ||
+      type === 'AssignmentPattern'
+    ) {
+      nextContext = context;
     } else if (type === 'TemplateLiteral') {
       const quasis = record.quasis as Array<{ value: { cooked: string | null; raw: string } }>;
       const expressions = record.expressions as Array<{ start: number; end: number }>;

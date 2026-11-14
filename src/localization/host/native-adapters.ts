@@ -24,7 +24,7 @@ const roleLabels: Record<string, [string, string]> = {
   delete: ['menu.delete', 'Delete'], selectall: ['menu.selectAll', 'Select All'],
   reload: ['menu.reload', 'Reload'], forcereload: ['menu.forceReload', 'Force Reload'],
   toggledevtools: ['menu.toggleDevTools', 'Toggle Developer Tools'], resetzoom: ['menu.resetZoom', 'Actual Size'],
-  zoomin: ['menu.zoomIn', 'Zoom In'], zoomout: ['menu.zoomOut', 'Zoom Out'],
+  zoom: ['menu.zoom', 'Zoom'], zoomin: ['menu.zoomIn', 'Zoom In'], zoomout: ['menu.zoomOut', 'Zoom Out'],
   togglefullscreen: ['menu.toggleFullscreen', 'Toggle Full Screen'], minimize: ['menu.minimize', 'Minimize'],
   close: ['menu.close', 'Close Window'], quit: ['session.quit', 'Quit'],
 };

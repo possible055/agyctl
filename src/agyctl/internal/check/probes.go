@@ -21,6 +21,58 @@ var markerNames = []string{"MODEL_PLACEHOLDER", "model_profiles", "GetAvailableM
 
 const patchHex = "4885c0747a4885db74758b530881ea2605000083fa6577190fa315910c0000731081780c20a107007307c7400c20a1070083780c0075108b531481ea409c00007f0231d289500c8b531485d27e1189d629ca39f10f42f239700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3"
 
+func linkedPatchTemplate() []byte {
+	head, _ := hex.DecodeString("4885c074794885db74748b5308488d35000000003916740d48637e0885ff74104801feebef8b560439500c730389500c")
+	legacy, _ := hex.DecodeString(patchHex)
+	return append(append(head, legacy[49:]...), 0xcc)
+}
+
+func isLinkedPatchBody(body []byte) bool {
+	if len(body) != 128 {
+		return false
+	}
+	template := linkedPatchTemplate()
+	normal := bytes.Clone(body)
+	copy(normal[16:20], template[16:20])
+	return bytes.Equal(normal, template)
+}
+
+// Reads the linked-v2 table independently; this screening is not the patcher's
+// original-byte, placement, or recovery gate.
+func linkedPatchLimits(data []byte, im image, f *Function, body []byte) ([]object, bool) {
+	if !isLinkedPatchBody(body) || f.Entryoff > uint64(len(data)) {
+		return nil, false
+	}
+	position := int64(f.Entryoff) + 20 + int64(int32(binary.LittleEndian.Uint32(body[16:20])))
+	limits := []object{}
+	lastID := uint32(0)
+	for len(limits) < 128 {
+		if position < int64(f.Entryoff)+128+8 || uint64(position) > im.size || im.size-uint64(position) < 16 {
+			return nil, false
+		}
+		guard, err := region(data, im.offset+uint64(position)-8, 24)
+		if err != nil || !bytes.Equal(guard[:8], bytes.Repeat([]byte{0xcc}, 8)) {
+			return nil, false
+		}
+		node := guard[8:]
+		id, target := binary.LittleEndian.Uint32(node), binary.LittleEndian.Uint32(node[4:])
+		if string(node[12:]) != "AGL2" || id <= lastID || id >= 1<<31 || target < 1 || target >= 1<<31 {
+			return nil, false
+		}
+		limits = append(limits, object{"id": id, "limit": target})
+		lastID = id
+		next := int32(binary.LittleEndian.Uint32(node[8:]))
+		if next == 0 {
+			return limits, true
+		}
+		if next < 24 {
+			return nil, false
+		}
+		position += int64(next)
+	}
+	return nil, false
+}
+
 func classifyBody(body []byte, known [][]byte, arch string) (string, any) {
 	if arch != "x86-64" {
 		return "unknown", nil
@@ -65,6 +117,11 @@ func probeLS(path string, known [][]byte) (object, error) {
 		}
 		kind, _ := classifyBody(body, known, im.arch)
 		clamp = object{"kind": kind, "size": f.Size, "body_sha256": hashBytes(body), "body_hex": hex.EncodeToString(body)}
+		if im.arch == "x86-64" && isLinkedPatchBody(body) {
+			if limits, valid := linkedPatchLimits(data, im, f, body); valid {
+				clamp["kind"], clamp["patch_format"], clamp["model_limits"] = "ours-patched", "linked-v2", limits
+			}
+		}
 	}
 	kind := str(clamp["kind"])
 	size := num(clamp["size"])

@@ -12,6 +12,7 @@ import {
   HOST_CAPSULE_FEATURE_MARKER,
   HOST_MANAGED_MARKER,
 } from '../../dist/host/bundle/host-composer.mjs';
+import { CAPSULE_INPUTS } from '../../scripts/capsule-build.mjs';
 import {
   capsuleReadiness,
   ensureOriginalBackup,
@@ -79,7 +80,8 @@ test('management prepares read-only reviews and commits only the reviewed select
   assert.equal(reviewed.localizationSelection.locale, 'zh-Hant-TW');
   assert.equal(reviewed.localizationSelection.expectedSelectionSha256, 'absent');
   assert.equal(fs.existsSync(path.join(stateRoot, 'localization', 'installations')), false);
-  assert.equal(result.value.localization.applied[0].hits, 1);
+  assert.equal(result.value.localization.format, 'dom');
+  assert.ok((result.value.localization.index?.exact ?? 0) > 0);
   assert.equal(
     path.dirname(result.value.localizationPlan),
     path.join(stateRoot, 'management', 'plans'),
@@ -100,7 +102,7 @@ test('management prepares read-only reviews and commits only the reviewed select
   assert.match(badLocale.value.error, /canonical --locale/);
   const outside = run('prepare', '--asar', fixture(prepared.root, 'outside').asarPath);
   assert.equal(outside.status, 1);
-  assert.match(outside.value.error, /exact discovered/);
+  assert.match(outside.value.error, /resources\/app.asar/);
   const layoutPath = path.join(runtime, 'compat', 'install-layout.json');
   const layout = JSON.parse(fs.readFileSync(layoutPath, 'utf8'));
   layout.platforms[process.platform].channels.push({
@@ -258,7 +260,10 @@ test('automatic localization preparation preserves Capsule and rejects dirty inp
   assert.equal(preflight.value.components.localization.status, 'ready');
   assert.equal(preflight.value.components.capsule, undefined);
   assert.deepEqual(fs.readFileSync(target.asarPath), archive);
-  const selected = run('prepare', '--capsule', '--localization', '--locale', 'en');
+  const english = run('prepare', '--capsule', '--localization', '--locale', 'en');
+  assert.equal(english.status, 1);
+  assert.match(english.value.error, /English is an explicit disable/);
+  const selected = run('prepare', '--capsule', '--localization', '--locale', 'ja-JP');
   assert.equal(selected.status, 0, selected.stdout + selected.stderr);
   const selectedPlan = JSON.parse(fs.readFileSync(selected.value.localizationPlan, 'utf8'));
   assert.notEqual(selectedPlan.inputs.capsule.code, capsuleCode);
@@ -299,7 +304,139 @@ test('automatic localization preparation preserves Capsule and rejects dirty inp
   assert.deepEqual(fs.readFileSync(target.asarPath), archive);
 });
 
-function managementPreparationFixture(t) {
+test('custom ASAR preparation, reviewed apply, status and removal share the validated target', (t) => {
+  if (requireLocalizationBuild(t)) return;
+  const { root, run, target, stateRoot, runtime } = managementPreparationFixture(t, {
+    discovered: false,
+  });
+  const original = fs.readFileSync(target.asarPath);
+  const prepared = run(
+    'prepare',
+    '--asar',
+    target.asarPath,
+    '--localization',
+    '--locale',
+    'zh-Hant-TW',
+  );
+  assert.equal(prepared.status, 0, prepared.stdout + prepared.stderr);
+  assert.equal(prepared.value.executablePath, target.executablePath);
+  const result = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '-e',
+      `
+    import assert from 'node:assert/strict';
+    import childProcess from 'node:child_process';
+    import { syncBuiltinESMExports } from 'node:module';
+    const originalExec = childProcess.execFileSync;
+    let windowsOutput = '"System","4","Services","0","1 K"\\n';
+    childProcess.execFileSync = (command, args, options) => {
+      if (command === 'tasklist') return windowsOutput;
+      if (command === 'ps') return process.platform === 'linux' ? '123 node\\n' : '123 /usr/bin/node\\n';
+      return originalExec(command, args, options);
+    };
+    syncBuiltinESMExports();
+    const { runReviewedHostOperation } = await import('./scripts/lib/management.mjs');
+    const adapter = await import('./scripts/lib/host-patch.mjs');
+    const { managementStatus } = await import('./scripts/manage.mjs');
+    const target = ${JSON.stringify(target)};
+    assert.equal(adapter.clientProcessState(target.asarPath).state, 'closed');
+    if (process.platform === 'win32') {
+      for (const [output, state] of [
+        ['"Antigravity.exe","123","Console","1","1 K"\\n', 'closed'],
+        ['"Antigravity - Insiders.exe","123","Console","1","1 K"\\n', 'running'],
+        ['malformed tasklist output\\n', 'unknown'],
+        ['', 'unknown'],
+      ]) {
+        windowsOutput = output;
+        assert.equal(adapter.clientProcessState(target.asarPath).state, state);
+        if (state !== 'closed') assert.throws(() => adapter.ensureClientClosedFor(target.asarPath), (error) => error.code === (state === 'running' ? 'CLIENT_RUNNING' : 'CLIENT_RUNNING_UNKNOWN'));
+      }
+      windowsOutput = '"System","4","Services","0","1 K"\\n';
+    }
+    await runReviewedHostOperation({ localizationPlan: ${JSON.stringify(prepared.value.localizationPlan)} }, true);
+    assert.equal(adapter.hostPatchStatus({ asarPath: target.asarPath }).features.localization, true);
+    const status = await managementStatus({ asarPath: target.asarPath });
+    assert.equal(status.errors.some((error) => error.component === 'discovery'), false);
+    assert.equal(status.clientRunning, false);
+    assert.equal(status.executablePath, target.executablePath);
+    assert.equal(status.localization.selected.locale, 'zh-Hant-TW');
+    await adapter.hostPatchRemove({ asarPath: target.asarPath, remove: ['localization'], ensureClientClosed: () => adapter.ensureClientClosedFor(target.asarPath) });
+    assert.equal(adapter.hostPatchStatus({ asarPath: target.asarPath }).archiveKind, 'pristine');
+  `,
+    ],
+    {
+      cwd: runtime,
+      encoding: 'utf8',
+      windowsHide: true,
+      env: { ...process.env, AGYCTL_HOME: stateRoot, AGYCTL_APP_DIR: 'invalid-relative-root' },
+    },
+  );
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.deepEqual(fs.readFileSync(target.asarPath), original);
+  assert.equal(fs.existsSync(path.join(root, 'missing-installation')), false);
+});
+
+test('POSIX probes match executable identity, not channel substrings or other arguments', (t) => {
+  if (requireLocalizationBuild(t)) return;
+  const { target, runtime, root } = managementPreparationFixture(t);
+  const result = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '-e',
+      `
+    import assert from 'node:assert/strict';
+    import fs from 'node:fs';
+    import path from 'node:path';
+    import childProcess from 'node:child_process';
+    import { syncBuiltinESMExports } from 'node:module';
+    let output;
+    let executableOutput;
+    childProcess.execFileSync = (_command, args) => args[0] === '-p' ? executableOutput : output;
+    syncBuiltinESMExports();
+    const adapter = await import('./scripts/lib/host-patch.mjs');
+    const { engine } = adapter;
+    const { inspectHostTarget } = await import('./scripts/lib/client-target.mjs');
+    const target = ${JSON.stringify(target)};
+    const source = ${JSON.stringify(path.join(root, 'installation/source'))};
+    fs.writeFileSync(path.join(source, 'package.json'), JSON.stringify({ name: 'antigravity', productName: 'Antigravity', version: '1' }));
+    fs.unlinkSync(target.asarPath);
+    await engine.createPackageWithOptions(source, target.asarPath, {});
+    for (const platform of ['linux', 'darwin']) {
+      Object.defineProperty(process, 'platform', { value: platform, configurable: true });
+      Object.defineProperty(process, 'arch', { value: platform === 'darwin' ? 'arm64' : 'x64', configurable: true });
+      const executable = platform === 'linux' ? 'antigravity' : 'MacOS/Antigravity';
+      const executablePath = path.join(path.dirname(path.dirname(target.asarPath)), executable);
+      fs.mkdirSync(path.dirname(executablePath), { recursive: true });
+      fs.copyFileSync(target.executablePath, executablePath);
+      const bytes = Buffer.alloc(64);
+      if (platform === 'linux') { bytes.set([0x7f, 0x45, 0x4c, 0x46, 2, 1]); bytes.writeUInt16LE(62, 18); }
+      else { bytes.writeUInt32LE(0xfeedfacf); bytes.writeUInt32LE(0x0100000c, 4); }
+      fs.writeFileSync(path.join(path.dirname(target.asarPath), 'bin/language_server'), bytes);
+      const layout = JSON.parse(fs.readFileSync('compat/install-layout.json', 'utf8'));
+      layout.platforms[platform] = { resources: 'resources', language_server: 'language_server', channels: [{ channel: 'antigravity', executable, root: path.dirname(path.dirname(target.asarPath)) }] };
+      fs.writeFileSync('compat/install-layout.json', JSON.stringify(layout));
+      inspectHostTarget(target.asarPath);
+      const rows = platform === 'linux'
+        ? [['123 antigravity-ins\\n', '', 'closed'], ['123 node\\n', '', 'closed'], ['123 Web Content\\n', '', 'closed'], ['123 antigravity\\n', executablePath + '\\n', 'running'], ['123 antigravity\\n', '/opt/other/antigravity\\n', 'closed'], ['123 antigravity\\n', '-\\n', 'unknown'], ['invalid process row\\n', '', 'unknown'], ['', '', 'unknown']]
+        : [['123 ' + executablePath + ' - Insiders\\n', '', 'closed'], ['0 kernel_task\\n123 /usr/bin/node\\n', '', 'closed'], ['123 ' + executablePath + '\\n', '', 'running'], ['123 (Antigravity)\\n', '', 'unknown'], ['invalid process row\\n', '', 'unknown'], ['', '', 'unknown']];
+      for (const [stdout, executable, state] of rows) {
+        output = stdout;
+        executableOutput = executable;
+        assert.equal(adapter.clientProcessState(target.asarPath).state, state, platform + ': ' + stdout);
+        if (state !== 'closed') assert.throws(() => adapter.ensureClientClosedFor(target.asarPath), (error) => error.code === (state === 'running' ? 'CLIENT_RUNNING' : 'CLIENT_RUNNING_UNKNOWN'));
+      }
+    }
+  `,
+    ],
+    { cwd: runtime, encoding: 'utf8', windowsHide: true },
+  );
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});
+
+function managementPreparationFixture(t, { discovered = true } = {}) {
   const root = temporary(t);
   const runtime = path.join(root, 'runtime');
   fs.mkdirSync(runtime);
@@ -431,7 +568,7 @@ ${anchoredMain()}`;
           channels: [
             {
               channel: 'insiders',
-              root: path.dirname(resources),
+              root: discovered ? path.dirname(resources) : path.join(root, 'missing-installation'),
               executable: path.relative(path.dirname(resources), executablePath),
             },
           ],
@@ -536,17 +673,10 @@ test('capsule preflight and mutations need no localization build, including reta
       !['localization-build.mjs', 'localization-feature.mjs'].includes(path.basename(file)),
   });
   fs.cpSync('src/capsule', path.join(runtime, 'src/capsule'), { recursive: true });
-  for (const name of [
-    'metrics-core.mjs',
-    'pricing-core.mjs',
-    'poll-policy.mjs',
-    'upstream-contract.mjs',
-    'locale.mjs',
-    'locale-state.mjs',
-  ]) {
-    const destination = path.join(runtime, 'src/plugin/lib', name);
+  for (const relative of CAPSULE_INPUTS) {
+    const destination = path.join(runtime, 'src', relative);
     fs.mkdirSync(path.dirname(destination), { recursive: true });
-    fs.copyFileSync(path.join('src/plugin/lib', name), destination);
+    fs.copyFileSync(path.join('src', relative), destination);
   }
   const manifestPath = 'dist/host/bundle/build-manifest.json';
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));

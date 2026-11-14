@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { ArtifactError, readValidatedArtifact } from './artifact.js';
+import { ArtifactError, isDomManifest, readValidatedArtifact } from './artifact.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'acorn';
@@ -20,10 +20,14 @@ import {
   sha256Text,
   stableStringify,
   transformAsset,
+  validateSourceCatalog,
+  type LocaleTranslations,
   type SourceCatalog,
   type UsageRule,
 } from './build/transform.js';
 import { buildInventory, type InventoryReport } from './build/inventory.js';
+import { buildDomArtifact, readDomEngineSource } from './build/dom-artifact.js';
+import { generateUsageRules } from './build/rulesgen.js';
 import {
   diffVendorLocaleCatalogs,
   importVendorDictionaries,
@@ -67,7 +71,19 @@ export {
   parseVendorJsonDictionary,
 } from './build/vendor.js';
 export { buildInventory } from './build/inventory.js';
-export { readValidatedArtifact } from './artifact.js';
+export { generateUsageRules } from './build/rulesgen.js';
+export { buildDomIndex, validateCatalogAliases } from './build/dom-index.js';
+export { buildDomArtifact, readDomEngineSource } from './build/dom-artifact.js';
+export { matchDisplayText } from './runtime/matcher.js';
+export {
+  authorizeBootstrapSender,
+  bootstrapHealthState,
+  decodeBootstrapResult,
+  matchHubNavigation,
+} from './runtime/hub.js';
+export type { DomIndex } from './build/dom-index.js';
+export type { GeneratedRules, RulesGenStats, RulesGenWorklist } from './build/rulesgen.js';
+export { decodeManifest, isDomManifest, readValidatedArtifact } from './artifact.js';
 export { decodeSelectionSnapshot, readRuntimeStatus } from './runtime/startup.js';
 export type { InventoryReport } from './build/inventory.js';
 export { LoggingError } from './logging.js';
@@ -107,10 +123,13 @@ function resolveProfile(
         : source?.sampleDir
           ? observeSampleSource(source.sampleDir, options)
           : null;
-      const candidates = profiles.filter((entry) =>
-        observed?.matchedProfileId === entry.profileId ||
-        observed?.matchedProfileId === null && observed.nlsHelperCalleeName === entry.nlsHelper.calleeName,
-      );
+      // The NLS helper name is a minification detail, not an identity: a
+      // renamed callee must not empty the candidate set. Transform
+      // compatibility below is the real filter.
+      const candidates =
+        observed?.matchedProfileId === null
+          ? profiles
+          : profiles.filter((entry) => observed?.matchedProfileId === entry.profileId);
       if (candidates.length === 1) return candidates[0];
       if (observed?.assets['main.js']) {
         const compatible = candidates.filter((candidate) => {
@@ -138,7 +157,7 @@ function resolveProfile(
 function resolveUsageRules(profile: LocalizationProfile, sourceSha256?: string): UsageRule[] {
   const database = readJson(path.join(REPO_ROOT, 'compat', 'localization', 'usage-points.json')) as {
     schema?: number;
-    profiles?: Record<string, { rules?: UsageRule[]; fallbackRules?: UsageRule[]; rulesFrom?: string }>;
+    profiles?: Record<string, { rules?: UsageRule[]; generatedRules?: UsageRule[]; fallbackRules?: UsageRule[]; rulesFrom?: string }>;
   };
   if (database.schema !== 1) throw new BuildError('PROFILE_INVALID', 'Unsupported usage-points database schema');
   let entry = database.profiles?.[profile.profileId];
@@ -148,8 +167,12 @@ function resolveUsageRules(profile: LocalizationProfile, sourceSha256?: string):
     entry = next;
   }
   const reviewed = entry?.rules ?? [];
+  const generated = entry?.generatedRules ?? [];
   const specific = reviewed.filter((rule) => rule.sourceSha256 === sourceSha256);
-  const rules = sourceSha256 === undefined ? reviewed : specific.length ? reviewed.filter((rule) => !rule.sourceSha256 || rule.sourceSha256 === sourceSha256) : entry?.fallbackRules ?? reviewed.filter((rule) => !rule.sourceSha256);
+  const generatedSpecific = generated.filter((rule) => rule.sourceSha256 === sourceSha256);
+  // Reviewed ranges always win; mechanically generated ranges apply only to
+  // their recorded source digest; anything else falls back to structural rules.
+  const rules = sourceSha256 === undefined ? reviewed : specific.length ? reviewed.filter((rule) => !rule.sourceSha256 || rule.sourceSha256 === sourceSha256) : generatedSpecific.length ? generatedSpecific : entry?.fallbackRules ?? reviewed.filter((rule) => !rule.sourceSha256);
   for (const rule of rules) if (rule.file !== 'main.js')
     throw new BuildError('PROFILE_INVALID', `Usage point targets an unexpected file: ${rule.file}`);
   return rules;
@@ -195,12 +218,12 @@ function resolveHelperCallee(observed: ObservedSource, hint: LocalizationProfile
 
 /** The installation a command operates on, when the source resolves to one. */
 function resolveSourceInstallation(options: { ls?: string; sampleDir?: string }): string | null {
-  const targets = installedTargets();
+  if (options.sampleDir) return null;
+  const targets = installedTargets({ ignoreAppDir: !!options.ls });
   if (options.ls) {
     const match = targets.find((target) => samePath(target.binaryPath, options.ls as string));
     return match ? sha256Text(match.asarPath) : null;
   }
-  if (options.sampleDir) return null;
   if (targets.length === 1) return sha256Text(targets[0].asarPath);
   return null;
 }
@@ -378,16 +401,39 @@ function canonicalJson(value: unknown): string {
 export async function runLocalizationCommand(argv: string[]): Promise<number> {
   const [command, ...rest] = argv;
   const json = rest.includes('--json');
-  const value = (flag: string): string | undefined => {
-    const index = rest.indexOf(flag);
-    if (index < 0) return undefined;
-    const next = rest[index + 1];
-    if (!next || next.startsWith('--')) throw new Error(`Missing value for ${flag}`);
-    return next;
-  };
-  const has = (flag: string): boolean => rest.includes(flag);
   let activeLog: CliLog | null = null;
   try {
+    const commandFlags: Record<string, string[]> = {
+      inspect: ['--ls', '--sample-dir', '--profile'],
+      prepare: ['--ls', '--sample-dir', '--profile', '--locale', '--probe', '--format'],
+      validate: ['--artifact-dir'],
+      inventory: ['--ls', '--sample-dir', '--profile', '--out'],
+      'rules:generate': ['--ls', '--sample-dir', '--profile'],
+      select: ['--artifact', '--installation', '--installation-id', '--expected-selection-sha256'],
+      status: ['--installation'],
+      'vendor:import': ['--vendor-root', '--out', '--previous'],
+    };
+    const allowed = Object.hasOwn(commandFlags, command) ? commandFlags[command] : undefined;
+    if (!allowed) throw new Error('Usage: localization.mjs inspect|prepare|validate|inventory|rules:generate|select|status|vendor:import [--json] ...');
+    const options = new Map<string, string | true>();
+    for (let index = 0; index < rest.length; index++) {
+      const flag = rest[index];
+      if (flag !== '--json' && !allowed.includes(flag)) throw new Error(`Unknown argument for ${command}: ${flag}`);
+      if (options.has(flag)) throw new Error(`Duplicate argument: ${flag}`);
+      if (flag === '--json' || flag === '--probe') {
+        options.set(flag, true);
+      } else {
+        const next = rest[++index];
+        if (!next || next.startsWith('--')) throw new Error(`Missing value for ${flag}`);
+        options.set(flag, next);
+      }
+    }
+    if (options.has('--ls') && options.has('--sample-dir')) throw new Error('--ls and --sample-dir cannot be combined');
+    const value = (flag: string): string | undefined => {
+      const option = options.get(flag);
+      return typeof option === 'string' ? option : undefined;
+    };
+    const has = (flag: string): boolean => options.has(flag);
     if (command === 'inspect') {
       const sourceHint = { ls: value('--ls'), sampleDir: value('--sample-dir') };
       const log = new CliLog(resolveSourceInstallation(sourceHint), false);
@@ -442,7 +488,19 @@ export async function runLocalizationCommand(argv: string[]): Promise<number> {
       const sourceHint = { ls: value('--ls'), sampleDir: value('--sample-dir') };
       const locale = value('--locale') ?? (has('--probe') ? 'en' : undefined);
       if (!locale) throw new Error('prepare requires --locale LOCALE or --probe');
-      const probe = has('--probe') || locale === 'en';
+      const format = value('--format') ?? (has('--probe') ? 'ast' : 'dom');
+      if (format !== 'ast' && format !== 'dom') throw new Error('prepare --format must be ast or dom');
+      if (locale === 'en' && !has('--probe'))
+        throw new BuildError(
+          'CATALOG_INVALID',
+          'English is an explicit disable; pass --probe only for a developer identity pack',
+        );
+      if (format === 'dom' && (has('--probe') || locale === 'en'))
+        throw new BuildError(
+          'CATALOG_INVALID',
+          'DOM prepare requires --locale other than en; English is an explicit disable',
+        );
+      const probe = has('--probe');
       const log = new CliLog(resolveSourceInstallation(sourceHint), true);
       activeLog = log;
       log.sink({ level: 'info', stage: 'source.observe', event: 'started', result: 'started' });
@@ -467,6 +525,84 @@ export async function runLocalizationCommand(argv: string[]): Promise<number> {
         member: 'main.js',
         counts: { assets: Object.keys(observed.assets).length },
       });
+      if (format === 'dom') {
+        const catalog = loadCatalog();
+        const translations = loadLocale(locale);
+        const engine = readDomEngineSource(
+          path.join(REPO_ROOT, 'dist', 'localization', 'bundle', 'dom-engine.js'),
+        );
+        log.sink({
+          level: 'info',
+          stage: 'index',
+          event: 'started',
+          result: 'started',
+          locale: translations.locale,
+        });
+        const built = buildDomArtifact({
+          profileId: observed.matchedProfileId ?? observedProfileId(observed.sourceIdentity),
+          adapterVersion: profile.adapterVersion,
+          toolchainSha256: toolchainSha256(),
+          locale: translations.locale,
+          formatLocale: translations.formatLocale ?? translations.locale,
+          catalog,
+          translations,
+          engineSource: engine.source,
+          sourceIdentity: observed.sourceIdentity,
+          sourceBinarySha256: observed.lsSha256,
+          sourceMainSha256: main.sha256,
+        });
+        log.sink({
+          level: 'info',
+          stage: 'index',
+          event: 'completed',
+          result: 'ok',
+          locale: translations.locale,
+          counts: {
+            exact: Object.keys(built.index.exact).length,
+            templates: built.index.templates.length,
+            conflicts: built.conflicts.length,
+          },
+        });
+        log.markMutating();
+        const artifactFiles: Record<string, string> = {
+          'manifest.json': `${stableStringify(built.manifest)}\n`,
+          'index.json': built.indexJson,
+        };
+        if (built.nativeJson !== null) artifactFiles['native.json'] = built.nativeJson;
+        const directory = writeArtifactDirectory(built.manifest.artifactId, artifactFiles);
+        log.sink({
+          level: 'info',
+          stage: 'artifact.publish',
+          event: 'completed',
+          result: 'published',
+          artifactId: built.manifest.artifactId,
+          locale: translations.locale,
+          counts: { files: Object.keys(artifactFiles).length },
+        });
+        log.close();
+        const report = {
+          artifactId: built.manifest.artifactId,
+          directory,
+          format: 'dom',
+          probe: false,
+          locale: built.manifest.locale,
+          index: {
+            exact: Object.keys(built.index.exact).length,
+            templates: built.index.templates.length,
+            conflicts: built.conflicts.length,
+          },
+          profileStatus: profile.status,
+          installationQualified: observed.matchedProfileId === profile.profileId,
+          sourceBinarySha256: observed.lsSha256,
+          sourceIdentity: observed.sourceIdentity,
+          conflicts: built.conflicts,
+          warnings: observed.warnings,
+          log: log.describe(),
+          ...logFailureField(log),
+        };
+        console.log(JSON.stringify(report, null, 2));
+        return 0;
+      }
         const rules = resolveUsageRules(profile, main.sha256);
         const catalog = loadCatalog();
         const translations = probe ? undefined : loadLocale(locale);
@@ -582,7 +718,9 @@ export async function runLocalizationCommand(argv: string[]): Promise<number> {
       activeLog = log;
         log.sink({ level: 'info', stage: 'artifact.validate', event: 'started', result: 'started' });
         const { manifest, assets } = readValidatedArtifact(directory);
-        for (const body of assets.values()) parse(body.toString('utf8'), { ecmaVersion: 'latest', sourceType: 'script' });
+        if (!isDomManifest(manifest)) {
+          for (const body of assets.values()) parse(body.toString('utf8'), { ecmaVersion: 'latest', sourceType: 'script' });
+        }
         log.sink({
           level: 'info',
           stage: 'artifact.validate',
@@ -664,6 +802,93 @@ export async function runLocalizationCommand(argv: string[]): Promise<number> {
       console.log(JSON.stringify(summary, null, 2));
       return 0;
     }
+    if (command === 'rules:generate') {
+      const sourceHint = { ls: value('--ls'), sampleDir: value('--sample-dir') };
+      const log = new CliLog(resolveSourceInstallation(sourceHint), true);
+      activeLog = log;
+      log.sink({ level: 'info', stage: 'source.observe', event: 'started', result: 'started' });
+      const profile = resolveProfile(value('--profile'), sourceHint);
+      const observed = observeSource(sourceHint, profile);
+      for (const warning of observed.warnings)
+        log.sink({ level: 'warn', stage: 'source.observe', event: 'warning', result: 'warn', code: warning.code, detail: warning.message });
+      const main = observed.assets['main.js'];
+      if (!main)
+        throw new BuildError('CAPABILITY_GAP', 'The observed source has no main.js asset; usage rules cannot be generated');
+      const helperCalleeName = resolveHelperCallee(observed, profile);
+      log.sink({
+        level: 'info',
+        stage: 'source.observe',
+        event: 'completed',
+        result: 'ok',
+        sourceIdentity: observed.sourceIdentity,
+        member: 'main.js',
+      });
+      const catalog = readJson(path.join(REPO_ROOT, 'src', 'localization', 'catalogs', 'source.json')) as SourceCatalog;
+      validateSourceCatalog(catalog);
+      const locales: LocaleTranslations[] = [];
+      for (const locale of ['zh-Hant-TW', 'zh-Hans-CN', 'ja-JP']) {
+        const file = path.join(REPO_ROOT, 'src', 'localization', 'catalogs', `${locale}.json`);
+        if (!fs.existsSync(file)) continue;
+        const parsed = readJson(file) as LocaleTranslations;
+        if (parsed.locale === locale && parsed.messages) locales.push(parsed);
+      }
+      const inventory = buildInventory({
+        file: 'main.js',
+        source: main.text,
+        sourceIdentity: observed.sourceIdentity,
+        sourceBinarySha256: observed.lsSha256,
+        helperCalleeName,
+      });
+      applyInventoryReviews(inventory);
+      log.sink({ level: 'info', stage: 'inventory', event: 'parsing', result: 'started', sourceIdentity: observed.sourceIdentity, member: 'main.js' });
+      const generated = generateUsageRules({ source: main.text, inventory, catalog, locales, helperCalleeName });
+      const profileId = observed.matchedProfileId ?? profile.profileId;
+      const usagePath = path.join(REPO_ROOT, 'compat', 'localization', 'usage-points.json');
+      const database = readJson(usagePath) as {
+        schema?: number;
+        profiles?: Record<string, { rules?: UsageRule[]; generatedRules?: UsageRule[]; fallbackRules?: UsageRule[]; rulesFrom?: string }>;
+      };
+      if (database.schema !== 1 || !database.profiles?.[profileId])
+        throw new BuildError('PROFILE_INVALID', `No usage-points entry exists for profile ${profileId}`);
+      log.markMutating();
+      database.profiles[profileId].generatedRules = generated.rules;
+      fs.writeFileSync(usagePath, `${JSON.stringify(database, null, 2)}\n`);
+      const worklistPath = path.join(agyctlHome(), 'localization', 'rules', `${observed.sourceIdentity}.json`);
+      fs.mkdirSync(path.dirname(worklistPath), { recursive: true });
+      fs.writeFileSync(
+        worklistPath,
+        `${stableStringify({
+          sourceIdentity: observed.sourceIdentity,
+          sourceSha256: main.sha256,
+          profileId,
+          stats: generated.stats,
+          worklist: generated.worklist,
+        })}\n`,
+      );
+      log.sink({
+        level: 'info',
+        stage: 'rules.generate',
+        event: 'completed',
+        result: 'ok',
+        sourceIdentity: observed.sourceIdentity,
+        counts: { rules: generated.rules.length, adoptedPoints: generated.stats.adoptedPoints, ambiguous: generated.stats.ambiguous },
+      });
+      log.close();
+      const report = {
+        profileId,
+        sourceIdentity: observed.sourceIdentity,
+        sourceSha256: main.sha256,
+        stats: generated.stats,
+        rules: generated.rules.length,
+        usagePointsPath: usagePath,
+        worklistPath,
+        warnings: observed.warnings,
+        log: log.describe(),
+        ...logFailureField(log),
+      };
+      console.log(JSON.stringify(report, null, 2));
+      return 0;
+    }
     if (command === 'select') {
       const artifactId = value('--artifact');
       if (!artifactId) throw new Error('select requires --artifact ARTIFACT_ID');
@@ -677,8 +902,8 @@ export async function runLocalizationCommand(argv: string[]): Promise<number> {
         if (installation || !/^[a-f0-9]{64}$/.test(explicitInstallationId)) throw new Error('--installation-id requires a 64-hex id and cannot be combined with --installation');
         installationId = explicitInstallationId;
       } else if (installation) {
-        const targets = installedTargets();
-        const match = targets.find((target) => target.asarPath === installation);
+        const targets = installedTargets({ ignoreAppDir: true });
+        const match = targets.find((target) => samePath(target.asarPath, installation));
         if (!match) throw new Error(`Unknown installation: ${installation}`);
         installationId = sha256Text(match.asarPath);
       } else {
@@ -743,9 +968,9 @@ export async function runLocalizationCommand(argv: string[]): Promise<number> {
     }
     if (command === 'status') {
       const installation = value('--installation');
-      const targets = installedTargets();
+      const targets = installedTargets({ ignoreAppDir: !!installation });
       const target = installation
-        ? targets.find((entry) => entry.asarPath === installation)
+        ? targets.find((entry) => samePath(entry.asarPath, installation))
         : targets.length === 1 ? targets[0] : undefined;
       if (!installation && targets.length > 1) throw new Error('Multiple installations exist; pass --installation ABS_ASAR_PATH');
       if (!target) throw new Error('No Antigravity installation found');
@@ -758,9 +983,12 @@ export async function runLocalizationCommand(argv: string[]): Promise<number> {
           : null;
         if (selection && selection.installationId !== installationId) throw new Error('Selection belongs to another installation');
         // Last-known runtime evidence from the Host process; never a live claim.
-        const lastKnownRuntime = readRuntimeStatus(
+        let lastKnownRuntime = readRuntimeStatus(
           path.join(agyctlHome(), 'localization', 'installations', installationId, 'runtime-status.json'),
         );
+        if ('status' in lastKnownRuntime && lastKnownRuntime.status.installationId !== installationId) {
+          lastKnownRuntime = { error: 'runtime status belongs to another installation' };
+        }
         log.sink({
           level: 'info',
           stage: 'status',

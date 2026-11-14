@@ -82,6 +82,13 @@ func (a *asarArchive) read(name string) ([]byte, error) {
 		if e != nil {
 			return nil, e
 		}
+		info, e := os.Lstat(dest)
+		if e != nil {
+			return nil, e
+		}
+		if !info.Mode().IsRegular() {
+			return nil, failure("AsarError", "unpacked member %s is not a regular file", name)
+		}
 		return os.ReadFile(dest)
 	}
 	off, e := strconv.ParseInt(str(n["offset"]), 10, 64)

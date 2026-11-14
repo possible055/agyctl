@@ -121,11 +121,14 @@ test('startup resolution follows the reviewed selection snapshot end to end', (t
   });
   const snapshot = resolveStartupSnapshot(configDir);
   assert.equal(snapshot.mode, 'selection');
+  assert.equal(snapshot.format, 'ast');
   assert.equal(snapshot.installationId, installationId);
   assert.equal(snapshot.artifactId, artifact.artifactId);
   assert.equal(snapshot.locale, artifact.locale);
   assert.equal(snapshot.sourceMainSha256, artifact.sourceMainSha256);
   assert.equal(snapshot.mainSha256, artifact.mainSha256);
+  assert.equal(snapshot.engineSha256, null);
+  assert.equal(snapshot.indexSha256, null);
 });
 
 test('a re-selection takes effect without changing the installed config', (t) => {
@@ -200,6 +203,85 @@ test('selection and artifact manifest must agree on the locale', (t) => {
   assert.throws(
     () => resolveStartupSnapshot(path.join(root, 'installed', 'dist', 'agyctl-localization')),
     (error) => error instanceof StartupError && error.code === 'SELECTION_INVALID',
+  );
+});
+
+function buildDomArtifact(root, { locale = 'zh-Hant-TW' } = {}) {
+  const stateRoot = path.join(root, 'localization');
+  const profiles = JSON.parse(fs.readFileSync('compat/localization/profiles.json', 'utf8'));
+  const profile = profiles.profiles.find((entry) => entry.profileId === HUB_PROFILE_ID);
+  const index = `${JSON.stringify({
+    schemaVersion: 1,
+    locale,
+    exact: { 'Open Settings': { messageId: 'nav.openSettings', translation: '開啟設定' } },
+    templates: [],
+  })}\n`;
+  const engineSha256 = 'a'.repeat(64);
+  const indexSha256 = digest(Buffer.from(index));
+  const artifactId = digest(Buffer.concat([Buffer.from(locale), Buffer.from(indexSha256)]))
+    .slice(0, 64)
+    .padEnd(64, '0');
+  const manifest = `${JSON.stringify(
+    {
+      schemaVersion: 2,
+      format: 'dom',
+      artifactId,
+      profileId: HUB_PROFILE_ID,
+      locale,
+      formatLocale: locale,
+      engineVersion: 1,
+      engineSha256,
+      scopesVersion: 1,
+      indexSha256,
+      catalogSha256: digest(Buffer.from('fixture-catalog')),
+      adapterVersion: profile.adapterVersion,
+      toolchainSha256: digest(Buffer.from('fixture-toolchain')),
+      nativeCatalogSha256: null,
+      sourceIdentity: digest(Buffer.from('fixture-source')).padEnd(64, '0'),
+      sourceMainSha256: profile.assets['main.js'].sha256,
+    },
+    null,
+    2,
+  )}\n`;
+  const directory = path.join(stateRoot, 'artifacts', artifactId);
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(path.join(directory, 'index.json'), index);
+  fs.writeFileSync(path.join(directory, 'manifest.json'), manifest);
+  return { stateRoot, artifactId, locale, engineSha256, indexSha256 };
+}
+
+test('a DOM artifact snapshot does not require rewritten main.js', (t) => {
+  const root = temporary(t);
+  const artifact = buildDomArtifact(root);
+  const installationId = digest(Buffer.from(path.join(root, 'app.asar')));
+  installSelection(root, artifact, { installationId });
+  const snapshot = resolveStartupSnapshot(
+    path.join(root, 'installed', 'dist', 'agyctl-localization'),
+  );
+  assert.equal(snapshot.format, 'dom');
+  assert.equal(snapshot.artifactId, artifact.artifactId);
+  assert.equal(snapshot.locale, artifact.locale);
+  assert.equal(snapshot.mainSha256, null);
+  assert.equal(snapshot.engineSha256, artifact.engineSha256);
+  assert.equal(snapshot.indexSha256, artifact.indexSha256);
+});
+
+test('unknown artifact schema versions are rejected', (t) => {
+  const root = temporary(t);
+  const artifact = buildArtifact(root);
+  const installationId = 'e'.repeat(64);
+  installSelection(root, artifact, { installationId });
+  const manifestPath = path.join(
+    artifact.stateRoot,
+    'artifacts',
+    artifact.artifactId,
+    'manifest.json',
+  );
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  fs.writeFileSync(manifestPath, JSON.stringify({ ...manifest, schemaVersion: 3 }));
+  assert.throws(
+    () => resolveStartupSnapshot(path.join(root, 'installed', 'dist', 'agyctl-localization')),
+    (error) => error instanceof StartupError && error.code === 'ARTIFACT_INVALID',
   );
 });
 
