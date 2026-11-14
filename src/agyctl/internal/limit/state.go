@@ -8,11 +8,12 @@ import (
 	"math"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
+	"agyctl/internal/apptarget"
 	"agyctl/internal/assets"
 	"agyctl/internal/fsx"
+	"agyctl/internal/patchlock"
 )
 
 type manifest struct {
@@ -48,12 +49,12 @@ func (s store) load() (manifest, error) {
 }
 
 func (s store) append(record map[string]any) (err error) {
-	lock, err := acquireStoreLock(s.directory)
+	lock, err := patchlock.AcquireStoreLock(s.directory)
 	if err != nil {
 		return err
 	}
 	defer func() {
-		if releaseErr := lock.release(); releaseErr != nil {
+		if releaseErr := lock.Release(); releaseErr != nil {
 			err = errors.Join(err, releaseErr)
 		}
 	}()
@@ -72,30 +73,9 @@ func (s store) append(record map[string]any) (err error) {
 	return fsx.AtomicWrite(s.path(), append(data, '\n'), 0600)
 }
 
-func normalized(path string) (string, error) {
-	absolute, err := filepath.Abs(path)
-	if err != nil {
-		return "", err
-	}
-	resolved, err := filepath.EvalSymlinks(absolute)
-	if err == nil {
-		absolute = resolved
-	} else if !errors.Is(err, os.ErrNotExist) {
-		return "", err
-	}
-	if runtime.GOOS == "windows" {
-		absolute = strings.ToLower(absolute)
-	}
-	return absolute, nil
-}
+func normalized(path string) (string, error) { return apptarget.Normalized(path) }
 
-func resolved(path string) (string, error) {
-	absolute, err := filepath.Abs(path)
-	if err != nil {
-		return "", err
-	}
-	return filepath.EvalSymlinks(absolute)
-}
+func resolved(path string) (string, error) { return apptarget.Resolved(path) }
 
 func (s store) last(binary string) (map[string]any, error) {
 	key, err := normalized(binary)

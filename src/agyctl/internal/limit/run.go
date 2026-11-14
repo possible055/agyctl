@@ -443,7 +443,7 @@ func patch(binary string, o options, reg registry, s store, candidates []layout.
 			err = errors.Join(err, releaseErr)
 		}
 	}()
-	record, err := patchBinarySettings(binary, data, out, sha, version, compat, settings, plan, s, op.id)
+	record, err := patchBinarySettings(binary, data, out, sha, version, compat, settings, plan, s, op.identifier())
 	if err != nil {
 		return nil, err
 	}
@@ -539,7 +539,7 @@ func restore(binary string, reg registry, s store, candidates []layout.Target) (
 			err = errors.Join(err, releaseErr)
 		}
 	}()
-	result, err = restoreBinary(binary, reg, s, op.id)
+	result, err = restoreBinary(binary, reg, s, op.identifier())
 	if err != nil {
 		return nil, err
 	}
@@ -547,19 +547,6 @@ func restore(binary string, reg registry, s store, candidates []layout.Target) (
 		addWarnings(result.(map[string]any), fmt.Errorf("restored, but the prepare record could not be cleared: %w", clearErr))
 	}
 	return result, nil
-}
-
-func requireStopped(running *bool, probeErr error) error {
-	if probeErr != nil {
-		return fmt.Errorf("cannot verify language server process state — refusing to modify binary: %w", probeErr)
-	}
-	if running == nil {
-		return errors.New("language server process state is unknown — refusing to modify binary")
-	}
-	if *running {
-		return errors.New("the target installation's application or language server is running — quit that Antigravity installation first (the binary must be unlocked)")
-	}
-	return nil
 }
 
 func restoreBinary(binary string, reg registry, s store, operation string) (map[string]any, error) {

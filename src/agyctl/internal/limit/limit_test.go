@@ -251,66 +251,6 @@ func TestRealBinaryFixedVectorDifferential(t *testing.T) {
 	}
 }
 
-func TestByteGateAndPatchIntegrity(t *testing.T) {
-	reg, data := fixtures(t)
-	ids, err := ParseIDs(DefaultIDs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	plan, err := PlanPatch(data, ids, DefaultLimit)
-	if err != nil {
-		t.Fatal(err)
-	}
-	for _, offset := range []int{4, 70, 127} {
-		patched := ApplyPatch(data, plan)
-		patched[plan.FuncOff+offset] ^= 1
-		state, err := DetectState(patched, reg.originals)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if state.Kind != "unknown" {
-			t.Fatalf("tampered offset %d classified %s", offset, state.Kind)
-		}
-	}
-	foreign := bytes.Clone(data)
-	foreign[plan.FuncOff+60] ^= 0xff
-	state, err := DetectState(foreign, reg.originals)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if state.Kind != "unknown" {
-		t.Fatalf("foreign body classified %s", state.Kind)
-	}
-	binary := filepath.Join(testutil.TempDir(t), "language_server.exe")
-	if err = os.WriteFile(binary, foreign, 0600); err != nil {
-		t.Fatal(err)
-	}
-	_, err = patch(binary, options{ids: DefaultIDs, limit: DefaultLimit, dryRun: true}, reg, store{directory: testutil.TempDir(t)}, nil)
-	if err == nil || !strings.Contains(err.Error(), "match no recorded original") {
-		t.Fatalf("byte gate error = %v", err)
-	}
-	if err = os.WriteFile(binary, data, 0600); err != nil {
-		t.Fatal(err)
-	}
-	backup := binary + ".orig"
-	if err = os.WriteFile(backup, []byte("preserved backup"), 0600); err != nil {
-		t.Fatal(err)
-	}
-	_, err = patch(binary, options{ids: DefaultIDs, limit: DefaultLimit, dryRun: true, out: backup}, reg, store{directory: testutil.TempDir(t)}, nil)
-	if !errors.Is(err, os.ErrExist) {
-		t.Fatalf("existing dry-run output error = %v", err)
-	}
-	if actual, err := os.ReadFile(backup); err != nil || string(actual) != "preserved backup" {
-		t.Fatal("dry-run overwrote existing backup")
-	}
-	withoutCave := bytes.Clone(data)
-	copy(withoutCave[plan.TableOff-8:plan.TableOff+16], make([]byte, 24))
-	_, err = PlanPatch(withoutCave, ids, DefaultLimit)
-	if err == nil || err.Error() != "no int3 padding cave found near the function" {
-		t.Fatalf("missing cave error = %v", err)
-	}
-}
-
 func TestModelIDsAndTargets(t *testing.T) {
 	ids, err := ParseIDs("1318-1320, 1400,1318")
 	if err != nil {

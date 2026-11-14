@@ -11,6 +11,7 @@ import (
 	"agyctl/internal/check"
 	"agyctl/internal/layout"
 	"agyctl/internal/limit"
+	"agyctl/internal/tooloutput"
 )
 
 // buildCommit is bound at build time by scripts/tools-build.mjs and lets the
@@ -35,6 +36,13 @@ func runtimeScopes(args []string) []string {
 			return nil
 		}
 		return []string{"limit"}
+	case "tool-output":
+		for _, arg := range args[1:] {
+			if arg == "--help" || arg == "-h" {
+				return nil
+			}
+		}
+		return []string{"tool-output"}
 	case "check":
 		switch checkerCommand(args[1:]) {
 		case "local":
@@ -95,7 +103,7 @@ func run(args []string) (any, int, error) {
 		root, args = args[1], args[2:]
 	}
 	if len(args) == 0 {
-		return nil, 1, fmt.Errorf("usage: agyctl [--root ABS_PATH] locate|limit|check|client target [arguments] --json")
+		return nil, 1, fmt.Errorf("usage: agyctl [--root ABS_PATH] locate|limit|tool-output|check|client target [arguments] --json")
 	}
 	scopes := runtimeScopes(args)
 	snapshot, err := assets.Capture(root, scopes...)
@@ -109,6 +117,8 @@ func run(args []string) (any, int, error) {
 	switch args[0] {
 	case "limit":
 		return limit.Run(root, snapshot, args[1:])
+	case "tool-output":
+		return tooloutput.Run(root, snapshot, args[1:])
 	case "check":
 		return check.Run(root, snapshot, args[1:])
 	case "client":

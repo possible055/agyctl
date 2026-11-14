@@ -49,6 +49,7 @@ export async function managementStatus({ asarPath, localizationPlan, unavailable
       reason: 'No localization-compatible installation is selected',
     },
     limit: null,
+    toolOutput: null,
     defaults: { limitIds: null, limitTokens: null },
     targets: [],
     errors: [],
@@ -103,6 +104,9 @@ export async function managementStatus({ asarPath, localizationPlan, unavailable
     }
   })();
   result.limit = capture('limit', () => call(['limit', 'status', '--binary', target.binaryPath]));
+  result.toolOutput = capture('tool-output', () =>
+    call(['tool-output', 'status', '--binary', target.binaryPath]),
+  );
   if (localizationPlan) {
     try {
       if (unavailable.localization) throw new Error(unavailable.localization);

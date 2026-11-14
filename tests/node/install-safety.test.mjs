@@ -63,7 +63,7 @@ async function fixture(root, name = 'client', { native = false, version = '1' } 
 
 function temporary(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-install-safety-'));
-  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true, maxRetries: 5 }));
   return root;
 }
 

@@ -175,7 +175,7 @@ func (s store) completePrepareRecord(binary, installedSHA string, prepared *prep
 		if err != nil {
 			return err
 		}
-		record := map[string]any{"action": "patch", "at": time.Now().Format(time.RFC3339), "binary_path": path, "binary_sha256_before": prepared.OriginalSHA, "binary_sha256_after": prepared.NewSHA, "backup_sibling": sibling, "backup_sibling_sha256": prepared.OriginalSHA, "repo_backup": repo, "repo_backup_sha256": prepared.OriginalSHA, "app_version": nullable(prepared.AppVersion), "compat": prepared.Compat, "ids": prepared.IDs, "limit": prepared.Limit, "model_limits": prepared.ModelLimits, "encoding": prepared.Encoding, "settings_source": prepared.SettingsSource, "func": Func, "func_va": prepared.FuncVA, "operation": op.id}
+		record := map[string]any{"action": "patch", "at": time.Now().Format(time.RFC3339), "binary_path": path, "binary_sha256_before": prepared.OriginalSHA, "binary_sha256_after": prepared.NewSHA, "backup_sibling": sibling, "backup_sibling_sha256": prepared.OriginalSHA, "repo_backup": repo, "repo_backup_sha256": prepared.OriginalSHA, "app_version": nullable(prepared.AppVersion), "compat": prepared.Compat, "ids": prepared.IDs, "limit": prepared.Limit, "model_limits": prepared.ModelLimits, "encoding": prepared.Encoding, "settings_source": prepared.SettingsSource, "func": Func, "func_va": prepared.FuncVA, "operation": op.identifier()}
 		if err = s.append(record); err != nil {
 			return err
 		}

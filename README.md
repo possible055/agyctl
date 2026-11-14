@@ -12,11 +12,12 @@ agyctl targets Antigravity 2.31.0 desktop (stable release), adding a context-usa
 | [Input-toolbar capsule](#input-toolbar-capsule) | Shows live context usage next to the send button | Yes, `app.asar` |
 | [Client localization](#client-localization) | Translates the interface into Traditional Chinese, Simplified Chinese, or Japanese | Yes, `app.asar` |
 | [Context limit patch](#context-limit-patch) | Raises the context limit for selected models | Yes, `language_server.exe` |
+| [Tool-output capacity patch](#tool-output-capacity-patch) | Raises recorded native tool-output limits on a qualified build | Yes, `language_server.exe` |
 | [Compatibility checker](#compatibility-checker) | Checks whether your app version supports these features | No |
 
-The capsule, localization, and limit patch keep a verified backup of the original files and can be removed.
+The capsule, localization, limit patch, and tool-output patch keep verified backups of the original files and can be removed.
 
-Both versions use the same commands below. Compatibility is checked against the selected installation's files, not a version-number range; see [localization evidence](docs/localization.md) and [limit patch](docs/limit-patch.md). If you keep both versions, select one with `AGYCTL_APP_DIR`. After an Antigravity update, check feature status and prepare a new localization plan instead of applying an older plan or restoring another build's backup. A successful file patch is not proof of runtime activation.
+The stable and development (Insiders) channels use the same commands below, with feature-specific admission checks. Compatibility is checked against the selected installation's files, not a version-number range; see [localization status](docs/localization.md#current-status) and [limit patch](docs/limit-patch.md). If you keep both channels, select one with `AGYCTL_APP_DIR`. After an Antigravity update, check feature status and prepare a new localization plan instead of applying an older plan or restoring another build's backup. A successful file patch is not proof of runtime activation.
 
 ## Get started
 
@@ -31,7 +32,7 @@ npm ci
 agyctl automatically detects the default Antigravity installation. If yours is in a custom folder, or several installations exist, select the folder containing `Antigravity.exe`:
 
 ```powershell
-$env:AGYCTL_APP_DIR = 'D:\Apps\Antigravity'   # only for a custom or explicit installation
+$env:AGYCTL_APP_DIR = '<installation-root>'   # replace with your installation folder
 ```
 
 This variable applies to this terminal. To reuse it in future terminals, optionally save it with `[Environment]::SetEnvironmentVariable('AGYCTL_APP_DIR', $env:AGYCTL_APP_DIR, 'User')`. Explicit command paths take priority; an invalid environment path fails instead of falling back. Multiple detected installations require a selection. `AGYCTL_HOME` is separate: it controls tool state and backups, not the app location. See [installation selection](docs/operations.md#installation-selection).
@@ -164,6 +165,19 @@ npm run limit:restore
 
 Expect `restored: true` or `already_restored: true`. Run the status command again and confirm `patch_state.kind` is `original`, then reopen Antigravity.
 
+## Tool-output capacity patch
+
+Raises recorded Language Server limits for native tool outputs: Read (2,000 lines / 128 KiB), legacy `grep_search` (100 results), and the post-merge message-conversion budget floor (98,304). These are start-of-qualification targets, not proven maxima, and live App validation is pending; the first version qualifies exactly one build (Antigravity App Windows 2.31.2) and refuses every other binary. It also carries the verified Windows grep fixes for that build when applied from the original. See [the recipe and evidence](docs/tool-output-patch.md).
+
+```powershell
+npm run tool-output:status    # on-disk state of the selected installation
+npm run tool-output:patch     # plan in memory; writes nothing
+npm run tool-output:patch -- --apply    # quit Antigravity first
+npm run tool-output:restore   # back to the exact patched-from input
+```
+
+Applying and restoring require the client to be closed, verified backups, and an explicit `--binary` when several installations exist. The patch never relaxes other tools' settings and shares one mutation lock with the context-limit patch; a binary patched by the other feature is reported as a conflict, never overwritten. App updates do not reapply anything.
+
 ## Compatibility checker
 
 Run this after Antigravity updates, before you enable a feature that modifies the app. It needs [Go](https://go.dev/dl/) 1.26 or newer and the CLI built with `npm run tools:build`. Read each capability and its diagnostics: `needs-review` means at least one warning, including a `probe-only` localization profile, not that every feature is unusable. The checker is advisory; each feature's own preflight decides whether it can modify the selected files. `compatible` does not prove runtime activation.
@@ -188,14 +202,14 @@ Quit Antigravity before replacing the installed panel, then run:
 git pull
 npm ci
 npm run plugin:install
-npm run tools:build   # only if you use the limit patch or the checker
+npm run tools:build   # if you use patch controls, a binary patch, or the checker
 ```
 
 Reopen Antigravity after installation.
 
 ## Backups
 
-By default, original app files are kept in `%LOCALAPPDATA%\agyctl\backups\`; `AGYCTL_HOME` changes the tool-state root. The limit patch also keeps an original beside the Language Server, and panel backups live separately under `~/.gemini/config/plugin-backups/`. Do not delete or overwrite originals needed for removal. See [backups and recovery](docs/operations.md#recovery-boundaries).
+On Windows, original app files are kept in `%LOCALAPPDATA%\agyctl\backups\` by default; `AGYCTL_HOME` changes the tool-state root. The limit patch also keeps an original beside the Language Server, and panel backups live separately under `~/.gemini/config/plugin-backups/`. Do not delete or overwrite originals needed for removal. See [backup locations](docs/operations.md#backup-locations) for every platform and [recovery](docs/operations.md#recovery-boundaries).
 
 ## Documentation
 
@@ -204,6 +218,7 @@ By default, original app files are kept in `%LOCALAPPDATA%\agyctl\backups\`; `AG
 - [Localization](docs/localization.md)
 - [Compatibility checker](docs/update-check.md)
 - [Limit patch](docs/limit-patch.md)
+- [Tool-output patch](docs/tool-output-patch.md)
 - [Development](docs/development.md): setup, tests, and project layout
 
 ## License

@@ -12,11 +12,12 @@ agyctl 面向 Antigravity 2.31.0 桌面应用（正式版），添加上下文�
 | [输入栏胶囊](#输入栏胶囊) | 在发送按钮旁显示实时上下文用量 | 是，`app.asar` |
 | [客户端本地化](#客户端本地化) | 将界面翻译为繁体中文、简体中文或日语 | 是，`app.asar` |
 | [上下文上限补丁](#上下文上限补丁) | 提高指定模型的上下文上限 | 是，`language_server.exe` |
+| [原生工具输出容量补丁](#原生工具输出容量补丁) | 放宽已通过资格检查的构建中的原生工具输出限制 | 是，`language_server.exe` |
 | [兼容性检查](#兼容性检查) | 检查你的应用版本是否支持这些功能 | 否 |
 
-胶囊、本地化和上限补丁都会保留经过校验的原始文件备份，并且可以移除。
+胶囊、本地化、上限补丁和工具输出补丁都会保留经过校验的原始文件备份，并且可以移除。
 
-两个版本使用下面相同的命令。兼容性根据所选安装的文件检查，不是按版本号范围放行；详见[本地化证据](docs/localization.md)和[上限补丁](docs/limit-patch.md)。同时保留两个版本时，用 `AGYCTL_APP_DIR` 选择一个。Antigravity 更新后应检查功能状态、重新准备本地化计划，不要应用旧计划或还原其他构建的备份。文件补丁成功不代表已经验证运行时激活。
+正式版和开发版（Insiders）使用下面相同的命令，各功能分别检查是否允许修改。兼容性根据所选安装的文件检查，不是按版本号范围放行；详见[本地化状态](docs/localization.md#current-status)和[上限补丁](docs/limit-patch.md)。同时保留两个渠道时，用 `AGYCTL_APP_DIR` 选择一个。Antigravity 更新后应检查功能状态、重新准备本地化计划，不要应用旧计划或还原其他构建的备份。文件补丁成功不代表已经验证运行时激活。
 
 ## 开始使用
 
@@ -31,7 +32,7 @@ npm ci
 agyctl 会自动检测默认的 Antigravity 安装位置。使用自定义文件夹或存在多个安装时，请选择包含 `Antigravity.exe` 的文件夹：
 
 ```powershell
-$env:AGYCTL_APP_DIR = 'D:\Apps\Antigravity'   # 仅自定义位置或明确选择安装时需要
+$env:AGYCTL_APP_DIR = '<installation-root>'   # 替换为你的安装文件夹
 ```
 
 此变量只对当前终端生效。如需在以后打开的终端中复用，可选择运行 `[Environment]::SetEnvironmentVariable('AGYCTL_APP_DIR', $env:AGYCTL_APP_DIR, 'User')` 保存。命令中明确指定的路径优先；环境变量路径无效时会报错，不会改选其他安装。检测到多个安装时必须选择。`AGYCTL_HOME` 只控制工具状态和备份目录，不是应用位置。详见[安装选择](docs/operations.md#installation-selection)。
@@ -163,6 +164,19 @@ npm run limit:restore
 
 输出应包含 `restored: true` 或 `already_restored: true`。再次运行状态命令，确认 `patch_state.kind` 为 `original`，再重新打开 Antigravity。
 
+## 原生工具输出容量补丁
+
+放宽已记录的语言服务器原生工具输出限制：Read（2,000 行／128 KiB）、传统 `grep_search`（100 笔结果）以及合并后消息转换预算下限（98,304）。这些是资格化起测目标，不是已实测的上限最大值，实机验收尚未完成；首版只资格化一个构建（Antigravity App Windows 2.31.2），其余构建一律拒绝。从原版应用时同时携带该构建已验证的 Windows grep 修复。配方与证据详见[工具输出补丁](docs/tool-output-patch.md)。
+
+```powershell
+npm run tool-output:status    # 查看所选安装的磁盘状态
+npm run tool-output:patch     # 仅在内存生成计划，不写入
+npm run tool-output:patch -- --apply    # 先退出 Antigravity
+npm run tool-output:restore   # 精确回到套用前的输入
+```
+
+应用与还原要求客户端已关闭、备份经过校验；发现多个安装时必须显式传 `--binary`。补丁不会放宽其他工具的设置，并与上下文上限补丁共用同一把操作锁；被另一功能补丁过的文件会报告冲突，不会被覆盖。应用更新不会自动重新应用。
+
 ## 兼容性检查
 
 Antigravity 更新后、启用会修改应用的功能前执行。需要 [Go](https://go.dev/dl/) 1.26 或更新，并先用 `npm run tools:build` 构建 CLI。请查看各项能力及诊断信息：`needs-review` 表示至少有一项警告（包括 `probe-only` 本地化配置档），不代表所有功能都不可用。检查器只提供参考；能否修改所选文件，由各功能自己的预检决定。`compatible` 也不代表已经验证运行时激活。
@@ -187,14 +201,14 @@ npm run update-check:check -- --channel hub --platform win-x64
 git pull
 npm ci
 npm run plugin:install
-npm run tools:build   # 仅在使用上限补丁或兼容性检查时需要
+npm run tools:build   # 使用补丁控制、二进制补丁或兼容性检查时需要
 ```
 
 安装完成后重新打开 Antigravity。
 
 ## 备份
 
-默认情况下，应用原始文件保存在 `%LOCALAPPDATA%\agyctl\backups\`；`AGYCTL_HOME` 可更改工具状态根目录。上限补丁还会在 Language Server 旁保留原始文件，面板备份则单独存放在 `~/.gemini/config/plugin-backups/`。请勿删除或覆盖移除功能所需的原始文件。详见[备份与恢复](docs/operations.md#recovery-boundaries)。
+在 Windows 上，应用原始文件默认保存在 `%LOCALAPPDATA%\agyctl\backups\`；`AGYCTL_HOME` 可更改工具状态根目录。上限补丁还会在 Language Server 旁保留原始文件，面板备份则单独存放在 `~/.gemini/config/plugin-backups/`。请勿删除或覆盖移除功能所需的原始文件。各平台路径见[备份位置](docs/operations.md#backup-locations)，恢复方式见[恢复边界](docs/operations.md#recovery-boundaries)。
 
 ## 文档
 
@@ -203,6 +217,7 @@ npm run tools:build   # 仅在使用上限补丁或兼容性检查时需要
 - [本地化](docs/localization.md)
 - [兼容性检查](docs/update-check.md)
 - [上下文上限补丁](docs/limit-patch.md)
+- [工具输出补丁](docs/tool-output-patch.md)
 - [开发](docs/development.md)：环境、测试与项目结构
 
 ## 许可证

@@ -97,14 +97,27 @@ func TestCommandsReadOnlyTheirOwnCompatFiles(t *testing.T) {
 	if err := os.MkdirAll(filepath.Join(root, "compat"), 0755); err != nil {
 		t.Fatal(err)
 	}
-	layout, err := os.ReadFile(filepath.Join("..", "..", "..", "..", "compat", "install-layout.json"))
-	if err != nil {
+	toolBinary := filepath.Join(root, "language_server.exe")
+	if err := os.WriteFile(toolBinary, []byte("placeholder"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if err = os.WriteFile(filepath.Join(root, "compat", "install-layout.json"), layout, 0600); err != nil {
+	if err := os.WriteFile(filepath.Join(root, "compat", "install-layout.json"), []byte("{}"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	for _, args := range [][]string{{"locate", "--json"}, {"limit", "metadata", "--json"}} {
+	toolOutputStatus := []string{"tool-output", "status", "--binary", toolBinary, "--json"}
+	if _, code, err := run(append([]string{"--root", root}, toolOutputStatus...)); code == 0 || err == nil {
+		t.Fatalf("tool-output needs compat/tool-output.json: code=%d error=%v", code, err)
+	}
+	for _, relative := range []string{"install-layout.json", "tool-output.json"} {
+		layout, err := os.ReadFile(filepath.Join("..", "..", "..", "..", "compat", filepath.FromSlash(relative)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = os.WriteFile(filepath.Join(root, "compat", filepath.FromSlash(relative)), layout, 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, args := range [][]string{{"locate", "--json"}, {"limit", "metadata", "--json"}, {"tool-output", "versions", "--binary", toolBinary, "--json"}} {
 		if _, code, err := run(append([]string{"--root", root}, args...)); err != nil || code != 0 {
 			t.Fatalf("%v without unrelated compat files: code=%d error=%v", args, code, err)
 		}
@@ -115,6 +128,7 @@ func TestCommandsReadOnlyTheirOwnCompatFiles(t *testing.T) {
 	if _, code, err := run([]string{"--root", root, "limit", "status"}); code == 0 || err == nil {
 		t.Fatalf("limit needs compat/versions.json: code=%d error=%v", code, err)
 	}
+
 }
 
 func TestCheckLocalReadsOnlyItsDeclaredCompatFiles(t *testing.T) {

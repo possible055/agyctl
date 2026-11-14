@@ -1,0 +1,247 @@
+{
+  "schema": 1,
+  "feature": "tool-output",
+  "targets": [
+    {
+      "id": "win-amd64-antigravity-2.31.2",
+      "product": "Antigravity App",
+      "channel": "antigravity",
+      "platform": "win32-x64",
+      "arch": "x86-64",
+      "binary_name": "language_server.exe",
+      "binary_size": 197992960,
+      "member": "resources/bin/language_server.exe",
+      "qualification": "candidate",
+      "verified_at": "2026-11-14",
+      "capacity_targets": {
+        "viewFile.maxLinesPerView": {
+          "source_value": 800,
+          "target": 2000,
+          "layer": "base default constant"
+        },
+        "viewFile.maxBytesPerView": {
+          "source_value": 46080,
+          "target": 131072,
+          "layer": "base default constant"
+        },
+        "grep.maxGrepResults": {
+          "source_value": 50,
+          "target": 100,
+          "layer": "base default constant"
+        },
+        "postMergeStepBudgetFloor": {
+          "source_value": 32768,
+          "target": 98304,
+          "layer": "post settings merge"
+        }
+      },
+      "out_of_scope": [
+        "toolOutput.perTool[run_command].maxOutputBytes=65536",
+        "toolOutput.perTool[<mcp tool>].maxOutputBytes=131072",
+        "Grep paging, two-tier capacity APIs, edit/write tools, useCoreDirect switching"
+      ],
+      "evidence": {
+        "external_report_sha256": "f91d18cd873222d78541cf65afddd032101605f9b7c7c44d2d496a9d4dfba812",
+        "patch_manifest_sha256": "cb94cecb073a89b39ee0f86a2a21f40192188471131cdb1b1d885f7a3cc5f725",
+        "original_binary_sha256": "e40f0447109c43ece15e7025ca0864a138e0e16cb8864d4ccf64a00512a99e1a",
+        "patched_binary_sha256": "1c69b4fc10b15b016125d38a32a5b4fd13018dad22564207b576bbb3e759e164",
+        "derived_output_sha256": "47a439efe717e797533f1cdc0c303d40f264c5f1e0a1135f766b64f1208fa61e",
+        "va_to_file_offset": "file offset = va - 0x140000a00 for .text (image base 0x140000000, .text rva 0x1000, raw 0x600)",
+        "go_metadata": "capacity segments change only immediate operands of existing instructions; instruction boundaries, PC/stack/GC metadata are unchanged. The 2.31.2 grep transform segments were verified externally (manifest goMetadataAtMovedSplitCall: pcsp/pcdata unchanged)."
+      },
+      "notes": "Candidate qualification: the registered capacity values are start-of-qualification targets, not proven upstream maxima. perTool run_command/MCP output limits require live qualification evidence before they can be added as segments. The grep transform segments carry the externally verified 2.31.2 native grep fixes (Windows drive-colon parsing, long-line scanning budget, error propagation, no GNU grep fallback) and are preserved unchanged on the already-patched input.",
+      "inputs": [
+        {
+          "input": "original",
+          "binary_sha256": "e40f0447109c43ece15e7025ca0864a138e0e16cb8864d4ccf64a00512a99e1a",
+          "output_sha256": "47a439efe717e797533f1cdc0c303d40f264c5f1e0a1135f766b64f1208fa61e",
+          "segments": [
+            {
+              "name": "viewfile-max-lines-per-view-2000",
+              "va": "0x141a4b744",
+              "offset": 27569476,
+              "expected_hex": "c70020030000",
+              "new_hex": "c700d0070000",
+              "role": "capacity"
+            },
+            {
+              "name": "viewfile-max-bytes-per-view-131072",
+              "va": "0x141a4b75e",
+              "offset": 27569502,
+              "expected_hex": "c70000b40000",
+              "new_hex": "c70000000200",
+              "role": "capacity"
+            },
+            {
+              "name": "grep-max-grep-results-100",
+              "va": "0x141a4c708",
+              "offset": 27573512,
+              "expected_hex": "c7400832000000",
+              "new_hex": "c7400864000000",
+              "role": "capacity"
+            },
+            {
+              "name": "grep-01-drive-aware-split",
+              "va": "0x14272c770",
+              "offset": 41074032,
+              "expected_hex": "90488b8424f0000000488b9c24f8000000488d0d20c2a801bf0100000031f641b803000000e8e625a3fd660f1f440000",
+              "new_hex": "488b4548488b5d50807d7000750e8078013a75084883c0024883eb02488d0d15c2a80189d731f6448d4702e8e025a3fd",
+              "role": "transform"
+            },
+            {
+              "name": "grep-02-preserve-direct-file-result-path",
+              "va": "0x14272c7c9",
+              "offset": 41074121,
+              "expected_hex": "48894424300fb694241801000084d27512488b842408010000488b9c2410010000eb4d488d442468440f1138440f117810488b9424100100004889542470488b9424080100004889542468488b542448488b32488b520848899424800000004889742478bb0200000089d9",
+              "new_hex": "48894588807d70007521488b4da0488b5548807a013a7509488329024883410802488b4560488b5d68eb45488d45c0440f1138440f117810488b5568488955c8488b5560488955c0488b55a0488b32488b5208488955d8488975d0bb0200000089d9909090909090909090",
+              "role": "transform"
+            },
+            {
+              "name": "grep-03-scanner-budget-captured-length",
+              "va": "0x14272e447",
+              "offset": 41081415,
+              "expected_hex": "48c78424380100000000010031c031d231db31f6eb5a",
+              "new_hex": "488b500848ffc24889559031c031d231db31f6eb5b90",
+              "role": "transform"
+            },
+            {
+              "name": "grep-04-parser-error-propagation",
+              "va": "0x14272e625",
+              "offset": 41081893,
+              "expected_hex": "48899c249800000048898c24e8000000b810000000488d1d8f779c06b901000000",
+              "new_hex": "48898c24f80000004889da488b8424f0000000488b9c24a0000000e918feffff90",
+              "role": "transform"
+            },
+            {
+              "name": "grep-05-scanner-error-propagation",
+              "va": "0x14272e72d",
+              "offset": 41082157,
+              "expected_hex": "4889b424d00000004889542478b810000000488d1d8a769c06b901000000",
+              "new_hex": "4889b424f8000000488b8424f0000000488b9c24a0000000e913fdffff90",
+              "role": "transform"
+            },
+            {
+              "name": "grep-06-rg-exit-status-2",
+              "va": "0x14272e250",
+              "offset": 41080912,
+              "expected_hex": "0f85cb000000",
+              "new_hex": "e9cc00000090",
+              "role": "transform"
+            },
+            {
+              "name": "grep-07-no-gnu-grep-fallback",
+              "va": "0x14272f571",
+              "offset": 41085809,
+              "expected_hex": "e84ac2ffff",
+              "new_hex": "31c0909090",
+              "role": "transform"
+            },
+            {
+              "name": "post-merge-step-budget-floor-98304",
+              "va": "0x1428b3112",
+              "offset": 42673938,
+              "expected_hex": "90488d0566580509bb02000000b901000000e857ffc9fd888424a7000000b810000000488d1d942c8406b901000000e81a2077fd488d152be7f305488910",
+              "new_hex": "488b9424b00000004885d27420488b42204885c07417488b40504885c0740e8138008001007d06c70000800100e990000000909090909090909090909090",
+              "role": "transform"
+            }
+          ]
+        },
+        {
+          "input": "grep-patched",
+          "binary_sha256": "1c69b4fc10b15b016125d38a32a5b4fd13018dad22564207b576bbb3e759e164",
+          "output_sha256": "47a439efe717e797533f1cdc0c303d40f264c5f1e0a1135f766b64f1208fa61e",
+          "segments": [
+            {
+              "name": "viewfile-max-lines-per-view-2000",
+              "va": "0x141a4b744",
+              "offset": 27569476,
+              "expected_hex": "c70020030000",
+              "new_hex": "c700d0070000",
+              "role": "capacity"
+            },
+            {
+              "name": "viewfile-max-bytes-per-view-131072",
+              "va": "0x141a4b75e",
+              "offset": 27569502,
+              "expected_hex": "c70000b40000",
+              "new_hex": "c70000000200",
+              "role": "capacity"
+            },
+            {
+              "name": "grep-max-grep-results-100",
+              "va": "0x141a4c708",
+              "offset": 27573512,
+              "expected_hex": "c7400832000000",
+              "new_hex": "c7400864000000",
+              "role": "capacity"
+            },
+            {
+              "name": "grep-01-drive-aware-split",
+              "va": "0x14272c770",
+              "offset": 41074032,
+              "expected_hex": "488b4548488b5d50807d7000750e8078013a75084883c0024883eb02488d0d15c2a80189d731f6448d4702e8e025a3fd",
+              "new_hex": "488b4548488b5d50807d7000750e8078013a75084883c0024883eb02488d0d15c2a80189d731f6448d4702e8e025a3fd",
+              "role": "preserve"
+            },
+            {
+              "name": "grep-02-preserve-direct-file-result-path",
+              "va": "0x14272c7c9",
+              "offset": 41074121,
+              "expected_hex": "48894588807d70007521488b4da0488b5548807a013a7509488329024883410802488b4560488b5d68eb45488d45c0440f1138440f117810488b5568488955c8488b5560488955c0488b55a0488b32488b5208488955d8488975d0bb0200000089d9909090909090909090",
+              "new_hex": "48894588807d70007521488b4da0488b5548807a013a7509488329024883410802488b4560488b5d68eb45488d45c0440f1138440f117810488b5568488955c8488b5560488955c0488b55a0488b32488b5208488955d8488975d0bb0200000089d9909090909090909090",
+              "role": "preserve"
+            },
+            {
+              "name": "grep-03-scanner-budget-captured-length",
+              "va": "0x14272e447",
+              "offset": 41081415,
+              "expected_hex": "488b500848ffc24889559031c031d231db31f6eb5b90",
+              "new_hex": "488b500848ffc24889559031c031d231db31f6eb5b90",
+              "role": "preserve"
+            },
+            {
+              "name": "grep-04-parser-error-propagation",
+              "va": "0x14272e625",
+              "offset": 41081893,
+              "expected_hex": "48898c24f80000004889da488b8424f0000000488b9c24a0000000e918feffff90",
+              "new_hex": "48898c24f80000004889da488b8424f0000000488b9c24a0000000e918feffff90",
+              "role": "preserve"
+            },
+            {
+              "name": "grep-05-scanner-error-propagation",
+              "va": "0x14272e72d",
+              "offset": 41082157,
+              "expected_hex": "4889b424f8000000488b8424f0000000488b9c24a0000000e913fdffff90",
+              "new_hex": "4889b424f8000000488b8424f0000000488b9c24a0000000e913fdffff90",
+              "role": "preserve"
+            },
+            {
+              "name": "grep-06-rg-exit-status-2",
+              "va": "0x14272e250",
+              "offset": 41080912,
+              "expected_hex": "e9cc00000090",
+              "new_hex": "e9cc00000090",
+              "role": "preserve"
+            },
+            {
+              "name": "grep-07-no-gnu-grep-fallback",
+              "va": "0x14272f571",
+              "offset": 41085809,
+              "expected_hex": "31c0909090",
+              "new_hex": "31c0909090",
+              "role": "preserve"
+            },
+            {
+              "name": "post-merge-step-budget-floor-98304",
+              "va": "0x1428b3112",
+              "offset": 42673938,
+              "expected_hex": "488b9424b00000004885d27420488b42204885c07417488b40504885c0740e8138008000007d06c70000800000e990000000909090909090909090909090",
+              "new_hex": "488b9424b00000004885d27420488b42204885c07417488b40504885c0740e8138008001007d06c70000800100e990000000909090909090909090909090",
+              "role": "transform"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -359,6 +359,7 @@ test('custom ASAR preparation, reviewed apply, status and removal share the vali
     assert.equal(adapter.hostPatchStatus({ asarPath: target.asarPath }).features.localization, true);
     const status = await managementStatus({ asarPath: target.asarPath });
     assert.equal(status.errors.some((error) => error.component === 'discovery'), false);
+    assert.ok('toolOutput' in status);
     assert.equal(status.clientRunning, false);
     assert.equal(status.executablePath, target.executablePath);
     assert.equal(status.localization.selected.locale, 'zh-Hant-TW');
