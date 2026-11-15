@@ -2,7 +2,7 @@ export interface CatalogModel {
   alias: string;
   name: string;
   baseName?: string;
-  effort?: 'high' | 'medium' | 'low' | null;
+  effort?: 'xhigh' | 'high' | 'medium' | 'low' | null;
   id: number | null;
   available: boolean;
 }

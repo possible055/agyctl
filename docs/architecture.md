@@ -4,7 +4,8 @@
 Antigravity 2.31.x desktop app (stable release). The tools can also discover and
 inspect the development (Insiders) channel. Exact builds are recorded per feature
 in `compat/` (see [limit patch](limit-patch.md),
-[tool-output patch](tool-output-patch.md), and
+[tool-output patch](tool-output-patch.md),
+[compaction patch](compaction-patch.md), and
 [localization](localization.md#current-status)); no feature is admitted by app
 version alone. Supported tool targets are Windows x86-64, Linux x86-64, and macOS
 Apple Silicon; discovery coverage does not imply that every feature works on every
@@ -15,7 +16,8 @@ The project provides:
 - read-only display of server-recorded token usage and context-limit metadata;
 - generation-speed and cost **estimates**, labeled as such;
 - an optional input-toolbar capsule, interface localization, a signature-gated
-  context-limit patch, and a whole-file tool-output capacity patch;
+  context-limit patch, a whole-file tool-output capacity patch, and a whole-file
+  summary-compaction patch;
 - a checker that inspects new upstream packages without installing or executing
   them.
 
@@ -201,6 +203,14 @@ its admission, planning, transaction, and restore in
 limit feature, but does not import the limit registry. See
 [tool-output patch](tool-output-patch.md).
 
+The compaction patcher follows the same whole-file admission pattern for its own
+registry, [compaction.json](../compat/compaction.json), and owns its transactions
+in [compaction](../src/agyctl/internal/compaction/). Its registered inputs are the
+tool-output patch output and the grep-patched baseline of one build; it changes
+only the summary-prompt strings and the request-retention values, and it reports
+other features' patches as conflicts instead of patching over them. See
+[compaction patch](compaction-patch.md).
+
 ASAR composition and binary patches retain original backups and hash-bound
 recovery records. Staging, per-file replacement, and prepare records are not one
 atomic transaction across components, and they do not guard against arbitrary
@@ -222,6 +232,7 @@ Each feature gates its own writes (see
 
 - limit patch: exact byte-signature match;
 - tool-output patch: registered whole-file hash;
+- compaction patch: registered whole-file hash;
 - capsule: executable and ASAR qualification plus served-bundle anchors;
 - localization: profile or structural evidence plus bound plan inputs.
 

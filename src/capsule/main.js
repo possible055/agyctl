@@ -5,11 +5,7 @@
 // timers; the DOM bootstrap statements live in mountCapsule(), which the
 // entry defers until the Host document is ready.
 
-import {
-  limitStatusEntries,
-  limitStatusLines,
-  normalizeLimitStatus,
-} from '../plugin/lib/limit-status-core.mjs';
+import { limitStatusEntries, normalizeLimitStatus } from '../plugin/lib/limit-status-core.mjs';
 import { formatLocaleNumber } from '../plugin/lib/locale.mjs';
 import {
   applyExecutorCapacity,
@@ -73,10 +69,6 @@ let diskLimitSnapshot = null;
 let diskLimitAttemptAt = null;
 let diskLimitInFlight = null;
 let diskLimitController = null;
-
-export function diskLimitLines() {
-  return limitStatusLines(diskLimitSnapshot, t());
-}
 
 async function syncDiskLimits(endpoint) {
   if (diskLimitInFlight) return diskLimitInFlight;

@@ -947,6 +947,7 @@ test('model and identity reads keep an empty tool-state directory untouched', as
     response.end(
       JSON.stringify({
         response: {
+          agentModelSorts: [{ groups: [{ modelIds: ['flash'] }] }],
           models: {
             flash: { displayName: 'Fixture Flash', model: 'MODEL_PLACEHOLDER_M318' },
           },

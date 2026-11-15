@@ -292,6 +292,41 @@ function verifyPristineOriginal(io: Omit<ComposerIo, 'transaction'>, backupPath:
 
 /** Resolves the complete current archive state from receipts, markers and pairing rules. */
 export function getHostStatus(io: Omit<ComposerIo, 'transaction'>): HostStatus {
+  // Status reads are pure functions of these files' bytes. Keying on stat
+  // identity makes an unchanged installation a cache hit while any write or
+  // update (which replaces or touches the files) produces a fresh read.
+  const unpackedRoot = `${io.asarPath}.unpacked`;
+  const key = [
+    `${io.asarPath}#${statIdentity(io.asarPath)}`,
+    io.executablePath ? `${io.executablePath}#${statIdentity(io.executablePath)}` : 'no-executable',
+    `${io.backupDir}#${statIdentity(io.backupDir)}`,
+    fs.existsSync(unpackedRoot) ? `${unpackedRoot}#${statIdentity(unpackedRoot)}` : 'no-unpacked',
+  ].join('\u0000');
+  const cached = hostStatusCache.get(key);
+  if (cached) return cached;
+  const status = computeHostStatus(io);
+  while (hostStatusCache.size >= HOST_STATUS_CACHE_LIMIT) {
+    const oldest = hostStatusCache.keys().next();
+    if (oldest.done) break;
+    hostStatusCache.delete(oldest.value);
+  }
+  hostStatusCache.set(key, status);
+  return status;
+}
+
+const HOST_STATUS_CACHE_LIMIT = 8;
+const hostStatusCache = new Map<string, HostStatus>();
+
+function statIdentity(filePath: string): string | null {
+  try {
+    const stat = fs.statSync(filePath);
+    return `${stat.size}|${stat.mtimeMs}|${stat.ctimeMs}|${stat.birthtimeMs}|${stat.ino}`;
+  } catch {
+    return null;
+  }
+}
+
+function computeHostStatus(io: Omit<ComposerIo, 'transaction'>): HostStatus {
   const { asarPath, backupDir, engine } = io;
   engine.validateArchive(asarPath);
   const installation = computeInstallationIdentity(asarPath);

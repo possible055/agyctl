@@ -1,8 +1,8 @@
-const EFFORT_NAME = /\s*\((high|medium|low)\)\s*$/i;
-const EFFORT_ALIAS = /-(high|medium|low)$/i;
+const EFFORT_NAME = /\s*\((extra[ -]high|xhigh|high|medium|low)\)\s*$/i;
+const EFFORT_ALIAS = /-(extra-high|xhigh|high|medium|low)$/i;
 
 function effortValue(value) {
-  return typeof value === 'string' ? value.toLowerCase() : null;
+  return typeof value === 'string' ? value.toLowerCase().replace(/^extra[ -]high$/, 'xhigh') : null;
 }
 
 /**

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFile, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import os from 'node:os';
@@ -25,6 +26,7 @@ const selection = () => ({
       { id: 101, limit: 400000 },
     ],
   },
+  compaction: false,
 });
 
 test('orphan cleanup verifies the selected installation, role, creation times, and launcher', {
@@ -83,21 +85,42 @@ test('orphan cleanup verifies the selected installation, role, creation times, a
   assert.throws(() => planSidecarCleanup(target, [record, record]), { code: 'PROCESS_UNKNOWN' });
 });
 
-test('model catalogs join exact installed enum names without guessing IDs or requiring access', () => {
+test('model catalogs follow the agent selector and join exact enum names without requiring access', () => {
   const modelEnum = readModelEnum(
     'D.Model={UNSPECIFIED:0,PLACEHOLDER_M0:1E3,PLACEHOLDER_M318:1318,PLACEHOLDER_M400:1400};',
   );
   const catalog = normalizeModelCatalog(
     {
       response: {
+        agentModelSorts: [
+          {
+            groups: [
+              {
+                modelIds: [
+                  'flash',
+                  'opus',
+                  'flash-extra-high',
+                  'unknown',
+                  'internal',
+                  'missing',
+                  'flash',
+                ],
+              },
+            ],
+          },
+        ],
         models: {
+          obsolete: { displayName: 'Gemini 3.8 Flash (High)', model: 'MODEL_PLACEHOLDER_M0' },
           flash: { displayName: 'Gemini 3.8 Flash (High)', model: 'MODEL_PLACEHOLDER_M318' },
           opus: {
             displayName: 'Claude Opus 5.5 (Low)',
             model: 'MODEL_PLACEHOLDER_M400',
             disabled: true,
           },
-          duplicateName: { displayName: 'Gemini 3.8 Flash (High)', model: 'MODEL_PLACEHOLDER_M0' },
+          'flash-extra-high': {
+            displayName: 'Gemini 3.8 Flash (Extra High)',
+            model: 'MODEL_PLACEHOLDER_M0',
+          },
           unknown: { displayName: 'New model', model: 'MODEL_PLACEHOLDER_M999' },
           internal: { model: 'MODEL_PLACEHOLDER_M0' },
         },
@@ -126,10 +149,10 @@ test('model catalogs join exact installed enum names without guessing IDs or req
         available: false,
       },
       {
-        alias: 'duplicateName',
-        name: 'Gemini 3.8 Flash (High)',
+        alias: 'flash-extra-high',
+        name: 'Gemini 3.8 Flash (Extra High)',
         baseName: 'Gemini 3.8 Flash',
-        effort: 'high',
+        effort: 'xhigh',
         id: 1000,
         available: true,
       },
@@ -152,6 +175,12 @@ test('model catalogs join exact installed enum names without guessing IDs or req
     /cannot be identified/,
   );
   assert.throws(() => normalizeModelCatalog({}, modelEnum), /Invalid available-model response/);
+  for (const agentModelSorts of [undefined, [], [{ groups: [{ modelIds: 'flash' }] }]]) {
+    assert.throws(
+      () => normalizeModelCatalog({ response: { models: {}, agentModelSorts } }, modelEnum),
+      /Invalid available-model sort/,
+    );
+  }
 });
 
 test('feature selections reject command/path injection and ambiguous model mappings', () => {
@@ -174,6 +203,8 @@ test('feature selections reject command/path injection and ambiguous model mappi
     { ...desired, capsule: 'true' },
     { ...desired, localization: { enabled: true, locale: '../outside' } },
     { ...desired, limit: { enabled: true, modelLimits: [] } },
+    { ...desired, compaction: 'true' },
+    { ...desired, compaction: undefined },
     {
       ...desired,
       limit: {
@@ -198,6 +229,16 @@ test('feature selections reject command/path injection and ambiguous model mappi
     validateFeatureApply({ ...desired, limit: { enabled: false, modelLimits: [] } }).limit,
     { enabled: false, modelLimits: [] },
   );
+  assert.equal(validateFeatureApply(desired).compaction, false);
+  assert.equal(validateFeatureApply({ ...desired, compaction: true }).compaction, true);
+  const existing = [{ id: 1400, limit: 900000 }];
+  const retained = { ...desired, limit: { enabled: true, modelLimits: existing } };
+  assert.deepEqual(validateFeatureApply(retained, existing).limit.modelLimits, existing);
+  for (const modelLimits of [[{ id: 1400, limit: 900001 }], [{ id: 1401, limit: 900000 }]])
+    assert.throws(
+      () => validateFeatureApply({ ...desired, limit: { enabled: true, modelLimits } }, existing),
+      { code: 'INVALID_SELECTION' },
+    );
 });
 
 test('production patch actions refuse a host without a UI token', async () => {
@@ -424,6 +465,70 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
   writeProbe(
     process.platform === 'win32' ? '"unrelated.exe","123","Console","1","1 K"' : '123 unrelated',
   );
+  await t.test(
+    'unsupported compaction keeps its refusal kind without modifying the installation',
+    async () => {
+      const preview = spawnSync(
+        path.join(root, 'dist/bin', native),
+        ['--root', root, 'compaction', 'patch', '--binary', binary, '--json'],
+        { env, windowsHide: true, encoding: 'utf8', timeout: 20000 },
+      );
+      assert.equal(preview.status, 1, preview.stderr || preview.stdout);
+      assert.equal(JSON.parse(preview.stdout).refusal?.kind, 'unknown-input');
+      const draft = await run('queue', { ...desired, capsule: false, compaction: true });
+      assert.equal(draft.error, undefined, JSON.stringify(draft));
+      const preflight = await run('preflight', { id: draft.draft.id });
+      assert.equal(preflight.code, 'COMPACTION_UNAVAILABLE', JSON.stringify(preflight));
+      assert.deepEqual(fs.readFileSync(binary), original);
+      assert.deepEqual(fs.readFileSync(asarPath), archive);
+      assert.equal(fs.existsSync(path.join(state, 'backups')), false);
+    },
+  );
+  await t.test('oversize native status rejects without crashing its caller', () => {
+    const resolved = fs.realpathSync(binary);
+    const key = process.platform === 'win32' ? resolved.toLowerCase() : resolved;
+    const identity = createHash('sha256').update(key).digest('hex').slice(0, 16);
+    const backups = path.join(state, 'backups');
+    const preparePath = path.join(backups, `compaction-prepare-${identity}.json`);
+    fs.mkdirSync(backups, { recursive: true });
+    fs.writeFileSync(
+      preparePath,
+      JSON.stringify({
+        schema: 1,
+        status: 'prepared',
+        target: key,
+        binary_sha256_before: 'a'.repeat(64),
+        binary_sha256_after: 'b'.repeat(64),
+        backups: [{ kind: 'repo', path: 'x'.repeat(9 * 1024 * 1024), sha256: 'a'.repeat(64) }],
+      }),
+    );
+    try {
+      const caller = spawnSync(
+        process.execPath,
+        [
+          '--input-type=module',
+          '-e',
+          `
+        import { runAgyctlAsync } from ${JSON.stringify(pathToFileURL(path.join(root, 'scripts/lib/agyctl.mjs')).href)};
+        try {
+          await runAgyctlAsync(['compaction', 'status', '--binary', ${JSON.stringify(binary)}]);
+          console.log(JSON.stringify({ resolved: true }));
+        } catch (error) {
+          console.log(JSON.stringify({ code: error.code, message: error.message }));
+        }
+      `,
+        ],
+        { env, encoding: 'utf8', windowsHide: true, timeout: 20000 },
+      );
+      assert.equal(caller.status, 0, caller.stderr || caller.stdout);
+      const error = JSON.parse(caller.stdout);
+      assert.equal(error.code, 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER');
+      assert.match(error.message, /stdout.*limit/);
+      assert.deepEqual(fs.readFileSync(binary), original);
+    } finally {
+      fs.rmSync(preparePath);
+    }
+  });
   const appliedDraft = await run('queue', { ...desired, capsule: false, limit: limits });
   const applied = await run('apply-draft', { id: appliedDraft.draft.id }, electronRuntime);
   assert.equal(applied.error, undefined, JSON.stringify(applied));
@@ -464,6 +569,56 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
     modelLimits: [],
     savedModelLimits: modifiedLimits.modelLimits,
   });
+  const legacyPatch = spawnSync(
+    path.join(root, 'dist/bin', native),
+    [
+      '--root',
+      root,
+      'limit',
+      'patch',
+      '--json',
+      '--binary',
+      binary,
+      '--model-limits',
+      '1400=900000',
+      '--apply',
+    ],
+    { env, windowsHide: true, encoding: 'utf8', timeout: 20000 },
+  );
+  assert.equal(legacyPatch.status, 0, legacyPatch.stderr || legacyPatch.stdout);
+  const legacy = await run('status');
+  const patchedBinary = fs.readFileSync(binary);
+  const preservedSelection = {
+    ...desired,
+    revision: legacy.revision,
+    capsule: false,
+    limit: { enabled: true, modelLimits: [{ id: 1400, limit: 900000 }] },
+  };
+  const preservedDraft = await run('queue', preservedSelection);
+  assert.equal(preservedDraft.error, undefined, JSON.stringify(preservedDraft));
+  assert.equal((await run('status')).draft.id, preservedDraft.draft.id);
+  const forged = await run('queue', {
+    ...preservedSelection,
+    limit: { enabled: true, modelLimits: [{ id: 1400, limit: 900001 }] },
+  });
+  assert.equal(forged.code, 'INVALID_SELECTION');
+  const draftFile = path.join(state, 'management/drafts', `${preservedDraft.draft.id}.json`);
+  const draftBytes = fs.readFileSync(draftFile);
+  const tampered = JSON.parse(draftBytes);
+  tampered.desired.limit.modelLimits[0].limit = 900001;
+  fs.writeFileSync(draftFile, JSON.stringify(tampered));
+  const rejected = await run('preflight', { id: preservedDraft.draft.id });
+  assert.equal(rejected.code, 'INVALID_SELECTION');
+  fs.writeFileSync(draftFile, draftBytes);
+  const preserved = await run('apply-draft', { id: preservedDraft.draft.id });
+  assert.equal(preserved.operation.state, 'succeeded', JSON.stringify(preserved));
+  assert.deepEqual(fs.readFileSync(binary), patchedBinary);
+  const cleanupDraft = await run('queue', {
+    ...preservedSelection,
+    limit: { enabled: false, modelLimits: [] },
+  });
+  const cleanup = await run('apply-draft', { id: cleanupDraft.draft.id });
+  assert.equal(cleanup.operation.state, 'succeeded', JSON.stringify(cleanup));
   fs.appendFileSync(executable, 'changed');
   const drifted = await run('queue', desired);
   assert.equal(drifted.code, 'REVISION_CHANGED');

@@ -149,7 +149,11 @@
     .check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
     .check input { margin-top: 3px; accent-color: var(--foreground); }
     .feature-switch { display: flex; align-items: center; gap: 10px; }
-    .feature-switch input, .model-limit-row input[type="checkbox"] { accent-color: var(--foreground); width: 17px; height: 17px; }
+    .feature-switch input, .model-limits-section > input, .model-limit-row input[type="checkbox"] { accent-color: var(--foreground); width: 17px; height: 17px; }
+    .model-limits-section { align-items: flex-start; gap: 10px; }
+    .model-limits-section > input { margin-top: 2px; flex-shrink: 0; }
+    .model-limits-section > details { flex: 1; min-width: 0; }
+    .model-limits-section > details > summary { color: var(--foreground); font-size: 13px; }
     .model-limit-row { display: grid; grid-template-columns: 20px minmax(0, 1fr) minmax(100px, 160px); gap: 10px; align-items: center; }
     .model-limit-row + .model-limit-row { margin-top: 8px; }
     .model-limit-name { overflow-wrap: anywhere; }
@@ -326,14 +330,19 @@
             <label class="feature-switch"><input id="feature-localization" type="checkbox" disabled><span data-i18n="featureLocalization">介面語言</span></label>
             <select id="feature-locale" disabled aria-label="介面語言"><option value="en">English</option><option value="zh-Hant-TW">繁體中文</option><option value="zh-Hans-CN">简体中文</option><option value="ja-JP">日本語</option></select>
           </div>
-          <div class="row stacked">
-            <label class="feature-switch"><input id="feature-limit" type="checkbox" disabled><span data-i18n="featureContext">模型上下文上限</span></label>
-            <div id="model-limits"></div>
-            <p class="muted small" id="model-catalog-status" role="status"></p>
+          <div class="row model-limits-section">
+            <input id="feature-limit" type="checkbox" disabled aria-labelledby="model-limits-heading">
+            <details id="model-limits-details">
+              <summary id="model-limits-heading" data-i18n="featureContext">模型上下文上限</summary>
+              <div id="model-limits"></div>
+              <p class="muted small" id="model-catalog-status" role="status"></p>
+            </details>
+          </div>
+          <div class="row">
+            <label class="feature-switch"><input id="feature-compaction" type="checkbox" disabled><span data-i18n="featureCompaction">壓縮摘要改善</span></label>
           </div>
           <div class="row stacked">
             <div class="actions"><button type="submit" class="button primary" id="btn-apply-features" disabled data-i18n="featureApply">儲存設定</button><button type="button" class="button compact" id="btn-reload-features" data-i18n="featureReload">重新讀取</button><button type="button" class="button compact" id="btn-cancel-features" hidden data-i18n="cancel">取消</button><span class="muted small" id="feature-status" role="status"></span></div>
-            <p class="muted small" id="feature-draft-command"></p>
             <p class="error" id="feature-error" role="alert"></p>
           </div>
         </form>
@@ -385,8 +394,10 @@
       let featureSnapshot = null;
       let featureDraftRevision = null;
       let featureRows = [];
+      let featureHiddenLimits = [];
       let featureDirty = false;
       let featureInFlight = false;
+      let featuresStale = true;
       let featureSubmitting = false;
       let pollIntervalMs = 10000;
 
@@ -844,7 +855,7 @@
 
       function updateFeatureControls() {
         const disabled = !featureSnapshot || featureBusy() || featureSubmitting;
-        for (const id of ['feature-capsule', 'feature-localization', 'feature-limit']) $(id).disabled = disabled;
+        for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-compaction']) $(id).disabled = disabled;
         $('feature-locale').disabled = disabled || !$('feature-localization').checked;
         $('feature-locale').setAttribute('aria-label', t().featureLocalization);
         $('btn-apply-features').disabled = disabled || !featureDirty;
@@ -858,11 +869,10 @@
           : draft
             ? t().featureDraftSaved
             : '';
-        $('feature-draft-command').textContent = draft?.commands?.apply ?? '';
         for (const row of featureRows) {
           if (!row.controls) continue;
-          row.controls.enabled.disabled = disabled || !$('feature-limit').checked || row.id === null;
-          row.controls.limit.disabled = disabled || !$('feature-limit').checked || !row.enabled || row.id === null;
+          row.controls.enabled.disabled = disabled || !$('feature-limit').checked || !row.ids.length;
+          row.controls.limit.disabled = disabled || !$('feature-limit').checked || !row.enabled || !row.ids.length;
         }
       }
 
@@ -880,17 +890,15 @@
           const enabled = element('input');
           enabled.type = 'checkbox';
           enabled.checked = row.enabled;
+          enabled.indeterminate = !row.modified && row.originalLimits.length > 0 && row.originalLimits.length < row.ids.length;
           enabled.setAttribute('aria-label', t().featureModelEnabled);
-          enabled.addEventListener('change', () => { row.enabled = enabled.checked; markFeaturesDirty(); });
+          enabled.addEventListener('change', () => { row.enabled = enabled.checked; row.modified = true; enabled.indeterminate = false; markFeaturesDirty(); });
           node.append(enabled);
           const name = element('div', 'model-limit-name');
-          const displayName = row.baseName || row.name || t().featureUnknownModel(row.id);
+          const displayName = row.baseName || row.name;
           name.append(element('span', 'model-limit-display', displayName));
           if (row.effort) name.append(element('span', 'model-effort', row.effort[0].toUpperCase() + row.effort.slice(1)));
-          const sameBase = (other) => other !== row && (other.baseName || other.name) === (row.baseName || row.name) && (other.effort ?? null) === (row.effort ?? null);
-          if (row.alias && featureRows.some(sameBase))
-            name.append(element('div', 'muted small', row.alias));
-          if (row.id === null) name.append(element('div', 'muted small', t().featureUnmappedModel));
+          if (!row.ids.length) name.append(element('div', 'muted small', t().featureUnmappedModel));
           else if (row.available === false) name.append(element('div', 'muted small', t().featureUnavailableModel));
           node.append(name);
           const field = element('label', 'field');
@@ -900,8 +908,9 @@
           input.max = '896000';
           input.step = '1';
           input.value = row.limit;
-          input.setAttribute('aria-label', `${row.name || t().featureUnknownModel(row.id)} · ${t().featureTokenLimit}`);
-          input.addEventListener('input', () => { row.limit = input.value; markFeaturesDirty(); });
+          input.placeholder = t().featureMixedLimits;
+          input.setAttribute('aria-label', `${displayName} · ${t().featureTokenLimit}`);
+          input.addEventListener('input', () => { row.limit = input.value; row.modified = true; enabled.indeterminate = false; markFeaturesDirty(); });
           field.append(element('span', '', t().featureTokenLimit), input);
           node.append(field);
           container.appendChild(node);
@@ -915,19 +924,37 @@
         $('feature-localization').checked = snapshot.features.localization.enabled;
         $('feature-locale').value = snapshot.features.localization.locale || currentLang;
         $('feature-limit').checked = snapshot.features.limit.enabled;
+        $('feature-compaction').checked = snapshot.features.compaction.enabled;
         const limits = snapshot.features.limit.modelLimits.length
           ? snapshot.features.limit.modelLimits : snapshot.features.limit.savedModelLimits;
         const values = new Map(limits.map(({ id, limit }) => [id, limit]));
         const known = new Set();
+        const groups = new Map();
         featureRows = [];
         for (const model of snapshot.catalog?.models || []) {
           if (model.id !== null && known.has(model.id)) continue;
-          known.add(model.id);
-          featureRows.push({ ...model, enabled: model.id !== null && values.has(model.id),
-            id: model.id === null ? null : String(model.id), limit: String(values.get(model.id) ?? 256000) });
+          if (model.id !== null) known.add(model.id);
+          const baseName = model.baseName || model.name;
+          const group = model.id !== null && /^Gemini\b/i.test(baseName)
+            ? model.alias.replace(/-(extra-high|xhigh|high|medium|low)$/i, '') : null;
+          let row = group ? groups.get(group) : null;
+          if (!row) {
+            row = { ...model, baseName, effort: group ? null : model.effort, ids: [], originalLimits: [], modified: false };
+            featureRows.push(row);
+            if (group) groups.set(group, row);
+          }
+          row.available ||= model.available;
+          if (model.id !== null) {
+            row.ids.push(model.id);
+            if (values.has(model.id)) row.originalLimits.push({ id: model.id, limit: values.get(model.id) });
+          }
         }
-        for (const [id, limit] of values) if (!known.has(id))
-          featureRows.push({ enabled: true, id: String(id), name: null, limit: String(limit) });
+        for (const row of featureRows) {
+          const selectedValues = new Set(row.originalLimits.map(({ limit }) => limit));
+          row.enabled = row.originalLimits.length > 0;
+          row.limit = selectedValues.size > 1 ? '' : String(selectedValues.values().next().value ?? 256000);
+        }
+        featureHiddenLimits = limits.filter(({ id }) => !known.has(id));
         $('model-catalog-status').textContent = snapshot.catalog?.status === 'available'
           ? '' : t().featureModelsUnavailable;
         featureDraftRevision = snapshot.revision;
@@ -960,12 +987,16 @@
         if (!featureSnapshot || featureBusy() || featureSubmitting || !featureDirty) return;
         try {
           const enabled = $('feature-limit').checked;
-          const modelLimits = enabled ? featureRows.filter(row => row.enabled).map(row => {
-            if (!/^\d+$/.test(row.id) || !/^\d+$/.test(row.limit)) throw new Error(t().featureInvalidLimits);
+          const selections = enabled ? [...featureHiddenLimits, ...featureRows.flatMap(row => row.modified
+            ? (row.enabled ? row.ids.map(id => ({ id, limit: row.limit })) : [])
+            : row.originalLimits)] : [];
+          const modelLimits = selections.map(row => {
+            if (!/^\d+$/.test(String(row.id)) || !/^\d+$/.test(String(row.limit))) throw new Error(t().featureInvalidLimits);
             const id = Number(row.id), limit = Number(row.limit);
-            if (!Number.isInteger(id) || id < 0 || id > 2147483647 || !Number.isInteger(limit) || limit < 256000 || limit > 896000) throw new Error(t().featureInvalidLimits);
+            const preserved = featureHiddenLimits.some(existing => existing.id === id && existing.limit === limit);
+            if (!Number.isInteger(id) || id < 0 || id > 2147483647 || !Number.isInteger(limit) || limit < 1 || limit > 2147483647 || (!preserved && (limit < 256000 || limit > 896000))) throw new Error(t().featureInvalidLimits);
             return { id, limit };
-          }).sort((a, b) => a.id - b.id) : [];
+          }).sort((a, b) => a.id - b.id);
           if (enabled && (!modelLimits.length || new Set(modelLimits.map(row => row.id)).size !== modelLimits.length)) throw new Error(t().featureInvalidLimits);
           featureSubmitting = true;
           updateFeatureControls();
@@ -973,7 +1004,8 @@
             revision: featureDraftRevision,
             capsule: $('feature-capsule').checked,
             localization: { enabled: $('feature-localization').checked, locale: $('feature-locale').value },
-            limit: { enabled, modelLimits }
+            limit: { enabled, modelLimits },
+            compaction: $('feature-compaction').checked
           });
           featureSnapshot.operation = result.operation;
           featureSnapshot.draft = result.draft;
@@ -990,6 +1022,7 @@
 
       function selectView(view) {
         activeView = view;
+        if (view === 'settings') featuresStale = true;
         try { localStorage.setItem(VIEW_KEY, view); } catch (e) {}
         for (const name of VIEW_NAMES) {
           $(`view-${name}`).hidden = name !== view;
@@ -1020,7 +1053,13 @@
       function pollLoop() {
         if (activeView === 'settings') {
           void loadPricing();
-          void loadFeatures();
+          // Feature state only changes through apply operations; reload it when
+          // entering the view and while tracking an operation, not every tick.
+          if (featuresStale || featureBusy()) {
+            const fresh = featureBusy();
+            featuresStale = false;
+            void loadFeatures(fresh);
+          }
         } else {
           void fetchUsage();
         }

@@ -13,7 +13,6 @@ import {
   closePopover,
   collapseState,
   currentLang,
-  diskLimitLines,
   openPopover,
   pollMetrics,
   renderPopoverContent,
@@ -74,8 +73,6 @@ export function refreshVisibleTooltip() {
     <div class="cr-tip-row">${dict.tipUsed(formatUiTokens(metrics?.totalUsed), formatUiTokens(metrics?.capacity))}</div>
     <div class="cr-tip-row">${dict.tipCache(formatUiNumber(metrics?.convCacheRate ?? 0))}</div>
   `;
-  const diskStatus = buildEl('div', 'cr-disk-limits', diskLimitLines().join('\n'));
-  tooltipEl.appendChild(diskStatus);
   const rect = tooltipTarget.el.getBoundingClientRect();
   const width = tooltipEl.getBoundingClientRect().width;
   tooltipEl.style.left = `${Math.max(10, Math.min(window.innerWidth - width - 10, rect.left + (rect.width - width) / 2))}px`;

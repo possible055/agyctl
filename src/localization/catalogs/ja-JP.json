@@ -3,7 +3,7 @@
   "formatLocale": "ja-JP",
   "provenance": {
     "kind": "vendor",
-    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor ja candidates (antigravity2-ja dictionary); every adopted value was present in the vendor catalog. C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order). DOM acceptance additions for the 2.31.0 reviewed surfaces are authored translations."
+    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor ja candidates (antigravity2-ja dictionary); every adopted value was present in the vendor catalog. C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order). DOM acceptance additions for the 2.31.0 reviewed surfaces are authored translations. The 2026-11-15 batch (settings.plan.*, settings.browsers.*, settings.shortcuts.layoutControls, hub.menus.*, settings.general.*, sidecars.automations.*, customizations.noCustomAgentsYet) is authored; plan/quota and add-automation strings are server-rendered on client 2.31.2 and verified from the live UI."
   },
   "messages": {
     "workbench.hover.statusBar.background": {
@@ -15836,6 +15836,134 @@
     },
     "session.emptyConversations": {
       "value": "会話はまだありません",
+      "reviewed": true
+    },
+    "settings.plan.yourPlanLabel": {
+      "value": "あなたのプラン：",
+      "reviewed": true
+    },
+    "settings.plan.upgrade": {
+      "value": "アップグレード",
+      "reviewed": true
+    },
+    "settings.plan.upgradeHint": {
+      "value": "Google AI Ultra プランにアップグレードすると、より高いレート制限が得られます。",
+      "reviewed": true
+    },
+    "settings.plan.aiCreditsDescription": {
+      "value": "オンにすると、モデルクォータを使い切ったときに Antigravity が AI クレジットを使用してモデル リクエストを処理します。Antigravity は常にモデルクォータを優先し、その後に AI クレジットを使用します。",
+      "reviewed": true
+    },
+    "settings.plan.geminiModelsHeading": {
+      "value": "Gemini モデル",
+      "reviewed": true
+    },
+    "settings.plan.claudeGptModelsHeading": {
+      "value": "Claude と GPT モデル",
+      "reviewed": true
+    },
+    "settings.plan.weeklyLimitRemaining": {
+      "value": "週間上限の残り",
+      "reviewed": true
+    },
+    "settings.plan.fiveHourLimitRemaining": {
+      "value": "5 時間上限の残り",
+      "reviewed": true
+    },
+    "settings.plan.weeklyRefreshSentence": {
+      "value": "週間上限の一部を使用しました。{0} に完全にリセットされます。",
+      "reviewed": true
+    },
+    "settings.plan.fiveHourRefreshSentence": {
+      "value": "5 時間上限の一部を使用しました。{0} に完全にリセットされます。",
+      "reviewed": true
+    },
+    "settings.browsers.builtInHeading": {
+      "value": "組み込みブラウザ",
+      "reviewed": true
+    },
+    "settings.browsers.externalHeading": {
+      "value": "外部ブラウザ",
+      "reviewed": true
+    },
+    "settings.browsers.clearVisitedUrls": {
+      "value": "組み込みブラウザの閲覧履歴と自動補完の候補を消去します。",
+      "reviewed": true
+    },
+    "settings.browsers.subagentRules": {
+      "value": "ブラウザ サブエージェントが許可・拒否する URL を設定します。組み込みブラウザ内で実行されるため、別途ブラウザをインストールする必要はありません。",
+      "reviewed": true
+    },
+    "settings.shortcuts.layoutControls": {
+      "value": "レイアウト操作",
+      "reviewed": true
+    },
+    "hub.menus.pin": {
+      "value": "ピン留め",
+      "reviewed": true
+    },
+    "hub.menus.markUnread": {
+      "value": "未読としてマーク",
+      "reviewed": true
+    },
+    "hub.menus.copyProjectName": {
+      "value": "プロジェクト名をコピー",
+      "reviewed": true
+    },
+    "hub.menus.showInFileExplorer": {
+      "value": "ファイル エクスプローラーで表示",
+      "reviewed": true
+    },
+    "hub.menus.deleteProject": {
+      "value": "プロジェクトを削除",
+      "reviewed": true
+    },
+    "settings.general.voiceMode": {
+      "value": "音声モード",
+      "reviewed": true
+    },
+    "settings.general.voiceVolumeHint": {
+      "value": "Antigravity の音声の音量。",
+      "reviewed": true
+    },
+    "settings.general.toolPermissionsHint": {
+      "value": "ファイル、ターミナル、MCP ツールの権限を変更します。",
+      "reviewed": true
+    },
+    "settings.general.globalPermissionsHint": {
+      "value": "グローバルに許可・拒否するリソース権限を設定します。",
+      "reviewed": true
+    },
+    "settings.general.queueUntilTurn": {
+      "value": "現在のターンが終わった後に送信します。",
+      "reviewed": true
+    },
+    "settings.general.interruptImmediately": {
+      "value": "エージェントを中断してすぐに送信します。",
+      "reviewed": true
+    },
+    "settings.general.notSet": {
+      "value": "未設定",
+      "reviewed": true
+    },
+    "settings.general.queueSegment": {
+      "value": "キュー",
+      "reviewed": true
+    },
+    "settings.general.showAll": {
+      "value": "すべて表示",
+      "reviewed": true
+    },
+    "sidecars.automations.searchPlaceholder": {
+      "value": "自動化を検索...",
+      "reviewed": true
+    },
+    "sidecars.automations.addAutomation": {
+      "value": "自動化を追加",
+      "reviewed": true
+    },
+    "customizations.noCustomAgentsYet": {
+      "value": "カスタム エージェントはまだありません。",
       "reviewed": true
     }
   }

@@ -15,6 +15,8 @@ const TEMPLATE_IDS = new Set([
   'web.dynamic.b5f27c050cde6d32',
   'web.dynamic.cce8efc4297055a2',
   'web.dynamic.e2b77e2f4cdc6950',
+  'settings.plan.weeklyRefreshSentence',
+  'settings.plan.fiveHourRefreshSentence',
 ]);
 
 export interface DomExactEntry {

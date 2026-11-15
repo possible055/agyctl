@@ -82,7 +82,7 @@ function normalizeLimitStatus(value) {
         ([id, effort]) =>
           !/^\d+$/.test(id) ||
           Number(id) > 2147483647 ||
-          !['high', 'medium', 'low'].includes(effort),
+          !['xhigh', 'high', 'medium', 'low'].includes(effort),
       ))
   )
     throw new Error('Invalid model efforts');

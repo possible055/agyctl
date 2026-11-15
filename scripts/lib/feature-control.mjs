@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { normalizeNativeLimitStatus } from '../../src/plugin/lib/limit-status-core.mjs';
 import { prepareManagement } from '../manage.mjs';
-import { repoRoot, runAgyctl } from './agyctl.mjs';
+import { repoRoot, runAgyctl, runAgyctlAsync } from './agyctl.mjs';
 import { cleanupOrphanSidecars, inspectOrphanSidecars } from './client-processes.mjs';
 import { inspectHostTarget } from './client-target.mjs';
 import { agyctlHome, findAsarPath, sha256File, sha256FileCached } from './install-paths.mjs';
@@ -26,9 +26,9 @@ function exactObject(value, keys) {
   );
 }
 
-export function validateFeatureApply(payload) {
+function normalizeFeatureApply(payload) {
   if (
-    !exactObject(payload, ['revision', 'capsule', 'localization', 'limit']) ||
+    !exactObject(payload, ['revision', 'capsule', 'localization', 'limit', 'compaction']) ||
     typeof payload.revision !== 'string' ||
     !/^[a-f0-9]{64}$/.test(payload.revision) ||
     typeof payload.capsule !== 'boolean' ||
@@ -39,7 +39,8 @@ export function validateFeatureApply(payload) {
     typeof payload.limit.enabled !== 'boolean' ||
     !Array.isArray(payload.limit.modelLimits) ||
     payload.limit.modelLimits.length > 128 ||
-    (payload.limit.enabled && payload.limit.modelLimits.length === 0)
+    (payload.limit.enabled && payload.limit.modelLimits.length === 0) ||
+    typeof payload.compaction !== 'boolean'
   )
     throw failure('INVALID_SELECTION', 'Check the feature selections and model limits');
   const seen = new Set();
@@ -51,11 +52,11 @@ export function validateFeatureApply(payload) {
         row.id < 0 ||
         row.id > 2147483647 ||
         !Number.isInteger(row.limit) ||
-        row.limit < 256000 ||
-        row.limit > 896000 ||
+        row.limit < 1 ||
+        row.limit > 2147483647 ||
         seen.has(row.id)
       )
-        throw failure('INVALID_SELECTION', 'Use unique model IDs and limits from 256000 to 896000');
+        throw failure('INVALID_SELECTION', 'Use unique model IDs and positive int32 limits');
       seen.add(row.id);
       return { id: row.id, limit: row.limit };
     })
@@ -65,7 +66,23 @@ export function validateFeatureApply(payload) {
     capsule: payload.capsule,
     localization: { enabled: payload.localization.enabled, locale: payload.localization.locale },
     limit: { enabled: payload.limit.enabled, modelLimits },
+    compaction: payload.compaction,
   };
+}
+
+export function validateFeatureApply(payload, installedLimits = []) {
+  const desired = normalizeFeatureApply(payload);
+  for (const row of desired.limit.modelLimits) {
+    if (
+      (row.limit < 256000 || row.limit > 896000) &&
+      !installedLimits.some((installed) => installed.id === row.id && installed.limit === row.limit)
+    )
+      throw failure(
+        'INVALID_SELECTION',
+        'Use limits from 256000 to 896000 for new or changed values',
+      );
+  }
+  return desired;
 }
 
 function digest(value) {
@@ -277,11 +294,20 @@ function selectionState(target, adapter) {
 async function snapshot(asarPath) {
   const target = inspectHostTarget(asarPath ?? findAsarPath());
   const adapter = await import('./host-patch.mjs');
-  const host = adapter.hostPatchStatus({ asarPath: target.asarPath });
-  const rawLimit = runAgyctl(['limit', 'status', '--binary', target.binaryPath]);
+  // The Go status reads are the slowest stages; start them first so the
+  // archive verification below overlaps the binary scans.
+  const [rawLimit, rawCompaction, host] = await Promise.all([
+    runAgyctlAsync(['limit', 'status', '--binary', target.binaryPath]),
+    runAgyctlAsync(['compaction', 'status', '--binary', target.binaryPath]),
+    Promise.resolve().then(() => adapter.hostPatchStatus({ asarPath: target.asarPath })),
+  ]);
   const limit = normalizeNativeLimitStatus(rawLimit, new Date().toISOString());
   if (!['patched', 'original'].includes(limit.patchKind))
     throw failure('STATE_UNAVAILABLE', 'The installed model limits cannot be verified');
+  // An unrecognized compaction file state (another feature patched over it)
+  // reads as disabled; a change attempt fails in preflight with the CLI's
+  // refusal instead of blocking the whole panel here.
+  const compactionEnabled = rawCompaction.file_state === 'managed-output';
   const selection = selectionState(target, adapter);
   if (host.features.localization && !selection.locale)
     throw failure('STATE_UNAVAILABLE', 'Localization has no verified language selection');
@@ -291,16 +317,15 @@ async function snapshot(asarPath) {
     unpacked: host.unpackedHash,
     receipt: host.receipt,
     executable: sha256FileCached(target.executablePath),
-    binary: sha256FileCached(target.binaryPath),
+    // The Go status already hashed these exact binary bytes during this read;
+    // hashing them again here would add a second full-file pass without new
+    // information.
+    binary: limit.binarySha256,
     selection: selection.hash,
     savedLimits: limit.savedModelLimits,
     settingsState: limit.settingsState,
+    compactionState: rawCompaction.file_state,
   };
-  if (
-    binding.binary !== limit.binarySha256 ||
-    sha256FileCached(target.asarPath) !== host.currentHash
-  )
-    throw failure('REVISION_CHANGED', 'The installation changed; reload and try again');
   const features = {
     capsule: { enabled: host.features.capsule },
     localization: {
@@ -313,8 +338,16 @@ async function snapshot(asarPath) {
       modelLimits: limit.modelLimits,
       savedModelLimits: limit.savedModelLimits,
     },
+    compaction: { enabled: compactionEnabled, fileState: rawCompaction.file_state },
   };
-  return { target, host, rawLimit, features, revision: digest(JSON.stringify(binding)) };
+  return {
+    target,
+    host,
+    rawLimit,
+    rawCompaction,
+    features,
+    revision: digest(JSON.stringify(binding)),
+  };
 }
 
 function readDraftDocument(id) {
@@ -329,7 +362,7 @@ function readDraftDocument(id) {
     digest(draft.target.asarPath) !== draft.installationKey
   )
     throw failure('INVALID_DRAFT', 'The saved settings draft cannot be verified');
-  validateFeatureApply(draft.desired);
+  normalizeFeatureApply(draft.desired);
   return draft;
 }
 
@@ -368,6 +401,57 @@ function limitChanges(desired, current) {
   );
 }
 
+function compactionChanges(desiredEnabled, current) {
+  return desiredEnabled !== current.enabled;
+}
+
+// The compaction recipes qualify only known tool-output outputs as inputs, so
+// a limit patch on top of an applied compaction patch would leave the binary
+// in a state the compaction transactions refuse. The panel therefore keeps
+// the two binary patches exclusive; combining them requires the CLI.
+function validatePatchCombination(desired, features) {
+  if (compactionChanges(desired.compaction, features.compaction)) {
+    if (desired.limit.enabled || features.limit.enabled)
+      throw failure(
+        'INVALID_SELECTION',
+        'Turn model context limits off before changing the compaction patch',
+      );
+  }
+  if (limitChanges(desired.limit, features.limit) && features.compaction.enabled)
+    throw failure(
+      'INVALID_SELECTION',
+      'Restore the compaction patch before changing model context limits',
+    );
+}
+
+function compactionPreflight(state, desired) {
+  if (!compactionChanges(desired.compaction, state.features.compaction)) return null;
+  if (state.rawCompaction.prepare_record)
+    throw failure(
+      'COMPACTION_RECOVERY_REQUIRED',
+      'Resolve the unfinished compaction operation before trying again',
+    );
+  const binary = state.target.binaryPath;
+  if (desired.compaction) {
+    try {
+      const preview = runAgyctl(['compaction', 'patch', '--binary', binary]);
+      return preview.binary_sha256_after;
+    } catch (error) {
+      if (!error.refusal) throw error;
+      throw failure(
+        'COMPACTION_UNAVAILABLE',
+        'The installed binary cannot receive the compaction patch; reload the actual state',
+      );
+    }
+  }
+  if (!state.rawCompaction.sibling_backup?.verified && !state.rawCompaction.repo_backup?.verified)
+    throw failure(
+      'COMPACTION_BACKUP_UNAVAILABLE',
+      'The original compaction backup cannot be verified',
+    );
+  return null;
+}
+
 function localizationDesired(desired) {
   return desired.localization.enabled && desired.localization.locale !== 'en';
 }
@@ -382,11 +466,13 @@ function validateChangedLimits(desired, current) {
 }
 
 export async function queueFeatureApply(payload, { asarPath } = {}) {
-  const desired = validateFeatureApply(payload);
+  const normalized = normalizeFeatureApply(payload);
   const state = await snapshot(asarPath);
-  if (desired.revision !== state.revision)
+  if (normalized.revision !== state.revision)
     throw failure('REVISION_CHANGED', 'The installation changed; reload and try again');
+  const desired = validateFeatureApply(normalized, state.features.limit.modelLimits);
   validateChangedLimits(desired.limit, state.features.limit);
+  validatePatchCombination(desired, state.features);
   const key = digest(state.target.asarPath);
   const operation = readOperation(key);
   if (activeStates.has(operation?.state))
@@ -582,7 +668,7 @@ function beginDraftOperation(draft) {
 }
 
 async function inspectDraft(draft) {
-  const desired = validateFeatureApply(draft.desired);
+  const desired = normalizeFeatureApply(draft.desired);
   const adapter = await import('./host-patch.mjs');
   const clientState = adapter.clientProcessState(draft.target.asarPath).state;
   if (clientState === 'unknown')
@@ -592,10 +678,13 @@ async function inspectDraft(draft) {
   const state = await snapshot(draft.target.asarPath);
   if (state.revision !== desired.revision)
     throw failure('REVISION_CHANGED', 'The installation changed; reload and try again');
+  validateFeatureApply(desired, state.features.limit.modelLimits);
   if (!processState(state, adapter))
     throw failure('CLIENT_RUNNING', 'Quit Antigravity yourself before applying');
   validateChangedLimits(desired.limit, state.features.limit);
+  validatePatchCombination(desired, state.features);
   const originalLimitHash = preflightLimits(state, desired.limit);
+  compactionPreflight(state, desired);
   const wantLocalization = localizationDesired(desired);
   const hostChanges =
     desired.capsule !== state.features.capsule.enabled ||
@@ -694,6 +783,25 @@ async function executePreparedApply(operation, { cleanupSidecars = false } = {})
         ]);
       }
     }
+    // The compaction patch and the limit patch stay exclusive (see
+    // validatePatchCombination), so compaction acts on the exact binary the
+    // preflight previewed.
+    if (compactionChanges(desired.compaction, state.features.compaction)) {
+      if (sha256File(state.target.binaryPath) !== state.rawCompaction.binary_sha256)
+        throw failure(
+          'REVISION_CHANGED',
+          'The Language Server changed; reload before applying compaction',
+        );
+      assertClosed(state.target, adapter);
+      if (state.features.compaction.enabled) {
+        log('Restoring the original summary prompt');
+        runAgyctl(['compaction', 'restore', '--binary', state.target.binaryPath]);
+      }
+      if (desired.compaction) {
+        log('Applying the compaction summary patch');
+        runAgyctl(['compaction', 'patch', '--binary', state.target.binaryPath, '--apply']);
+      }
+    }
     const actual = await snapshot(state.target.asarPath);
     if (
       actual.features.capsule.enabled !== desired.capsule ||
@@ -703,7 +811,8 @@ async function executePreparedApply(operation, { cleanupSidecars = false } = {})
       (localizationDesired(desired) && actual.features.localization.format !== 'dom') ||
       actual.features.limit.enabled !== desired.limit.enabled ||
       (desired.limit.enabled &&
-        !sameLimits(actual.features.limit.modelLimits, desired.limit.modelLimits))
+        !sameLimits(actual.features.limit.modelLimits, desired.limit.modelLimits)) ||
+      actual.features.compaction.enabled !== desired.compaction
     )
       throw failure('VERIFY_FAILED', 'Some changes did not verify; reload the actual state');
     log('Verified the actual installed features');

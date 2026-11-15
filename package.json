@@ -34,6 +34,9 @@
     "tool-output:status": "node scripts/agyctl.mjs tool-output status",
     "tool-output:patch": "node scripts/agyctl.mjs tool-output patch",
     "tool-output:restore": "node scripts/agyctl.mjs tool-output restore",
+    "compaction:status": "node scripts/agyctl.mjs compaction status",
+    "compaction:patch": "node scripts/agyctl.mjs compaction patch",
+    "compaction:restore": "node scripts/agyctl.mjs compaction restore",
     "update-check:versions": "node scripts/agyctl.mjs check versions",
     "update-check:local": "node scripts/agyctl.mjs check local",
     "update-check:check": "node scripts/agyctl.mjs check check",
@@ -45,7 +48,7 @@
     "tools:lint": "cd src/agyctl && golangci-lint run",
     "typecheck": "tsc -p tsconfig.json",
     "test:prepare": "npm run host:build -s && npm run capsule:build -s && npm run localization:build -s",
-    "test:run": "node --test tests/node/monitor-core.test.mjs tests/node/transport.test.mjs tests/node/capsule-anchors.test.mjs tests/node/runtime.test.mjs tests/node/locale.test.mjs tests/node/locale-state.test.mjs tests/node/usage.test.mjs tests/node/pricing.test.mjs tests/node/limit-diagnostics.test.mjs tests/node/limit-status.test.mjs tests/node/feature-control.test.mjs tests/node/install-paths.test.mjs tests/node/install-safety.test.mjs tests/node/host-patch.test.mjs",
+    "test:run": "node --test tests/node/monitor-core.test.mjs tests/node/transport.test.mjs tests/node/capsule-anchors.test.mjs tests/node/runtime.test.mjs tests/node/locale.test.mjs tests/node/locale-state.test.mjs tests/node/usage.test.mjs tests/node/pricing.test.mjs tests/node/limit-diagnostics.test.mjs tests/node/limit-status.test.mjs tests/node/feature-control.test.mjs tests/node/compaction-recipe.test.mjs tests/node/install-paths.test.mjs tests/node/install-safety.test.mjs tests/node/host-patch.test.mjs",
     "test:localization:run": "node --test tests/node/localization.test.mjs tests/node/localization-logging.test.mjs tests/node/localization-vendor.test.mjs tests/node/runtime-startup.test.mjs tests/node/dom-index.test.mjs tests/node/hub-bootstrap.test.mjs",
     "test:vendor-sync:run": "node --test tests/node/localization-vendor-sync.test.mjs"
   },

@@ -9,6 +9,7 @@ import (
 
 	"agyctl/internal/assets"
 	"agyctl/internal/check"
+	"agyctl/internal/compaction"
 	"agyctl/internal/layout"
 	"agyctl/internal/limit"
 	"agyctl/internal/tooloutput"
@@ -43,6 +44,13 @@ func runtimeScopes(args []string) []string {
 			}
 		}
 		return []string{"tool-output"}
+	case "compaction":
+		for _, arg := range args[1:] {
+			if arg == "--help" || arg == "-h" {
+				return nil
+			}
+		}
+		return []string{"compaction"}
 	case "check":
 		switch checkerCommand(args[1:]) {
 		case "local":
@@ -103,7 +111,7 @@ func run(args []string) (any, int, error) {
 		root, args = args[1], args[2:]
 	}
 	if len(args) == 0 {
-		return nil, 1, fmt.Errorf("usage: agyctl [--root ABS_PATH] locate|limit|tool-output|check|client target [arguments] --json")
+		return nil, 1, fmt.Errorf("usage: agyctl [--root ABS_PATH] locate|limit|tool-output|compaction|check|client target [arguments] --json")
 	}
 	scopes := runtimeScopes(args)
 	snapshot, err := assets.Capture(root, scopes...)
@@ -119,6 +127,8 @@ func run(args []string) (any, int, error) {
 		return limit.Run(root, snapshot, args[1:])
 	case "tool-output":
 		return tooloutput.Run(root, snapshot, args[1:])
+	case "compaction":
+		return compaction.Run(root, snapshot, args[1:])
 	case "check":
 		return check.Run(root, snapshot, args[1:])
 	case "client":
@@ -174,7 +184,11 @@ func main() {
 		if code == 0 {
 			code = 1
 		}
-		result = map[string]any{"error": err.Error()}
+		if object, ok := result.(map[string]any); ok && object != nil {
+			object["error"] = err.Error()
+		} else {
+			result = map[string]any{"error": err.Error()}
+		}
 		fmt.Fprintln(os.Stderr, err)
 	}
 	if result == nil {

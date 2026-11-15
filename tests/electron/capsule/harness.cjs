@@ -180,6 +180,7 @@ async function assertCapsule(frame, locale) {
     aria: document.querySelector('#agyctl-titlebar-btn').getAttribute('aria-label'),
     composition: document.querySelector('[data-cr-i18n="compTitle"]').textContent,
     tooltip: document.querySelector('#agyctl-input-tooltip')?.textContent,
+    tooltipRows: document.querySelector('#agyctl-input-tooltip')?.children.length,
     tooltipVisible: document.querySelector('#agyctl-input-tooltip')?.classList.contains('visible')
   })`);
   assert.deepEqual(
@@ -197,6 +198,7 @@ async function assertCapsule(frame, locale) {
     },
   );
   assert.equal(snapshot.tooltipVisible, true);
+  assert.equal(snapshot.tooltipRows, 2, 'tooltip shows only usage and cache rate');
   assert.ok(snapshot.tooltip.includes(wanted.tip), snapshot.tooltip);
 }
 

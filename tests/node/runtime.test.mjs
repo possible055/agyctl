@@ -404,9 +404,46 @@ test('feature controls prefill actual settings, preserve edits and queue only th
     catalog: {
       status: 'available',
       models: [
-        { id: 101, alias: 'flash-high', name: 'Gemini Flash (High)', available: true },
-        { id: 102, alias: 'opus-low', name: 'Claude Opus (Low)', available: false },
-        { id: 103, alias: 'flash-low', name: 'Gemini Flash (High)', available: true },
+        {
+          id: 101,
+          alias: 'flash-high',
+          name: 'Gemini Flash (High)',
+          baseName: 'Gemini Flash',
+          effort: 'high',
+          available: true,
+        },
+        {
+          id: 102,
+          alias: 'opus-low',
+          name: 'Claude Opus (Low)',
+          baseName: 'Claude Opus',
+          effort: 'low',
+          available: false,
+        },
+        {
+          id: 103,
+          alias: 'flash-low',
+          name: 'Gemini Flash (Low)',
+          baseName: 'Gemini Flash',
+          effort: 'low',
+          available: true,
+        },
+        {
+          id: 104,
+          alias: 'flash-medium',
+          name: 'Gemini Flash (Medium)',
+          baseName: 'Gemini Flash',
+          effort: 'medium',
+          available: true,
+        },
+        {
+          id: 105,
+          alias: 'flash-xhigh',
+          name: 'Gemini Flash (Extra High)',
+          baseName: 'Gemini Flash',
+          effort: 'xhigh',
+          available: true,
+        },
         { id: null, alias: 'unknown', name: 'Unmapped model', available: true },
       ],
     },
@@ -418,9 +455,11 @@ test('feature controls prefill actual settings, preserve edits and queue only th
         modelLimits: [
           { id: 101, limit: 750000 },
           { id: 102, limit: 900000 },
+          { id: 1400, limit: 900000 },
         ],
         savedModelLimits: [],
       },
+      compaction: { enabled: false, fileState: 'registered-input' },
     },
   };
   await panel.respond(
@@ -430,14 +469,20 @@ test('feature controls prefill actual settings, preserve edits and queue only th
   assert.equal(panel.getElement('feature-capsule').checked, true);
   assert.equal(panel.getElement('feature-locale').value, 'zh-Hant-TW');
   const row = panel.getElement('model-limits').children[0];
-  assert.equal(row.children[1].children[0].textContent, 'Gemini Flash (High)');
-  assert.equal(row.children[1].children[1].textContent, 'flash-high');
+  assert.equal(panel.getElement('model-limits').children.length, 3);
+  assert.equal(row.children[1].children[0].textContent, 'Gemini Flash');
+  assert.equal(row.children[1].children.length, 1);
+  assert.equal(row.children[0].indeterminate, true);
+  assert.equal(
+    panel.getElement('model-limits').children[1].children[1].children[2].textContent,
+    'Unavailable',
+  );
   assert.equal(
     panel.getElement('model-limits').children[2].children[2].children[1].value,
     '256000',
   );
   assert.equal(panel.getElement('model-limits').children[2].children[0].checked, false);
-  assert.equal(panel.getElement('model-limits').children[3].children[0].disabled, true);
+  assert.equal(panel.getElement('model-limits').children[2].children[0].disabled, true);
   const limitInput = row.children[2].children[1];
   assert.equal(limitInput.value, '750000');
   assert.equal(limitInput.min, '256000');
@@ -485,7 +530,17 @@ test('feature controls prefill actual settings, preserve edits and queue only th
     revision: 'a'.repeat(64),
     capsule: false,
     localization: { enabled: true, locale: 'zh-Hant-TW' },
-    limit: { enabled: true, modelLimits: [{ id: 101, limit: 880000 }] },
+    limit: {
+      enabled: true,
+      modelLimits: [
+        { id: 101, limit: 880000 },
+        { id: 103, limit: 880000 },
+        { id: 104, limit: 880000 },
+        { id: 105, limit: 880000 },
+        { id: 1400, limit: 900000 },
+      ],
+    },
+    compaction: false,
   });
   assert.equal(queued.options.headers['X-Agyctl-Action'], '1');
   await panel.respond(queued, { operation: { id: 'job-1', state: 'waiting' } });
@@ -509,20 +564,111 @@ test('feature controls prefill actual settings, preserve edits and queue only th
     catalog: { status: 'unavailable', models: [] },
   });
   await reloading;
-  assert.equal(panel.getElement('model-limits').children.length, 2);
-  assert.equal(
-    panel.getElement('model-limits').children[0].children[1].children[0].textContent,
-    'Unknown model (ID 101)',
-  );
-  assert.equal(
-    panel.getElement('model-limits').children[0].children[2].children[1].value,
-    '750000',
-  );
+  assert.equal(panel.getElement('model-limits').children.length, 0);
   assert.equal(panel.getElement('feature-capsule').disabled, false);
   assert.equal(
     panel.getElement('model-catalog-status').textContent,
     'Could not read the model list. Existing settings are preserved.',
   );
+  panel.getElement('feature-capsule').checked = false;
+  panel.getElement('feature-capsule').listeners.get('change')();
+  const preserved = panel.submit('feature-form');
+  const request = panel.allRequests.at(-1);
+  assert.equal(request.url, '/api/features/apply');
+  assert.deepEqual(
+    JSON.parse(request.options.body).limit.modelLimits,
+    snapshot.features.limit.modelLimits,
+  );
+  await panel.respond(request, {
+    draft: {
+      id: 'preserved-draft',
+      commands: { apply: 'npm run settings:apply -- --draft preserved-draft' },
+    },
+  });
+  await preserved;
+  assert.equal(panel.getElement('feature-status').textContent, 'Draft saved (not applied).');
+  assert.doesNotMatch(
+    [...panel.elements.values()].map((element) => element.textContent).join('\n'),
+    /npm run|external terminal/,
+  );
+});
+
+test('grouped Gemini limits preserve mixed values until the shared field is edited', async () => {
+  const panel = panelHarness('settings');
+  await panel.respond(
+    panel.allRequests.find((request) => request.url === '/api/features'),
+    {
+      revision: 'a'.repeat(64),
+      installation: { version: '2.31.2' },
+      catalog: {
+        status: 'available',
+        models: [
+          {
+            id: 101,
+            alias: 'flash-low',
+            name: 'Gemini Flash (Low)',
+            baseName: 'Gemini Flash',
+            effort: 'low',
+            available: true,
+          },
+          {
+            id: 102,
+            alias: 'flash-high',
+            name: 'Gemini Flash (High)',
+            baseName: 'Gemini Flash',
+            effort: 'high',
+            available: true,
+          },
+          {
+            id: 103,
+            alias: 'other-flash-high',
+            name: 'Gemini Flash (High)',
+            baseName: 'Gemini Flash',
+            effort: 'high',
+            available: true,
+          },
+        ],
+      },
+      features: {
+        capsule: { enabled: false },
+        localization: { enabled: false, locale: 'en' },
+        limit: {
+          enabled: true,
+          modelLimits: [
+            { id: 101, limit: 500000 },
+            { id: 102, limit: 750000 },
+          ],
+          savedModelLimits: [],
+        },
+        compaction: { enabled: false, fileState: 'registered-input' },
+      },
+    },
+  );
+  assert.equal(panel.getElement('model-limits').children.length, 2);
+  const row = panel.getElement('model-limits').children[0];
+  const input = row.children[2].children[1];
+  assert.equal(input.value, '');
+  assert.equal(input.placeholder, 'Multiple values');
+  panel.getElement('feature-capsule').checked = true;
+  panel.getElement('feature-capsule').listeners.get('change')();
+  const saving = panel.submit('feature-form');
+  const request = panel.allRequests.at(-1);
+  assert.deepEqual(JSON.parse(request.options.body).limit.modelLimits, [
+    { id: 101, limit: 500000 },
+    { id: 102, limit: 750000 },
+  ]);
+  await panel.respond(request, { draft: { id: 'draft-1' } });
+  await saving;
+  input.value = '800000';
+  input.listeners.get('input')();
+  const unified = panel.submit('feature-form');
+  const update = panel.allRequests.at(-1);
+  assert.deepEqual(JSON.parse(update.options.body).limit.modelLimits, [
+    { id: 101, limit: 800000 },
+    { id: 102, limit: 800000 },
+  ]);
+  await panel.respond(update, { draft: { id: 'draft-2' } });
+  await unified;
 });
 
 const capsuleSource = assembleCapsule();

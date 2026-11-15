@@ -26,6 +26,8 @@ process checks differ by feature:
 - **Tool output:** `agyctl tool-output patch --apply` and `restore` use the same
   stopped-process contract. Discovery never guesses between multiple installations:
   an explicit `--binary` is required when more than one is found.
+- **Compaction:** `agyctl compaction patch --apply` and `restore` use the same
+  stopped-process contract and require an explicit `--binary`.
 - **Host changes that add, remove, or preserve localization:** resolve the selected
   installation's paired executable, including explicit custom paths. Windows checks
   exact image names from `tasklist`, Linux checks matching `ps` command names against
@@ -46,6 +48,7 @@ failing gate writes nothing and names what no longer matches:
 | --- | --- | --- |
 | Context limit | The installed clamp function body must equal an original recorded in [versions.json](../compat/versions.json) | `npm run limit:status`, or `npm run limit:patch` without `--apply` |
 | Tool output | The installed binary must equal a whole-file input registered in [tool-output.json](../compat/tool-output.json) | `npm run tool-output:status`, or `npm run tool-output:patch` without `--apply` |
+| Compaction | The installed binary must equal a whole-file input registered in [compaction.json](../compat/compaction.json) | `npm run compaction:status`, or `npm run compaction:patch` without `--apply` |
 | Capsule | Executable and ASAR qualification, plus every anchor in [anchors.js](../src/capsule/anchors.js) present in the LS's served web bundle | `node scripts/manage.mjs status` reports `capsuleAnchors`; a [Host plan](#prepare-and-review) checks the proposed change without applying it |
 | Localization | Reviewed profile or structural evidence, adapter anchors, and bound plan inputs | `node scripts/manage.mjs status` and `--host-preflight` after [preparation](#localization-preparation-and-apply); `prepare` writes tool state, not installed files |
 
@@ -137,34 +140,53 @@ uses the client logs.
 Build the Host, localization, and native tools, then install or update the panel.
 Settings reads the selected installation's feature state and decoded model limits
 instead of showing terminal commands. Toggle the capsule, localization, and
-context-limit patches independently, choose a locale, and set each model's token
-limit; uncheck a model to omit it from the new mapping. Installed values prefill the
-controls, and saved values can prefill a disabled limit patch. Polling does not
+context-limit patches independently, choose a locale, and expand **Model context
+limits** to set each model's token limit; uncheck a model to omit it from the new
+mapping. The model list starts collapsed, like **Built-in prices**, and expanding or
+collapsing it does not change the independent patch toggle. Installed values prefill
+the controls, and saved values can prefill a disabled limit patch. Polling does not
 overwrite unsaved edits or silently retarget their installation revision.
 
 Model discovery calls the connected LS's
 `GetAvailableModels` with `{forceRefresh:false}` and joins
 `response.models[alias].model` to the literal `Model` enum in the `main.js` extracted
 read-only from the selected LS binary. It never evaluates upstream JavaScript or
-infers IDs from names, ordering, or placeholder suffixes. Display names and
-Low/Medium/High variants come from the catalog, with aliases distinguishing duplicate
-names, and profiles without a display name are not listed. A disabled profile is
-labeled unavailable without rejecting other model settings or changing account
-access, and a model with no enum match cannot be selected. Existing mappings absent
-from the catalog stay visible as unknown IDs. If discovery fails, existing settings
-and the other feature controls remain usable, with a short model-list error.
+infers IDs from names, ordering, or placeholder suffixes. Only aliases listed in
+`response.agentModelSorts[0].groups[].modelIds` are shown, in their advertised order,
+without duplicates. This follows the selector list read by `j3c` in Antigravity
+2.31.2's LS-served `main.js`; the full `response.models` map also contains older
+aliases whose display names can identify a different model. Inspect that function
+with `loadCapsuleServedBundle().readServedScripts(binaryPath)['main.js']` from
+[`scripts/lib/host-build.mjs`](../scripts/lib/host-build.mjs), without evaluating it.
+The normalization lives in
+[`scripts/lib/model-catalog.mjs`](../scripts/lib/model-catalog.mjs).
+
+Profiles without a display name are not listed. Listed disabled profiles remain
+labeled unavailable, without changing account access, and a model with no enum match
+cannot be selected. Gemini aliases differing only by Low/Medium/High/Extra High effort
+share one settings row; matching display names alone never merge different aliases.
+Editing that row applies the same limit to every mapped effort ID. Different existing
+limits show as multiple values and stay unchanged until the row is edited. Existing
+mappings absent from the catalog are hidden but preserved when saving. If discovery
+fails, no model rows are shown; existing mappings and the other feature controls
+remain usable, with a short model-list error. The controls are implemented in
+[`src/plugin/sidecars/panel/index.html`](../src/plugin/sidecars/panel/index.html).
 
 New model rows prefill 256,000 and start unchecked, so opening settings never enables
 a new mapping. The panel and its worker accept whole-token limits from 256,000
-through 896,000 inclusive; existing out-of-range values are shown unchanged and must
-be corrected or unchecked before submission. The CLI keeps its own numeric-ID
+through 896,000 inclusive for new or changed values. Visible out-of-range values
+must be corrected or unchecked before submission; hidden installed values can stay
+unchanged, verified against the revision-bound disk snapshot when saving and again
+before applying. The CLI keeps its own numeric-ID
 interface and bounds. The capsule shows decoded limits with the same catalog names,
 and explicit IDs when names are unknown. These are disk patch values, not confirmed
 live context capacity.
 
-**Save settings** writes a draft only, to `<AGYCTL_HOME>/management/drafts/<id>.json`,
-and shows the matching command. Opening the panel never applies saved settings. Quit
-Antigravity yourself, then run from a terminal:
+**Save settings** writes a draft only, to `<AGYCTL_HOME>/management/drafts/<id>.json`.
+The panel shows a short saved/not-applied status, not terminal instructions or
+commands. Opening the panel never applies saved settings. Read the draft ID from
+`draft.id` in `npm run settings:status`, then quit Antigravity yourself and run from
+a terminal:
 
 ```bash
 npm run settings:preflight -- --draft <id>   # check without modifying installed files
@@ -285,10 +307,11 @@ the draft and `feature-control-worker.mjs` path above, not this endpoint. Build 
 `npm run tools:build` and reinstall or update the panel when you move the checkout.
 The display is a timestamped snapshot of the selected installation on disk, not
 confirmation that the running server loaded those bytes. Responses are shared and
-cached for up to 60 seconds to avoid repeatedly hashing the binary. The capsule's
-server-reported session capacity is separate. A missing tool, invalid selection, or
-absent sidecar produces an unavailable status instead of a remembered applied claim,
-and ordinary usage monitoring does not need this optional connection.
+cached for up to 60 seconds to avoid repeatedly hashing the binary. Disk patch values
+remain in the capsule's detailed popover, not its usage/cache hover tooltip. The
+capsule's server-reported session capacity is separate. A missing tool, invalid
+selection, or absent sidecar produces an unavailable status instead of a remembered
+applied claim, and ordinary usage monitoring does not need this optional connection.
 
 ## Tool-output capacity patch
 
@@ -313,6 +336,50 @@ tool-home backup. The tool never overwrites or deletes backups.
 `node scripts/manage.mjs status` reports the disk state under `toolOutput`; a disk
 patch does not mean the running client loaded it, and app updates never reapply
 anything automatically.
+
+## Summary compaction patch
+
+`compaction patch` replaces the continuation-summary prompt and raises the
+request-retention values as one fixed combination. The registered values, the
+canonical prompt, and the binary evidence are in
+[compaction-patch.md](compaction-patch.md). Preview is always in-memory: without
+`--apply` the command writes nothing. An explicit `--binary` selects the
+installation, and with several installed the command refuses instead of guessing.
+
+Quit the selected client before applying or restoring (the process checks above
+apply). To change or remove the patch, run `npm run compaction:restore`, which
+returns the binary to exactly the input it was patched from, verified against the
+recorded transaction. A binary that changed since the patch (an app update, a later
+`limit` patch, or an external edit) is refused rather than overwritten; remove the
+other patch with its own restore first. The feature shares one operation lock with
+limit and tool-output, so they cannot mutate the same installation concurrently.
+
+State lives beside the other feature records in the tool home:
+`compaction-state.json` and `compaction-prepare-<target>.json` transaction
+records, plus the feature-named tool-home backup. The tool never overwrites or
+deletes backups. A disk patch does not mean the running client loaded it — the
+status output reports `effective_state: "unknown"` until live qualification
+exists — and app updates never reapply anything automatically.
+
+Both apply and restore write a prepare record before replacing the binary. Its
+`action` identifies `patch` or `restore`; an older schema-1 prepare without that
+field means `patch`. To inspect an interrupted operation, run
+`npm run compaction:status -- --binary ABS_PATH`. With the client closed, resume
+a pending patch with `npm run compaction:patch -- --binary ABS_PATH --apply`, or
+resume a pending restore with
+`npm run compaction:restore -- --binary ABS_PATH`. Restore can also cancel a
+prepared patch before replacement, or undo one whose replacement already
+completed. A pending restore cannot be resumed by the patch command.
+
+Recovery checks the target, recipe fingerprint, registered input/output hashes,
+backup contents, and transaction history under the shared operation lock before
+changing files or completing records. Status and preview never finish recovery.
+A successful retry does not duplicate completed records, and backups remain
+untouched. Backup `verified` status compares the file hash with the transaction's
+recorded input, not just the existence of a file. Missing or conflicting evidence
+is refused as `prepare-invalid`; do not delete the prepare or backup files to
+bypass that refusal. A historical interrupted restore with no prepare record
+cannot be authenticated this way and still requires manual inspection.
 
 ## Interface languages
 
@@ -374,6 +441,11 @@ Recovery is component-specific, not one transaction across the client:
   verified-replacement pattern with its own state files. Restore returns exactly the
   recorded operation input and refuses drifted binaries; see
   [tool-output admission](tool-output-patch.md#admission-gate-and-coexistence-with-limit).
+- **Compaction binary:** the same verified-backup, prepare-record, and
+  verified-replacement pattern with its own state files
+  (`compaction-state.json`). Restore returns exactly the recorded operation
+  input and refuses drifted binaries; see
+  [compaction admission](compaction-patch.md#admission-gate-and-coexistence).
 - **Multiple features:** the capsule and localization are one Host transaction over
   one verified original. The limit and tool-output patches are separate operations on
   the LS binary, and a failure in one never reverses another, so check each feature's

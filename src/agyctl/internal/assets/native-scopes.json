@@ -2,5 +2,6 @@
   "layout": ["compat/install-layout.json"],
   "limit": ["compat/install-layout.json", "compat/versions.json"],
   "tool-output": ["compat/install-layout.json", "compat/tool-output.json"],
+  "compaction": ["compat/install-layout.json", "compat/compaction.json"],
   "check": ["compat/versions.json", "compat/localization/profiles.json"]
 }

@@ -10,7 +10,7 @@ export interface AvailableLimitStatus {
   modelLimits: ModelLimit[];
   savedModelLimits: ModelLimit[];
   modelNames?: Record<string, string>;
-  modelEfforts?: Record<string, 'high' | 'medium' | 'low'>;
+  modelEfforts?: Record<string, 'xhigh' | 'high' | 'medium' | 'low'>;
 }
 export type LimitStatus = AvailableLimitStatus | { status: 'unavailable'; snapshotAt: string; error: string };
 export interface DiskLimitMessages {

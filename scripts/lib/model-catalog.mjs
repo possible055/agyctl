@@ -32,8 +32,20 @@ export function normalizeModelCatalog(raw, modelEnum) {
   const profiles = raw?.response?.models;
   if (!profiles || typeof profiles !== 'object' || Array.isArray(profiles))
     throw new Error('Invalid available-model response');
+  const groups = raw.response.agentModelSorts?.[0]?.groups;
+  if (
+    !Array.isArray(groups) ||
+    groups.some(
+      (group) =>
+        !Array.isArray(group?.modelIds) ||
+        group.modelIds.some((alias) => typeof alias !== 'string' || !alias.trim()),
+    )
+  )
+    throw new Error('Invalid available-model sort');
   const models = [];
-  for (const [alias, profile] of Object.entries(profiles)) {
+  for (const alias of new Set(groups.flatMap((group) => group.modelIds))) {
+    if (!Object.hasOwn(profiles, alias)) continue;
+    const profile = profiles[alias];
     if (!profile || typeof profile !== 'object' || Array.isArray(profile))
       throw new Error('Invalid model profile');
     if (profile.displayName === undefined) continue;

@@ -13,9 +13,10 @@ agyctl targets Antigravity 2.31.0 desktop (stable release), adding a context-usa
 | [Client localization](#client-localization) | Translates the interface into Traditional Chinese, Simplified Chinese, or Japanese | Yes, `app.asar` |
 | [Context limit patch](#context-limit-patch) | Raises the context limit for selected models | Yes, `language_server.exe` |
 | [Tool-output capacity patch](#tool-output-capacity-patch) | Raises recorded native tool-output limits on a qualified build | Yes, `language_server.exe` |
+| [Summary compaction patch](#summary-compaction-patch) | Improves summary and request retention at context compaction on a qualified build | Yes, `language_server.exe` |
 | [Compatibility checker](#compatibility-checker) | Checks whether your app version supports these features | No |
 
-The capsule, localization, limit patch, and tool-output patch keep verified backups of the original files and can be removed.
+The capsule, localization, limit patch, tool-output patch, and compaction patch keep verified backups of the original files and can be removed.
 
 The stable and development (Insiders) channels use the same commands below, with feature-specific admission checks. Compatibility is checked against the selected installation's files, not a version-number range; see [localization status](docs/localization.md#current-status) and [limit patch](docs/limit-patch.md). If you keep both channels, select one with `AGYCTL_APP_DIR`. After an Antigravity update, check feature status and prepare a new localization plan instead of applying an older plan or restoring another build's backup. A successful file patch is not proof of runtime activation.
 
@@ -68,7 +69,7 @@ npm run tools:build
 npm run plugin:install
 ```
 
-Reopen Antigravity and use **Settings → Patches**. Installed values are filled in automatically. Models come from the signed-in account's Language Server catalog and are matched to the selected installation's numeric enum IDs; choose models by name, including their Low/Medium/High variants. New rows start at 256,000 tokens and remain unchecked; the panel accepts 256,000–896,000. Select the features, locale, and per-model limits, then press **Save settings**. Quit Antigravity yourself and run the shown `npm run settings:apply -- --draft <id>` command. The tool applies the selected changes without closing or restarting the app. Reopen after application finishes; settings are read back from the installed files. See [patch controls](docs/operations.md#panel-patch-controls) for unavailable models, pending operations, and recovery. The commands below remain available as an alternative.
+Reopen Antigravity and use **Settings → Patches**. Installed values are filled in automatically. Expand **Model context limits** to choose models from the signed-in account's Language Server catalog; Gemini thinking-effort variants share one row. New rows start at 256,000 tokens and remain unchecked; the panel accepts 256,000–896,000 for new or changed values. The **Summary compaction patch** checkbox mirrors the [compaction patch](#summary-compaction-patch) and cannot be combined with model context limits. Select the features, locale, and per-model limits, then press **Save settings** to save a draft without applying it. The panel does not display terminal commands. Follow [patch controls](docs/operations.md#panel-patch-controls) to find the draft ID, apply it with Antigravity closed, and handle unavailable models or recovery. Reopen after application finishes; settings are read back from the installed files. The commands below remain available as an alternative.
 
 ## Input-toolbar capsule
 
@@ -178,6 +179,19 @@ npm run tool-output:restore   # back to the exact patched-from input
 
 Applying and restoring require the client to be closed, verified backups, and an explicit `--binary` when several installations exist. The patch never relaxes other tools' settings and shares one mutation lock with the context-limit patch; a binary patched by the other feature is reported as a conflict, never overwritten. App updates do not reapply anything.
 
+## Summary compaction patch
+
+Improves what survives context compaction as one fixed combination: it replaces the continuation-summary prompt with a ten-section canonical prompt (prioritizing the latest user intent, corrections, constraints, current work including the last tool call's outcome, and next steps) and raises request retention from 10 to 30 requests with a 2,048-byte cap per request. Automatic compaction thresholds and the manual `/compact` command are not modified. Live validation is pending: the recipe is static-verified only, and a disk patch does not prove the running session adopted it. The first version qualifies exactly one build (Antigravity App Windows 2.31.2, applied on top of the tool-output patch output or the grep-patched baseline) and refuses every other binary. See [the recipe and evidence](docs/compaction-patch.md).
+
+```powershell
+npm run compaction:status    # on-disk state of the selected installation
+npm run compaction:patch     # plan in memory; writes nothing
+npm run compaction:patch -- --apply    # quit Antigravity first
+npm run compaction:restore   # back to the exact patched-from input
+```
+
+Applying and restoring follow the same closed-client, verified-backup, and explicit-`--binary` rules as the other binary patches, and share the same mutation lock. The compaction patch and the context-limit patch are mutually exclusive on one binary: apply compaction only with limits removed, and remove compaction before changing limits. App updates do not reapply anything. The panel's patch settings offer the same choice as a checkbox with the same exclusivity rule.
+
 ## Compatibility checker
 
 Run this after Antigravity updates, before you enable a feature that modifies the app. It needs [Go](https://go.dev/dl/) 1.26 or newer and the CLI built with `npm run tools:build`. Read each capability and its diagnostics: `needs-review` means at least one warning, including a `probe-only` localization profile, not that every feature is unusable. The checker is advisory; each feature's own preflight decides whether it can modify the selected files. `compatible` does not prove runtime activation.
@@ -219,6 +233,7 @@ On Windows, original app files are kept in `%LOCALAPPDATA%\agyctl\backups\` by d
 - [Compatibility checker](docs/update-check.md)
 - [Limit patch](docs/limit-patch.md)
 - [Tool-output patch](docs/tool-output-patch.md)
+- [Summary compaction patch](docs/compaction-patch.md)
 - [Development](docs/development.md): setup, tests, and project layout
 
 ## License

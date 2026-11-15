@@ -3,7 +3,7 @@
   "formatLocale": "zh-CN",
   "provenance": {
     "kind": "vendor",
-    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor antigravity2-cn candidates; the New Conversation conflict (新建对话/新建会话) resolves to 新建对话 (menu_nav context matches the command surface). C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order). DOM acceptance additions for the 2.31.0 reviewed surfaces are authored translations."
+    "scope": "The two workbench theme messages are authored. C1 batch messages adopt vendor antigravity2-cn candidates; the New Conversation conflict (新建对话/新建会话) resolves to 新建对话 (menu_nav context matches the command surface). C2 wave-2 messages adopt vendor candidates for all three locales (no conflicts in this wave). Dynamic greeting/status sentences are authored translations ({0} placeholders kept once, in order). DOM acceptance additions for the 2.31.0 reviewed surfaces are authored translations. The 2026-11-15 batch (settings.plan.*, settings.browsers.*, settings.shortcuts.layoutControls, hub.menus.*, settings.general.*, sidecars.automations.*, customizations.noCustomAgentsYet) is authored; plan/quota and add-automation strings are server-rendered on client 2.31.2 and verified from the live UI."
   },
   "messages": {
     "workbench.hover.statusBar.background": {
@@ -15836,6 +15836,134 @@
     },
     "session.emptyConversations": {
       "value": "暂无对话",
+      "reviewed": true
+    },
+    "settings.plan.yourPlanLabel": {
+      "value": "你的方案：",
+      "reviewed": true
+    },
+    "settings.plan.upgrade": {
+      "value": "升级",
+      "reviewed": true
+    },
+    "settings.plan.upgradeHint": {
+      "value": "你可以升级到 Google AI Ultra 方案以获得更高的用量限额。",
+      "reviewed": true
+    },
+    "settings.plan.aiCreditsDescription": {
+      "value": "开启后，当模型配额用尽时，Antigravity 将使用你的 AI 点数来完成模型请求。Antigravity 会始终先使用模型配额，再使用 AI 点数。",
+      "reviewed": true
+    },
+    "settings.plan.geminiModelsHeading": {
+      "value": "Gemini 模型",
+      "reviewed": true
+    },
+    "settings.plan.claudeGptModelsHeading": {
+      "value": "Claude 与 GPT 模型",
+      "reviewed": true
+    },
+    "settings.plan.weeklyLimitRemaining": {
+      "value": "每周限额剩余",
+      "reviewed": true
+    },
+    "settings.plan.fiveHourLimitRemaining": {
+      "value": "五小时限额剩余",
+      "reviewed": true
+    },
+    "settings.plan.weeklyRefreshSentence": {
+      "value": "你已使用部分每周限额，将在 {0} 后完全重置。",
+      "reviewed": true
+    },
+    "settings.plan.fiveHourRefreshSentence": {
+      "value": "你已使用部分五小时限额，将在 {0} 后完全重置。",
+      "reviewed": true
+    },
+    "settings.browsers.builtInHeading": {
+      "value": "内置浏览器",
+      "reviewed": true
+    },
+    "settings.browsers.externalHeading": {
+      "value": "外部浏览器",
+      "reviewed": true
+    },
+    "settings.browsers.clearVisitedUrls": {
+      "value": "清除内置浏览器的访问网址与自动补全建议。",
+      "reviewed": true
+    },
+    "settings.browsers.subagentRules": {
+      "value": "配置浏览器子代理允许与拒绝的网址。它在内置浏览器中运行，因此无需单独安装浏览器。",
+      "reviewed": true
+    },
+    "settings.shortcuts.layoutControls": {
+      "value": "布局控制",
+      "reviewed": true
+    },
+    "hub.menus.pin": {
+      "value": "置顶",
+      "reviewed": true
+    },
+    "hub.menus.markUnread": {
+      "value": "标记为未读",
+      "reviewed": true
+    },
+    "hub.menus.copyProjectName": {
+      "value": "复制项目名称",
+      "reviewed": true
+    },
+    "hub.menus.showInFileExplorer": {
+      "value": "在文件资源管理器中显示",
+      "reviewed": true
+    },
+    "hub.menus.deleteProject": {
+      "value": "删除项目",
+      "reviewed": true
+    },
+    "settings.general.voiceMode": {
+      "value": "语音模式",
+      "reviewed": true
+    },
+    "settings.general.voiceVolumeHint": {
+      "value": "Antigravity 语音的音量大小。",
+      "reviewed": true
+    },
+    "settings.general.toolPermissionsHint": {
+      "value": "修改文件、终端与 MCP 工具的权限。",
+      "reviewed": true
+    },
+    "settings.general.globalPermissionsHint": {
+      "value": "配置全局允许与拒绝的资源权限。",
+      "reviewed": true
+    },
+    "settings.general.queueUntilTurn": {
+      "value": "加入队列，待当前回合结束后发送。",
+      "reviewed": true
+    },
+    "settings.general.interruptImmediately": {
+      "value": "中断代理并立即发送。",
+      "reviewed": true
+    },
+    "settings.general.notSet": {
+      "value": "未设置",
+      "reviewed": true
+    },
+    "settings.general.queueSegment": {
+      "value": "队列",
+      "reviewed": true
+    },
+    "settings.general.showAll": {
+      "value": "显示全部",
+      "reviewed": true
+    },
+    "sidecars.automations.searchPlaceholder": {
+      "value": "搜索自动化...",
+      "reviewed": true
+    },
+    "sidecars.automations.addAutomation": {
+      "value": "新增自动化",
+      "reviewed": true
+    },
+    "customizations.noCustomAgentsYet": {
+      "value": "暂无自定义代理。",
       "reviewed": true
     }
   }

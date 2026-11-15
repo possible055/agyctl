@@ -119981,6 +119981,230 @@
       "surface": "session.commands",
       "critical": false,
       "description": "Authored translations for the fixed empty-project conversation status observed in Windows Antigravity 2.31.0 sidebar; not a project or conversation name."
+    },
+    "settings.plan.yourPlanLabel": {
+      "messageId": "settings.plan.yourPlanLabel",
+      "format": "plain",
+      "defaultMessage": "Your Plan:",
+      "description": "Plan row label; separate text node from the plan-name value, which stays untranslated. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.models"
+    },
+    "settings.plan.upgrade": {
+      "messageId": "settings.plan.upgrade",
+      "format": "plain",
+      "defaultMessage": "Upgrade",
+      "description": "Plan row action button. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.models"
+    },
+    "settings.plan.upgradeHint": {
+      "messageId": "settings.plan.upgradeHint",
+      "format": "plain",
+      "defaultMessage": "You can upgrade to a Google AI Ultra plan to receive higher rate limits.",
+      "description": "Plan row description; plan-dependent variant, other subscriptions may render different sentences. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "settings.models"
+    },
+    "settings.plan.aiCreditsDescription": {
+      "messageId": "settings.plan.aiCreditsDescription",
+      "format": "plain",
+      "defaultMessage": "When toggled on, Antigravity will use your AI credits to fulfill model requests once you're out of model quota. Antigravity will always use your model quota first before using AI credits.",
+      "description": "AI-credits overspend toggle description. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "settings.models"
+    },
+    "settings.plan.geminiModelsHeading": {
+      "messageId": "settings.plan.geminiModelsHeading",
+      "format": "plain",
+      "defaultMessage": "Gemini Models",
+      "description": "Quota group heading. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "settings.models"
+    },
+    "settings.plan.claudeGptModelsHeading": {
+      "messageId": "settings.plan.claudeGptModelsHeading",
+      "format": "plain",
+      "defaultMessage": "Claude and GPT models",
+      "description": "Quota group heading. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "settings.models"
+    },
+    "settings.plan.weeklyLimitRemaining": {
+      "messageId": "settings.plan.weeklyLimitRemaining",
+      "format": "plain",
+      "defaultMessage": "Weekly Limit Remaining",
+      "description": "Quota row title. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "settings.models"
+    },
+    "settings.plan.fiveHourLimitRemaining": {
+      "messageId": "settings.plan.fiveHourLimitRemaining",
+      "format": "plain",
+      "defaultMessage": "Five Hour Limit Remaining",
+      "description": "Quota row title. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "settings.models"
+    },
+    "settings.plan.weeklyRefreshSentence": {
+      "messageId": "settings.plan.weeklyRefreshSentence",
+      "format": "icu",
+      "defaultMessage": "You have used some of your weekly limit, it will fully refresh in {0}.",
+      "description": "Quota row sentence; the captured span is the server-baked refresh duration. Registered as a DOM template. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "settings.models"
+    },
+    "settings.plan.fiveHourRefreshSentence": {
+      "messageId": "settings.plan.fiveHourRefreshSentence",
+      "format": "icu",
+      "defaultMessage": "You have used some of your 5-hour limit, it will fully refresh in {0}.",
+      "description": "Quota row sentence; the captured span is the server-baked refresh duration. Registered as a DOM template. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "settings.models"
+    },
+    "settings.browsers.builtInHeading": {
+      "messageId": "settings.browsers.builtInHeading",
+      "format": "plain",
+      "defaultMessage": "Built-in Browser",
+      "description": "Browser settings group heading and segmented-control option. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.browsers"
+    },
+    "settings.browsers.externalHeading": {
+      "messageId": "settings.browsers.externalHeading",
+      "format": "plain",
+      "defaultMessage": "External Browser",
+      "description": "Segmented-control option. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.browsers"
+    },
+    "settings.browsers.clearVisitedUrls": {
+      "messageId": "settings.browsers.clearVisitedUrls",
+      "format": "plain",
+      "defaultMessage": "Clear visited URLs and autocomplete suggestions from the built-in browser.",
+      "description": "Browsing-history row description (title context). Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.browsers"
+    },
+    "settings.browsers.subagentRules": {
+      "messageId": "settings.browsers.subagentRules",
+      "format": "plain",
+      "defaultMessage": "Configure allowed and denied URLs for the browser subagent. It runs in the built-in browser, so no separate browser install is needed.",
+      "description": "Browser-rules row description. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.browsers"
+    },
+    "settings.shortcuts.layoutControls": {
+      "messageId": "settings.shortcuts.layoutControls",
+      "format": "plain",
+      "defaultMessage": "Layout Controls",
+      "description": "Shortcut settings section heading. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.shortcuts"
+    },
+    "hub.menus.pin": {
+      "messageId": "hub.menus.pin",
+      "format": "plain",
+      "defaultMessage": "Pin",
+      "description": "Conversation context-menu item. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "hub.menus"
+    },
+    "hub.menus.markUnread": {
+      "messageId": "hub.menus.markUnread",
+      "format": "plain",
+      "defaultMessage": "Mark Unread",
+      "description": "Conversation context-menu item. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "hub.menus"
+    },
+    "hub.menus.copyProjectName": {
+      "messageId": "hub.menus.copyProjectName",
+      "format": "plain",
+      "defaultMessage": "Copy Project Name",
+      "description": "Project context-menu item; not a bundle literal. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "hub.menus"
+    },
+    "hub.menus.showInFileExplorer": {
+      "messageId": "hub.menus.showInFileExplorer",
+      "format": "plain",
+      "defaultMessage": "Show in File Explorer",
+      "description": "Project context-menu item. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "hub.menus"
+    },
+    "hub.menus.deleteProject": {
+      "messageId": "hub.menus.deleteProject",
+      "format": "plain",
+      "defaultMessage": "Delete Project",
+      "description": "Project context-menu item; not a bundle literal. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "hub.menus"
+    },
+    "settings.general.voiceMode": {
+      "messageId": "settings.general.voiceMode",
+      "format": "plain",
+      "defaultMessage": "Voice mode",
+      "description": "Voice settings heading and row label. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "settings.general.voiceVolumeHint": {
+      "messageId": "settings.general.voiceVolumeHint",
+      "format": "plain",
+      "defaultMessage": "How loud Antigravity's voice is.",
+      "description": "Voice volume row description. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "settings.general.toolPermissionsHint": {
+      "messageId": "settings.general.toolPermissionsHint",
+      "format": "plain",
+      "defaultMessage": "Modify permissions for file, terminal, and MCP tools.",
+      "description": "Tool-permissions row description. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "settings.general.globalPermissionsHint": {
+      "messageId": "settings.general.globalPermissionsHint",
+      "format": "plain",
+      "defaultMessage": "Configure global allowed and denied resource permissions.",
+      "description": "Global-permissions row description. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "settings.general.queueUntilTurn": {
+      "messageId": "settings.general.queueUntilTurn",
+      "format": "plain",
+      "defaultMessage": "Queue until after the current turn.",
+      "description": "Queued-message radio option description. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "settings.general.interruptImmediately": {
+      "messageId": "settings.general.interruptImmediately",
+      "format": "plain",
+      "defaultMessage": "Interrupt the agent and send immediately.",
+      "description": "Queued-message radio option description. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "settings.general.notSet": {
+      "messageId": "settings.general.notSet",
+      "format": "plain",
+      "defaultMessage": "Not set",
+      "description": "Combobox placeholder value. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "settings.general.queueSegment": {
+      "messageId": "settings.general.queueSegment",
+      "format": "plain",
+      "defaultMessage": "Queue",
+      "description": "Queued-message segmented-control option. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "settings.general.showAll": {
+      "messageId": "settings.general.showAll",
+      "format": "plain",
+      "defaultMessage": "Show All",
+      "description": "Settings project-list expander button. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "settings.general"
+    },
+    "sidecars.automations.searchPlaceholder": {
+      "messageId": "sidecars.automations.searchPlaceholder",
+      "format": "plain",
+      "defaultMessage": "Search automations...",
+      "description": "Automations page search input placeholder. Authored 2026-11-15 against stable Windows x64 client 2.31.2; rendered node verified through live UI inspection.",
+      "surface": "sidecars.automations"
+    },
+    "sidecars.automations.addAutomation": {
+      "messageId": "sidecars.automations.addAutomation",
+      "format": "plain",
+      "defaultMessage": "Add automation",
+      "description": "aria-label of the automations page add button; attribute translation. Server-rendered string (no main.js literal); text verified from the live client.",
+      "surface": "sidecars.automations"
+    },
+    "customizations.noCustomAgentsYet": {
+      "messageId": "customizations.noCustomAgentsYet",
+      "format": "plain",
+      "defaultMessage": "No custom agents yet.",
+      "description": "Customizations page empty-state line. Page-level string; the node is outside current writable roots until scopes extend, so the entry stays dormant until then.",
+      "surface": "customizations"
     }
   }
 }

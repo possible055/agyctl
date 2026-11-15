@@ -9,16 +9,6 @@ import {
 
 export function capsuleStyles() {
   return `
-      #${TOOLTIP_ID} .cr-disk-limits {
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-        font-size: 11px;
-        line-height: 1.5;
-        font-variant-numeric: tabular-nums;
-        margin-top: 4px;
-        padding-top: 4px;
-        border-top: 1px solid var(--border, rgba(255, 255, 255, 0.08));
-      }
       #${POPOVER_ID} .cr-effort-badge {
         display: inline-flex;
         align-items: center;
