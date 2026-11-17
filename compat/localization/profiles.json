@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "note": "Historical source identities are evidence, not a version allowlist. Structurally unique reviewed adapter contracts qualify unknown builds with warnings; current transaction hashes remain mandatory. Profiles remain probe-only until real-client acceptance.",
+  "note": "Profiles select exact application versions before structural qualification. Recorded web asset bytes and unique native anchors remain mandatory; unknown versions require a reviewed profile or an explicit developer override. Probe-only is not real-client acceptance.",
   "profiles": [
     {
       "profileId": "hub-win-x64-2.29.0-290e1b7a",
@@ -190,6 +190,44 @@
         "maxTotalBytes": 536870912
       },
       "nativeAdapterVersion": "2"
+    },
+    {
+      "profileId": "hub-win-x64-2.32.1-5b493943",
+      "status": "probe-only",
+      "product": "hub",
+      "channel": "stable",
+      "platform": "win32-x64",
+      "version": "2.32.1",
+      "electron": "44.9.1",
+      "adapterVersion": "3",
+      "exeSha256": "aeaf47c28ac1b7406f27ae610dded0e4c8e2f972f553d8840cdee7db767bf1e8",
+      "asarSha256": "5b493943e67e500638555315594d5b1acbc7a02e6dac3c786651921c1ee8519f",
+      "lsSha256": "65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f",
+      "nlsHelper": {
+        "calleeName": "Fr"
+      },
+      "assets": {
+        "index.html": {
+          "sha256": "118dcfc4e881a41715f2f363ced8ae9afa6b4d7c1acf312da194cb6fab50f768",
+          "size": 3798
+        },
+        "main.js": {
+          "sha256": "4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e",
+          "size": 12061895
+        }
+      },
+      "hostAdapter": {
+        "file": "dist/utils.js",
+        "sha256": "17879de917b8129ab7a4aa0c760d13f28c1afb1af44150f7f0950799e6af5d50",
+        "anchor": "win.loadURL = (targetUrl, options) => hubWcv.webContents.loadURL(targetUrl, options);"
+      },
+      "limits": {
+        "maxEntryBytes": 26214400,
+        "maxEntries": 4096,
+        "maxTotalBytes": 536870912
+      },
+      "nativeAdapterVersion": "3",
+      "nativeImageBinding": true
     }
   ]
 }

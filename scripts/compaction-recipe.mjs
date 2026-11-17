@@ -15,6 +15,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { pathToFileURL } from 'node:url';
+import { inspectTarget } from './lib/client-target.mjs';
+import { COMPACTION_BUILDS } from './lib/compaction-builds.mjs';
+import { buildConsumerSegments, checkConsumerSegments } from './lib/compaction-consumers.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const CANONICAL_PROMPT = 'compat/compaction/summary-v1.txt';
@@ -24,109 +27,6 @@ const REGISTRY = 'compat/compaction.json';
 // request-retention values. There are no user-selectable variants.
 const MAX_USER_REQUESTS = { source: 10, target: 30 };
 const MAX_USER_REQUEST_BYTES = { source: 1024, target: 2048 };
-
-// Segment table for Antigravity 2.31.2 language_server.exe (Windows x86-64,
-// image base 0x140000000). Offsets and preimage hashes were verified by
-// read-only inspection of the recorded inputs; see docs/compaction-patch.md.
-// VA-to-offset agreement is re-checked against the PE section table on every
-// run, so a single constant delta is never assumed.
-const PROMPT_SEGMENTS = [
-  {
-    name: 'summary-prompt-raw',
-    role: 'prompt',
-    encoding: 'raw',
-    va: '0x143c2a28d',
-    offset: 0x3c2968d,
-    preimageSha256: 'adc0b546b4512337f3edc1080cbcdf2d4b9303345664815694024e7304898a1c',
-  },
-  {
-    name: 'summary-prompt-json-1',
-    role: 'prompt',
-    encoding: 'json',
-    va: '0x149e5ffea',
-    offset: 0x9e5edea,
-    preimageSha256: 'ec1fb15144962801251eeb9521b88b22c4b110e16b89916e61e7c2ffe981f081',
-  },
-  {
-    name: 'summary-prompt-json-2',
-    role: 'prompt',
-    encoding: 'json',
-    va: '0x149e62da4',
-    offset: 0x9e61ba4,
-    preimageSha256: 'ec1fb15144962801251eeb9521b88b22c4b110e16b89916e61e7c2ffe981f081',
-  },
-];
-const REQUEST_COUNT_SITES = [
-  {
-    name: 'max-user-requests-gemini-2.5-flash',
-    profile: 'MODEL_GOOGLE_GEMINI_2_5_FLASH',
-    va: '0x149e5f275',
-    offset: 0x9e5e075,
-  },
-  {
-    name: 'max-user-requests-gemini-2.5-pro',
-    profile: 'MODEL_GOOGLE_GEMINI_2_5_PRO',
-    va: '0x149e5f67b',
-    offset: 0x9e5e47b,
-  },
-  {
-    name: 'max-user-requests-gpt-oss-120b-medium',
-    profile: 'MODEL_OPENAI_GPT_OSS_120B_MEDIUM',
-    va: '0x149e5fa54',
-    offset: 0x9e5e854,
-  },
-  {
-    name: 'max-user-requests-m124-base',
-    profile: 'MODEL_PLACEHOLDER_M124',
-    va: '0x149e5fe22',
-    offset: 0x9e5ec22,
-  },
-  {
-    name: 'max-user-requests-m26-base',
-    profile: 'MODEL_PLACEHOLDER_M26',
-    va: '0x149e61456',
-    offset: 0x9e60256,
-  },
-  {
-    name: 'max-user-requests-m400-base',
-    profile: 'MODEL_PLACEHOLDER_M400',
-    va: '0x149e62429',
-    offset: 0x9e61229,
-  },
-  {
-    name: 'max-user-requests-m400-claude-1m-840k',
-    profile: 'MODEL_PLACEHOLDER_M400/claude-1m_840k',
-    va: '0x149e627e0',
-    offset: 0x9e615e0,
-  },
-  {
-    name: 'max-user-requests-m408-base',
-    profile: 'MODEL_PLACEHOLDER_M408',
-    va: '0x149e62bdc',
-    offset: 0x9e619dc,
-  },
-];
-const IMM32_SITES = [
-  {
-    name: 'max-user-request-bytes-imm32',
-    field: '[rax+0x1c]',
-    va: '0x1418c0f85',
-    offset: 0x18c0585,
-    source: MAX_USER_REQUEST_BYTES.source,
-    target: MAX_USER_REQUEST_BYTES.target,
-  },
-  {
-    name: 'max-user-requests-imm32',
-    field: '[rax+0x18]',
-    va: '0x1418c0f90',
-    offset: 0x18c0590,
-    source: MAX_USER_REQUESTS.source,
-    target: MAX_USER_REQUESTS.target,
-  },
-];
-const EMBEDDED_JSON = { offset: 0x9e5c968, length: 28210 };
-const RAW_PROMPT_LENGTH = 3937;
-const JSON_PROMPT_LENGTH = 4103;
 
 function fail(message) {
   throw new Error(message);
@@ -239,13 +139,17 @@ function readCanonicalPrompt() {
 // Solve the trailing-padding split so the same canonical prompt fills both
 // the raw segment (1 byte per newline and space) and the JSON body (3 bytes
 // per padded newline, 1 per space). Returns null when no split exists.
-function solvePadding(canonical) {
+function solvePadding(canonical, layout) {
   const encodedLength = utf8Length(encodePromptBody(canonical));
   const rawLength = utf8Length(canonical);
-  const delta = JSON_PROMPT_LENGTH - RAW_PROMPT_LENGTH; // 166 for this build
+  if (layout.consumerSites) {
+    const spaces = layout.rawPromptLength - rawLength;
+    return spaces < 0 ? null : { newlines: 0, spaces, encodedLength, rawLength };
+  }
+  const delta = layout.jsonPromptLength - layout.rawPromptLength;
   const newlines = Math.round((delta - (encodedLength - rawLength)) / 2);
   if (newlines < 0 || (delta - (encodedLength - rawLength)) % 2 !== 0) return null;
-  const spaces = RAW_PROMPT_LENGTH - rawLength - newlines;
+  const spaces = layout.rawPromptLength - rawLength - newlines;
   if (spaces < 0) return null;
   return { newlines, spaces, encodedLength, rawLength };
 }
@@ -278,7 +182,7 @@ function peSections(data) {
 
 // Assert every recorded VA lands on its recorded file offset through the
 // real section table; this rejects single-delta assumptions outright.
-function verifyVaOffsets(data) {
+function verifyVaOffsets(data, layout) {
   const { imageBase, sections } = peSections(data);
   const report = [];
   const check = (vaText, offset) => {
@@ -297,20 +201,28 @@ function verifyVaOffsets(data) {
       );
     report.push({ va: vaText, offset, section: section.name });
   };
-  for (const segment of PROMPT_SEGMENTS) check(segment.va, segment.offset);
-  for (const site of REQUEST_COUNT_SITES) check(site.va, site.offset);
-  for (const site of IMM32_SITES) check(site.va, site.offset);
+  for (const site of [
+    ...layout.promptSegments,
+    ...layout.requestCountSites,
+    ...layout.imm32Sites,
+    ...(layout.consumerSites ?? []),
+    ...layout.preservedPrompts,
+    ...(layout.preservedBytes ?? []),
+  ])
+    check(site.va, site.offset);
   return { imageBase, sections: report };
 }
 
-function buildSegments(data, canonical, padding) {
+function buildSegments(data, canonical, padding, layout) {
+  if (layout.consumerSites)
+    return buildConsumerSegments(data, canonical, layout, {
+      requests: MAX_USER_REQUESTS.target,
+      bytes: MAX_USER_REQUEST_BYTES.target,
+    });
   const padded = paddedPrompt(canonical, padding);
   const segments = [];
-  for (const segment of PROMPT_SEGMENTS) {
-    const expected = data.subarray(
-      segment.offset,
-      segment.offset + (segment.encoding === 'raw' ? RAW_PROMPT_LENGTH : JSON_PROMPT_LENGTH),
-    );
+  for (const segment of layout.promptSegments) {
+    const expected = data.subarray(segment.offset, segment.offset + promptLength(segment, layout));
     if (sha256(expected) !== segment.preimageSha256) {
       fail(
         `segment ${segment.name} does not match the recorded original prompt preimage — refusing`,
@@ -350,7 +262,7 @@ function buildSegments(data, canonical, padding) {
       new_hex: replacement.toString('hex'),
     });
   }
-  for (const site of REQUEST_COUNT_SITES) {
+  for (const site of layout.requestCountSites) {
     const expected = data.subarray(site.offset, site.offset + 2);
     if (expected.toString('latin1') !== String(MAX_USER_REQUESTS.source)) {
       fail(
@@ -366,7 +278,7 @@ function buildSegments(data, canonical, padding) {
       new_hex: Buffer.from(String(MAX_USER_REQUESTS.target), 'latin1').toString('hex'),
     });
   }
-  for (const site of IMM32_SITES) {
+  for (const site of layout.imm32Sites) {
     const expected = data.subarray(site.offset, site.offset + 4);
     if (expected.readUInt32LE(0) !== site.source) {
       fail(
@@ -396,10 +308,10 @@ function buildSegments(data, canonical, padding) {
 
 // Parse the embedded configuration and every nested profile/variant JSON
 // string, then report the request-retention paths found.
-function parseEmbeddedConfig(data) {
+function parseEmbeddedConfig(data, layout) {
   const jsonBytes = data.subarray(
-    EMBEDDED_JSON.offset,
-    EMBEDDED_JSON.offset + EMBEDDED_JSON.length,
+    layout.embeddedJson.offset,
+    layout.embeddedJson.offset + layout.embeddedJson.length,
   );
   let outer;
   try {
@@ -447,17 +359,8 @@ function parseEmbeddedConfig(data) {
           walk(inner, `${childPath}(json)`);
           continue;
         }
-        // Not every configuration string is prompt-shaped. The override
-        // values appear both as encoded bodies and as already-decoded text
-        // depending on nesting depth, so try the codec and fall back to the
-        // plain string.
-        let candidate;
-        try {
-          candidate = decodePromptBody(item);
-        } catch {
-          candidate = item;
-        }
-        if (candidate.includes('continuation summary')) promptPaths.push(childPath);
+        if (key === 'session_summary_prompt_override' && item.length > 0)
+          promptPaths.push(childPath);
         continue;
       }
       walk(item, childPath);
@@ -470,7 +373,7 @@ function parseEmbeddedConfig(data) {
 }
 
 // Deep-compare the parsed configurations and classify every difference.
-// Only the two prompt overrides and the eight request-count values may
+// Only the selected build's prompt overrides and request-count values may
 // change; anything else fails.
 function assertOnlyExpectedChanges(before, after, expectedPromptPaths, expectedCountPaths) {
   const differences = [];
@@ -595,13 +498,107 @@ function loadBinary(binaryPath) {
   return { data, sha: sha256(data) };
 }
 
-function inspect(binaryPath) {
+function promptLength(segment, layout) {
+  return segment.encoding === 'raw' ? layout.rawPromptLength : layout.jsonPromptLength;
+}
+
+function knownBuildHashes() {
+  const hashes = new Map(
+    COMPACTION_BUILDS.map((layout) => [
+      layout.id,
+      new Set([layout.originalSha256, ...layout.offlineCandidateInputs]),
+    ]),
+  );
+  for (const filename of [REGISTRY, 'compat/tool-output.json']) {
+    const registry = JSON.parse(fs.readFileSync(path.join(root, filename), 'utf8'));
+    for (const target of registry.targets) {
+      const known = hashes.get(target.id);
+      if (!known) continue;
+      for (const input of [...target.inputs, ...(target.historical_inputs ?? [])]) {
+        known.add(input.binary_sha256);
+        known.add(input.output_sha256);
+      }
+    }
+  }
+  return hashes;
+}
+
+function selectCompactionBuild({ sha, size, appVersion }, hashes = knownBuildHashes()) {
+  let layout;
+  if (appVersion !== undefined) {
+    layout = COMPACTION_BUILDS.find((candidate) => candidate.version === appVersion);
+    if (!layout) fail(`unsupported installed app version ${appVersion}; no compaction site layout`);
+  } else {
+    layout = COMPACTION_BUILDS.find((candidate) => hashes.get(candidate.id)?.has(sha));
+    if (!layout) fail(`unknown binary SHA ${sha}; no verified compaction site layout`);
+  }
+  if (!hashes.get(layout.id)?.has(sha))
+    fail(
+      `binary SHA ${sha} is not a known ${layout.version} input or output; version alone cannot admit it`,
+    );
+  if (size !== layout.binarySize)
+    fail(`binary size ${size} does not match ${layout.id}: expected ${layout.binarySize}`);
+  return {
+    layout,
+    version: layout.version,
+    selectionSource: appVersion === undefined ? 'binary-sha256' : 'app-version',
+    identityVerifiedBy: 'whole-file-sha256-and-size',
+  };
+}
+
+function binaryAppVersion(binaryPath) {
+  const directory = path.dirname(path.resolve(binaryPath));
+  if (path.basename(directory).toLowerCase() !== 'bin') return undefined;
+  const asar = path.join(directory, '..', 'app.asar');
+  if (!fs.existsSync(asar)) return undefined;
+  return inspectTarget(asar, { requireFiles: false }).version;
+}
+
+function inspectPreservedPrompts(data, layout) {
+  return layout.preservedPrompts.map((site) => {
+    const bytes = data.subarray(site.offset, site.offset + site.length);
+    const digest = sha256(bytes);
+    if (digest !== site.preimageSha256)
+      fail(`preserved prompt ${site.name} does not match its recorded preimage`);
+    const decoded = decodePromptBody(bytes.toString('utf8'));
+    if (utf8Length(decoded) !== site.decodedLength)
+      fail(`preserved prompt ${site.name} decoded length differs from its recorded length`);
+    return {
+      name: site.name,
+      profile: site.profile,
+      sha256: digest,
+      encoded_bytes: site.length,
+      decoded_bytes: site.decodedLength,
+      preserved: true,
+    };
+  });
+}
+
+function inspectPreservedBytes(data, layout) {
+  return (layout.preservedBytes ?? []).map((site) => {
+    const bytes = data.subarray(site.offset, site.offset + site.length);
+    const digest = sha256(bytes);
+    if (bytes.length !== site.length || digest !== site.preimageSha256)
+      fail(`preserved bytes ${site.name} do not match the recorded preimage`);
+    return {
+      name: site.name,
+      va: site.va,
+      offset: site.offset,
+      bytes: site.length,
+      sha256: digest,
+      preserved: true,
+    };
+  });
+}
+
+function inspect(binaryPath, appVersion = binaryAppVersion(binaryPath)) {
   const { data, sha } = loadBinary(binaryPath);
-  const pe = verifyVaOffsets(data);
+  const { layout, ...selection } = selectCompactionBuild({ sha, size: data.length, appVersion });
+  const pe = verifyVaOffsets(data, layout);
   const segments = [];
   let promptState = 'match';
-  for (const segment of PROMPT_SEGMENTS) {
-    const length = segment.encoding === 'raw' ? RAW_PROMPT_LENGTH : JSON_PROMPT_LENGTH;
+  for (const segment of layout.promptSegments) {
+    const length = promptLength(segment, layout);
     const digest = sha256(data.subarray(segment.offset, segment.offset + length));
     if (digest !== segment.preimageSha256) promptState = 'drift';
     segments.push({
@@ -611,7 +608,7 @@ function inspect(binaryPath) {
     });
   }
   const valueSites = [];
-  for (const site of REQUEST_COUNT_SITES) {
+  for (const site of layout.requestCountSites) {
     const value = data.toString('latin1', site.offset, site.offset + 2);
     valueSites.push({
       name: site.name,
@@ -619,13 +616,13 @@ function inspect(binaryPath) {
       matches: value === String(MAX_USER_REQUESTS.source),
     });
   }
-  for (const site of IMM32_SITES) {
+  for (const site of layout.imm32Sites) {
     const value = data.readUInt32LE(site.offset);
     valueSites.push({ name: site.name, value, matches: value === site.source });
   }
   let config;
   try {
-    const parsed = parseEmbeddedConfig(data);
+    const parsed = parseEmbeddedConfig(data, layout);
     config = {
       parses: true,
       promptPaths: parsed.promptPaths,
@@ -639,6 +636,25 @@ function inspect(binaryPath) {
   const known = registry ? registryInputs(registry) : [];
   return {
     binary: binaryPath,
+    build: layout.id,
+    ...selection,
+    qualification: layout.qualification,
+    runtime_prompt_adoption: layout.runtimePromptAdoption,
+    ...(layout.consumerSites
+      ? {
+          strategy: layout.strategy,
+          consumer_policy: layout.consumerPolicy,
+          preserved_bytes: inspectPreservedBytes(data, layout),
+          consumer_sites: layout.consumerSites.map((site) => ({
+            name: site.name,
+            role: site.role,
+            va: site.va,
+            bytes: site.length,
+            matches:
+              sha256(data.subarray(site.offset, site.offset + site.length)) === site.preimageSha256,
+          })),
+        }
+      : {}),
     binary_sha256: sha,
     binary_size: data.length,
     pe: {
@@ -646,20 +662,27 @@ function inspect(binaryPath) {
       sections: pe.sections.map((section) => section.section),
     },
     prompt_segments: segments,
+    preserved_prompts: inspectPreservedPrompts(data, layout),
     value_sites: valueSites,
     embedded_config: config,
     registered_inputs: known,
     matches_registered_input: known.some((input) => input.binary_sha256 === sha),
     matches_registered_output: registry ? registryOutputs(registry).includes(sha) : false,
+    matches_historical_output: registry
+      ? registry.targets.some((target) =>
+          target.historical_inputs?.some((input) => input.output_sha256 === sha),
+        )
+      : false,
     prompt_state: promptState,
   };
 }
 
-function promptFit() {
+function promptFit(layout) {
   const canonical = readCanonicalPrompt();
-  const padding = solvePadding(canonical);
+  const padding = solvePadding(canonical, layout);
   if (!padding) {
     return {
+      build: layout.id,
       canonical_bytes: utf8Length(canonical),
       fits: false,
       detail:
@@ -667,18 +690,32 @@ function promptFit() {
     };
   }
   const padded = paddedPrompt(canonical, padding);
+  if (layout.consumerSites)
+    return {
+      build: layout.id,
+      strategy: layout.strategy,
+      canonical_bytes: padding.rawLength,
+      padding_newlines: padding.newlines,
+      padding_spaces: padding.spaces,
+      raw_segment_length: layout.rawPromptLength,
+      padded_bytes: utf8Length(padded),
+      fits: utf8Length(padded) === layout.rawPromptLength,
+      embedded_prompt_semantics:
+        'unchanged; the normalized M124 literal is a legacy comparison table',
+    };
   return {
+    build: layout.id,
     canonical_bytes: padding.rawLength,
     encoded_bytes: padding.encodedLength,
     padding_newlines: padding.newlines,
     padding_spaces: padding.spaces,
-    raw_segment_length: RAW_PROMPT_LENGTH,
-    json_segment_length: JSON_PROMPT_LENGTH,
+    raw_segment_length: layout.rawPromptLength,
+    json_segment_length: layout.jsonPromptLength,
     padded_bytes: utf8Length(padded),
     encoded_padded_bytes: utf8Length(encodePromptBody(padded)),
     fits:
-      utf8Length(padded) === RAW_PROMPT_LENGTH &&
-      utf8Length(encodePromptBody(padded)) === JSON_PROMPT_LENGTH,
+      utf8Length(padded) === layout.rawPromptLength &&
+      utf8Length(encodePromptBody(padded)) === layout.jsonPromptLength,
   };
 }
 
@@ -707,29 +744,37 @@ function registryOutputs(registry) {
   ];
 }
 
-function build(binaryPath, expectSha, outPath) {
+function build(binaryPath, expectSha, outPath, appVersion = binaryAppVersion(binaryPath)) {
   const { data, sha } = loadBinary(binaryPath);
   if (!expectSha) fail('build requires --expect-sha with the whole-file input SHA-256');
   if (sha !== expectSha.toLowerCase())
     fail(`input SHA ${sha} does not match --expect-sha ${expectSha}`);
+  const { layout, ...selection } = selectCompactionBuild({ sha, size: data.length, appVersion });
   const registry = readRegistryIfExists();
-  if (registry && !registryInputs(registry).some((input) => input.binary_sha256 === sha)) {
+  if (
+    !layout.offlineCandidateInputs.includes(sha) &&
+    !registryInputs(registry).some(
+      (input) => input.target === layout.id && input.binary_sha256 === sha,
+    )
+  ) {
     fail(
       `input SHA ${sha} is not a registered compaction input; add the verified input to ${REGISTRY} first`,
     );
   }
-  verifyVaOffsets(data);
+  verifyVaOffsets(data, layout);
+  const preservedPrompts = inspectPreservedPrompts(data, layout);
+  const preservedBytes = inspectPreservedBytes(data, layout);
   const canonical = readCanonicalPrompt();
-  const padding = solvePadding(canonical);
+  const padding = solvePadding(canonical, layout);
   if (!padding)
     fail(
       'the canonical prompt does not fit the registered segment sizes; run prompt-fit for details',
     );
-  const segments = buildSegments(data, canonical, padding);
+  const segments = buildSegments(data, canonical, padding, layout);
   const output = applySegments(data, segments);
   // Round-trip: decode every patched prompt segment back to the canonical text.
-  for (const segment of PROMPT_SEGMENTS) {
-    const length = segment.encoding === 'raw' ? RAW_PROMPT_LENGTH : JSON_PROMPT_LENGTH;
+  for (const segment of layout.promptSegments) {
+    const length = promptLength(segment, layout);
     const replaced = segments.find((candidate) => candidate.name === segment.name);
     const bytes = Buffer.from(replaced.new_hex, 'hex');
     if (bytes.length !== length) fail(`segment ${segment.name} replacement length drifted`);
@@ -740,43 +785,74 @@ function build(binaryPath, expectSha, outPath) {
     if (normalizePrompt(decoded) !== normalizePrompt(canonical))
       fail(`segment ${segment.name} does not decode back to the canonical prompt`);
   }
-  // Full configuration round-trip: only prompt fields and request counts change.
-  const before = parseEmbeddedConfig(data);
-  const after = parseEmbeddedConfig(output);
-  const expectedCountPaths = new Set(
-    before.retentionSites
-      .filter(
-        (site) =>
-          site.path.endsWith('max_user_requests') && site.value === MAX_USER_REQUESTS.source,
-      )
-      .map((site) => site.path),
-  );
-  if (expectedCountPaths.size !== REQUEST_COUNT_SITES.length) {
-    fail(
-      `expected ${REQUEST_COUNT_SITES.length} embedded request-count sites, found ${expectedCountPaths.size}`,
+  // Consumer recipes preserve every embedded setting; older recipes change
+  // only the recorded prompt fields and request counts.
+  const before = parseEmbeddedConfig(data, layout);
+  const after = parseEmbeddedConfig(output, layout);
+  if (layout.consumerSites) {
+    assertOnlyExpectedChanges(before.outer, after.outer, [], new Set());
+  } else {
+    const expectedCountPaths = new Set(
+      before.retentionSites
+        .filter(
+          (site) =>
+            site.path.endsWith('max_user_requests') && site.value === MAX_USER_REQUESTS.source,
+        )
+        .map((site) => site.path),
     );
+    if (expectedCountPaths.size !== layout.requestCountSites.length) {
+      fail(
+        `expected ${layout.requestCountSites.length} embedded request-count sites, found ${expectedCountPaths.size}`,
+      );
+    }
+    const changedPromptPaths = before.promptPaths.filter(
+      (promptPath) =>
+        !layout.preservedPrompts.some((site) => promptPath.includes(`.${site.profile}.`)),
+    );
+    if (
+      changedPromptPaths.length !==
+      layout.promptSegments.filter((site) => site.encoding === 'json').length
+    )
+      fail('the embedded prompt paths do not match the selected build layout');
+    assertOnlyExpectedChanges(before.outer, after.outer, changedPromptPaths, expectedCountPaths);
+    const counts = after.retentionSites.filter((site) => site.path.endsWith('max_user_requests'));
+    if (
+      counts.length !== layout.requestCountSites.length ||
+      counts.some((site) => site.value !== MAX_USER_REQUESTS.target)
+    ) {
+      fail('the patched configuration does not carry the target request count everywhere');
+    }
+    const bytesPerRequest = after.retentionSites.filter((site) =>
+      site.path.endsWith('max_user_request_bytes'),
+    );
+    if (bytesPerRequest.length !== 0)
+      fail('an unexpected max_user_request_bytes JSON site appeared');
   }
-  assertOnlyExpectedChanges(before.outer, after.outer, before.promptPaths, expectedCountPaths);
-  const counts = after.retentionSites.filter((site) => site.path.endsWith('max_user_requests'));
-  if (
-    counts.length !== REQUEST_COUNT_SITES.length ||
-    counts.some((site) => site.value !== MAX_USER_REQUESTS.target)
-  ) {
-    fail('the patched configuration does not carry the target request count everywhere');
-  }
-  const bytesPerRequest = after.retentionSites.filter((site) =>
-    site.path.endsWith('max_user_request_bytes'),
-  );
-  if (bytesPerRequest.length !== 0) fail('an unexpected max_user_request_bytes JSON site appeared');
+  inspectPreservedPrompts(output, layout);
+  inspectPreservedBytes(output, layout);
   const candidate = {
     schema: 1,
     feature: 'compaction',
+    build: layout.id,
+    ...selection,
+    qualification: 'offline-candidate',
+    runtime_prompt_adoption: layout.runtimePromptAdoption,
+    promotion_blocker: layout.runtimePromptAdoption.startsWith('live-verified')
+      ? 'Live qualification applies only to the exact registered output and recorded model route; this generated candidate requires review.'
+      : layout.consumerSites
+        ? 'Static consumer recipe only; runtime prompt adoption and payload retention await live qualification.'
+        : 'Runtime prompt adoption has not been established; relocation is not an effectiveness fix.',
+    ...(layout.consumerSites
+      ? { strategy: layout.strategy, consumer_policy: layout.consumerPolicy }
+      : {}),
     generated_with: `scripts/compaction-recipe.mjs build --expect-sha ${sha}`,
     canonical_prompt: CANONICAL_PROMPT,
     canonical_prompt_sha256: sha256(Buffer.from(canonical, 'utf8')),
     input_sha256: sha,
     output_sha256: sha256(output),
     padding: { newlines: padding.newlines, spaces: padding.spaces },
+    preserved_prompts: preservedPrompts,
+    ...(layout.preservedBytes ? { preserved_bytes: preservedBytes } : {}),
     segments,
   };
   const resolvedOut = requireOutUnderVar(outPath);
@@ -784,6 +860,11 @@ function build(binaryPath, expectSha, outPath) {
   fs.writeFileSync(resolvedOut, `${JSON.stringify(candidate, null, 2)}\n`);
   return {
     candidate: resolvedOut,
+    build: layout.id,
+    ...selection,
+    qualification: candidate.qualification,
+    runtime_prompt_adoption: candidate.runtime_prompt_adoption,
+    ...(layout.consumerSites ? { strategy: layout.strategy } : {}),
     input_sha256: sha,
     output_sha256: candidate.output_sha256,
     segments: segments.length,
@@ -800,8 +881,7 @@ function build(binaryPath, expectSha, outPath) {
 // Registry consistency: decode every registered prompt replacement and check
 // it against the canonical prompt, so editing the text without regenerating
 // the recipe fails loudly.
-function checkRegistry() {
-  const registry = readRegistryIfExists();
+function checkRegistry(registry = readRegistryIfExists()) {
   if (!registry)
     fail(`${REGISTRY} does not exist yet; run build and promote the reviewed candidate`);
   if (registry.schema !== 1 || registry.feature !== 'compaction')
@@ -809,16 +889,125 @@ function checkRegistry() {
   const canonical = readCanonicalPrompt();
   const problems = [];
   const report = [];
+  const historicalReport = [];
   for (const target of registry.targets) {
+    const layout = COMPACTION_BUILDS.find((candidate) => candidate.id === target.id);
+    if (!layout) fail(`no compaction site layout for registered target ${target.id}`);
+    if (target.app_version !== layout.version)
+      fail(`${target.id}: registry app version does not match the build layout`);
+    if (target.binary_size !== layout.binarySize)
+      fail(`${target.id}: registry binary size does not match the build layout`);
+    const history = target.historical_inputs ?? [];
+    if (history.length !== (layout.historicalRecipes?.length ?? 0))
+      problems.push(`${target.id}: historical recipes do not match their preserved contracts`);
+    for (const input of history) {
+      const fingerprint = createHash('sha256');
+      for (const segment of [...input.segments].sort((a, b) =>
+        a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+      ))
+        fingerprint.update(
+          `${segment.name}\0${segment.offset}\0${segment.expected_hex.toLowerCase()}\0${segment.new_hex.toLowerCase()}\n`,
+        );
+      const digest = fingerprint.digest('hex');
+      const contract = layout.historicalRecipes?.find((recipe) => recipe.fingerprint === digest);
+      if (
+        !contract ||
+        contract.input !== input.input ||
+        contract.inputSha256 !== input.binary_sha256 ||
+        contract.outputSha256 !== input.output_sha256
+      )
+        problems.push(`${target.id}: historical recipe identity or restore fingerprint changed`);
+      historicalReport.push({
+        target: target.id,
+        input: input.input,
+        segments: input.segments.length,
+        fingerprint: digest,
+      });
+    }
+    const sites = [
+      ...layout.promptSegments,
+      ...layout.requestCountSites,
+      ...layout.imm32Sites,
+      ...(layout.consumerSites ?? []),
+    ];
+    if (layout.consumerSites && target.inputs.length !== 1)
+      problems.push(`${target.id}: the consumer recipe admits only its exact original input`);
     for (const input of target.inputs) {
+      const actualNames = input.segments.map((segment) => segment.name).sort();
+      const expectedNames = sites.map((site) => site.name).sort();
+      if (JSON.stringify(actualNames) !== JSON.stringify(expectedNames))
+        problems.push(`${target.id}/${input.input}: segment names do not match the build layout`);
+      if (layout.consumerSites) {
+        if (input.input !== 'original' || input.binary_sha256 !== layout.originalSha256)
+          problems.push(`${target.id}: the consumer recipe admits only its exact original input`);
+        for (const site of sites) {
+          const segment = input.segments.find((candidate) => candidate.name === site.name);
+          if (
+            segment &&
+            (segment.role !== site.role || segment.offset !== site.offset || segment.va !== site.va)
+          )
+            problems.push(
+              `${target.id}/${input.input}: consumer segment ${site.name} identity differs from the build layout`,
+            );
+        }
+        try {
+          checkConsumerSegments(input.segments, canonical, layout, {
+            requests: MAX_USER_REQUESTS.target,
+            bytes: MAX_USER_REQUEST_BYTES.target,
+          });
+        } catch (error) {
+          problems.push(`${target.id}/${input.input}: ${error.message}`);
+        }
+        report.push({
+          target: target.id,
+          version: layout.version,
+          input: input.input,
+          segments: input.segments.length,
+        });
+        continue;
+      }
+      for (const site of sites) {
+        const segment = input.segments.find((candidate) => candidate.name === site.name);
+        if (!segment) continue;
+        if (segment.role !== (site.role ?? 'capacity'))
+          problems.push(
+            `${target.id}/${input.input}: segment ${site.name} role differs from the build layout`,
+          );
+        if (segment.offset !== site.offset || segment.va !== site.va)
+          problems.push(
+            `${target.id}/${input.input}: segment ${site.name} address differs from the build layout`,
+          );
+        let expected;
+        if (site.preimageSha256) {
+          if (sha256(Buffer.from(segment.expected_hex, 'hex')) !== site.preimageSha256)
+            problems.push(
+              `${target.id}/${input.input}: segment ${site.name} prompt preimage differs from the build layout`,
+            );
+        } else if (site.field) {
+          expected = Buffer.alloc(4);
+          expected.writeUInt32LE(site.source);
+        } else {
+          expected = Buffer.from(String(MAX_USER_REQUESTS.source), 'latin1');
+        }
+        if (expected && segment.expected_hex !== expected.toString('hex'))
+          problems.push(
+            `${target.id}/${input.input}: segment ${site.name} source value differs from the build layout`,
+          );
+      }
       const promptSegments = input.segments.filter((segment) => segment.role === 'prompt');
-      if (promptSegments.length !== PROMPT_SEGMENTS.length)
+      if (promptSegments.length !== layout.promptSegments.length)
         problems.push(
-          `${target.id}/${input.input}: expected ${PROMPT_SEGMENTS.length} prompt segments, found ${promptSegments.length}`,
+          `${target.id}/${input.input}: expected ${layout.promptSegments.length} prompt segments, found ${promptSegments.length}`,
         );
       for (const segment of promptSegments) {
+        const site = layout.promptSegments.find((candidate) => candidate.name === segment.name);
+        if (!site) continue;
         const bytes = Buffer.from(segment.new_hex, 'hex');
-        const isRaw = segment.name.endsWith('-raw');
+        if (bytes.length !== promptLength(site, layout))
+          problems.push(
+            `${target.id}/${input.input}: segment ${segment.name} replacement length differs from the build layout`,
+          );
+        const isRaw = site.encoding === 'raw';
         const decoded = isRaw ? bytes.toString('utf8') : decodePromptBody(bytes.toString('utf8'));
         if (normalizePrompt(decoded) !== normalizePrompt(canonical))
           problems.push(
@@ -855,7 +1044,12 @@ function checkRegistry() {
             `${target.id}/${input.input}: segment ${segment.name} replaces with ${replacement}, expected ${MAX_USER_REQUEST_BYTES.target}`,
           );
       }
-      report.push({ target: target.id, input: input.input, segments: input.segments.length });
+      report.push({
+        target: target.id,
+        version: layout.version,
+        input: input.input,
+        segments: input.segments.length,
+      });
     }
   }
   if (problems.length > 0)
@@ -865,6 +1059,7 @@ function checkRegistry() {
   return {
     registry: REGISTRY,
     inputs: report,
+    historical_inputs: historicalReport,
     canonical_prompt_sha256: sha256(Buffer.from(canonical, 'utf8')),
   };
 }
@@ -874,6 +1069,7 @@ function parseArguments(argv) {
   for (let i = 1; i < argv.length; i++) {
     const argument = argv[i];
     if (argument === '--binary') options.binary = argv[++i];
+    else if (argument === '--asar') options.asar = argv[++i];
     else if (argument === '--expect-sha') options.expectSha = argv[++i];
     else if (argument === '--out') options.out = argv[++i];
     else fail(`unknown argument ${argument}`);
@@ -888,8 +1084,13 @@ function parseArguments(argv) {
   ) {
     fail(`unknown command ${options.command}`);
   }
-  if ((options.command === 'inspect' || options.command === 'build') && !options.binary)
-    fail(`${options.command} requires --binary PATH`);
+  if (options.binary && options.asar) fail('select --binary PATH or --asar PATH, not both');
+  if (
+    (options.command === 'inspect' || options.command === 'build') &&
+    !options.binary &&
+    !options.asar
+  )
+    fail(`${options.command} requires --binary PATH or --asar PATH`);
   if (options.command === 'build' && !options.out)
     fail('build requires --out FILE under var/; it never writes elsewhere');
   return options;
@@ -897,11 +1098,26 @@ function parseArguments(argv) {
 
 function runCli(argv) {
   const options = parseArguments(argv);
+  let appVersion;
+  if (options.asar) {
+    const target = inspectTarget(path.resolve(options.asar), { requireFiles: false });
+    options.binary = target.binaryPath;
+    appVersion = target.version;
+  }
   let result;
-  if (options.command === 'inspect') result = inspect(options.binary);
-  else if (options.command === 'prompt-fit') result = promptFit();
-  else if (options.command === 'build')
-    result = build(options.binary, options.expectSha, options.out);
+  if (options.command === 'inspect') result = inspect(options.binary, appVersion);
+  else if (options.command === 'prompt-fit') {
+    if (options.binary) {
+      const { data, sha } = loadBinary(options.binary);
+      const { layout, ...selection } = selectCompactionBuild({
+        sha,
+        size: data.length,
+        appVersion: appVersion ?? binaryAppVersion(options.binary),
+      });
+      result = { ...promptFit(layout), ...selection };
+    } else result = { builds: COMPACTION_BUILDS.map((layout) => promptFit(layout)) };
+  } else if (options.command === 'build')
+    result = build(options.binary, options.expectSha, options.out, appVersion);
   else result = checkRegistry();
   return JSON.stringify(result, null, 2);
 }
@@ -913,24 +1129,21 @@ export {
   assertOnlyExpectedChanges,
   build,
   buildSegments,
+  COMPACTION_BUILDS,
   checkRegistry,
   decodePromptBody,
   encodePromptBody,
-  IMM32_SITES,
   inspect,
-  JSON_PROMPT_LENGTH,
   MAX_USER_REQUEST_BYTES,
   MAX_USER_REQUESTS,
   normalizePrompt,
-  PROMPT_SEGMENTS,
   paddedPrompt,
   parseEmbeddedConfig,
   promptFit,
-  RAW_PROMPT_LENGTH,
-  REQUEST_COUNT_SITES,
   readCanonicalPrompt,
   requireOutUnderVar,
   runCli,
+  selectCompactionBuild,
   solvePadding,
   verifyVaOffsets,
 };

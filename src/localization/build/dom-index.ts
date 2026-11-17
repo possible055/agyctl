@@ -17,6 +17,20 @@ const TEMPLATE_IDS = new Set([
   'web.dynamic.e2b77e2f4cdc6950',
   'settings.plan.weeklyRefreshSentence',
   'settings.plan.fiveHourRefreshSentence',
+  "ssh.web.connectingTo",
+  "ssh.web.connectionFailed",
+  "ssh.web.removeRecent",
+  "ssh.web.removedRecent",
+  "ssh.web.removeRecentFailed",
+  "ssh.web.hideHost",
+  "ssh.web.showHost",
+  "ssh.web.hidHost",
+  "ssh.web.showingHost",
+  "ssh.web.configGroup",
+  "ssh.web.hiddenHostCount",
+  "ssh.web.onHost",
+  "ssh.web.connectedTo",
+  "ssh.web.hostWindowNotice",
 ]);
 
 export interface DomExactEntry {

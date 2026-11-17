@@ -16,9 +16,9 @@ messages and never translates Antigravity. See
 
 ## Current status
 
-The development target is Windows x86-64 Antigravity 2.31.0 (profile
-`hub-win-x64-2.31.0-03f3d094`) in `zh-Hant-TW`, `zh-Hans-CN`, and `ja-JP`. Older
-profiles for 2.29.x remain in the registry.
+The current development target is Windows x86-64 Antigravity 2.32.1
+(profile `hub-win-x64-2.32.1-5b493943`) in `zh-Hant-TW`, `zh-Hans-CN`, and `ja-JP`.
+The 2.31.0 and 2.29.x profiles remain in the registry.
 
 Every profile in [profiles.json](../compat/localization/profiles.json) is
 `probe-only`. A `probe-only` profile can enter installation preflight with an
@@ -34,11 +34,35 @@ node -e "for(const p of require('./compat/localization/profiles.json').profiles)
 - **Automated:** isolated Electron contracts exercise production DOM and native
   preparation (`npm run test:electron`; see [development](development.md#checks)).
   They are not full client acceptance.
+- **Offline, recorded 2026-11-16 on Windows 2.32.1:** all three locales prepared
+  and validated against the installed original LS without conflicts; native
+  adapter anchors were unique and all transformed members parsed. Three-locale
+  Electron DOM fixtures cover SSH/MCP controls and content-string collisions.
+  This offline check made no installed-file changes or SSH connections.
+- **Live, partial, recorded 2026-11-16 on Windows 2.32.1:** reviewed Host
+  transactions installed each locale and retained the capsule. After restarting
+  the installed client for each locale, the real SSH config-file picker title and
+  the native invalid-host response used the selected translation. The picker was
+  canceled without selecting a file; the invalid input was rejected before any
+  SSH connection. The Hub DOM engine and input capsule were present in all three
+  runs. The selected locale was restored to `zh-Hant-TW` afterwards. This does not
+  qualify successful remote connections, authentication dialogs, or every MCP
+  error state.
 - **Manual, recorded 2026-11-14 on Windows x86-64 Antigravity 2.31.0:** translated
   quit confirmation, workspace picker, and zero-agent tray menus in all three
   locales.
 - **Unverified:** broader UI coverage, startup and foreground performance, and the
   engine's incremental memory cost. No profile is promoted by these observations.
+
+For the 2.32.1 profile, `nativeImageBinding` permits preparation from the native
+coordinator's verified original image. Preparation independently compares every
+localization asset, archive identity, and NLS helper with the installed managed
+image. Identical assets reuse the same artifact even when L/T/C bytes change.
+The reviewed Host plan still binds the current full native SHA, original SHA,
+generation, and recipe-assets fingerprint separately; changes after review
+require preparing again. Legacy profiles keep their original whole-LS binding.
+See [management](../scripts/lib/management.mjs) and
+[revision binding](../scripts/lib/native-binding.mjs).
 
 ### Catalogs and validation
 
@@ -84,6 +108,23 @@ Selection alone does not inject the DOM engine or prove activation. A missing
 profile or a failed asset or structural check refuses the feature; ASAR or
 executable hash drift emits `IDENTITY_DRIFT` instead. Receipts retain
 `features.localization.profileStatus`.
+
+For installed sources, Host preparation and the localization CLI read the selected
+ASAR's `package.json.version` and select an exact version/platform profile before
+structural or asset admission. This also applies to explicit `--ls` paths paired
+with a custom installation's `app.asar`. Unknown versions refuse; there is no
+nearest-version choice. The developer `--profile` override and independent offline
+sample inspection remain available, without bypassing their own asset/structural
+checks. See [profile resolution](../src/localization/host/feature.ts) and
+[CLI source selection](../src/localization/cli.ts).
+
+Per-asset admission alone does not establish native-patch composition. The 2.32.1
+profile additionally uses the verified native image proof and content identity
+described in [verification status](#verification-status), allowing unchanged
+localization assets to reuse an artifact across coordinated L/T/C changes. Legacy
+profiles retain their whole-LS source binding. Reviewed management plans bind the
+observed native revision separately; any change after review requires preparing
+again, even when the artifact itself is reusable. Old plans must not be replayed.
 
 ### Trust boundary and known limits
 
@@ -213,6 +254,17 @@ dialogs, and the embedded-browser security popup and
 its edit menu. Message boxes keep their `defaultId`/`cancelId` semantics. The
 messages are listed in
 [native-messages.json](../compat/localization/native-messages.json).
+
+Native adapter v2 keeps the legacy edit set. The 2.32.1 profile selects v3,
+which additionally reviews `dist/remote/remoteManager.js`, `sshPrompts.js`,
+`sshPromptPreload.js`, `sshBridge.js`, `sshErrorText.js`, `sshArgs.js`,
+`disconnectedPage.js`, `sshConnection.js`, `sshDestination.js`, and
+`sshConfigHosts.js`. Missing members and unknown adapter versions refuse rather
+than dropping edits. The sandboxed SSH prompt preload receives translated static
+framing over its existing IPC; it does not load the Host engine with `require`.
+Dynamic host labels, paths, usernames, raw SSH/MCP errors, and server names remain
+content. DOM protection and reviewed template contexts are in
+[scopes.ts](../src/localization/runtime/scopes.ts).
 
 ## Selection and status
 

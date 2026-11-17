@@ -486,14 +486,14 @@ test('feature controls prefill actual settings, preserve edits and queue only th
   const limitInput = row.children[2].children[1];
   assert.equal(limitInput.value, '750000');
   assert.equal(limitInput.min, '256000');
-  assert.equal(limitInput.max, '896000');
-  for (const invalid of ['255999', '896001']) {
+  assert.equal(limitInput.max, '983040');
+  for (const invalid of ['255999', '983041']) {
     limitInput.value = invalid;
     limitInput.listeners.get('input')();
     await panel.submit('feature-form');
     assert.equal(
       panel.getElement('feature-error').textContent,
-      'Select models and enter whole token limits from 256,000 to 896,000.',
+      'Select models and enter whole token limits from 256,000 to 983,040.',
     );
     assert.equal(
       panel.allRequests.some((request) => request.options?.method === 'POST'),
@@ -562,10 +562,17 @@ test('feature controls prefill actual settings, preserve edits and queue only th
   await panel.respond(panel.allRequests.at(-1), {
     ...snapshot,
     catalog: { status: 'unavailable', models: [] },
+    features: { ...snapshot.features, compaction: { enabled: null, fileState: 'unknown' } },
   });
   await reloading;
   assert.equal(panel.getElement('model-limits').children.length, 0);
   assert.equal(panel.getElement('feature-capsule').disabled, false);
+  assert.equal(panel.getElement('feature-compaction').indeterminate, true);
+  assert.equal(panel.getElement('feature-compaction').disabled, true);
+  assert.equal(
+    panel.getElement('feature-compaction-state').textContent,
+    'State unknown; left unchanged',
+  );
   assert.equal(
     panel.getElement('model-catalog-status').textContent,
     'Could not read the model list. Existing settings are preserved.',
@@ -575,6 +582,7 @@ test('feature controls prefill actual settings, preserve edits and queue only th
   const preserved = panel.submit('feature-form');
   const request = panel.allRequests.at(-1);
   assert.equal(request.url, '/api/features/apply');
+  assert.equal(JSON.parse(request.options.body).compaction, null);
   assert.deepEqual(
     JSON.parse(request.options.body).limit.modelLimits,
     snapshot.features.limit.modelLimits,

@@ -340,6 +340,7 @@
           </div>
           <div class="row">
             <label class="feature-switch"><input id="feature-compaction" type="checkbox" disabled><span data-i18n="featureCompaction">壓縮摘要改善</span></label>
+            <span id="feature-compaction-state" class="muted small" role="status"></span>
           </div>
           <div class="row stacked">
             <div class="actions"><button type="submit" class="button primary" id="btn-apply-features" disabled data-i18n="featureApply">儲存設定</button><button type="button" class="button compact" id="btn-reload-features" data-i18n="featureReload">重新讀取</button><button type="button" class="button compact" id="btn-cancel-features" hidden data-i18n="cancel">取消</button><span class="muted small" id="feature-status" role="status"></span></div>
@@ -856,6 +857,8 @@
       function updateFeatureControls() {
         const disabled = !featureSnapshot || featureBusy() || featureSubmitting;
         for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-compaction']) $(id).disabled = disabled;
+        $('feature-compaction').disabled ||= featureSnapshot?.features.compaction.enabled === null;
+        $('feature-compaction-state').textContent = featureSnapshot?.features.compaction.enabled === null ? t().featureCompactionUnknown : '';
         $('feature-locale').disabled = disabled || !$('feature-localization').checked;
         $('feature-locale').setAttribute('aria-label', t().featureLocalization);
         $('btn-apply-features').disabled = disabled || !featureDirty;
@@ -905,7 +908,7 @@
           const input = element('input');
           input.type = 'number';
           input.min = '256000';
-          input.max = '896000';
+          input.max = '983040';
           input.step = '1';
           input.value = row.limit;
           input.placeholder = t().featureMixedLimits;
@@ -924,7 +927,8 @@
         $('feature-localization').checked = snapshot.features.localization.enabled;
         $('feature-locale').value = snapshot.features.localization.locale || currentLang;
         $('feature-limit').checked = snapshot.features.limit.enabled;
-        $('feature-compaction').checked = snapshot.features.compaction.enabled;
+        $('feature-compaction').checked = snapshot.features.compaction.enabled === true;
+        $('feature-compaction').indeterminate = snapshot.features.compaction.enabled === null;
         const limits = snapshot.features.limit.modelLimits.length
           ? snapshot.features.limit.modelLimits : snapshot.features.limit.savedModelLimits;
         const values = new Map(limits.map(({ id, limit }) => [id, limit]));
@@ -994,7 +998,7 @@
             if (!/^\d+$/.test(String(row.id)) || !/^\d+$/.test(String(row.limit))) throw new Error(t().featureInvalidLimits);
             const id = Number(row.id), limit = Number(row.limit);
             const preserved = featureHiddenLimits.some(existing => existing.id === id && existing.limit === limit);
-            if (!Number.isInteger(id) || id < 0 || id > 2147483647 || !Number.isInteger(limit) || limit < 1 || limit > 2147483647 || (!preserved && (limit < 256000 || limit > 896000))) throw new Error(t().featureInvalidLimits);
+            if (!Number.isInteger(id) || id < 0 || id > 2147483647 || !Number.isInteger(limit) || limit < 1 || limit > 2147483647 || (!preserved && (limit < 256000 || limit > 983040))) throw new Error(t().featureInvalidLimits);
             return { id, limit };
           }).sort((a, b) => a.id - b.id);
           if (enabled && (!modelLimits.length || new Set(modelLimits.map(row => row.id)).size !== modelLimits.length)) throw new Error(t().featureInvalidLimits);
@@ -1005,7 +1009,7 @@
             capsule: $('feature-capsule').checked,
             localization: { enabled: $('feature-localization').checked, locale: $('feature-locale').value },
             limit: { enabled, modelLimits },
-            compaction: $('feature-compaction').checked
+            compaction: $('feature-compaction').indeterminate ? null : $('feature-compaction').checked
           });
           featureSnapshot.operation = result.operation;
           featureSnapshot.draft = result.draft;

@@ -15965,6 +15965,238 @@
     "customizations.noCustomAgentsYet": {
       "value": "尚無自訂代理。",
       "reviewed": true
+    },
+    "ssh.web.connectCommand": {
+      "value": "連線至 SSH 主機…",
+      "reviewed": true
+    },
+    "ssh.web.stopCommand": {
+      "value": "停止 SSH 伺服器…",
+      "reviewed": true
+    },
+    "ssh.web.switchComputer": {
+      "value": "切換至這部電腦",
+      "reviewed": true
+    },
+    "ssh.web.switchTo": {
+      "value": "切換至",
+      "reviewed": true
+    },
+    "ssh.web.hostMenu": {
+      "value": "SSH 主機…",
+      "reviewed": true
+    },
+    "ssh.web.host": {
+      "value": "SSH 主機",
+      "reviewed": true
+    },
+    "ssh.web.hostInput": {
+      "value": "SSH 主機",
+      "reviewed": true
+    },
+    "ssh.web.openHost": {
+      "value": "開啟 SSH 主機",
+      "reviewed": true
+    },
+    "ssh.web.connectHost": {
+      "value": "連線至 SSH 主機",
+      "reviewed": true
+    },
+    "ssh.web.showDetails": {
+      "value": "顯示詳細資料",
+      "reviewed": true
+    },
+    "ssh.web.unexpectedResponse": {
+      "value": "Hub 傳回非預期的回應。",
+      "reviewed": true
+    },
+    "ssh.web.hostSpaces": {
+      "value": "主機名稱不得包含空白。",
+      "reviewed": true
+    },
+    "ssh.web.removeFromRecent": {
+      "value": "從最近使用清單移除",
+      "reviewed": true
+    },
+    "ssh.web.hideFromList": {
+      "value": "從此清單隱藏",
+      "reviewed": true
+    },
+    "ssh.web.showInList": {
+      "value": "再次顯示於清單中",
+      "reviewed": true
+    },
+    "ssh.web.enterDestination": {
+      "value": "請輸入 [user@]host[:port]，或從 SSH 設定檔選擇主機。",
+      "reviewed": true
+    },
+    "ssh.web.createProjectAfter": {
+      "value": "然後在該主機的視窗中建立專案。",
+      "reviewed": true
+    },
+    "ssh.web.connecting": {
+      "value": "正在連線…",
+      "reviewed": true
+    },
+    "ssh.web.connectionFailedPrefix": {
+      "value": "無法連線至",
+      "reviewed": true
+    },
+    "ssh.web.config": {
+      "value": "SSH 設定檔",
+      "reviewed": true
+    },
+    "ssh.web.configLabel": {
+      "value": "SSH 設定檔：",
+      "reviewed": true
+    },
+    "ssh.web.defaultConfig": {
+      "value": "~/.ssh/config（預設）",
+      "reviewed": true
+    },
+    "ssh.web.oneHiddenHost": {
+      "value": "1 台隱藏的主機",
+      "reviewed": true
+    },
+    "ssh.web.hiddenHosts": {
+      "value": "隱藏的主機",
+      "reviewed": true
+    },
+    "ssh.web.loadingHosts": {
+      "value": "正在載入主機…",
+      "reviewed": true
+    },
+    "ssh.web.loadHostsFailed": {
+      "value": "無法載入 SSH 主機清單。您仍可自行輸入主機。",
+      "reviewed": true
+    },
+    "ssh.web.loadHostsFailedShort": {
+      "value": "無法載入 SSH 主機清單",
+      "reviewed": true
+    },
+    "ssh.web.noHostsPrefix": {
+      "value": "下列位置尚無主機：",
+      "reviewed": true
+    },
+    "ssh.web.noHostsSuffix": {
+      "value": "。請在上方輸入主機。",
+      "reviewed": true
+    },
+    "ssh.web.chooseFile": {
+      "value": "選擇檔案…",
+      "reviewed": true
+    },
+    "ssh.web.useDefault": {
+      "value": "使用預設值",
+      "reviewed": true
+    },
+    "ssh.web.waitingConnection": {
+      "value": "正在等待 SSH 連線完成",
+      "reviewed": true
+    },
+    "ssh.web.relaunchesApp": {
+      "value": "重新啟動應用程式",
+      "reviewed": true
+    },
+    "mcp.web.error": {
+      "value": "MCP 錯誤",
+      "reviewed": true
+    },
+    "mcp.web.serverError": {
+      "value": "MCP 伺服器錯誤",
+      "reviewed": true
+    },
+    "mcp.web.viewServers": {
+      "value": "查看 MCP 伺服器",
+      "reviewed": true
+    },
+    "mcp.web.storeConfigHelp": {
+      "value": "使用「新增 MCP」瀏覽商店，或透過 MCP 設定新增自訂伺服器。",
+      "reviewed": true
+    },
+    "mcp.web.storeHelp": {
+      "value": "使用「新增 MCP」瀏覽商店。",
+      "reviewed": true
+    },
+    "mcp.web.unnamedServer": {
+      "value": "未命名的 MCP 伺服器",
+      "reviewed": true
+    },
+    "hub.web.focusTile": {
+      "value": "聚焦此分割視窗",
+      "reviewed": true
+    },
+    "hub.web.tableSizeLimit": {
+      "value": "檔案超過表格預覽的 512 KB 限制。",
+      "reviewed": true
+    },
+    "hub.web.permissionsClick": {
+      "value": "按一下",
+      "reviewed": true
+    },
+    "hub.web.permissionsOpen": {
+      "value": "開啟 ↗",
+      "reviewed": true
+    },
+    "hub.web.permissionsOpenSuffix": {
+      "value": "以開啟 macOS「隱私權與安全性」。",
+      "reviewed": true
+    },
+    "ssh.web.connectingTo": {
+      "value": "正在連線至 {0}…",
+      "reviewed": true
+    },
+    "ssh.web.connectionFailed": {
+      "value": "無法連線至 {0}",
+      "reviewed": true
+    },
+    "ssh.web.removeRecent": {
+      "value": "從最近使用清單移除 {0}",
+      "reviewed": true
+    },
+    "ssh.web.removedRecent": {
+      "value": "已從最近使用清單移除 {0}",
+      "reviewed": true
+    },
+    "ssh.web.removeRecentFailed": {
+      "value": "無法從最近使用清單移除 {0}",
+      "reviewed": true
+    },
+    "ssh.web.hideHost": {
+      "value": "從此清單隱藏 {0}",
+      "reviewed": true
+    },
+    "ssh.web.showHost": {
+      "value": "再次於清單中顯示 {0}",
+      "reviewed": true
+    },
+    "ssh.web.hidHost": {
+      "value": "已隱藏 {0}",
+      "reviewed": true
+    },
+    "ssh.web.showingHost": {
+      "value": "再次顯示 {0}",
+      "reviewed": true
+    },
+    "ssh.web.configGroup": {
+      "value": "SSH 設定檔（{0}）",
+      "reviewed": true
+    },
+    "ssh.web.hiddenHostCount": {
+      "value": "{0} 台隱藏的主機",
+      "reviewed": true
+    },
+    "ssh.web.onHost": {
+      "value": "位於 {0}",
+      "reviewed": true
+    },
+    "ssh.web.connectedTo": {
+      "value": "已連線至 {0}",
+      "reviewed": true
+    },
+    "ssh.web.hostWindowNotice": {
+      "value": "此視窗的代理程式、檔案與終端機都位於 {0}。",
+      "reviewed": true
     }
   }
 }

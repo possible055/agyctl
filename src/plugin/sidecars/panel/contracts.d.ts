@@ -10,6 +10,22 @@ export interface LimitDiagnostic {
   id: string;
   limits: number[];
   error: string | null;
+  executors: {
+    index: number;
+    checkpoint: CheckpointMetadata | null;
+    requestOverride: CheckpointMetadata | null;
+    error: string | null;
+  }[];
+}
+
+export interface CheckpointMetadata {
+  maxTokenLimit: number | null;
+  maxUserRequests: number | null;
+  maxUserRequestBytes: number | null;
+  enabled: boolean | null;
+  includeLastUserMessage: boolean | null;
+  summaryPrompt: { bytes: number; sha256: string } | null;
+  stepCompaction: { maxInlineFrames: number | null; maxLatestResultBytes: number | null } | null;
 }
 
 export interface LimitDiagnostics {

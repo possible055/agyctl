@@ -12,6 +12,9 @@ const PAGE_HEADING_MESSAGE_IDS: Record<string, string> = {
 };
 
 const SIDEBAR_LIST_SELECTOR = '[data-testid="conversation-list-sidebar"]';
+const MCP_ERROR_BADGE_SELECTOR = 'span.inline-flex.rounded-full.text-error[title]';
+const MCP_ERROR_TEXT_SELECTOR = '[data-testid="mcp-server-row"] div.text-red-500.break-words';
+const SSH_ERROR_HEADING_SELECTOR = '[data-testid="ssh-connect-error"] > div > span:first-child';
 const SIDEBAR_APPLICATION_SELECTOR = [
   '[data-testid="section-header"] button',
   'button[data-testid="sidebar-add-project-button"]',
@@ -43,6 +46,11 @@ export const WRITABLE_ROOT_SELECTORS = [
   APPLICATION_INPUT_SELECTOR,
   APPLICATION_PAGE_HEADING_SELECTOR,
   SIDEBAR_APPLICATION_SELECTOR,
+  '[data-testid="ssh-connect-dialog"]',
+  '[data-testid="ssh-host-label"]',
+  '[data-testid="ssh-machine-switcher-status"]',
+  '[data-testid="computer-permissions-card"]',
+  MCP_ERROR_BADGE_SELECTOR,
   'input[placeholder]',
   'textarea[placeholder]',
 ] as const;
@@ -68,6 +76,13 @@ export const PROTECTED_SELECTORS = [
   '[data-mention-menu] :not([data-testid="menu-category-row"]) > [data-testid="menu-option-trailing-label"]',
   '[data-quotable]',
   '[data-quotable-inline="true"]',
+  '[data-testid="ssh-connect-host-option"] > span.flex.flex-col',
+  '[data-testid="ssh-config-file-name"][tabindex]',
+  '[data-testid="ssh-connect-error"] .whitespace-pre-line',
+  '[data-testid="mcp-server-row"] span.font-medium[title]',
+  '[data-testid="mcp-server-note"]',
+  '[role="alert"].agy-callout.text-destructive:has(~ div #plugin-detail-tabpanel)',
+  '[class~="border-error/30"][class~="bg-error/10"]:has(~ #plugin-detail-tabpanel) > div.flex.items-center.gap-2 > span',
   '[contenteditable="true"]',
   '[contenteditable=""]',
   '.monaco-editor',
@@ -77,7 +92,7 @@ export const PROTECTED_SELECTORS = [
 ] as const;
 
 export const TRANSLATABLE_ATTRIBUTES = ['placeholder', 'title', 'aria-label'] as const;
-export const PROTECTION_ATTRIBUTES = ['data-testid', 'data-project-icon', 'aria-labelledby'] as const;
+export const PROTECTION_ATTRIBUTES = ['data-testid', 'data-project-icon', 'aria-labelledby', 'tabindex'] as const;
 
 const PROTECTED_SELECTOR = PROTECTED_SELECTORS.join(',');
 const PROTECTED_SUBTREE_SELECTOR = PROTECTED_SELECTORS.filter(
@@ -101,6 +116,11 @@ export function isProtectedNode(node: Node): boolean {
   const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
   if (!element) return true;
   if (hasProtectedAncestor(element)) return true;
+  if (node.nodeType === Node.TEXT_NODE) {
+    if (element.matches(SSH_ERROR_HEADING_SELECTOR) && node !== element.firstChild) return true;
+    if (element.matches(MCP_ERROR_TEXT_SELECTOR) && node !== element.firstChild) return true;
+    if (element.matches('[data-testid="ssh-connect-dialog"] p') && node.previousSibling && node.nextSibling) return true;
+  }
   return Boolean(
     element.closest(SIDEBAR_LIST_SELECTOR) && !element.closest(SIDEBAR_APPLICATION_SELECTOR),
   );
@@ -167,6 +187,21 @@ export function isPlanInstructionMessage(messageId: string): boolean {
 
 export function isAllowedMatchContext(node: Node, messageId: string): boolean {
   const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
+  if (node.nodeType === Node.ELEMENT_NODE && element?.matches(MCP_ERROR_BADGE_SELECTOR)) return false;
+  if (node.nodeType === Node.ELEMENT_NODE && element?.matches('[data-testid="ssh-connect-host-option"]')) return false;
+  if (element?.matches(SSH_ERROR_HEADING_SELECTOR)) return messageId === 'ssh.web.connectionFailedPrefix';
+  if (element?.matches(MCP_ERROR_TEXT_SELECTOR)) return messageId === 'hub.ui.617062906764f3b8';
+  if (element?.closest('[data-testid="ssh-connect-progress"]')) return messageId === 'ssh.web.connectingTo';
+  if (element?.closest('[data-testid="ssh-host-label"]')) return messageId === 'ssh.web.onHost';
+  if (element?.closest('[data-testid="ssh-machine-switcher-status"]')) return messageId === 'ssh.web.connectedTo';
+  if (messageId === 'ssh.web.onHost') return !!element?.closest('[data-testid="ssh-host-label"]');
+  if (messageId === 'ssh.web.connectedTo') return !!element?.closest('[data-testid="ssh-machine-switcher-status"],[role="alert"],[role="status"]');
+  if (messageId === 'ssh.web.hostWindowNotice') return !!element?.closest('[role="alert"],[role="status"]');
+  if (messageId === 'ssh.web.connectingTo' || messageId === 'ssh.web.connectionFailed') return !!element?.closest('[data-testid="ssh-connect-dialog"],[role="alert"],[role="status"]');
+  if (messageId === 'ssh.web.hideHost' || messageId === 'ssh.web.showHost') return !!element?.closest('[data-testid="ssh-connect-host-action"]');
+  if (messageId === 'ssh.web.configGroup' || messageId === 'ssh.web.hiddenHostCount') return !!element?.closest('[data-testid="ssh-connect-dialog"]');
+  if (['ssh.web.removeRecent', 'ssh.web.removedRecent', 'ssh.web.removeRecentFailed', 'ssh.web.hidHost', 'ssh.web.showingHost'].includes(messageId)) return !!element?.closest('[data-testid="ssh-connect-host-action"],[role="alert"],[role="status"]');
+  if (messageId.startsWith('hub.web.permissions')) return !!element?.closest('[data-testid="computer-permissions-card"]');
   const heading = element?.closest(APPLICATION_PAGE_HEADING_SELECTOR);
   if (heading && !heading.closest('nav,header,[role="dialog"]')) {
     const pathname = heading.ownerDocument.defaultView?.location.pathname;

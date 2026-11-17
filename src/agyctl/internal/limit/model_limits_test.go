@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"agyctl/internal/fsx"
+	"agyctl/internal/lspatch"
 	"agyctl/internal/testutil"
 )
 
@@ -66,6 +67,21 @@ func TestPerModelSettingsGrammar(t *testing.T) {
 	}
 	if _, err := parseOptions([]string{"patch", "--model-limits", "1=2", "--limit", "3"}); err == nil || !strings.Contains(err.Error(), "cannot be combined") {
 		t.Fatalf("mixed options: %v", err)
+	}
+	for _, flag := range []string{"--limit", "--model-limits"} {
+		for _, value := range []string{"983040", "983041"} {
+			argument := value
+			if flag == "--model-limits" {
+				argument = "1318=" + value
+			}
+			_, err := parseOptions([]string{"patch", flag, argument})
+			if value == "983040" && err != nil {
+				t.Fatalf("rejected inclusive upper bound via %s: %v", flag, err)
+			}
+			if value == "983041" && (err == nil || !strings.Contains(err.Error(), "must not exceed 983040")) {
+				t.Fatalf("oversized limit via %s: %v", flag, err)
+			}
+		}
 	}
 }
 
@@ -285,5 +301,96 @@ func TestPerModelDryRunDoesNotCompletePrepare(t *testing.T) {
 	settings, err := settingsFromRecord(last)
 	if err != nil || !reflect.DeepEqual(settings.ModelLimits, values) {
 		t.Fatalf("completed settings = %+v (%v)", settings, err)
+	}
+}
+
+func TestNativeLimitAdoptsLegacyAndReservesDisabledRecipeGuards(t *testing.T) {
+	root := filepath.Join("..", "..", "..", "..")
+	_, original := fixtures(t)
+	original = modelFixtureCaves(t, original)
+	values := []ModelLimit{{ID: 1318, Limit: 300000}}
+	first, err := PlanModelPatch(original, values)
+	if err != nil {
+		t.Fatal(err)
+	}
+	guardOffset := first.Nodes[0].Offset - 8
+	reserved := []lspatch.Span{{Offset: guardOffset, Expected: []byte{0xcc}, Replacement: []byte{0xcd}}}
+	canonical, err := PlanModelPatchReserved(original, values, reserved)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if canonical.Nodes[0].Offset == first.Nodes[0].Offset {
+		t.Fatal("limit reused a disabled fixed recipe's guard")
+	}
+	for _, encoding := range []string{"", modelEncoding} {
+		t.Run("legacy-"+encoding, func(t *testing.T) {
+			directory := testutil.TempDir(t)
+			binary := filepath.Join(directory, "server.bin")
+			s := store{directory: filepath.Join(directory, "state")}
+			if err := os.WriteFile(binary, original, 0600); err != nil {
+				t.Fatal(err)
+			}
+			settings := patchSettings{Encoding: encoding, ModelLimits: values}
+			if encoding == "" {
+				settings.IDs = []int{1318}
+				settings.Limit = 300000
+			}
+			plan, err := planSettings(original, settings)
+			if err != nil {
+				t.Fatal(err)
+			}
+			patched := ApplyPatch(original, plan)
+			if _, err := patchBinarySettings(binary, original, patched, fsx.SHA256(original), "", "unverified", settings, plan, s, "legacy"); err != nil {
+				t.Fatal(err)
+			}
+			history, err := os.ReadFile(s.path())
+			if err != nil {
+				t.Fatal(err)
+			}
+			ref, err := NativeReference(root, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			spec := lspatch.Spec{ID: "fixture", BaseSHA: fsx.SHA256(original), Size: len(original), LimitRef: ref, LegacyLimitRefs: NativeLegacyReferences(ref), ToolOutput: &lspatch.Contribution{Ref: lspatch.RecipeRef{ID: "fixture-tool", Fingerprint: fsx.SHA256([]byte("tool"))}, Spans: reserved}}
+			spec.Limit = func(base []byte, config lspatch.LimitConfig, reserved []lspatch.Span, ref lspatch.RecipeRef) (lspatch.Contribution, error) {
+				return NativeContribution(root, nil, base, config, reserved, ref)
+			}
+			engine := lspatch.Engine{Directory: s.directory, AssetsFingerprint: fsx.SHA256([]byte("assets")), Specs: []lspatch.Spec{spec}, RequireStopped: func(string) error { return nil }}
+			engine.Legacy = func(binary string, current, base []byte, spec lspatch.Spec) (*lspatch.Legacy, error) {
+				return NativeLegacy(root, nil, s.directory, binary, current, base, spec)
+			}
+			status, err := engine.Status(binary)
+			if err != nil || status["verified"] != true || status["file_state"] != "legacy" {
+				t.Fatalf("legacy proof: %v %v", status, err)
+			}
+			owned, err := lspatch.HasState(s.directory, binary)
+			if err != nil || owned {
+				t.Fatalf("status adopted legacy state: %v %v", owned, err)
+			}
+			enabled := true
+			desired := lspatch.Desired{ToolOutput: &enabled}
+			reviewed, err := engine.Plan(binary, desired)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := engine.Apply(binary, desired, reviewed.Expected, "native"); err != nil {
+				t.Fatal(err)
+			}
+			current, err := os.ReadFile(binary)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if current[guardOffset] != 0xcd || !bytes.Equal(current[canonical.FuncOff:canonical.FuncOff+len(canonical.Body)], canonical.Body) || !bytes.Equal(current[canonical.Nodes[0].Offset:canonical.Nodes[0].Offset+16], canonical.Nodes[0].Data) {
+				t.Fatal("adoption did not rebuild limit against the fixed reserved layout")
+			}
+			afterHistory, err := os.ReadFile(s.path())
+			if err != nil || !bytes.Equal(history, afterHistory) {
+				t.Fatalf("legacy history was modified: %v", err)
+			}
+			status, err = engine.Status(binary)
+			if err != nil || status["verified"] != true || status["file_state"] != "managed" {
+				t.Fatalf("managed proof: %v %v", status, err)
+			}
+		})
 	}
 }

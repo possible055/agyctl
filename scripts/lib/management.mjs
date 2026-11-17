@@ -3,7 +3,13 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { runAgyctl } from './agyctl.mjs';
 import { agyctlHome, backupDir, sha256File } from './install-paths.mjs';
+import {
+  assertNativeExpectation,
+  localizationContentIdentity,
+  nativeExpectation,
+} from './native-binding.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -18,21 +24,53 @@ async function localizationSource(target) {
     originalPath: original,
     originalHash,
     executablePath: io.executablePath,
+    appVersion: target.version,
   });
   const cli = adapter.localizationCli();
-  const observed = cli.observeLsSource(target.binaryPath, {
+  if (profile.nativeImageBinding !== undefined && typeof profile.nativeImageBinding !== 'boolean')
+    throw new Error('Invalid nativeImageBinding in the localization profile');
+  const observeOptions = {
     profiles: adapter.localizationProfiles(),
     limits: profile.limits,
     assetNames: [
       ...new Set(adapter.localizationProfiles().flatMap((entry) => Object.keys(entry.assets))),
     ],
-  });
+  };
+  const nativeStatus = profile.nativeImageBinding
+    ? runAgyctl(['native', 'status', '--binary', target.binaryPath])
+    : null;
+  if (nativeStatus && ['pending', 'drift'].includes(nativeStatus.file_state))
+    throw new Error('Recover the native patch state before preparing localization');
+  const nativeBinding = nativeStatus ? nativeExpectation(nativeStatus) : null;
+  const sourceBinaryPath = nativeBinding ? nativeStatus.base_binary_path : target.binaryPath;
+  if (
+    nativeBinding &&
+    (!path.isAbsolute(sourceBinaryPath ?? '') ||
+      sha256File(sourceBinaryPath) !== nativeBinding.base_sha256)
+  )
+    throw new Error('The verified native patch base cannot be read');
+  const observed = cli.observeLsSource(sourceBinaryPath, observeOptions);
+  if (nativeBinding && sourceBinaryPath !== target.binaryPath) {
+    const currentSource = cli.observeLsSource(target.binaryPath, observeOptions);
+    if (
+      currentSource.lsSha256 !== nativeBinding.current_sha256 ||
+      localizationContentIdentity(currentSource) !== localizationContentIdentity(observed)
+    )
+      throw new Error(
+        'Native patches changed the localization assets or helper; prepare cannot reuse the base',
+      );
+  }
+  if (nativeBinding)
+    assertNativeExpectation(
+      runAgyctl(['native', 'status', '--binary', target.binaryPath]),
+      nativeBinding,
+    );
   if (!observed.assets['main.js'])
     throw new Error('The Language Server source has no main.js asset');
   observed.warnings = [...observed.warnings, ...warnings];
   if (status.features.capsule || status.features.localization)
     adapter.hostPatchPlan({ ...io, features: {} });
-  return { adapter, io, status, profile, observed, original };
+  return { adapter, io, status, profile, observed, original, sourceBinaryPath, nativeBinding };
 }
 
 function readOptionalJson(filename) {
@@ -180,7 +218,8 @@ export async function availableLocalization(target) {
 }
 
 export async function prepareLocalizationHostPlan(target, { locale, capsule = false }) {
-  const { adapter, io, status, profile, observed, original } = await localizationSource(target);
+  const { adapter, io, status, profile, observed, original, sourceBinaryPath, nativeBinding } =
+    await localizationSource(target);
   const installationId = createHash('sha256').update(target.asarPath).digest('hex');
   const stateRoot = adapter.defaultStateRoot();
   const expectedSelectionSha256 = selectionHash(stateRoot, installationId);
@@ -190,16 +229,21 @@ export async function prepareLocalizationHostPlan(target, { locale, capsule = fa
     features.capsule = { code: assembleCapsule() };
     adapter.capsuleFeature.validate(features.capsule);
   }
-  const prepared = runLocalization(['prepare', '--ls', target.binaryPath, '--locale', locale]);
+  const prepared = runLocalization(['prepare', '--ls', sourceBinaryPath, '--locale', locale]);
   if (
     prepared.locale !== locale ||
     !/^[a-f0-9]{64}$/.test(prepared.artifactId ?? '') ||
     prepared.sourceIdentity !== observed.sourceIdentity ||
     prepared.sourceBinarySha256 !== observed.lsSha256 ||
-    sha256File(target.binaryPath) !== observed.lsSha256
+    sha256File(sourceBinaryPath) !== observed.lsSha256
   )
     throw new Error(
       'The prepared localization artifact does not match the selected source and locale',
+    );
+  if (nativeBinding)
+    assertNativeExpectation(
+      runAgyctl(['native', 'status', '--binary', target.binaryPath]),
+      nativeBinding,
     );
   features.localization = adapter.loadLocalizationInputs({
     profileId: profile.profileId,
@@ -214,8 +258,8 @@ export async function prepareLocalizationHostPlan(target, { locale, capsule = fa
       warnings: observed.warnings.map(({ code, message }) => ({ code, message })),
     },
   });
-  if (profile.nativeAdapterVersion === '2')
-    features.localization.adapterEdits.push(...adapter.localizationNativeEdits(original));
+  if (['2', '3'].includes(profile.nativeAdapterVersion))
+    features.localization.adapterEdits.push(...adapter.localizationNativeEdits(original, profile));
   const plan = adapter.hostPatchPlan({ ...io, features, baseProvenance: 'official-profile' });
   if (plan.currentHash !== status.currentHash)
     throw new Error('The selected installation changed during preparation');
@@ -235,6 +279,7 @@ export async function prepareLocalizationHostPlan(target, { locale, capsule = fa
       sourceIdentity: observed.sourceIdentity,
       sourceBinarySha256: observed.lsSha256,
       expectedSelectionSha256,
+      ...(nativeBinding ? { nativeBinding } : {}),
     },
   };
   adapter.composer.inspectReviewedHostPlan(
@@ -301,6 +346,19 @@ async function reviewed(options) {
   return { adapter, loaded };
 }
 
+function verifyLocalizationSource(binaryPath, selection) {
+  if (selection.nativeBinding) {
+    assertNativeExpectation(
+      runAgyctl(['native', 'status', '--binary', binaryPath]),
+      selection.nativeBinding,
+    );
+    if (selection.nativeBinding.base_sha256 !== selection.sourceBinarySha256)
+      throw new Error('The reviewed localization source does not match the native patch base');
+  } else if (sha256File(binaryPath) !== selection.sourceBinarySha256) {
+    throw new Error('The Language Server source changed since review; prepare again');
+  }
+}
+
 export async function inspectReviewedHostPlan(options) {
   const { loaded } = await reviewed(options);
   return {
@@ -357,8 +415,7 @@ export async function runReviewedHostOperation(options, apply = false) {
       'bin',
       process.platform === 'win32' ? 'language_server.exe' : 'language_server',
     );
-    if (sha256File(sourceBinaryPath) !== selection.sourceBinarySha256)
-      throw new Error('The Language Server source changed since review; prepare again');
+    verifyLocalizationSource(sourceBinaryPath, selection);
   }
   if (sha256File(options.localizationPlan) !== planHash)
     throw new Error('The reviewed Host plan changed before application');
@@ -406,10 +463,7 @@ export async function runReviewedHostOperation(options, apply = false) {
   if (sha256File(options.localizationPlan) !== planHash)
     throw new Error('The reviewed Host plan changed during the operation');
   if (apply && selection) {
-    if (sha256File(sourceBinaryPath) !== selection.sourceBinarySha256)
-      throw new Error(
-        'Host installed, but the Language Server source changed during application; selection was not changed',
-      );
+    verifyLocalizationSource(sourceBinaryPath, selection);
     const stateRoot = features.localization.stateRoot;
     const currentHash = selectionHash(stateRoot, selection.installationId);
     const current = readOptionalJson(

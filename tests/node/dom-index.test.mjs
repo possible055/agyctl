@@ -164,6 +164,13 @@ test('reviewed catalogs prepare all three locales and keep aliases off the indep
       matchDisplayText(index, 'Hi Alice, what can we get done today?')?.translated,
       locale.messages['composer.greeting.hi'].value.replace('{0}', 'Alice'),
     );
+    const remote = {
+      'zh-Hant-TW': ['從此清單隱藏 user@主機', 'MCP 錯誤'],
+      'zh-Hans-CN': ['从此列表隐藏 user@主機', 'MCP 错误'],
+      'ja-JP': ['この一覧で user@主機 を非表示にする', 'MCP エラー'],
+    }[localeName];
+    assert.equal(matchDisplayText(index, 'Hide user@主機 from this list')?.translated, remote[0]);
+    assert.equal(matchDisplayText(index, 'MCP error')?.translated, remote[1]);
   }
 });
 

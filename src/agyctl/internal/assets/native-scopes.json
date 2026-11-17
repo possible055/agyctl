@@ -3,5 +3,6 @@
   "limit": ["compat/install-layout.json", "compat/versions.json"],
   "tool-output": ["compat/install-layout.json", "compat/tool-output.json"],
   "compaction": ["compat/install-layout.json", "compat/compaction.json"],
+  "native": ["compat/install-layout.json", "compat/versions.json", "compat/tool-output.json", "compat/compaction.json"],
   "check": ["compat/versions.json", "compat/localization/profiles.json"]
 }

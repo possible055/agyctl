@@ -15965,6 +15965,238 @@
     "customizations.noCustomAgentsYet": {
       "value": "カスタム エージェントはまだありません。",
       "reviewed": true
+    },
+    "ssh.web.connectCommand": {
+      "value": "SSH ホストに接続…",
+      "reviewed": true
+    },
+    "ssh.web.stopCommand": {
+      "value": "SSH サーバーを停止…",
+      "reviewed": true
+    },
+    "ssh.web.switchComputer": {
+      "value": "このコンピューターに切り替え",
+      "reviewed": true
+    },
+    "ssh.web.switchTo": {
+      "value": "切り替え先",
+      "reviewed": true
+    },
+    "ssh.web.hostMenu": {
+      "value": "SSH ホスト…",
+      "reviewed": true
+    },
+    "ssh.web.host": {
+      "value": "SSH ホスト",
+      "reviewed": true
+    },
+    "ssh.web.hostInput": {
+      "value": "SSH ホスト",
+      "reviewed": true
+    },
+    "ssh.web.openHost": {
+      "value": "SSH ホストを開く",
+      "reviewed": true
+    },
+    "ssh.web.connectHost": {
+      "value": "SSH ホストに接続",
+      "reviewed": true
+    },
+    "ssh.web.showDetails": {
+      "value": "詳細を表示",
+      "reviewed": true
+    },
+    "ssh.web.unexpectedResponse": {
+      "value": "Hub から予期しない応答が返されました。",
+      "reviewed": true
+    },
+    "ssh.web.hostSpaces": {
+      "value": "ホスト名に空白を含めることはできません。",
+      "reviewed": true
+    },
+    "ssh.web.removeFromRecent": {
+      "value": "最近使ったホストから削除",
+      "reviewed": true
+    },
+    "ssh.web.hideFromList": {
+      "value": "この一覧で非表示にする",
+      "reviewed": true
+    },
+    "ssh.web.showInList": {
+      "value": "一覧に再表示する",
+      "reviewed": true
+    },
+    "ssh.web.enterDestination": {
+      "value": "[user@]host[:port] を入力するか、SSH 設定からホストを選択してください。",
+      "reviewed": true
+    },
+    "ssh.web.createProjectAfter": {
+      "value": "次に、そのウィンドウでプロジェクトを作成してください。",
+      "reviewed": true
+    },
+    "ssh.web.connecting": {
+      "value": "接続中…",
+      "reviewed": true
+    },
+    "ssh.web.connectionFailedPrefix": {
+      "value": "接続できませんでした:",
+      "reviewed": true
+    },
+    "ssh.web.config": {
+      "value": "SSH 設定",
+      "reviewed": true
+    },
+    "ssh.web.configLabel": {
+      "value": "SSH 設定:",
+      "reviewed": true
+    },
+    "ssh.web.defaultConfig": {
+      "value": "~/.ssh/config（既定）",
+      "reviewed": true
+    },
+    "ssh.web.oneHiddenHost": {
+      "value": "非表示のホスト 1 件",
+      "reviewed": true
+    },
+    "ssh.web.hiddenHosts": {
+      "value": "非表示のホスト",
+      "reviewed": true
+    },
+    "ssh.web.loadingHosts": {
+      "value": "ホストを読み込み中…",
+      "reviewed": true
+    },
+    "ssh.web.loadHostsFailed": {
+      "value": "SSH ホストを読み込めませんでした。ホストを直接入力できます。",
+      "reviewed": true
+    },
+    "ssh.web.loadHostsFailedShort": {
+      "value": "SSH ホストを読み込めませんでした",
+      "reviewed": true
+    },
+    "ssh.web.noHostsPrefix": {
+      "value": "この場所にホストはまだありません:",
+      "reviewed": true
+    },
+    "ssh.web.noHostsSuffix": {
+      "value": "。上の欄に入力してください。",
+      "reviewed": true
+    },
+    "ssh.web.chooseFile": {
+      "value": "ファイルを選択…",
+      "reviewed": true
+    },
+    "ssh.web.useDefault": {
+      "value": "既定値を使用",
+      "reviewed": true
+    },
+    "ssh.web.waitingConnection": {
+      "value": "SSH 接続の完了を待っています",
+      "reviewed": true
+    },
+    "ssh.web.relaunchesApp": {
+      "value": "アプリを再起動します",
+      "reviewed": true
+    },
+    "mcp.web.error": {
+      "value": "MCP エラー",
+      "reviewed": true
+    },
+    "mcp.web.serverError": {
+      "value": "MCP サーバーエラー",
+      "reviewed": true
+    },
+    "mcp.web.viewServers": {
+      "value": "MCP サーバーを表示",
+      "reviewed": true
+    },
+    "mcp.web.storeConfigHelp": {
+      "value": "「MCP を追加」からストアを参照するか、MCP 設定でカスタムサーバーを追加してください。",
+      "reviewed": true
+    },
+    "mcp.web.storeHelp": {
+      "value": "「MCP を追加」からストアを参照してください。",
+      "reviewed": true
+    },
+    "mcp.web.unnamedServer": {
+      "value": "名前のない MCP サーバー",
+      "reviewed": true
+    },
+    "hub.web.focusTile": {
+      "value": "このタイルにフォーカス",
+      "reviewed": true
+    },
+    "hub.web.tableSizeLimit": {
+      "value": "ファイルがテーブルプレビューの上限 512 KB を超えています。",
+      "reviewed": true
+    },
+    "hub.web.permissionsClick": {
+      "value": "クリック:",
+      "reviewed": true
+    },
+    "hub.web.permissionsOpen": {
+      "value": "開く ↗",
+      "reviewed": true
+    },
+    "hub.web.permissionsOpenSuffix": {
+      "value": "から macOS の「プライバシーとセキュリティ」を開きます。",
+      "reviewed": true
+    },
+    "ssh.web.connectingTo": {
+      "value": "{0} に接続中…",
+      "reviewed": true
+    },
+    "ssh.web.connectionFailed": {
+      "value": "{0} に接続できませんでした",
+      "reviewed": true
+    },
+    "ssh.web.removeRecent": {
+      "value": "最近使ったホストから {0} を削除",
+      "reviewed": true
+    },
+    "ssh.web.removedRecent": {
+      "value": "最近使ったホストから {0} を削除しました",
+      "reviewed": true
+    },
+    "ssh.web.removeRecentFailed": {
+      "value": "最近使ったホストから {0} を削除できませんでした",
+      "reviewed": true
+    },
+    "ssh.web.hideHost": {
+      "value": "この一覧で {0} を非表示にする",
+      "reviewed": true
+    },
+    "ssh.web.showHost": {
+      "value": "一覧に {0} を再表示する",
+      "reviewed": true
+    },
+    "ssh.web.hidHost": {
+      "value": "{0} を非表示にしました",
+      "reviewed": true
+    },
+    "ssh.web.showingHost": {
+      "value": "{0} を再表示しました",
+      "reviewed": true
+    },
+    "ssh.web.configGroup": {
+      "value": "SSH 設定（{0}）",
+      "reviewed": true
+    },
+    "ssh.web.hiddenHostCount": {
+      "value": "非表示のホスト {0} 件",
+      "reviewed": true
+    },
+    "ssh.web.onHost": {
+      "value": "接続先: {0}",
+      "reviewed": true
+    },
+    "ssh.web.connectedTo": {
+      "value": "{0} に接続しました",
+      "reviewed": true
+    },
+    "ssh.web.hostWindowNotice": {
+      "value": "このウィンドウのエージェント、ファイル、ターミナルは {0} にあります。",
+      "reviewed": true
     }
   }
 }

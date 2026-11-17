@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import { ArtifactError, isDomManifest, readValidatedArtifact } from './artifact.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import { parse } from 'acorn';
 import {
   BuildError,
@@ -43,6 +44,7 @@ import {
 } from './logging.js';
 import { decodeSelectionSnapshot, readRuntimeStatus } from './runtime/startup.js';
 import { agyctlHome, installedTargets } from '../../scripts/lib/install-paths.mjs';
+import { readLocalizationAppVersion } from './host/feature.js';
 
 export {
   BuildError,
@@ -112,6 +114,29 @@ function resolveProfile(
 ): LocalizationProfile {
   const profiles = loadProfiles(path.join(REPO_ROOT, 'compat', 'localization', 'profiles.json'));
   if (profileId === undefined) {
+    const targets = source?.sampleDir ? [] : installedTargets({ ignoreAppDir: !!source?.ls });
+    let installation: { binaryPath: string; asarPath: string } | undefined = source?.ls
+      ? targets.find((target) => samePath(target.binaryPath, source.ls as string))
+      : targets.length === 1 ? targets[0] : undefined;
+    if (!installation && source?.ls && path.basename(path.dirname(source.ls)).toLowerCase() === 'bin') {
+      const asarPath = path.resolve(path.dirname(source.ls), '..', 'app.asar');
+      try {
+        if (!fs.statSync(asarPath).isFile()) throw new BuildError('SOURCE_MISMATCH', 'The paired application archive is not a regular file');
+        installation = { binaryPath: path.resolve(source.ls), asarPath };
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+      }
+    }
+    if (installation) {
+      const { builtinAsar } = createRequire(import.meta.url)(path.join(REPO_ROOT, 'scripts/vendor/asar-engine.cjs'));
+      const version = readLocalizationAppVersion(builtinAsar, installation.asarPath);
+      const candidates = profiles.filter((profile) => profile.version === version && profile.platform === `${process.platform}-${process.arch}`);
+      if (!candidates.length) throw new BuildError('PROFILE_INVALID', `No reviewed localization profile for application version ${version} on ${process.platform}-${process.arch}`);
+      const observed = observeLsSource(installation.binaryPath, { profiles: candidates, limits: candidates[0].limits, assetNames: [...new Set(candidates.flatMap((entry) => Object.keys(entry.assets)))] });
+      const matching = candidates.find((profile) => profile.profileId === observed.matchedProfileId);
+      if (!matching) throw new BuildError('SOURCE_MISMATCH', `Application version ${version} does not match its reviewed localization assets`);
+      return matching;
+    }
     if (profiles.length !== 1) {
       const options = {
         profiles,
@@ -134,7 +159,9 @@ function resolveProfile(
       if (observed?.assets['main.js']) {
         const compatible = candidates.filter((candidate) => {
           try {
-            transformAsset({ source: observed.assets['main.js'].text, file: 'main.js', rules: resolveUsageRules(candidate, observed.assets['main.js'].sha256), helperCalleeName: observed.nlsHelperCalleeName ?? candidate.nlsHelper.calleeName });
+            const rules = resolveUsageRules(candidate, observed.assets['main.js'].sha256);
+            if (!rules.length) return false;
+            transformAsset({ source: observed.assets['main.js'].text, file: 'main.js', rules, helperCalleeName: observed.nlsHelperCalleeName ?? candidate.nlsHelper.calleeName });
             return true;
           } catch (error) {
             if (error instanceof BuildError && error.code === 'SOURCE_MISMATCH') return false;
@@ -604,6 +631,7 @@ export async function runLocalizationCommand(argv: string[]): Promise<number> {
         return 0;
       }
         const rules = resolveUsageRules(profile, main.sha256);
+        if (!probe && !rules.length) throw new BuildError('CAPABILITY_GAP', `Profile ${profile.profileId} has no reviewed AST usage rules; use DOM preparation`);
         const catalog = loadCatalog();
         const translations = probe ? undefined : loadLocale(locale);
         let localeId = 'en';

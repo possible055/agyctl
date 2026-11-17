@@ -124,6 +124,34 @@ func dataHome(t *testing.T) string {
 	return home
 }
 
+func TestHistoricalRecipeValidation(t *testing.T) {
+	for _, test := range []struct {
+		name    string
+		mutate  func(*Target)
+		message string
+	}{
+		{"current-duplicate", func(target *Target) { target.HistoricalInputs = append(target.HistoricalInputs, target.Inputs[0]) }, "duplicated historical input"},
+		{"history-duplicate", func(target *Target) {
+			target.HistoricalInputs = append(target.HistoricalInputs, target.HistoricalInputs[0])
+		}, "duplicated historical input"},
+		{"different-base", func(target *Target) { target.HistoricalInputs[0].BinarySHA = fsx.SHA256([]byte("unregistered-base")) }, "unmatched"},
+		{"invalid-bytes", func(target *Target) { target.HistoricalInputs[0].Segments[0].NewHex = "xx" }, "invalid or mismatched new bytes"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			fixture := syntheticFixtureData(t, 0x10, nil)
+			target := &fixture.registry.Targets[0]
+			historical := target.Inputs[0]
+			historical.Segments = append([]Segment(nil), historical.Segments...)
+			historical.Segments[0].NewHex = "45454545"
+			target.HistoricalInputs = []InputState{historical}
+			test.mutate(target)
+			if err := validateTarget(target, map[string]bool{}); err == nil || !strings.Contains(err.Error(), test.message) {
+				t.Fatalf("historical recipe gate: want %q, got %v", test.message, err)
+			}
+		})
+	}
+}
+
 func TestRegistryValidationRejectsBrokenRecipes(t *testing.T) {
 	base := syntheticFixtureData(t, 0x10, nil)
 	cases := map[string]func(document map[string]any){
@@ -175,56 +203,100 @@ func TestRegistryValidationRejectsBrokenRecipes(t *testing.T) {
 	}
 }
 
-// TestRealRegistryLoadsAndSelfChecks pins the tracked 2.31.2 registry to its
-// documented shape; deeper byte verification against the real binaries needs
-// the recorded installers and is deliberately out of scope here.
 func TestRealRegistryLoadsAndSelfChecks(t *testing.T) {
 	root := filepath.Join("..", "..", "..", "..")
 	reg, err := LoadRegistry(root, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(reg.Targets) != 1 {
-		t.Fatalf("expected exactly one registered target, got %d", len(reg.Targets))
+	contracts := map[string]struct {
+		version           string
+		qualification     string
+		segments, prompts int
+		fingerprint       string
+		outputs           map[string]string
+		historical        map[string]string
+	}{
+		"win-amd64-antigravity-2.31.2": {
+			version: "2.31.2", qualification: "candidate", segments: 13, prompts: 3,
+			fingerprint: "601543e289e97cec5e809d51dcd1626bdbbc98e8d55eb0d981b10966f4cab8ea",
+			outputs: map[string]string{
+				"47a439efe717e797533f1cdc0c303d40f264c5f1e0a1135f766b64f1208fa61e": "c6c7d81e29eeab66af720c2304c7ad6b7543c5482db48dfd1379dd7a95c33814",
+				"1c69b4fc10b15b016125d38a32a5b4fd13018dad22564207b576bbb3e759e164": "b361c8c3ed47a1e315714d1f8b8178e23f282cb4d0724be5aeb8d9380c0831d6",
+			},
+		},
+		"win-amd64-antigravity-2.32.1": {
+			version: "2.32.1", qualification: "supported", segments: 10, prompts: 4,
+			fingerprint: "dcc5c351fcf209d0d87a9ca2cb2d43aca1994e4265882c45fa274b36ae75d499",
+			outputs: map[string]string{
+				"65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f": "b9ba32e6e1f23227e2ac1f109e509b8e487d231397002e24a44cac1c556997da",
+			},
+			historical: map[string]string{
+				"1b201f436605748b6ae741682e8922bb0746f7582ff6472030800c5396f0f359": "1128a0cb82de55743875cb1921565887dbc07686a934805f1caee0e81bf87cee",
+			},
+		},
 	}
-	target := reg.Targets[0]
-	if target.Qualification != "candidate" {
-		t.Fatalf("qualification = %s, candidate until live qualification", target.Qualification)
+	if len(reg.Targets) != len(contracts) {
+		t.Fatalf("registered build contracts changed: got %d targets, want %d", len(reg.Targets), len(contracts))
 	}
-	if len(target.Inputs) != 2 {
-		t.Fatalf("expected two registered input states, got %d", len(target.Inputs))
-	}
-	outputs := map[string]bool{}
-	for _, state := range target.Inputs {
-		outputs[state.OutputSHA] = true
-		if state.BinarySHA == state.OutputSHA {
-			t.Fatalf("input %s claims identity transform", state.Input)
+	for _, target := range reg.Targets {
+		contract, ok := contracts[target.ID]
+		if !ok {
+			t.Fatalf("no reviewed contract for %s", target.ID)
 		}
-		if len(state.Segments) != 13 {
-			t.Fatalf("input %s declares %d segments, want 13", state.Input, len(state.Segments))
+		if target.AppVersion != contract.version {
+			t.Fatalf("app version = %s, want %s", target.AppVersion, contract.version)
 		}
-		promptSegments := 0
-		for _, segment := range state.Segments {
-			switch segment.Role {
-			case "prompt":
-				promptSegments++
-			case "capacity":
-			default:
-				t.Fatalf("input %s segment %s has unknown role %s", state.Input, segment.Name, segment.Role)
+		if target.Qualification != contract.qualification {
+			t.Fatalf("qualification = %s, want reviewed qualification %s", target.Qualification, contract.qualification)
+		}
+		if len(target.Inputs) != len(contract.outputs) {
+			t.Fatalf("input states = %d, want %d", len(target.Inputs), len(contract.outputs))
+		}
+		outputs := map[string]bool{}
+		for _, state := range target.Inputs {
+			if state.OutputSHA != contract.outputs[state.BinarySHA] || state.Fingerprint() != contract.fingerprint {
+				t.Fatalf("%s/%s changed its admission, output or restore fingerprint", target.ID, state.Input)
+			}
+			outputs[state.OutputSHA] = true
+			if state.BinarySHA == state.OutputSHA {
+				t.Fatalf("input %s claims identity transform", state.Input)
+			}
+			if len(state.Segments) != contract.segments {
+				t.Fatalf("input %s segments = %d, want %d", state.Input, len(state.Segments), contract.segments)
+			}
+			promptSegments := 0
+			for _, segment := range state.Segments {
+				switch segment.Role {
+				case "prompt":
+					promptSegments++
+				case "capacity":
+				default:
+					t.Fatalf("input %s segment %s has unknown role %s", state.Input, segment.Name, segment.Role)
+				}
+			}
+			if promptSegments != contract.prompts {
+				t.Fatalf("input %s prompt segments = %d, want %d", state.Input, promptSegments, contract.prompts)
 			}
 		}
-		if promptSegments != 3 {
-			t.Fatalf("input %s declares %d prompt segments, want 3", state.Input, promptSegments)
+		if len(outputs) != len(contract.outputs) {
+			t.Fatalf("the build's inputs must preserve their distinct outputs, got %v", outputs)
 		}
-	}
-	if len(outputs) != 2 {
-		t.Fatalf("the two inputs must produce distinct outputs, got %v", outputs)
-	}
-	if target.ValueTargets["max_user_requests"].Target != 30 {
-		t.Fatalf("max_user_requests target = %v", target.ValueTargets["max_user_requests"])
-	}
-	if target.ValueTargets["max_user_request_bytes"].Target != 2048 {
-		t.Fatalf("max_user_request_bytes target = %v", target.ValueTargets["max_user_request_bytes"])
+		if len(target.HistoricalInputs) != len(contract.historical) {
+			t.Fatalf("%s historical inputs = %d, want %d", target.ID, len(target.HistoricalInputs), len(contract.historical))
+		}
+		for _, state := range target.HistoricalInputs {
+			_, knownInput := contract.outputs[state.BinarySHA]
+			if !knownInput || state.Input != "original" || state.OutputSHA != contract.historical[state.Fingerprint()] {
+				t.Fatalf("%s/%s changed its historical admission, output or restore fingerprint", target.ID, state.Input)
+			}
+		}
+		if target.ValueTargets["max_user_requests"].Target != 30 {
+			t.Fatalf("max_user_requests target = %v", target.ValueTargets["max_user_requests"])
+		}
+		if target.ValueTargets["max_user_request_bytes"].Target != 2048 {
+			t.Fatalf("max_user_request_bytes target = %v", target.ValueTargets["max_user_request_bytes"])
+		}
 	}
 }
 

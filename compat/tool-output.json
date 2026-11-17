@@ -4,6 +4,7 @@
   "targets": [
     {
       "id": "win-amd64-antigravity-2.31.2",
+      "app_version": "2.31.2",
       "product": "Antigravity App",
       "channel": "antigravity",
       "platform": "win32-x64",
@@ -236,6 +237,98 @@
               "va": "0x1428b3112",
               "offset": 42673938,
               "expected_hex": "488b9424b00000004885d27420488b42204885c07417488b40504885c0740e8138008000007d06c70000800000e990000000909090909090909090909090",
+              "new_hex": "488b9424b00000004885d27420488b42204885c07417488b40504885c0740e8138008001007d06c70000800100e990000000909090909090909090909090",
+              "role": "transform"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "win-amd64-antigravity-2.32.1",
+      "app_version": "2.32.1",
+      "product": "Antigravity App",
+      "channel": "antigravity",
+      "platform": "win32-x64",
+      "arch": "x86-64",
+      "binary_name": "language_server.exe",
+      "binary_size": 215547392,
+      "member": "resources/bin/language_server.exe",
+      "qualification": "candidate",
+      "verified_at": "2026-11-16",
+      "capacity_targets": {
+        "viewFile.maxLinesPerView": {
+          "source_value": 800,
+          "target": 2000,
+          "layer": "base default constant"
+        },
+        "viewFile.maxBytesPerView": {
+          "source_value": 46080,
+          "target": 131072,
+          "layer": "base default constant"
+        },
+        "grep.maxGrepResults": {
+          "source_value": 50,
+          "target": 100,
+          "layer": "base default constant"
+        },
+        "postMergeStepBudgetFloor": {
+          "source_value": 32768,
+          "target": 98304,
+          "layer": "post settings merge"
+        }
+      },
+      "out_of_scope": [
+        "toolOutput.perTool[run_command].maxOutputBytes=65536",
+        "toolOutput.perTool[<mcp tool>].maxOutputBytes=131072",
+        "Grep paging, two-tier capacity APIs, edit/write tools, useCoreDirect switching",
+        "The seven 2.31.2 native grep transforms are not applicable to this build; their absence is not evidence that the upstream bugs are fixed."
+      ],
+      "evidence": {
+        "original_binary_sha256": "65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f",
+        "derived_output_sha256": "a53f6fcc14e73fa4117acbcf70bf4c1b4497731d9b72db9ca03284b21b82dea0",
+        "va_to_file_offset": "Derived from the PE section table: image base 0x140000000, .text RVA 0x1000, raw offset 0x600.",
+        "capacity_function": "config.defaultConversationalCascadeConfig at VA 0x1419ad5e0: three immediate-only changes preserve instructions and PC/stack/GC metadata. The second grep/find +8 initializer at VA 0x1419aef26 is unchanged.",
+        "step_floor_function": "google3/third_party/jetski/cortex/cortex.(*CascadeManager).getCascadeConfig at VA 0x1429043a0, size 992. Replacement [0x142904632,0x142904670) has no calls, SP changes, new stack slots or pointer stores. All conditional branches target the new jmp at 0x14290465f; final jmp reaches the original mov rax,rdx at 0x1429046f4. Original direct branches do not enter the replaced region.",
+        "go_metadata": "Go pclntab 0xfffffff1 at file offset 77670912. pcsp=296 at 0x14290456b..0x1429046fc. UnsafePoint=-1 at 0x14290455d..0x142904677. StackMapIndex=6 at 0x14290462d..0x1429046e7 and 7 at 0x1429046e7..0x1429046fd; locals maps 6 and 7 are both 0100 (14 bits), rooting the merged config at [rsp+0xb0]. Args maps 6/7 are 04/00; no arguments are used after the jump. ArgLiveIndex=3 at 0x1429043ed..0x142904765. Metadata bytes are unchanged.",
+        "preserved_find_initializer": "0x1419aef26 is the find max-results initializer, not the first grep +8 write; it is outside every recipe segment."
+      },
+      "notes": "Candidate qualification: exact-input, equal-length static recipe only. Capacity targets are qualification targets, not proven upstream maxima. The step-floor control flow, constant SP delta, unsafe-point coverage and GC root maps were inspected for this build. Runtime tool routing, applied capacity and remote settings override detection still require live qualification. No 2.31.2 native grep transform is copied into this target.",
+      "inputs": [
+        {
+          "input": "original",
+          "binary_sha256": "65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f",
+          "output_sha256": "a53f6fcc14e73fa4117acbcf70bf4c1b4497731d9b72db9ca03284b21b82dea0",
+          "segments": [
+            {
+              "name": "viewfile-max-lines-per-view-2000",
+              "va": "0x1419adee4",
+              "offset": 26924260,
+              "expected_hex": "c70020030000",
+              "new_hex": "c700d0070000",
+              "role": "capacity"
+            },
+            {
+              "name": "viewfile-max-bytes-per-view-131072",
+              "va": "0x1419adefe",
+              "offset": 26924286,
+              "expected_hex": "c70000b40000",
+              "new_hex": "c70000000200",
+              "role": "capacity"
+            },
+            {
+              "name": "grep-max-grep-results-100",
+              "va": "0x1419aeea8",
+              "offset": 26928296,
+              "expected_hex": "c7400832000000",
+              "new_hex": "c7400864000000",
+              "role": "capacity"
+            },
+            {
+              "name": "post-merge-step-budget-floor-98304",
+              "va": "0x142904632",
+              "offset": 43007026,
+              "expected_hex": "90488d0586430b0abb02000000b901000000e8577e9afd888424a7000000b810000000488d1d9c62ab06b901000000e8fa0a72fd488d1523091906488910",
               "new_hex": "488b9424b00000004885d27420488b42204885c07417488b40504885c0740e8138008001007d06c70000800100e990000000909090909090909090909090",
               "role": "transform"
             }

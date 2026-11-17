@@ -34,6 +34,26 @@ Neither reconstructs the upstream configuration call graph.
 
 ## Modification boundary
 
+### Windows Hub 2.32.1 live qualification
+
+On 2026-11-16, the installed `resources/bin/language_server.exe` had original
+SHA-256 `65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f`
+and size 215547392 bytes. Its `utils.ClampCheckpointConfigForModelInfo` body
+at VA `0x141823b00` (file offset `0x1823100`) matched the recorded 128-byte
+original. After applying `--model-limits 1318=500000,1319=500000,1320=500000`
+with the client and Language Server stopped, the patched SHA-256 was
+`b661864c7e6265e70a502ac0440ebce07f0b4bc1d61ab013e7fa0630b9ac7125`.
+
+After restarting both processes, `GetCascadeTrajectoryExecutorMetadatas` for
+a resumed synthetic Gemini 3.8 Flash High session and a new synthetic session
+reported `cascadeConfig.checkpointConfig.maxTokenLimit=500000`. The resumed
+session's pre-patch executor recorded 256000. Both post-patch executors retained
+`maxUserRequests=10`, `maxUserRequestBytes=1024`, and the same 3937-byte summary
+prompt digest `adc0b546b4512337f3edc1080cbcdf2d4b9303345664815694024e7304898a1c`.
+This qualifies that model path and the limit change, not other models, prompt
+replacement, retention changes, or natural automatic compaction. The exact
+build entry is in [versions.json](../compat/versions.json).
+
 The implementation is Go under
 [src/agyctl/internal/limit/](../src/agyctl/internal/limit/).
 
@@ -63,7 +83,10 @@ The implementation is Go under
 Legacy defaults are `500000` tokens for model IDs `1318-1320,1400-1405,1417-1419`
 ([asm.go](../src/agyctl/internal/limit/asm.go)), and IDs must fit a 128-wide bitset
 window. `--model-limits` maps at most 128 distinct positive int32 IDs to positive
-int32 floors and cannot be combined with `--ids`/`--limit`. IDs are numeric enum
+floors up to `983040` tokens and cannot be combined with `--ids`/`--limit`.
+`--limit` has the same upper bound. The shared native coordinator also rejects
+new or changed mappings above this bound, while preserving unchanged historical
+mappings for inspection, reconstruction, and restoration. IDs are numeric enum
 values; no model name is inferred from them.
 
 The requested value is a candidate floor applied before later clamps, **not** a

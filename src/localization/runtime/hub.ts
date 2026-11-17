@@ -1,7 +1,7 @@
 export const BOOTSTRAP_CHANNEL = 'agyctl:localization:bootstrap';
 export const BOOTSTRAP_RESULT_CHANNEL = 'agyctl:localization:bootstrap-result';
 
-// Windows Antigravity 2.31.0 main.js: x5c search state and z7 manager route tree.
+// Reviewed Windows 2.31.0 route/search contract, retained for the exact-gated 2.32.1 adapter.
 const HUB_DOCUMENT_PATHS = new Set([
   '/',
   '/customizations',

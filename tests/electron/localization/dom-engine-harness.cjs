@@ -65,6 +65,45 @@ const EXPECTED = {
 if (!EXPECTED || INDEX.locale !== manifest.locale)
   throw new Error('Unrecognized catalog fixture locale');
 
+const REMOTE_EXPECTED = {
+  'zh-Hant-TW': [
+    '使用預設值',
+    'SSH 主機',
+    '正在連線至 user@主機…',
+    '位於 Open Settings',
+    '已連線至 Open Settings',
+    'MCP 錯誤',
+    '查看 MCP 伺服器',
+    '從此清單隱藏 Open Settings',
+    '無法連線至 ',
+    '已連線',
+  ],
+  'zh-Hans-CN': [
+    '使用默认值',
+    'SSH 主机',
+    '正在连接到 user@主機…',
+    '位于 Open Settings',
+    '已连接到 Open Settings',
+    'MCP 错误',
+    '查看 MCP 服务器',
+    '从此列表隐藏 Open Settings',
+    '无法连接到 ',
+    '已连接',
+  ],
+  'ja-JP': [
+    '既定値を使用',
+    'SSH ホスト',
+    'user@主機 に接続中…',
+    '接続先: Open Settings',
+    'Open Settings に接続しました',
+    'MCP エラー',
+    'MCP サーバーを表示',
+    'この一覧で Open Settings を非表示にする',
+    '接続できませんでした: ',
+    '接続済み',
+  ],
+}[manifest.locale];
+
 const PAGE = `<!doctype html>
 <html><body>
 <nav>
@@ -139,6 +178,31 @@ const PAGE = `<!doctype html>
   <button id="plain-type" title="Type">Type</button><button id="plain-and-select">and select</button>
   <span id="wrong-plan-instruction">Type<code>/</code> and select<code>other</code></span>
   <div data-testid="planner-response-text"><span id="protected-plan-instruction"></span></div>
+</div>
+<div role="dialog">
+  <div data-testid="ssh-connect-dialog">
+    <label id="ssh-label">SSH host</label>
+    <input id="ssh-input" data-testid="ssh-connect-host-input" aria-label="SSH host" value="user@主機">
+    <button id="ssh-default">Use Default</button>
+    <button data-testid="ssh-connect-host-option" title="Open Settings">
+      <span class="flex flex-col"><span id="ssh-host">Open Settings</span><span id="ssh-path" title="Open Settings">Open Settings</span></span>
+      <span id="ssh-connected">Connected</span>
+    </button>
+    <button id="ssh-action" data-testid="ssh-connect-host-action" aria-label="Hide Open Settings from this list"></button>
+    <span id="ssh-config-path" data-testid="ssh-config-file-name" tabindex="0">Open Settings</span>
+    <div data-testid="ssh-connect-error"><div><span id="ssh-error-heading"></span><span class="whitespace-pre-line" id="ssh-raw-error">Open Settings</span></div></div>
+    <div data-testid="ssh-connect-progress"><span id="ssh-progress">Connecting to user@主機…</span></div>
+    <p id="ssh-no-hosts"></p>
+  </div>
+  <div data-testid="ssh-host-label"><span id="ssh-current-host">On Open Settings</span></div>
+  <div data-testid="ssh-machine-switcher-status"><span id="ssh-switch-status">Connected to Open Settings</span></div>
+  <span class="inline-flex rounded-full text-error" title="Open Settings" id="mcp-badge">MCP error</span>
+  <div data-testid="mcp-server-row"><span class="font-medium" title="Open Settings" id="mcp-name">Open Settings</span><div class="text-red-500 break-words" id="mcp-raw-error"></div></div>
+  <div role="alert" class="agy-callout text-destructive" id="mcp-alert">Open Settings</div>
+  <div>
+    <div class="border-error/30 bg-error/10"><div class="flex items-center gap-2"><span id="mcp-banner-error">Open Settings</span></div><button id="mcp-view">View MCP servers</button></div>
+    <div id="plugin-detail-tabpanel"></div>
+  </div>
 </div>
 </body></html>`;
 
@@ -244,6 +308,9 @@ app
       window.__planClicks = 0;
       slash.addEventListener('click', () => { window.__planClicks += 1; });
       plan.addEventListener('click', () => { window.__planClicks += 1; });
+      document.getElementById('ssh-error-heading').replaceChildren(document.createTextNode("Couldn't connect to "), document.createTextNode('Open Settings'));
+      document.getElementById('ssh-no-hosts').replaceChildren(document.createTextNode('No hosts in '), document.createTextNode('Open Settings'), document.createTextNode(' yet. Type one above.'));
+      document.getElementById('mcp-raw-error').replaceChildren(document.createTextNode('Error: '), document.createTextNode('Open Settings'));
     })()`);
     await wc.executeJavaScript(bundle);
     const started = JSON.parse(
@@ -671,6 +738,39 @@ app
     check('button-translated', afterStart.settings === EXPECTED.settings, afterStart.settings);
     check('menu-translated', afterStart.create === EXPECTED.create, afterStart.create);
     check('greeting-keeps-name', afterStart.greeting === EXPECTED.greeting, afterStart.greeting);
+    const remote = await wc.executeJavaScript(`({
+      controls: [document.getElementById('ssh-default').textContent,
+        document.getElementById('ssh-label').textContent,
+        document.getElementById('ssh-progress').textContent,
+        document.getElementById('ssh-current-host').textContent,
+        document.getElementById('ssh-switch-status').textContent,
+        document.getElementById('mcp-badge').textContent,
+        document.getElementById('mcp-view').textContent,
+        document.getElementById('ssh-action').getAttribute('aria-label'),
+        document.getElementById('ssh-error-heading').firstChild.data,
+        document.getElementById('ssh-connected').textContent],
+      content: ['ssh-host', 'ssh-path', 'ssh-config-path', 'ssh-raw-error', 'mcp-name', 'mcp-alert', 'mcp-banner-error'].map((id) => document.getElementById(id).textContent),
+      errorHost: document.getElementById('ssh-error-heading').lastChild.data,
+      configPath: document.getElementById('ssh-no-hosts').childNodes[1].data,
+      mcpError: document.getElementById('mcp-raw-error').lastChild.data,
+      tooltip: document.getElementById('mcp-badge').getAttribute('title'),
+      input: document.getElementById('ssh-input').value,
+    })`);
+    check(
+      'ssh-mcp-controls-translated',
+      JSON.stringify(remote.controls) === JSON.stringify(REMOTE_EXPECTED),
+      JSON.stringify(remote),
+    );
+    check(
+      'ssh-mcp-opaque-values-kept',
+      remote.content.every((text) => text === 'Open Settings') &&
+        remote.errorHost === 'Open Settings' &&
+        remote.configPath === 'Open Settings' &&
+        remote.mcpError === 'Open Settings' &&
+        remote.tooltip === 'Open Settings' &&
+        remote.input === 'user@主機',
+      JSON.stringify(remote),
+    );
     check(
       'sidebar-links-translated',
       afterStart.sidebarCreate === EXPECTED.create &&

@@ -52,6 +52,14 @@ failing gate writes nothing and names what no longer matches:
 | Capsule | Executable and ASAR qualification, plus every anchor in [anchors.js](../src/capsule/anchors.js) present in the LS's served web bundle | `node scripts/manage.mjs status` reports `capsuleAnchors`; a [Host plan](#prepare-and-review) checks the proposed change without applying it |
 | Localization | Reviewed profile or structural evidence, adapter anchors, and bound plan inputs | `node scripts/manage.mjs status` and `--host-preflight` after [preparation](#localization-preparation-and-apply); `prepare` writes tool state, not installed files |
 
+Tool-output and compaction `patch` automatically select versioned recipes from the
+paired app's version, then run their exact whole-file gates. Unknown versions and
+unreadable version sources refuse; there is no nearest-version selection. Offline
+standalone binaries and legacy unversioned registries retain exact hash admission.
+Status and restore retain historical recipes. See
+[selection.go](../src/agyctl/internal/apptarget/selection.go). Context-limit
+admission remains byte-based, not a version allowlist.
+
 The capsule anchor gate parses the embedded web bundle with bounded extraction and
 never executes it. Anchors are the capsule's one volatile upstream dependency: a
 renamed selector is caught when the client changes, not after the capsule silently
@@ -174,13 +182,24 @@ remain usable, with a short model-list error. The controls are implemented in
 
 New model rows prefill 256,000 and start unchecked, so opening settings never enables
 a new mapping. The panel and its worker accept whole-token limits from 256,000
-through 896,000 inclusive for new or changed values. Visible out-of-range values
+through 983,040 inclusive for new or changed values. Visible out-of-range values
 must be corrected or unchecked before submission; hidden installed values can stay
 unchanged, verified against the revision-bound disk snapshot when saving and again
-before applying. The CLI keeps its own numeric-ID
-interface and bounds. The capsule shows decoded limits with the same catalog names,
+before applying. The CLI keeps its numeric-ID interface and accepts positive
+limits up to 983,040 tokens. Unchanged historical mappings remain readable and
+restorable. The capsule shows decoded limits with the same catalog names,
 and explicit IDs when names are unknown. These are disk patch values, not confirmed
 live context capacity.
+
+Compaction disk state is tri-state: registered input is disabled, a managed output
+is enabled, and unsupported, unrecognized, or pending states are unknown. Unknown
+is shown with an indeterminate, disabled checkbox and a leave-unchanged notice.
+The draft stores `compaction: null` to preserve it, rather than inventing a disabled
+state. Explicitly changing an unknown state refuses in preflight. A pending
+compaction transaction also blocks native limit changes. The exact registered
+2.32.1 native target supports combined limit/compaction settings through one
+reviewed native plan; legacy targets retain their conflict checks. Disk state
+does not by itself prove runtime compaction effectiveness.
 
 **Save settings** writes a draft only, to `<AGYCTL_HOME>/management/drafts/<id>.json`.
 The panel shows a short saved/not-applied status, not terminal instructions or
@@ -269,6 +288,42 @@ installed layout, canonical regular files, paired LS/executable, and native targ
 before preparation or process inspection. Use the same archive for preparation,
 reviewed apply, status, and removal; a custom path does not bypass the feature gates.
 
+## Native feature composition
+
+The exact registered Windows 2.32.1 original supports one native transaction for
+limit, tool-output, and compaction. Version detection selects candidate data;
+whole-file originals and each feature's byte gates still decide admission. The
+existing feature commands route to the same coordinator for this target. Removing
+one feature preserves the other two; changing model limits does not require
+removing compaction. Host localization/capsule composition remains a separate
+archive transaction, not an atomic transaction with the Language Server.
+
+The native CLI accepts explicit desired fields and preserves omitted fields:
+
+```powershell
+dist/bin/windows-amd64/agyctl.exe native status --binary ABS_LS_PATH --json
+dist/bin/windows-amd64/agyctl.exe native plan --binary ABS_LS_PATH --desired '{"compaction":true}' --json
+```
+
+With the selected client closed, `native apply` takes the same `--desired` and
+requires `--expected` with the exact `expected` object returned by that plan.
+This binds the original/current hashes, generation, and recipe-assets fingerprint;
+an intervening change refuses instead of replanning silently. `null` is not an
+omit operation. Disabling limit requires an empty model map. Panel draft preflight
+builds one native plan, preserving tool-output when the panel changes L/C only.
+
+The coordinator retains one active record and a prepare record under the tool
+home, plus verified originals under `backups/`. It reproduces the complete current
+image before changing anything. Recipe updates retain complete immutable
+`historical_inputs`; their exact fingerprints reproduce old managed images before
+the new transaction rebuilds from the original. `recipe_update_required` is not
+`already-applied`, including when only disabled-feature layout reservations
+change. Missing history, bad backups, pending transactions, unknown bytes, and
+overlapping writes/guards refuse. Existing legacy records and original backups
+are retained. Implementation: [native CLI](../src/agyctl/cmd/agyctl/native.go),
+[coordinator](../src/agyctl/internal/lspatch/), and
+[panel execution](../scripts/lib/feature-control.mjs).
+
 ## Per-model context settings
 
 `agyctl limit` patches PE and ELF x86-64 targets. Mach-O ARM64 binaries are inspected
@@ -339,12 +394,28 @@ anything automatically.
 
 ## Summary compaction patch
 
-`compaction patch` replaces the continuation-summary prompt and raises the
-request-retention values as one fixed combination. The registered values, the
+`compaction patch` applies a build-specific continuation-summary and retention
+recipe. The legacy default-string recipe alone did not establish runtime
+adoption. The registered values, the
 canonical prompt, and the binary evidence are in
 [compaction-patch.md](compaction-patch.md). Preview is always in-memory: without
 `--apply` the command writes nothing. An explicit `--binary` selects the
 installation, and with several installed the command refuses instead of guessing.
+
+The Windows 2.32.1 recipe instead patches final consumers and participates in
+[native composition](#native-feature-composition). Its current input remains an
+exact whole-file original, not an arbitrary previously patched file. The offline
+`node scripts/compaction-recipe.mjs inspect --asar ABS_ASAR_PATH` selects sites by
+version and verifies identity; `build --binary ABS_ORIGINAL --expect-sha SHA --out
+var/candidate.json` writes only a candidate. It never edits the installation or
+promotes a registry entry automatically.
+
+### Windows 2.32.1 consumer evidence
+
+Build-specific observations and reproduction details are owned by
+[compaction consumer evidence](compaction-patch.md#windows-2321-consumer-evidence).
+
+### Legacy transaction records
 
 Quit the selected client before applying or restoring (the process checks above
 apply). To change or remove the patch, run `npm run compaction:restore`, which
@@ -380,6 +451,41 @@ recorded input, not just the existence of a file. Missing or conflicting evidenc
 is refused as `prepare-invalid`; do not delete the prepare or backup files to
 bypass that refusal. A historical interrupted restore with no prepare record
 cannot be authenticated this way and still requires manual inspection.
+
+### Read-only checkpoint metadata
+
+[limit-diagnostics.mjs](../src/plugin/sidecars/panel/limit-diagnostics.mjs)
+decodes each `executor_metadata.data` BLOB independently, ordered by its `idx`.
+It follows `ExecutorMetadata.cascade_config` (field 10) →
+`CascadeConfig.checkpoint_config` (field 2), and reports the request override
+(executor field 17) separately. It does not search arbitrary payload bytes or
+concatenate database rows. A malformed row has its own error and does not supply
+values to the next row. Missing fields remain `null`, not assumed defaults.
+
+The observation includes max-token/count/byte settings, enabled and last-message
+flags, a summary-prompt byte length and SHA-256 (never its text), and the step
+compaction inline-frame/latest-result settings. Config metadata does not prove
+prompt adoption, actual retained payload size, hook activation, or model-visible
+tool capacity. `parseExecutorCheckpointMetadata` decodes one supplied BLOB;
+`readRecentContextLimits({ conversationDir, conversationIds: [ID] })` opens only
+the explicitly named UUID databases, read-only. Without explicit IDs the panel
+keeps its recent-conversation diagnostic behavior.
+
+Schema evidence inspected on Windows 2.32.1, package member
+`resources/bin/language_server.exe`, SHA-256
+`65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f`:
+the `ExecutorMetadata`, `CascadeConfig`, `CheckpointConfig`, and
+`StepCompactionConfig` descriptors start at file offsets `0x42bc068`,
+`0x42a1f51`, `0x42b476e`, and `0x42b4463`. The checkpoint scalar field numbers are
+5, 16, 17, 6, and 29 respectively; summary override is 20 and step config is 38.
+Step fields 2 and 10 are the inline-frame and latest-result byte limits.
+`(*sqliteStore).SetExecMetadata` at VA `0x141e310e0` calls `proto.Marshal` at
+`0x141e31124` before storing the BLOB. To reproduce, locate these messages in the
+embedded `DescriptorProto` records and decode their `FieldDescriptorProto`
+numbers/types; locate that store function through Go pclntab and disassemble its
+marshal/store call chain. Use the
+[protobuf wire-format rules](https://protobuf.dev/programming-guides/encoding/)
+for boundaries and singular-message merging, not Go struct memory offsets.
 
 ## Interface languages
 
@@ -447,9 +553,10 @@ Recovery is component-specific, not one transaction across the client:
   input and refuses drifted binaries; see
   [compaction admission](compaction-patch.md#admission-gate-and-coexistence).
 - **Multiple features:** the capsule and localization are one Host transaction over
-  one verified original. The limit and tool-output patches are separate operations on
-  the LS binary, and a failure in one never reverses another, so check each feature's
-  status after a failed run.
+  one verified original. The registered 2.32.1 L/T/C target uses one separate
+  [native transaction](#native-feature-composition); older builds retain their
+  separate feature records. A failed Host operation does not reverse a completed
+  native operation, or vice versa. Check each component after a failed run.
 
 On failure, read the command result, the current feature status, and any
 prepare/recovery records before retrying. Do not delete originals or treat a failed

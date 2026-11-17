@@ -187,8 +187,8 @@ and reports its state as `unavailable`; macOS mutation needs its own reviewed by
 and signing evidence. Windows and Linux ARM64 are not supported. Admission compares
 the original function bytes for the detected architecture with
 [versions.json](../compat/versions.json), not the application version, so an
-unlisted version with known bytes can pass. Only the Insiders Windows x64 entry
-records a live behavioral observation. The requested limit remains subject to the
+unlisted version with known bytes can pass. The registry also records the
+Windows stable 2.32.1 live observation. The requested limit remains subject to the
 replacement's later clamps and upstream/provider restrictions. See
 [limit patch](limit-patch.md).
 
@@ -203,13 +203,25 @@ its admission, planning, transaction, and restore in
 limit feature, but does not import the limit registry. See
 [tool-output patch](tool-output-patch.md).
 
-The compaction patcher follows the same whole-file admission pattern for its own
+The legacy compaction patcher follows the same whole-file admission pattern for its own
 registry, [compaction.json](../compat/compaction.json), and owns its transactions
 in [compaction](../src/agyctl/internal/compaction/). Its registered inputs are the
 tool-output patch output and the grep-patched baseline of one build; it changes
 only the summary-prompt strings and the request-retention values, and it reports
 other features' patches as conflicts instead of patching over them. See
 [compaction patch](compaction-patch.md).
+
+For the exact registered Windows 2.32.1 original, L/T/C mutations instead use the
+fixed-feature [native coordinator](../src/agyctl/internal/lspatch/), assembled by
+the [native CLI](../src/agyctl/cmd/agyctl/native.go). Each contribution first
+reproduces its own byte-gated recipe, and the coordinator reconstructs the entire
+desired image from the verified original. Disabled recipe spans remain reserved
+against limit-node allocation. One native active record and prepare transaction
+own that target; feature entry points cannot bypass them. Historical recipes are
+retained by exact identity and fingerprint to reproduce an older managed image
+before migrating it to current recipes. Unknown bytes and stale reviewed plans
+refuse. Other builds keep their existing feature gates and recovery paths. See
+[native feature composition](operations.md#native-feature-composition).
 
 ASAR composition and binary patches retain original backups and hash-bound
 recovery records. Staging, per-file replacement, and prepare records are not one

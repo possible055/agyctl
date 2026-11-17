@@ -12,6 +12,7 @@ import (
 	"agyctl/internal/compaction"
 	"agyctl/internal/layout"
 	"agyctl/internal/limit"
+	"agyctl/internal/lspatch"
 	"agyctl/internal/tooloutput"
 )
 
@@ -21,6 +22,8 @@ var buildCommit = "unknown"
 
 func runtimeScopes(args []string) []string {
 	switch args[0] {
+	case "native":
+		return []string{"native"}
 	case "locate":
 		return []string{"layout"}
 	case "client":
@@ -111,9 +114,16 @@ func run(args []string) (any, int, error) {
 		root, args = args[1], args[2:]
 	}
 	if len(args) == 0 {
-		return nil, 1, fmt.Errorf("usage: agyctl [--root ABS_PATH] locate|limit|tool-output|compaction|check|client target [arguments] --json")
+		return nil, 1, fmt.Errorf("usage: agyctl [--root ABS_PATH] locate|native|limit|tool-output|compaction|check|client target [arguments] --json")
 	}
 	scopes := runtimeScopes(args)
+	managed, err := usesNative(root, args)
+	if err != nil {
+		return nil, 1, err
+	}
+	if managed {
+		scopes = []string{"native"}
+	}
 	snapshot, err := assets.Capture(root, scopes...)
 	if err != nil {
 		code := 1
@@ -122,13 +132,39 @@ func run(args []string) (any, int, error) {
 		}
 		return nil, code, err
 	}
+	var native lspatch.Handler
+	if managed && args[0] != "native" {
+		engine, err := nativeEngine(root, snapshot)
+		if err != nil {
+			return nil, 1, err
+		}
+		native = engine.Handle
+	} else if args[0] == "limit" || args[0] == "tool-output" || args[0] == "compaction" {
+		native = func(request lspatch.Request) (map[string]any, bool, error) {
+			selected, err := usesNative(root, []string{request.Feature, request.Command, "--binary", request.Binary})
+			if err != nil || !selected {
+				return nil, false, err
+			}
+			joint, err := assets.Capture(root, "native")
+			if err != nil {
+				return nil, true, err
+			}
+			engine, err := nativeEngine(root, joint)
+			if err != nil {
+				return nil, true, err
+			}
+			return engine.Handle(request)
+		}
+	}
 	switch args[0] {
+	case "native":
+		return runNative(root, snapshot, args[1:])
 	case "limit":
-		return limit.Run(root, snapshot, args[1:])
+		return limit.RunWithNative(root, snapshot, args[1:], native)
 	case "tool-output":
-		return tooloutput.Run(root, snapshot, args[1:])
+		return tooloutput.RunWithNative(root, snapshot, args[1:], native)
 	case "compaction":
-		return compaction.Run(root, snapshot, args[1:])
+		return compaction.RunWithNative(root, snapshot, args[1:], native)
 	case "check":
 		return check.Run(root, snapshot, args[1:])
 	case "client":

@@ -13,6 +13,7 @@ import (
 	"agyctl/internal/assets"
 	"agyctl/internal/fsx"
 	"agyctl/internal/layout"
+	"agyctl/internal/lspatch"
 )
 
 type options struct {
@@ -62,6 +63,10 @@ func parseOptions(args []string) (options, error) {
 // were verified; a nil snapshot (only for direct library use in tests) falls
 // back to reading compat/tool-output.json under root.
 func Run(root string, snap *assets.Snapshot, args []string) (any, int, error) {
+	return RunWithNative(root, snap, args, nil)
+}
+
+func RunWithNative(root string, snap *assets.Snapshot, args []string, native lspatch.Handler) (any, int, error) {
 	o, err := parseOptions(args)
 	if err != nil {
 		return failure(o.command, err)
@@ -96,14 +101,43 @@ func Run(root string, snap *assets.Snapshot, args []string) (any, int, error) {
 	if o.command != "versions" && binary == "" {
 		return failure(o.command, resolveErr)
 	}
+	if native != nil && (o.command == "status" || o.command == "patch" || o.command == "restore") {
+		enabled := true
+		value, handled, nativeErr := native(lspatch.Request{Feature: "tool-output", Command: o.command, Binary: binary, Apply: o.apply, Desired: lspatch.Desired{ToolOutput: &enabled}})
+		if nativeErr != nil {
+			return failure(o.command, nativeErr)
+		}
+		if handled {
+			return value, 0, nil
+		}
+	}
 	switch o.command {
 	case "versions":
 		return versions(binary, reg)
 	case "status":
 		return status(binary, reg, s, candidates)
 	case "patch":
+		versions := make([]string, len(reg.Targets))
+		for i, target := range reg.Targets {
+			versions[i] = target.AppVersion
+		}
+		selection, selectErr := apptarget.SelectBuild(binary, versions)
+		if selectErr != nil {
+			return failure(o.command, selectErr)
+		}
+		selected := reg
+		selected.Targets = make([]Target, 0, len(selection.Indices))
+		for _, index := range selection.Indices {
+			selected.Targets = append(selected.Targets, reg.Targets[index])
+		}
 		var result any
-		result, err = patch(binary, o, reg, s, candidates)
+		result, err = patch(binary, o, selected, s, candidates)
+		if details, ok := result.(map[string]any); ok && details != nil {
+			details["app_version"] = nullable(selection.AppVersion)
+			details["version_source"] = selection.VersionSource
+			details["selection_source"] = selection.SelectionSource
+			details["identity_gate"] = "whole-file-sha256"
+		}
 		if err != nil {
 			return failure(o.command, err)
 		}
@@ -352,6 +386,11 @@ func planFor(binary string, data []byte, reg Registry, s store) (Plan, *Admissio
 }
 
 func patch(binary string, o options, reg Registry, s store, candidates []layout.Target) (result map[string]any, err error) {
+	if o.apply {
+		if err := lspatch.GuardStandalone(s.directory, binary, "tool-output"); err != nil {
+			return nil, err
+		}
+	}
 	data, err := os.ReadFile(binary)
 	if err != nil {
 		return nil, err
@@ -469,6 +508,9 @@ func preparedOperationID(prepared *prepareRecord, plan Plan, binary string) stri
 }
 
 func completePreparedRecord(binary, installedSHA string, s store, prepared *prepareRecord) error {
+	if err := lspatch.GuardStandalone(s.directory, binary, "tool-output"); err != nil {
+		return err
+	}
 	if installedSHA != prepared.NewSHA {
 		return fmt.Errorf("the prepared record expects patched hash %s but the installed binary is %s — refusing to complete it", prepared.NewSHA, installedSHA)
 	}
@@ -520,6 +562,9 @@ func completePreparedRecord(binary, installedSHA string, s store, prepared *prep
 }
 
 func applyPlan(binary string, data []byte, plan Plan, version string, s store, operation string) (map[string]any, error) {
+	if err := lspatch.GuardStandalone(s.directory, binary, "tool-output"); err != nil {
+		return nil, err
+	}
 	targetKey, err := apptarget.Normalized(binary)
 	if err != nil {
 		return nil, err
@@ -588,6 +633,9 @@ func restore(binary string, reg Registry, s store, candidates []layout.Target) (
 }
 
 func restoreBinary(binary string, reg Registry, s store, operation string) (any, error) {
+	if err := lspatch.GuardStandalone(s.directory, binary, "tool-output"); err != nil {
+		return nil, err
+	}
 	current, err := os.ReadFile(binary)
 	if err != nil {
 		return nil, err

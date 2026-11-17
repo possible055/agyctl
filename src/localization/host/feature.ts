@@ -9,15 +9,18 @@ export { buildReviewedNativeEdits, engineRequirePath } from './native-adapters.j
 export interface LocalizationProfile {
   profileId: string;
   status: string;
+  version?: string;
+  platform?: string;
   asarSha256?: string;
   exeSha256?: string;
   hostAdapter?: { file: string; sha256: string; anchor: string };
-  nativeAdapterVersion?: '2';
+  nativeAdapterVersion?: '2' | '3';
+  nativeImageBinding?: boolean;
 }
 
 export function buildNativeInventory(engine: AsarEngineLike, originalPath: string, profile: LocalizationProfile) {
-  if (profile.nativeAdapterVersion !== '2') return [];
-  return buildReviewedNativeEdits(engine, originalPath).filter((edit) => edit.messageIds.length).map((edit) => ({
+  if (profile.nativeAdapterVersion === undefined) return [];
+  return buildReviewedNativeEdits(engine, originalPath, profile.nativeAdapterVersion).filter((edit) => edit.messageIds.length).map((edit) => ({
     usageId: sha256(Buffer.from(`${edit.sourceSha256}\0${edit.file}\0${edit.start}\0${edit.end}`)),
     file: edit.file,
     start: edit.start,
@@ -30,12 +33,29 @@ export function buildNativeInventory(engine: AsarEngineLike, originalPath: strin
   }));
 }
 
-/** Selects a unique reviewed adapter contract, independently of historical digests. */
+/** Reads package data only; no archive member is executed. */
+export function readLocalizationAppVersion(engine: AsarEngineLike, originalPath: string): string {
+  let version: unknown;
+  try {
+    version = (JSON.parse(engine.extractFile(originalPath, 'package.json').toString('utf8')) as { version?: unknown }).version;
+  } catch (error) {
+    throw new ComposerError('SOURCE_MISMATCH', `Cannot read localization application version: ${String(error)}`);
+  }
+  if (typeof version !== 'string' || !/^\d+\.\d+\.\d+(?:[-+][\w.-]+)?$/.test(version))
+    throw new ComposerError('SOURCE_MISMATCH', 'Application package has no valid localization version');
+  return version;
+}
+
+/** Selects an exact application version, then verifies its reviewed adapter contract. */
 export function resolveLocalizationProfile<T extends LocalizationProfile>(
   profiles: T[],
-  context: { engine: AsarEngineLike; originalPath: string; originalHash: string; executablePath?: string; profileId?: string },
+  context: { engine: AsarEngineLike; originalPath: string; originalHash: string; executablePath?: string; profileId?: string; appVersion?: string },
 ): { profile: T; warnings: LocalizationQualificationWarning[] } {
-  const candidates = context.profileId ? profiles.filter((profile) => profile.profileId === context.profileId) : profiles;
+  const appVersion = context.profileId ? undefined : context.appVersion ?? readLocalizationAppVersion(context.engine, context.originalPath);
+  const platform = `${process.platform}-${process.arch}`;
+  const candidates = profiles.filter((profile) => context.profileId ? profile.profileId === context.profileId : profile.version === appVersion && (profile.platform === undefined || profile.platform === platform));
+  if (!candidates.length)
+    throw new ComposerError('SOURCE_MISMATCH', context.profileId ? `Unknown localization profile: ${context.profileId}` : `No reviewed localization profile for application version ${appVersion} on ${platform}`);
   const qualified: T[] = [];
   const failures: string[] = [];
   for (const profile of candidates) {
@@ -45,7 +65,7 @@ export function resolveLocalizationProfile<T extends LocalizationProfile>(
       const source = context.engine.extractFile(context.originalPath, adapter.file).toString('utf8');
       const start = source.indexOf(adapter.anchor);
       if (start < 0 || source.indexOf(adapter.anchor, start + 1) >= 0) throw new Error(`Host delivery anchor missing or ambiguous in ${adapter.file}`);
-      if (profile.nativeAdapterVersion === '2') buildReviewedNativeEdits(context.engine, context.originalPath);
+      if (profile.nativeAdapterVersion !== undefined) buildReviewedNativeEdits(context.engine, context.originalPath, profile.nativeAdapterVersion);
       qualified.push(profile);
     } catch (error) { failures.push(`${profile.profileId}: ${String(error)}`); }
   }

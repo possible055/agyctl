@@ -18,6 +18,7 @@ import {
   findAsarPath,
   languageServerPath,
 } from './install-paths.mjs';
+import { validateNativeExpectation } from './native-binding.mjs';
 
 const require = createRequire(import.meta.url);
 const requireLocalization = createRequire(import.meta.url);
@@ -98,16 +99,21 @@ export function localizationNativeInventory(originalPath, profile) {
   return buildNativeInventory(engine, originalPath, profile);
 }
 
-export function localizationNativeEdits(originalPath) {
+export function localizationNativeEdits(originalPath, profile) {
+  const adapterVersion = profile?.nativeAdapterVersion;
+  if (!['2', '3'].includes(adapterVersion))
+    throw new Error(`Unsupported native localization adapter version: ${adapterVersion}`);
   requireLocalization('./localization-build.mjs').verifyLocalizationBuild();
   const { buildReviewedNativeEdits } = requireLocalization(
     '../../dist/localization/bundle/feature-provider.mjs',
   );
-  return buildReviewedNativeEdits(engine, originalPath).map(({ file, anchor, replaceAnchor }) => ({
-    file,
-    anchor,
-    replaceAnchor,
-  }));
+  return buildReviewedNativeEdits(engine, originalPath, adapterVersion).map(
+    ({ file, anchor, replaceAnchor }) => ({
+      file,
+      anchor,
+      replaceAnchor,
+    }),
+  );
 }
 
 /** Loads the localization runtime inputs from the built bundles. */
@@ -450,6 +456,14 @@ export function loadReviewedHostPlan(planPath, { asarPath } = {}) {
         'Reviewed selection targets a different installation',
       );
     const installationId = createHash('sha256').update(selection.asarPath).digest('hex');
+    if (selection.nativeBinding !== undefined) {
+      validateNativeExpectation(selection.nativeBinding);
+      if (selection.nativeBinding.base_sha256 !== selection.sourceBinarySha256)
+        throw new composer.ComposerError(
+          'PLAN_MISMATCH',
+          'Reviewed native revision does not match the localization source',
+        );
+    }
     if (
       selection?.schemaVersion !== 1 ||
       !['en', 'zh-Hant-TW', 'zh-Hans-CN', 'ja-JP'].includes(selection.locale) ||

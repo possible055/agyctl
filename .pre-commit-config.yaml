@@ -121,5 +121,5 @@ repos:
         entry: go -C src/agyctl test ./internal/...
         language: system
         pass_filenames: false
-        files: ^(src/agyctl/.*\.go|compat/(versions|install-layout|compaction)\.json|compat/compaction/.*\.txt|src/agyctl/internal/assets/.*\.json)$
+        files: ^(src/agyctl/.*\.go|compat/(versions|install-layout|tool-output|compaction)\.json|compat/compaction/.*\.txt|src/agyctl/internal/assets/.*\.json)$
         stages: [pre-commit]

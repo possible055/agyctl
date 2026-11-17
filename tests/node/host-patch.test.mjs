@@ -310,6 +310,37 @@ test('custom ASAR preparation, reviewed apply, status and removal share the vali
     discovered: false,
   });
   const original = fs.readFileSync(target.asarPath);
+  const packagePath = path.join(root, 'installation/source/package.json');
+  const packageBytes = fs.readFileSync(packagePath);
+  fs.writeFileSync(packagePath, JSON.stringify({ ...JSON.parse(packageBytes), version: '2.99.0' }));
+  fs.unlinkSync(target.asarPath);
+  engine.createPackageWithOptions(path.dirname(packagePath), target.asarPath, {});
+  const unknownVersion = spawnSync(
+    process.execPath,
+    [
+      'scripts/localization.mjs',
+      'prepare',
+      '--ls',
+      target.binaryPath,
+      '--locale',
+      'zh-Hant-TW',
+      '--json',
+    ],
+    {
+      cwd: runtime,
+      encoding: 'utf8',
+      windowsHide: true,
+      env: { ...process.env, AGYCTL_HOME: stateRoot },
+    },
+  );
+  assert.equal(unknownVersion.status, 1, unknownVersion.stdout + unknownVersion.stderr);
+  assert.match(
+    JSON.parse(unknownVersion.stdout).error,
+    /No reviewed localization profile.*2\.99\.0/,
+  );
+  assert.equal(fs.existsSync(path.join(stateRoot, 'localization/artifacts')), false);
+  fs.writeFileSync(packagePath, packageBytes);
+  fs.writeFileSync(target.asarPath, original);
   const prepared = run(
     'prepare',
     '--asar',
@@ -472,7 +503,7 @@ function managementPreparationFixture(t, { discovered = true } = {}) {
     JSON.stringify({
       name: 'antigravity-insiders',
       productName: 'Antigravity - Insiders',
-      version: '1',
+      version: '1.0.0',
     }),
   );
   const anchor =
@@ -516,8 +547,8 @@ ${anchoredMain()}`;
     status: 'probe-only',
     product: 'hub',
     channel: 'insiders',
-    platform: process.platform,
-    version: '1',
+    platform: `${process.platform}-${process.arch}`,
+    version: '1.0.0',
     adapterVersion: '1',
     asarSha256: digest(fs.readFileSync(asarPath)),
     exeSha256: digest(fs.readFileSync(executablePath)),

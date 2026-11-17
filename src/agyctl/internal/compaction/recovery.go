@@ -11,6 +11,7 @@ import (
 	"agyctl/internal/apptarget"
 	"agyctl/internal/fsx"
 	"agyctl/internal/layout"
+	"agyctl/internal/lspatch"
 )
 
 func recordedByteCount(record map[string]any) (int, error) {
@@ -39,6 +40,9 @@ type preparedTransaction struct {
 // transaction before writing bookkeeping or bytes, even when only cleanup is
 // needed. Missing action is the original schema-1 patch direction.
 func recoverPrepared(binary string, reg Registry, s store, command string, candidates []layout.Target) (map[string]any, error) {
+	if err := lspatch.GuardStandalone(s.directory, binary, "compaction"); err != nil {
+		return nil, err
+	}
 	p, err := s.loadPrepare(binary)
 	if err != nil {
 		return nil, &operationRefusal{kind: "prepare-invalid", err: err}

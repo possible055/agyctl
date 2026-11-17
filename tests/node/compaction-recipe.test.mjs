@@ -1,24 +1,23 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import {
   applySegments,
   assertOnlyExpectedChanges,
+  COMPACTION_BUILDS,
+  checkRegistry,
   decodePromptBody,
   encodePromptBody,
-  IMM32_SITES,
-  JSON_PROMPT_LENGTH,
   MAX_USER_REQUEST_BYTES,
   MAX_USER_REQUESTS,
   normalizePrompt,
-  PROMPT_SEGMENTS,
   paddedPrompt,
-  RAW_PROMPT_LENGTH,
-  REQUEST_COUNT_SITES,
   readCanonicalPrompt,
   requireOutUnderVar,
   runCli,
+  selectCompactionBuild,
   solvePadding,
 } from '../../scripts/compaction-recipe.mjs';
 
@@ -58,39 +57,105 @@ test('prompt codec rejects malformed bodies', () => {
   assert.throws(() => decodePromptBody('trailing\\'), /unexpected escape/);
 });
 
-test('the canonical prompt fits both registered segment lengths', () => {
+test('the canonical prompt fits every inspected build without changing its text', () => {
   const canonical = readCanonicalPrompt();
-  const padding = solvePadding(canonical);
-  assert.ok(padding, 'no padding split satisfies both segment lengths');
-  const padded = paddedPrompt(canonical, padding);
-  assert.equal(Buffer.byteLength(padded, 'utf8'), RAW_PROMPT_LENGTH);
-  assert.equal(Buffer.byteLength(encodePromptBody(padded), 'utf8'), JSON_PROMPT_LENGTH);
-  // Each representation decodes back to the canonical text once trailing
-  // whitespace is removed.
-  assert.equal(normalizePrompt(padded), normalizePrompt(canonical));
-  assert.equal(
-    normalizePrompt(decodePromptBody(encodePromptBody(padded))),
-    normalizePrompt(canonical),
-  );
-  // Padding is appended after the canonical text and is whitespace only.
-  assert.ok(padded.startsWith(canonical));
-  assert.match(padded.slice(canonical.length), /^[\n ]*$/);
-  assert.equal(padded.trimEnd(), canonical.trimEnd());
+  for (const layout of COMPACTION_BUILDS) {
+    const padding = solvePadding(canonical, layout);
+    assert.ok(padding, 'no padding split satisfies both segment lengths');
+    const padded = paddedPrompt(canonical, padding);
+    assert.equal(Buffer.byteLength(padded, 'utf8'), layout.rawPromptLength);
+    if (!layout.consumerSites)
+      assert.equal(Buffer.byteLength(encodePromptBody(padded), 'utf8'), layout.jsonPromptLength);
+    else assert.equal(padding.newlines, 0);
+    // Each representation decodes back to the canonical text once trailing
+    // whitespace is removed.
+    assert.equal(normalizePrompt(padded), normalizePrompt(canonical));
+    assert.equal(
+      normalizePrompt(decodePromptBody(encodePromptBody(padded))),
+      normalizePrompt(canonical),
+    );
+    // Padding is appended after the canonical text and is whitespace only.
+    assert.ok(padded.startsWith(canonical));
+    assert.match(padded.slice(canonical.length), /^[\n ]*$/);
+    assert.equal(padded.trimEnd(), canonical.trimEnd());
+  }
 });
 
-test('segment table covers every request site exactly once', () => {
-  const names = [...PROMPT_SEGMENTS, ...REQUEST_COUNT_SITES, ...IMM32_SITES].map(
-    (segment) => segment.name,
-  );
-  assert.equal(new Set(names).size, names.length);
-  assert.equal(REQUEST_COUNT_SITES.length, 8);
-  assert.equal(IMM32_SITES.length, 2);
-  const offsets = [...PROMPT_SEGMENTS, ...REQUEST_COUNT_SITES, ...IMM32_SITES]
-    .map((segment) => segment.offset)
-    .sort((a, b) => a - b);
-  for (let i = 1; i < offsets.length; i++) {
-    assert.ok(offsets[i] > offsets[i - 1], `offsets not strictly increasing at ${i}`);
+test('build layouts cover their own prompt copies and request sites without overlap', () => {
+  const shapes = {
+    '2.31.2': { prompts: 3, counts: 8, initializers: 2, consumers: 0, preserved: [] },
+    '2.32.1': { prompts: 1, counts: 0, initializers: 0, consumers: 9, preserved: [6307] },
+  };
+  for (const layout of COMPACTION_BUILDS) {
+    const sites = [
+      ...layout.promptSegments,
+      ...layout.requestCountSites,
+      ...layout.imm32Sites,
+      ...(layout.consumerSites ?? []),
+      ...layout.preservedPrompts,
+      ...(layout.preservedBytes ?? []),
+    ];
+    const names = sites.map((segment) => segment.name);
+    assert.equal(new Set(names).size, names.length);
+    assert.equal(layout.promptSegments.length, shapes[layout.version].prompts);
+    assert.equal(layout.requestCountSites.length, shapes[layout.version].counts);
+    assert.equal(layout.imm32Sites.length, shapes[layout.version].initializers);
+    assert.equal(layout.consumerSites?.length ?? 0, shapes[layout.version].consumers);
+    assert.deepEqual(
+      layout.preservedPrompts.map((site) => site.decodedLength),
+      shapes[layout.version].preserved,
+    );
+    const spans = sites
+      .map((site) => ({
+        offset: site.offset,
+        length:
+          site.length ??
+          (site.encoding
+            ? site.encoding === 'raw'
+              ? layout.rawPromptLength
+              : layout.jsonPromptLength
+            : site.field
+              ? 4
+              : 2),
+      }))
+      .sort((a, b) => a.offset - b.offset);
+    for (let i = 1; i < spans.length; i++) {
+      assert.ok(
+        spans[i].offset >= spans[i - 1].offset + spans[i - 1].length,
+        `overlap in ${layout.id}`,
+      );
+    }
   }
+});
+
+test('build selection uses the installed version without weakening the exact identity gate', () => {
+  const [older, newer] = COMPACTION_BUILDS;
+  const hashes = new Map(
+    COMPACTION_BUILDS.map((layout) => [layout.id, new Set([layout.originalSha256])]),
+  );
+  for (const layout of COMPACTION_BUILDS) {
+    const identity = { sha: layout.originalSha256, size: layout.binarySize };
+    const installed = selectCompactionBuild({ ...identity, appVersion: layout.version }, hashes);
+    assert.equal(installed.layout.id, layout.id);
+    assert.equal(installed.selectionSource, 'app-version');
+    assert.equal(installed.identityVerifiedBy, 'whole-file-sha256-and-size');
+    const offline = selectCompactionBuild(identity, hashes);
+    assert.equal(offline.layout.id, layout.id);
+    assert.equal(offline.selectionSource, 'binary-sha256');
+  }
+  const identity = { sha: newer.originalSha256, size: newer.binarySize };
+  const refused = [
+    [{ ...identity, sha: '0'.repeat(64) }, /unknown binary SHA/],
+    [
+      { ...identity, appVersion: newer.version, sha: '0'.repeat(64) },
+      /version alone cannot admit it/,
+    ],
+    [{ ...identity, appVersion: older.version }, /version alone cannot admit it/],
+    [{ ...identity, appVersion: '2.99.0' }, /unsupported installed app version/],
+    [{ ...identity, appVersion: newer.version, size: newer.binarySize - 1 }, /binary size/],
+  ];
+  for (const [input, message] of refused)
+    assert.throws(() => selectCompactionBuild(input, hashes), message);
 });
 
 test('applySegments applies registered bytes and rejects drift', () => {
@@ -254,18 +319,107 @@ test('feature values are the fixed first-version combination', () => {
 test('check-registry validates the promoted registry against the canonical prompt', () => {
   const result = JSON.parse(runCli(['check-registry']));
   assert.equal(result.registry, 'compat/compaction.json');
-  assert.equal(result.inputs.length, 2);
+  const registry = JSON.parse(
+    fs.readFileSync(new URL('../../compat/compaction.json', import.meta.url), 'utf8'),
+  );
+  assert.equal(
+    result.inputs.length,
+    registry.targets.reduce((n, target) => n + target.inputs.length, 0),
+  );
   for (const input of result.inputs) {
+    const layout = COMPACTION_BUILDS.find((candidate) => candidate.id === input.target);
     assert.equal(
       input.segments,
-      PROMPT_SEGMENTS.length + REQUEST_COUNT_SITES.length + IMM32_SITES.length,
+      layout.promptSegments.length +
+        layout.requestCountSites.length +
+        layout.imm32Sites.length +
+        (layout.consumerSites?.length ?? 0),
     );
+  }
+  const changed = structuredClone(registry);
+  changed.targets[0].inputs[0].segments = changed.targets[0].inputs[0].segments.filter(
+    (segment) => segment.name !== 'max-user-requests-m124-base',
+  );
+  assert.throws(() => checkRegistry(changed), /segment names do not match the build layout/);
+  const consumer = registry.targets.find((target) => target.app_version === '2.32.1');
+  assert.equal(consumer.inputs.length, 1);
+  assert.deepEqual(result.historical_inputs, [
+    {
+      target: consumer.id,
+      input: 'original',
+      segments: 8,
+      fingerprint: '1b201f436605748b6ae741682e8922bb0746f7582ff6472030800c5396f0f359',
+    },
+  ]);
+  const mutations = [
+    [
+      (target) => {
+        target.inputs = [];
+      },
+      /consumer recipe admits only its exact original input/,
+    ],
+    [
+      (target) => {
+        target.inputs[0].binary_sha256 = '0'.repeat(64);
+      },
+      /consumer recipe admits only its exact original input/,
+    ],
+    [
+      (target) => {
+        target.historical_inputs[0].segments[0].new_hex = '9090';
+      },
+      /historical recipe identity or restore fingerprint changed/,
+    ],
+    [
+      (target) => {
+        const segment = target.inputs[0].segments.find(
+          (site) => site.name === 'core-post-merge-outgoing-summary',
+        );
+        segment.new_hex = `90${segment.new_hex.slice(2)}`;
+      },
+      /core-post-merge-outgoing-summary does not reproduce the canonical recipe/,
+    ],
+    [
+      (target) => {
+        const segment = target.inputs[0].segments.find(
+          (site) => site.name === 'post-merge-outgoing-summary',
+        );
+        segment.new_hex = `90${segment.new_hex.slice(2)}`;
+      },
+      /post-merge-outgoing-summary does not reproduce the canonical recipe/,
+    ],
+    [
+      (target) => {
+        const segment = target.inputs[0].segments.find(
+          (site) => site.name === 'semantic-legacy-comparison-table',
+        );
+        segment.new_hex = segment.expected_hex;
+      },
+      /semantic-legacy-comparison-table does not reproduce the canonical recipe/,
+    ],
+  ];
+  for (const [mutate, message] of mutations) {
+    const invalid = structuredClone(registry);
+    mutate(invalid.targets.find((target) => target.id === consumer.id));
+    assert.throws(() => checkRegistry(invalid), message);
   }
 });
 
-test('prompt-fit reports the canonical prompt as fitting', () => {
+test('prompt-fit reports every known build without requiring a manual profile', () => {
   const result = JSON.parse(runCli(['prompt-fit']));
-  assert.equal(result.fits, true);
-  assert.equal(result.padded_bytes, RAW_PROMPT_LENGTH);
-  assert.equal(result.encoded_padded_bytes, JSON_PROMPT_LENGTH);
+  assert.deepEqual(
+    result.builds.map((build) => build.build),
+    COMPACTION_BUILDS.map((layout) => layout.id),
+  );
+  for (const build of result.builds) {
+    const layout = COMPACTION_BUILDS.find((candidate) => candidate.id === build.build);
+    assert.equal(build.fits, true);
+    assert.equal(build.padded_bytes, layout.rawPromptLength);
+    if (layout.consumerSites)
+      assert.equal(
+        build.embedded_prompt_semantics,
+        'unchanged; the normalized M124 literal is a legacy comparison table',
+      );
+    else assert.equal(build.encoded_padded_bytes, layout.jsonPromptLength);
+  }
 });

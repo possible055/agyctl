@@ -14,6 +14,7 @@ import (
 	"agyctl/internal/assets"
 	"agyctl/internal/fsx"
 	"agyctl/internal/layout"
+	"agyctl/internal/lspatch"
 )
 
 type options struct {
@@ -77,9 +78,17 @@ func parseOptions(args []string) (options, error) {
 		return o, fmt.Errorf("--model-limits cannot be combined with --ids or --limit")
 	}
 	if hasModels {
-		if _, err := ParseModelLimits(o.modelLimits); err != nil {
+		values, err := ParseModelLimits(o.modelLimits)
+		if err != nil {
 			return o, err
 		}
+		for _, value := range values {
+			if value.Limit > lspatch.MaxContextLimit {
+				return o, fmt.Errorf("context limits must not exceed %d tokens", lspatch.MaxContextLimit)
+			}
+		}
+	} else if o.command == "patch" && o.limit > lspatch.MaxContextLimit {
+		return o, fmt.Errorf("context limits must not exceed %d tokens", lspatch.MaxContextLimit)
 	}
 	o.dryRun = o.dryRun || !o.apply
 	return o, nil
@@ -90,6 +99,10 @@ func parseOptions(args []string) (options, error) {
 // assets were verified; a nil snapshot (only for direct library use in tests)
 // falls back to reading compat/versions.json under root.
 func Run(root string, snap *assets.Snapshot, args []string) (any, int, error) {
+	return RunWithNative(root, snap, args, nil)
+}
+
+func RunWithNative(root string, snap *assets.Snapshot, args []string, native lspatch.Handler) (any, int, error) {
 	o, err := parseOptions(args)
 	if err != nil {
 		return failure(o.command, err)
@@ -147,6 +160,39 @@ func Run(root string, snap *assets.Snapshot, args []string) (any, int, error) {
 		return failure(o.command, err)
 	}
 	var result any
+	if native != nil && (o.command == "status" || o.command == "patch" || o.command == "restore") {
+		request := lspatch.Request{Feature: "limit", Command: o.command, Binary: binary, Apply: !o.dryRun, Out: o.out, UseCurrentLimit: !o.settingsExplicit}
+		if o.command == "patch" {
+			requested := o
+			if !o.settingsExplicit {
+				owned, err := lspatch.HasState(s.directory, binary)
+				if err != nil {
+					return failure(o.command, err)
+				}
+				if owned {
+					requested.resolveSettings = false
+				}
+			}
+			settings, _, settingsErr := s.requestedSettings(binary, PatchState{Kind: "original"}, requested)
+			if settingsErr != nil {
+				return failure(o.command, settingsErr)
+			}
+			config := lspatch.LimitConfig{Enabled: true, ModelLimits: settings.ModelLimits}
+			request.Desired.Limit = &config
+		}
+		value, handled, nativeErr := native(request)
+		if nativeErr != nil {
+			return failure(o.command, nativeErr)
+		}
+		if handled {
+			if o.command == "status" {
+				if err := decorateNativeStatus(binary, value, reg, s, candidates); err != nil {
+					return failure(o.command, err)
+				}
+			}
+			return value, 0, nil
+		}
+	}
 	switch o.command {
 	case "status":
 		result, err = status(binary, reg, s, candidates)
@@ -461,6 +507,9 @@ func patchBinary(binary string, data, out []byte, sha, version, compat string, i
 }
 
 func patchBinarySettings(binary string, data, out []byte, sha, version, compat string, settings patchSettings, plan Plan, s store, operation string) (map[string]any, error) {
+	if err := lspatch.GuardStandalone(s.directory, binary, "limit"); err != nil {
+		return nil, err
+	}
 	ids, target := settings.IDs, settings.Limit
 	prepared, err := s.loadPrepare(binary)
 	if err != nil {
@@ -550,6 +599,9 @@ func restore(binary string, reg registry, s store, candidates []layout.Target) (
 }
 
 func restoreBinary(binary string, reg registry, s store, operation string) (map[string]any, error) {
+	if err := lspatch.GuardStandalone(s.directory, binary, "limit"); err != nil {
+		return nil, err
+	}
 	current, err := os.ReadFile(binary)
 	if err != nil {
 		return nil, err

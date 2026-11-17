@@ -18,6 +18,22 @@
         {
           "file": "dist/deviceChooser.js",
           "anchor": "buttons: [...snapshot.map(({ label }) => label), 'Cancel']"
+        },
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Stop Server', 'Cancel']"
+        },
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Sign In', 'Cancel']"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "<button id=\"cancel\">Cancel</button>"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "buttons: confirm ? ['Yes', 'No'] : ['Cancel']"
         }
       ],
       "translations": {
@@ -1467,6 +1483,1934 @@
         "ja-JP": "このフォルダーは Windows ファイルシステム上にあります。WSL から /mnt 経由でアクセスすると遅くなる場合があります。最適なパフォーマンスを得るには、プロジェクトを WSL ファイルシステム内に保存してください。"
       },
       "escapeContext": "Electron presentation string; not HTML; leave dynamic device, origin, path, distro and certificate values untouched"
+    },
+    {
+      "id": "ssh.chooseConfigFile",
+      "original": "Choose an SSH config file",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Choose an SSH config file'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "選擇 SSH 設定檔",
+        "zh-Hans-CN": "选择 SSH 配置文件",
+        "ja-JP": "SSH 設定ファイルを選択"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.connectionFailedTitle",
+      "original": "SSH connection failed",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'SSH connection failed'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 連線失敗",
+        "zh-Hans-CN": "SSH 连接失败",
+        "ja-JP": "SSH 接続に失敗しました"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.signInFailed",
+      "original": "Sign-in failed",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "this.reportError(err, entry.label, 'Sign-in failed', win)"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "登入失敗",
+        "zh-Hans-CN": "登录失败",
+        "ja-JP": "ログインに失敗しました"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.stopFailedTitle",
+      "original": "Could not stop the SSH server",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "this.reportError(err, entry.label, 'Could not stop the SSH server', win)"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法停止 SSH 伺服器",
+        "zh-Hans-CN": "无法停止 SSH 服务器",
+        "ja-JP": "SSH サーバーを停止できませんでした"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.stopServerTitle",
+      "original": "Stop SSH server",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "\n                title: 'Stop SSH server'"
+        },
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "\n            title: 'Stop SSH server'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "停止 SSH 伺服器",
+        "zh-Hans-CN": "停止 SSH 服务器",
+        "ja-JP": "SSH サーバーを停止"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.stopServerConfirm",
+      "original": "Stop the Antigravity server on {0}?",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Stop the Antigravity server on ${entry.label}?`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "要停止 {0} 上的 Antigravity 伺服器嗎？",
+        "zh-Hans-CN": "要停止 {0} 上的 Antigravity 服务器吗？",
+        "ja-JP": "{0} の Antigravity サーバーを停止しますか？"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.stopServerDetail",
+      "original": "Agents running on this host will stop and its window will close. The server starts again the next time you connect.",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "'Agents running on this host will stop and its window will close. ' +\n                    'The server starts again the next time you connect.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "此主機上執行中的代理程式將停止，視窗也會關閉。下次連線時，伺服器會再次啟動。",
+        "zh-Hans-CN": "此主机上运行的智能体将停止，其窗口也会关闭。下次连接时，服务器会再次启动。",
+        "ja-JP": "このホストで実行中のエージェントが停止し、ウィンドウが閉じます。次回接続時にサーバーが再起動します。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.notConnectedTo",
+      "original": "Not connected to {0}",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Not connected to ${label}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "未連線至 {0}",
+        "zh-Hans-CN": "未连接到 {0}",
+        "ja-JP": "{0} に接続していません"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.reconnectBeforeStop",
+      "original": "Reconnect first, then stop its server.",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "'Reconnect first, then stop its server.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "請先重新連線，再停止伺服器。",
+        "zh-Hans-CN": "请先重新连接，再停止服务器。",
+        "ja-JP": "再接続してからサーバーを停止してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.signInTitle",
+      "original": "Sign in",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Sign in'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "登入",
+        "zh-Hans-CN": "登录",
+        "ja-JP": "ログイン"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.organizationSignInConfirm",
+      "original": "Sign in to your organization for {0}?",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Sign in to your organization for ${entry.label}?`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "要為 {0} 登入您的機構嗎？",
+        "zh-Hans-CN": "要为 {0} 登录您的组织吗？",
+        "ja-JP": "{0} のために組織にログインしますか？"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.organizationSignInDetail",
+      "original": "Continue only if you just chose to sign in with your organization in this window. {0} will get access to your organization's Google Cloud account.\n",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "'Continue only if you just chose to sign in with your organization ' +\n                `in this window. ${entry.label} will get access to your ` +\n                \"organization's Google Cloud account.\\n\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "只有在您剛剛於此視窗中選擇以機構身分登入時，才應繼續。{0} 將能存取您機構的 Google Cloud 帳戶。\n",
+        "zh-Hans-CN": "只有在您刚刚于此窗口中选择以组织身份登录时，才应继续。{0} 将能访问您组织的 Google Cloud 账号。\n",
+        "ja-JP": "このウィンドウで組織へのログインを選んだ場合のみ続行してください。{0} が組織の Google Cloud アカウントにアクセスできるようになります。\n"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.workforceProvider",
+      "original": "Workforce pool: {0}  Provider: {1}",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Workforce pool: ${names[1]}  Provider: ${names[2]}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "員工集區：{0}  提供者：{1}",
+        "zh-Hans-CN": "员工池：{0}  提供方：{1}",
+        "ja-JP": "Workforce プール: {0}  プロバイダー: {1}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.identityProvider",
+      "original": "Identity provider: {0}",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Identity provider: ${provider}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "身分識別提供者：{0}",
+        "zh-Hans-CN": "身份提供方：{0}",
+        "ja-JP": "ID プロバイダー: {0}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.stopServerAction",
+      "original": "Stop Server",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Stop Server', 'Cancel']"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "停止伺服器",
+        "zh-Hans-CN": "停止服务器",
+        "ja-JP": "サーバーを停止"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.signInAction",
+      "original": "Sign In",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Sign In', 'Cancel']"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "登入",
+        "zh-Hans-CN": "登录",
+        "ja-JP": "ログイン"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.promptRetry",
+      "original": "Asked again: your last answer may not have worked.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "<div id=\"retry\" class=\"note\" hidden>Asked again: your last answer may not have worked.</div>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "再次詢問：您上次的回答可能未生效。",
+        "zh-Hans-CN": "再次询问：您上次的回答可能未生效。",
+        "ja-JP": "再度質問されています。前回の回答が正しくなかった可能性があります。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.promptTooLong",
+      "original": "That's too long.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "<div id=\"long\" class=\"note\" hidden>That's too long.</div>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "回答太長。",
+        "zh-Hans-CN": "回答太长。",
+        "ja-JP": "回答が長すぎます。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "common.continue",
+      "original": "Continue",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "<button id=\"continue\">Continue</button>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "繼續",
+        "zh-Hans-CN": "继续",
+        "ja-JP": "続行"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.promptTitle",
+      "original": "SSH: {0}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`SSH: ${label}`"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`SSH: ${text.label}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH：{0}",
+        "zh-Hans-CN": "SSH：{0}",
+        "ja-JP": "SSH: {0}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.promptAsks",
+      "original": "{0} asks:",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "message: confirm ? `${label} asks:` : 'Touch your security key'"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "contents.send('ssh-prompt:show', text);"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 詢問：",
+        "zh-Hans-CN": "{0} 询问：",
+        "ja-JP": "{0} からの質問:"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.touchSecurityKey",
+      "original": "Touch your security key",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "message: confirm ? `${label} asks:` : 'Touch your security key'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "請觸碰您的安全金鑰",
+        "zh-Hans-CN": "请触碰您的安全密钥",
+        "ja-JP": "セキュリティ キーに触れてください"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.yes",
+      "original": "Yes",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "buttons: confirm ? ['Yes', 'No'] : ['Cancel']"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "是",
+        "zh-Hans-CN": "是",
+        "ja-JP": "はい"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.no",
+      "original": "No",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "buttons: confirm ? ['Yes', 'No'] : ['Cancel']"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "否",
+        "zh-Hans-CN": "否",
+        "ja-JP": "いいえ"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configPathLimit",
+      "original": "The SSH config file must be a path of at most 4 KiB.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshBridge.js",
+          "anchor": "'The SSH config file must be a path of at most 4 KiB.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 設定檔必須是最多 4 KiB 的路徑。",
+        "zh-Hans-CN": "SSH 配置文件路径不得超过 4 KiB。",
+        "ja-JP": "SSH 設定ファイルのパスは 4 KiB 以下にしてください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.enterHost",
+      "original": "Enter an SSH host, for example \"devbox\" or \"user@host\".",
+      "contexts": [
+        {
+          "file": "dist/remote/sshBridge.js",
+          "anchor": "'Enter an SSH host, for example \"devbox\" or \"user@host\".'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "請輸入 SSH 主機，例如 \"devbox\" 或 \"user@host\"。",
+        "zh-Hans-CN": "请输入 SSH 主机，例如 \"devbox\" 或 \"user@host\"。",
+        "ja-JP": "SSH ホストを入力してください。例: \"devbox\" または \"user@host\"。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.codeAndLogs",
+      "original": "Error code: {0}\nLogs: {1}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshErrorText.js",
+          "anchor": "`Error code: ${err.code}\\nLogs: ${logPath()}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "錯誤代碼：{0}\n記錄：{1}",
+        "zh-Hans-CN": "错误代码：{0}\n日志：{1}",
+        "ja-JP": "エラーコード: {0}\nログ: {1}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.reportedError",
+      "original": "{0} reported: {1}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshErrorText.js",
+          "anchor": "`${label} reported: ${text}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 回報：{1}",
+        "zh-Hans-CN": "{0} 报告：{1}",
+        "ja-JP": "{0} からの報告: {1}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.connectionClosedEarly",
+      "original": "The connection was closed before it finished.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshErrorText.js",
+          "anchor": "'The connection was closed before it finished.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連線在完成前已關閉。",
+        "zh-Hans-CN": "连接在完成前已关闭。",
+        "ja-JP": "接続が完了する前に閉じられました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.sharedHomeFile",
+      "original": "{0}\nFile: {1} on {2}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshErrorText.js",
+          "anchor": "`${what}\\nFile: ${note} on ${label}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0}\n檔案：{2} 上的 {1}",
+        "zh-Hans-CN": "{0}\n文件：{2} 上的 {1}",
+        "ja-JP": "{0}\nファイル: {2} 上の {1}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.errorWithLogs",
+      "original": "{0}\nLogs: {1}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshErrorText.js",
+          "anchor": "`${text}\\nLogs: ${logPath()}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0}\n記錄：{1}",
+        "zh-Hans-CN": "{0}\n日志：{1}",
+        "ja-JP": "{0}\nログ: {1}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.invalidConfig",
+      "original": "Invalid SSH config file.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'Invalid SSH config file.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 設定檔無效。",
+        "zh-Hans-CN": "SSH 配置文件无效。",
+        "ja-JP": "SSH 設定ファイルが無効です。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.authFailed",
+      "original": "SSH authentication failed. Check your password, code or keys, then try again.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'SSH authentication failed. Check your password, code or keys, then try again.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 驗證失敗。請檢查密碼、驗證碼或金鑰，然後再試一次。",
+        "zh-Hans-CN": "SSH 身份验证失败。请检查密码、验证码或密钥，然后重试。",
+        "ja-JP": "SSH 認証に失敗しました。パスワード、コード、鍵を確認してから再試行してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.authReconnect",
+      "original": "SSH authentication failed. Click Reconnect to sign in again.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'SSH authentication failed. Click Reconnect to sign in again.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 驗證失敗。請按「重新連線」再次登入。",
+        "zh-Hans-CN": "SSH 身份验证失败。请点击“重新连接”再次登录。",
+        "ja-JP": "SSH 認証に失敗しました。「再接続」をクリックしてログインし直してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.authWindows",
+      "original": "SSH authentication failed. Antigravity can't answer password or code prompts on Windows yet: set up key-based login with ssh-agent, then try again.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "\"SSH authentication failed. Antigravity can't answer password or code prompts on Windows yet: set up key-based login with ssh-agent, then try again.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 驗證失敗。Antigravity 尚無法在 Windows 回應密碼或驗證碼提示。請透過 ssh-agent 設定金鑰登入，然後再試一次。",
+        "zh-Hans-CN": "SSH 身份验证失败。Antigravity 尚无法在 Windows 上响应密码或验证码提示。请通过 ssh-agent 设置密钥登录，然后重试。",
+        "ja-JP": "SSH 認証に失敗しました。Antigravity は Windows のパスワードやコードの入力にまだ対応していません。ssh-agent で鍵認証を設定してから再試行してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.invalidDestination",
+      "original": "That SSH host isn't valid. Enter an alias from your SSH config or a host like user@host or user@host:2222.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "\"That SSH host isn't valid. Enter an alias from your SSH config or a host like user@host or user@host:2222.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 主機無效。請輸入 SSH 設定檔中的別名，或 user@host、user@host:2222 格式的主機。",
+        "zh-Hans-CN": "SSH 主机无效。请输入 SSH 配置文件中的别名，或 user@host、user@host:2222 格式的主机。",
+        "ja-JP": "SSH ホストが無効です。SSH 設定のエイリアス、または user@host や user@host:2222 形式のホストを入力してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.hostKeyWindows",
+      "original": "The host's SSH key is unknown or has changed. Save it with ssh in a terminal. If it changed, ask the host's owner first: the connection may be intercepted.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "\"The host's SSH key is unknown or has changed. Save it with ssh in a terminal. If it changed, ask the host's owner first: the connection may be intercepted.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "主機的 SSH 金鑰未知或已變更。請在終端機中使用 ssh 儲存金鑰。如果金鑰已變更，請先詢問主機擁有者，連線可能遭到攔截。",
+        "zh-Hans-CN": "主机的 SSH 密钥未知或已更改。请在终端中使用 ssh 保存密钥。如果密钥已更改，请先询问主机所有者，连接可能遭到拦截。",
+        "ja-JP": "ホストの SSH 鍵が不明、または変更されています。ターミナルの ssh で保存してください。変更されていた場合は、先にホストの所有者に確認してください。接続が傍受されている可能性があります。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.hostKeyChanged",
+      "original": "The host's SSH key has changed or isn't trusted. If it changed, ask the host's owner first: the connection may be intercepted.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "\"The host's SSH key has changed or isn't trusted. If it changed, ask the host's owner first: the connection may be intercepted.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "主機的 SSH 金鑰已變更或不受信任。如果金鑰已變更，請先詢問主機擁有者，連線可能遭到攔截。",
+        "zh-Hans-CN": "主机的 SSH 密钥已更改或不受信任。如果密钥已更改，请先询问主机所有者，连接可能遭到拦截。",
+        "ja-JP": "ホストの SSH 鍵が変更されたか、信頼されていません。変更されていた場合は、先にホストの所有者に確認してください。接続が傍受されている可能性があります。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.forwardingFailed",
+      "original": "SSH port forwarding failed. Make sure the server allows TCP forwarding (AllowTcpForwarding) for your account, then try again.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'SSH port forwarding failed. Make sure the server allows TCP forwarding (AllowTcpForwarding) for your account, then try again.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 連接埠轉送失敗。請確認伺服器允許您的帳戶使用 TCP 轉送（AllowTcpForwarding），然後再試一次。",
+        "zh-Hans-CN": "SSH 端口转发失败。请确认服务器允许您的账号使用 TCP 转发（AllowTcpForwarding），然后重试。",
+        "ja-JP": "SSH ポート転送に失敗しました。サーバーでアカウントの TCP 転送（AllowTcpForwarding）が許可されていることを確認してから再試行してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.unsupportedHost",
+      "original": "The SSH host isn't supported. Antigravity needs Linux on x64 or arm64 with glibc 2.26 or newer.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "\"The SSH host isn't supported. Antigravity needs Linux on x64 or arm64 with glibc 2.26 or newer.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "不支援此 SSH 主機。Antigravity 需要搭載 glibc 2.26 以上版本的 x64 或 arm64 Linux。",
+        "zh-Hans-CN": "不支持此 SSH 主机。Antigravity 需要搭载 glibc 2.26 或更高版本的 x64 或 arm64 Linux。",
+        "ja-JP": "この SSH ホストには対応していません。Antigravity には glibc 2.26 以降の x64 または arm64 の Linux が必要です。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.sharedHome",
+      "original": "Another host that shares your home directory runs the Antigravity server. Connect to that host instead.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'Another host that shares your home directory runs the Antigravity server. Connect to that host instead.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "另一台共用您家目錄的主機正在執行 Antigravity 伺服器。請改為連線至該主機。",
+        "zh-Hans-CN": "另一台共享您主目录的主机正在运行 Antigravity 服务器。请改为连接到该主机。",
+        "ja-JP": "ホームディレクトリを共有する別のホストで Antigravity サーバーが実行されています。そのホストに接続してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.installFailed",
+      "original": "Couldn't install the Antigravity server on the SSH host. Make sure it has free disk space, and that it or this computer can download from the internet.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "\"Couldn't install the Antigravity server on the SSH host. Make sure it has free disk space, and that it or this computer can download from the internet.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法在 SSH 主機上安裝 Antigravity 伺服器。請確認主機有可用磁碟空間，且主機或這部電腦能從網際網路下載檔案。",
+        "zh-Hans-CN": "无法在 SSH 主机上安装 Antigravity 服务器。请确认主机有可用磁盘空间，且主机或此计算机能从互联网下载文件。",
+        "ja-JP": "SSH ホストに Antigravity サーバーをインストールできませんでした。空きディスク容量があり、ホストまたはこのコンピューターからインターネットにアクセスしてダウンロードできることを確認してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.serverStopped",
+      "original": "The Antigravity server on the SSH host stopped. Reconnect to start it again.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'The Antigravity server on the SSH host stopped. Reconnect to start it again.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 主機上的 Antigravity 伺服器已停止。請重新連線以再次啟動。",
+        "zh-Hans-CN": "SSH 主机上的 Antigravity 服务器已停止。请重新连接以再次启动。",
+        "ja-JP": "SSH ホストの Antigravity サーバーが停止しました。再接続して起動し直してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.connectionClosed",
+      "original": "The SSH connection closed. Check your network connection, then reconnect.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'The SSH connection closed. Check your network connection, then reconnect.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 連線已關閉。請檢查網路連線，然後重新連線。",
+        "zh-Hans-CN": "SSH 连接已关闭。请检查网络连接，然后重新连接。",
+        "ja-JP": "SSH 接続が閉じられました。ネットワーク接続を確認してから再接続してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.connectionCancelled",
+      "original": "The connection was cancelled.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'The connection was cancelled.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連線已取消。",
+        "zh-Hans-CN": "连接已取消。",
+        "ja-JP": "接続がキャンセルされました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.unknownError",
+      "original": "Couldn't connect to the SSH host. Try ssh to it in a terminal, and see the Antigravity log for details.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "\"Couldn't connect to the SSH host. Try ssh to it in a terminal, and see the Antigravity log for details.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法連線至 SSH 主機。請嘗試在終端機中使用 ssh 連線，並查看 Antigravity 記錄以取得詳細資訊。",
+        "zh-Hans-CN": "无法连接到 SSH 主机。请尝试在终端中使用 ssh 连接，并查看 Antigravity 日志以获取详细信息。",
+        "ja-JP": "SSH ホストに接続できませんでした。ターミナルで ssh 接続を試し、詳細は Antigravity のログを確認してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.unknownErrorCode",
+      "original": "Couldn't connect to the SSH host ({0}).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "`Couldn't connect to the SSH host (${String(code)}).`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法連線至 SSH 主機（{0}）。",
+        "zh-Hans-CN": "无法连接到 SSH 主机（{0}）。",
+        "ja-JP": "SSH ホストに接続できませんでした（{0}）。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.connectionFailedAdvice",
+      "original": "Couldn't connect to the SSH host. Check its name, your network and ssh config (e.g. a ProxyCommand), and that ssh to it works in a terminal.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "`Couldn't connect to the SSH host. Check its name, your network and ssh config (e.g. a ProxyCommand), and that ssh to it works in a terminal${prompts === 'no' ? ' without a prompt' : ''}.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法連線至 SSH 主機。請檢查主機名稱、網路與 ssh 設定（例如 ProxyCommand），並確認能在終端機中使用 ssh 連線。",
+        "zh-Hans-CN": "无法连接到 SSH 主机。请检查主机名称、网络与 ssh 配置（例如 ProxyCommand），并确认能在终端中使用 ssh 连接。",
+        "ja-JP": "SSH ホストに接続できませんでした。ホスト名、ネットワーク、ssh 設定（ProxyCommand など）を確認し、ターミナルから ssh 接続できることを確認してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.connectionFailedAdviceWindows",
+      "original": "Couldn't connect to the SSH host. Check its name, your network and ssh config (e.g. a ProxyCommand), and that ssh to it works in a terminal without a prompt.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "`Couldn't connect to the SSH host. Check its name, your network and ssh config (e.g. a ProxyCommand), and that ssh to it works in a terminal${prompts === 'no' ? ' without a prompt' : ''}.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法連線至 SSH 主機。請檢查主機名稱、網路與 ssh 設定（例如 ProxyCommand），並確認能在終端機中使用 ssh 連線而不需回應提示。",
+        "zh-Hans-CN": "无法连接到 SSH 主机。请检查主机名称、网络与 ssh 配置（例如 ProxyCommand），并确认能在终端中使用 ssh 连接且无需响应提示。",
+        "ja-JP": "SSH ホストに接続できませんでした。ホスト名、ネットワーク、ssh 設定（ProxyCommand など）を確認し、ターミナルから追加入力なしで ssh 接続できることを確認してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.serverStartFailed",
+      "original": "The Antigravity server failed to start on the SSH host. See its log in ~/{0}/data on that host.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "`The Antigravity server failed to start on the SSH host. See its log in ~/${types_1.REMOTE_INSTALL_ROOT}/data on that host.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法在 SSH 主機上啟動 Antigravity 伺服器。請查看該主機上 ~/{0}/data 中的記錄。",
+        "zh-Hans-CN": "无法在 SSH 主机上启动 Antigravity 服务器。请查看该主机上 ~/{0}/data 中的日志。",
+        "ja-JP": "SSH ホストで Antigravity サーバーを起動できませんでした。ホスト上の ~/{0}/data にあるログを確認してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.reconnecting",
+      "original": "Reconnecting…",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "'Reconnecting…'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在重新連線…",
+        "zh-Hans-CN": "正在重新连接…",
+        "ja-JP": "再接続中…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.disconnected",
+      "original": "Disconnected",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "'Disconnected'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "已中斷連線",
+        "zh-Hans-CN": "连接已断开",
+        "ja-JP": "切断されました"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.reconnectingTo",
+      "original": "Reconnecting to {0}…",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "`Reconnecting to ${host}…`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在重新連線至 {0}…",
+        "zh-Hans-CN": "正在重新连接到 {0}…",
+        "ja-JP": "{0} に再接続中…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.disconnectedFrom",
+      "original": "Disconnected from {0}",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "`Disconnected from ${host}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "已中斷與 {0} 的連線",
+        "zh-Hans-CN": "已断开与 {0} 的连接",
+        "ja-JP": "{0} との接続が切断されました"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.agentsKeepRunning",
+      "original": "Agents keep running on {0}.",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "`Agents keep running on ${host}.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "代理程式仍在 {0} 上執行。",
+        "zh-Hans-CN": "智能体仍在 {0} 上运行。",
+        "ja-JP": "エージェントは {0} で引き続き実行されています。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.agentsMayKeepRunning",
+      "original": "Agents keep running on {0} unless its server stopped.",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "`Agents keep running on ${host} unless its server stopped.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "除非伺服器已停止，否則代理程式仍在 {0} 上執行。",
+        "zh-Hans-CN": "除非服务器已停止，否则智能体仍在 {0} 上运行。",
+        "ja-JP": "サーバーが停止していなければ、エージェントは {0} で引き続き実行されています。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.reconnect",
+      "original": "Reconnect",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": ">Reconnect</a>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "重新連線",
+        "zh-Hans-CN": "重新连接",
+        "ja-JP": "再接続"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.closeWindow",
+      "original": "Close",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": ">Close</a>"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "關閉",
+        "zh-Hans-CN": "关闭",
+        "ja-JP": "閉じる"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.statusChecking",
+      "original": "Checking {0}…",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Checking ${label}…`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在檢查 {0}…",
+        "zh-Hans-CN": "正在检查 {0}…",
+        "ja-JP": "{0} を確認中…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.statusWaiting",
+      "original": "Waiting for another window to finish installing on {0}…",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Waiting for another window to finish installing on ${label}…`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在等待另一個視窗完成 {0} 上的安裝…",
+        "zh-Hans-CN": "正在等待另一个窗口完成 {0} 上的安装…",
+        "ja-JP": "別のウィンドウで {0} へのインストールが完了するのを待機中…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.statusReplacing",
+      "original": "Replacing an invalid server binary on {0}…",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Replacing an invalid server binary on ${label}…`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在取代 {0} 上無效的伺服器執行檔…",
+        "zh-Hans-CN": "正在替换 {0} 上无效的服务器可执行文件…",
+        "ja-JP": "{0} 上の無効なサーバーバイナリを置換中…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.statusDownloading",
+      "original": "Downloading the Antigravity server on {0}…",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Downloading the Antigravity server on ${label}…`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在 {0} 上下載 Antigravity 伺服器…",
+        "zh-Hans-CN": "正在 {0} 上下载 Antigravity 服务器…",
+        "ja-JP": "{0} に Antigravity サーバーをダウンロード中…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.statusInstalled",
+      "original": "Installed the Antigravity server on {0}.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Installed the Antigravity server on ${label}.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "已在 {0} 上安裝 Antigravity 伺服器。",
+        "zh-Hans-CN": "已在 {0} 上安装 Antigravity 服务器。",
+        "ja-JP": "{0} に Antigravity サーバーをインストールしました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.statusStarting",
+      "original": "Starting the Antigravity server on {0}…",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Starting the Antigravity server on ${label}…`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在 {0} 上啟動 Antigravity 伺服器…",
+        "zh-Hans-CN": "正在 {0} 上启动 Antigravity 服务器…",
+        "ja-JP": "{0} の Antigravity サーバーを起動中…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.statusAttaching",
+      "original": "Connecting to the running server on {0}…",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Connecting to the running server on ${label}…`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在連線至 {0} 上執行中的伺服器…",
+        "zh-Hans-CN": "正在连接到 {0} 上运行的服务器…",
+        "ja-JP": "{0} で実行中のサーバーに接続中…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.timedOut",
+      "original": "Timed out connecting to {0}.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Timed out connecting to ${this.label}.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連線至 {0} 逾時。",
+        "zh-Hans-CN": "连接到 {0} 超时。",
+        "ja-JP": "{0} への接続がタイムアウトしました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.noStopPort",
+      "original": "The Antigravity server on {0} has no HTTP port to stop it through.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`The Antigravity server on ${this.label} has no HTTP port to stop it through.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 上的 Antigravity 伺服器沒有可用來停止服務的 HTTP 連接埠。",
+        "zh-Hans-CN": "{0} 上的 Antigravity 服务器没有可用于停止服务的 HTTP 端口。",
+        "ja-JP": "{0} の Antigravity サーバーには停止要求を送る HTTP ポートがありません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.stopRefused",
+      "original": "The Antigravity server on {0} refused to stop (HTTP {1}).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`The Antigravity server on ${this.label} refused to stop (HTTP ${status}).`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 上的 Antigravity 伺服器拒絕停止（HTTP {1}）。",
+        "zh-Hans-CN": "{0} 上的 Antigravity 服务器拒绝停止（HTTP {1}）。",
+        "ja-JP": "{0} の Antigravity サーバーが停止を拒否しました（HTTP {1}）。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.stopUnconfirmed",
+      "original": "Could not confirm that the Antigravity server on {0} stopped",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Could not confirm that the Antigravity server on ${this.label} stopped`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法確認 {0} 上的 Antigravity 伺服器是否已停止",
+        "zh-Hans-CN": "无法确认 {0} 上的 Antigravity 服务器是否已停止",
+        "ja-JP": "{0} の Antigravity サーバーが停止したことを確認できませんでした"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.binaryMissing",
+      "original": "Could not run \"{0}\". Install OpenSSH or set ANTIGRAVITY_SSH_BIN.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Could not run \"${sshBin}\". Install OpenSSH or set ANTIGRAVITY_SSH_BIN.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法執行 \"{0}\"。請安裝 OpenSSH 或設定 ANTIGRAVITY_SSH_BIN。",
+        "zh-Hans-CN": "无法运行 \"{0}\"。请安装 OpenSSH 或设置 ANTIGRAVITY_SSH_BIN。",
+        "ja-JP": "\"{0}\" を実行できませんでした。OpenSSH をインストールするか、ANTIGRAVITY_SSH_BIN を設定してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.runFailed",
+      "original": "Could not run ssh: {0}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Could not run ssh: ${err.message}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法執行 ssh：{0}",
+        "zh-Hans-CN": "无法运行 ssh：{0}",
+        "ja-JP": "ssh を実行できませんでした: {0}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.socksPortFailed",
+      "original": "ssh could not listen on its SOCKS port {0}.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`ssh could not listen on its SOCKS port ${this.socksPort}.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "ssh 無法在 SOCKS 連接埠 {0} 上監聽。",
+        "zh-Hans-CN": "ssh 无法在 SOCKS 端口 {0} 上监听。",
+        "ja-JP": "ssh が SOCKS ポート {0} で待ち受けできませんでした。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.unexpectedUpload",
+      "original": "{0} asked for an upload it can't need.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`${this.label} asked for an upload it can't need.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 要求了不應需要的上傳。",
+        "zh-Hans-CN": "{0} 请求了本不需要的上传。",
+        "ja-JP": "{0} から不要なアップロードが要求されました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.lineTooLong",
+      "original": "{0} sent a line longer than {1} characters.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`${this.label} sent a line longer than ${MAX_LINE_CHARS} characters.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 傳送了超過 {1} 個字元的一行文字。",
+        "zh-Hans-CN": "{0} 发送了超过 {1} 个字符的一行文本。",
+        "ja-JP": "{0} から {1} 文字を超える行が送信されました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.downloadFailed",
+      "original": "Neither {0} nor this computer could download the Antigravity server: {1}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Neither ${this.label} nor this computer could download the Antigravity server: ${errorMessage(err)}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 與這部電腦都無法下載 Antigravity 伺服器：{1}",
+        "zh-Hans-CN": "{0} 与此计算机均无法下载 Antigravity 服务器：{1}",
+        "ja-JP": "{0} からもこのコンピューターからも Antigravity サーバーをダウンロードできませんでした: {1}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.hostServerStopped",
+      "original": "The Antigravity server on {0} stopped.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`The Antigravity server on ${this.label} stopped.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 上的 Antigravity 伺服器已停止。",
+        "zh-Hans-CN": "{0} 上的 Antigravity 服务器已停止。",
+        "ja-JP": "{0} の Antigravity サーバーが停止しました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.connectionLost",
+      "original": "The connection to {0} was lost: {1}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`The connection to ${this.label} was lost: ${describeExit(code, signal, this.stderrTail)}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "與 {0} 的連線已中斷：{1}",
+        "zh-Hans-CN": "与 {0} 的连接已中断：{1}",
+        "ja-JP": "{0} との接続が切断されました: {1}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.tunnelUnresponsive",
+      "original": "The Antigravity server on {0} did not respond through the SSH tunnel ({1}).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`The Antigravity server on ${this.label} did not respond through the SSH tunnel (${(0, types_1.sanitizeRemoteText)(lastErr, 200)}).`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 上的 Antigravity 伺服器未透過 SSH 通道回應（{1}）。",
+        "zh-Hans-CN": "{0} 上的 Antigravity 服务器未通过 SSH 隧道响应（{1}）。",
+        "ja-JP": "{0} の Antigravity サーバーから SSH トンネル経由の応答がありませんでした（{1}）。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.exitedWithError",
+      "original": "ssh exited ({0}): {1}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`ssh exited (${how}): ${(0, types_1.sanitizeRemoteText)(lastLine, 300)}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "ssh 已結束（{0}）：{1}",
+        "zh-Hans-CN": "ssh 已退出（{0}）：{1}",
+        "ja-JP": "ssh が終了しました（{0}）: {1}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.exited",
+      "original": "ssh exited ({0}).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`ssh exited (${how}).`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "ssh 已結束（{0}）。",
+        "zh-Hans-CN": "ssh 已退出（{0}）。",
+        "ja-JP": "ssh が終了しました（{0}）。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.waitingAnswer",
+      "original": "Waiting for your answer…",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "'Waiting for your answer…'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "正在等待您的回答…",
+        "zh-Hans-CN": "正在等待您的回答…",
+        "ja-JP": "回答を待っています…"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.signInCancelled",
+      "original": "Sign-in cancelled.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "'Sign-in cancelled.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "已取消登入。",
+        "zh-Hans-CN": "已取消登录。",
+        "ja-JP": "ログインがキャンセルされました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.promptFailed",
+      "original": "Couldn't answer ssh's prompt.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "\"Couldn't answer ssh's prompt.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法回應 ssh 的提示。",
+        "zh-Hans-CN": "无法响应 ssh 的提示。",
+        "ja-JP": "ssh の入力要求に応答できませんでした。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.forwardingNotAllowed",
+      "original": "The SSH server does not allow port forwarding (AllowTcpForwarding).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "'The SSH server does not allow port forwarding (AllowTcpForwarding).'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 伺服器不允許連接埠轉送（AllowTcpForwarding）。",
+        "zh-Hans-CN": "SSH 服务器不允许端口转发（AllowTcpForwarding）。",
+        "ja-JP": "SSH サーバーでポート転送（AllowTcpForwarding）が許可されていません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.setupWaiting",
+      "original": "{0} did not start the setup within {1} s. ssh (e.g. a ProxyCommand or ProxyJump login) or a command in your shell startup files (e.g. ~/.bashrc) may be waiting for input.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`${this.label} did not start the setup within ${Math.round(firstLineMs / 1000)} s. ` +\n                    'ssh (e.g. a ProxyCommand or ProxyJump login) or a command in ' +\n                    'your shell startup files (e.g. ~/.bashrc) may be waiting for input.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 未在 {1} 秒內開始設定。ssh（例如 ProxyCommand 或 ProxyJump 登入）或 Shell 啟動檔（例如 ~/.bashrc）中的指令可能正在等待輸入。",
+        "zh-Hans-CN": "{0} 未在 {1} 秒内开始设置。ssh（例如 ProxyCommand 或 ProxyJump 登录）或 Shell 启动文件（例如 ~/.bashrc）中的命令可能正在等待输入。",
+        "ja-JP": "{0} で {1} 秒以内にセットアップが開始されませんでした。ssh（ProxyCommand、ProxyJump のログインなど）やシェル起動ファイル（~/.bashrc など）のコマンドが入力を待っている可能性があります。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.signInRequestMismatch",
+      "original": "The sign-in request of the Antigravity server on {0} doesn't match what this app expects, so it was not opened. Update Antigravity, or restart the server on that host.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`The sign-in request of the Antigravity server on ${this.label} doesn't match what this app expects, so it was not opened. ` +\n                    'Update Antigravity, or restart the server on that host.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 上的 Antigravity 伺服器登入要求與此應用程式預期不符，因此未開啟。請更新 Antigravity，或重新啟動該主機上的伺服器。",
+        "zh-Hans-CN": "{0} 上的 Antigravity 服务器登录请求与此应用预期不符，因此未打开。请更新 Antigravity，或重新启动该主机上的服务器。",
+        "ja-JP": "{0} の Antigravity サーバーからのログイン要求がこのアプリの想定と一致しないため、開かれませんでした。Antigravity を更新するか、ホストのサーバーを再起動してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.signInPortInUse",
+      "original": "Local port {0} is in use, so the sign-in callback can't reach {1}. Close the program using it and sign in again. ({2})",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "`Local port ${port} is in use, so the sign-in callback can't ` +\n                `reach ${this.label}. Close the program using it and sign in again. ` +\n                `(${errorMessage(err)})`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "本機連接埠 {0} 使用中，登入回呼無法連至 {1}。請關閉占用此連接埠的程式，然後再次登入。（{2}）",
+        "zh-Hans-CN": "本地端口 {0} 正在使用，登录回调无法连接到 {1}。请关闭占用此端口的程序，然后再次登录。（{2}）",
+        "ja-JP": "ローカルポート {0} が使用中のため、ログインのコールバックが {1} に届きません。使用中のプログラムを閉じてからログインし直してください。（{2}）"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.userMissing",
+      "original": "The user name before \"@\" is missing.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "\n        invalid('The user name before \"@\" is missing.');"
+        },
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "\n            invalid('The user name before \"@\" is missing.');"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "缺少 \"@\" 前的使用者名稱。",
+        "zh-Hans-CN": "缺少 \"@\" 前的用户名。",
+        "ja-JP": "\"@\" の前にユーザー名がありません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.userDash",
+      "original": "The user name must not start with \"-\".",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "'The user name must not start with \"-\".'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "使用者名稱不得以 \"-\" 開頭。",
+        "zh-Hans-CN": "用户名不得以 \"-\" 开头。",
+        "ja-JP": "ユーザー名を \"-\" で始めることはできません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.hostMissing",
+      "original": "The host name is missing.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "'The host name is missing.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "缺少主機名稱。",
+        "zh-Hans-CN": "缺少主机名称。",
+        "ja-JP": "ホスト名がありません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.hostDash",
+      "original": "The host name must not start with \"-\".",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "'The host name must not start with \"-\".'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "主機名稱不得以 \"-\" 開頭。",
+        "zh-Hans-CN": "主机名称不得以 \"-\" 开头。",
+        "ja-JP": "ホスト名を \"-\" で始めることはできません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.uriAt",
+      "original": "Write \"@\" inside the user name of an ssh:// URI as %40.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "'Write \"@\" inside the user name of an ssh:// URI as %40.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "ssh:// URI 使用者名稱中的 \"@\" 請寫成 %40。",
+        "zh-Hans-CN": "ssh:// URI 用户名中的 \"@\" 请写成 %40。",
+        "ja-JP": "ssh:// URI のユーザー名内の \"@\" は %40 と記述してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.uriIPv6",
+      "original": "Write an IPv6 address in an ssh:// URI in brackets, for example ssh://[::1]:2222.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "'Write an IPv6 address in an ssh:// URI in brackets, for example ssh://[::1]:2222.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "ssh:// URI 中的 IPv6 位址請加上方括號，例如 ssh://[::1]:2222。",
+        "zh-Hans-CN": "ssh:// URI 中的 IPv6 地址请加上方括号，例如 ssh://[::1]:2222。",
+        "ja-JP": "ssh:// URI の IPv6 アドレスは角括弧で囲んでください。例: ssh://[::1]:2222。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.enterHostPort",
+      "original": "Enter an SSH host, for example \"devbox\" or \"user@host:2222\".",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "'Enter an SSH host, for example \"devbox\" or \"user@host:2222\".'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "請輸入 SSH 主機，例如 \"devbox\" 或 \"user@host:2222\"。",
+        "zh-Hans-CN": "请输入 SSH 主机，例如 \"devbox\" 或 \"user@host:2222\"。",
+        "ja-JP": "SSH ホストを入力してください。例: \"devbox\" または \"user@host:2222\"。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.destinationDash",
+      "original": "The SSH host must not start with \"-\".",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "'The SSH host must not start with \"-\".'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 主機不得以 \"-\" 開頭。",
+        "zh-Hans-CN": "SSH 主机不得以 \"-\" 开头。",
+        "ja-JP": "SSH ホストを \"-\" で始めることはできません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.destinationSpaces",
+      "original": "The SSH host must not contain spaces or control characters.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "'The SSH host must not contain spaces or control characters.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 主機不得包含空白或控制字元。",
+        "zh-Hans-CN": "SSH 主机不得包含空格或控制字符。",
+        "ja-JP": "SSH ホストに空白や制御文字を含めることはできません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.userInvalid",
+      "original": "\"{0}\" isn't a valid user name.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`\"${shown}\" isn't a valid user name.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "\"{0}\" 不是有效的使用者名稱。",
+        "zh-Hans-CN": "\"{0}\" 不是有效的用户名。",
+        "ja-JP": "\"{0}\" は有効なユーザー名ではありません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.hostInvalid",
+      "original": "\"{0}\" isn't a valid host name.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`\"${host}\" isn't a valid host name.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "\"{0}\" 不是有效的主機名稱。",
+        "zh-Hans-CN": "\"{0}\" 不是有效的主机名称。",
+        "ja-JP": "\"{0}\" は有効なホスト名ではありません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.portInvalid",
+      "original": "Invalid port \"{0}\": use a number from 1 to 65535.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`Invalid port \"${port}\": use a number from 1 to 65535.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連接埠 \"{0}\" 無效：請使用 1 到 65535 的數字。",
+        "zh-Hans-CN": "端口 \"{0}\" 无效：请使用 1 到 65535 的数字。",
+        "ja-JP": "ポート \"{0}\" が無効です。1 から 65535 の数値を使用してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.ipv6Invalid",
+      "original": "\"{0}\" isn't a valid IPv6 address. Write an IPv6 address with a port in brackets, for example [::1]:2222.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`\"${addr}\" isn't a valid IPv6 address. Write an IPv6 address with a port in brackets, for example [::1]:2222.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "\"{0}\" 不是有效的 IPv6 位址。IPv6 位址搭配連接埠時，請將位址加上方括號，例如 [::1]:2222。",
+        "zh-Hans-CN": "\"{0}\" 不是有效的 IPv6 地址。IPv6 地址搭配端口时，请将地址加上方括号，例如 [::1]:2222。",
+        "ja-JP": "\"{0}\" は有効な IPv6 アドレスではありません。ポート付きの IPv6 アドレスは角括弧で囲んでください。例: [::1]:2222。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.ipv6Bracket",
+      "original": "Missing \"]\" after the IPv6 address in \"{0}\".",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`Missing \"]\" after the IPv6 address in \"${hostPort}\".`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "\"{0}\" 中 IPv6 位址後缺少 \"]\"。",
+        "zh-Hans-CN": "\"{0}\" 中 IPv6 地址后缺少 \"]\"。",
+        "ja-JP": "\"{0}\" の IPv6 アドレスの後に \"]\" がありません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.ipv6Unexpected",
+      "original": "Unexpected \"{0}\" after \"]\".",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`Unexpected \"${rest}\" after \"]\".`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "\"]\" 後出現非預期的 \"{0}\"。",
+        "zh-Hans-CN": "\"]\" 后出现意外的 \"{0}\"。",
+        "ja-JP": "\"]\" の後に予期しない \"{0}\" があります。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.percentInvalid",
+      "original": "Invalid percent-encoding in the user name \"{0}\".",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`Invalid percent-encoding in the user name \"${s}\".`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "使用者名稱 \"{0}\" 中的百分比編碼無效。",
+        "zh-Hans-CN": "用户名 \"{0}\" 中的百分比编码无效。",
+        "ja-JP": "ユーザー名 \"{0}\" のパーセントエンコーディングが無効です。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.destinationTooLong",
+      "original": "The SSH host is too long (at most {0} characters).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`The SSH host is too long (at most ${MAX_DESTINATION_LENGTH} characters).`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 主機太長（最多 {0} 個字元）。",
+        "zh-Hans-CN": "SSH 主机太长（最多 {0} 个字符）。",
+        "ja-JP": "SSH ホストが長すぎます（最大 {0} 文字）。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.destinationCharacter",
+      "original": "The SSH host must not contain {0}.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshDestination.js",
+          "anchor": "`The SSH host must not contain ${describeChar(bad[0])}.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 主機不得包含 {0}。",
+        "zh-Hans-CN": "SSH 主机不得包含 {0}。",
+        "ja-JP": "SSH ホストに {0} を含めることはできません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configProblem",
+      "original": "The SSH config file {0}",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "`The SSH config file ${problem}`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "SSH 設定檔 {0}",
+        "zh-Hans-CN": "SSH 配置文件 {0}",
+        "ja-JP": "SSH 設定ファイル{0}"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configOneLine",
+      "original": "must be a path on one line.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "'must be a path on one line.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "路徑不得包含換行。",
+        "zh-Hans-CN": "路径不得包含换行。",
+        "ja-JP": "のパスは 1 行で記述してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configNotFile",
+      "original": "{0} isn't a file.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "`${shown} isn't a file.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 不是檔案。",
+        "zh-Hans-CN": "{0} 不是文件。",
+        "ja-JP": " {0} はファイルではありません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configPermissions",
+      "original": "{0} can be changed by others: it must be yours or root's, and not group- or world-writable.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "`${shown} can be changed by others: it must be yours or root's, and not group- or world-writable.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 可被其他人變更：必須由您或 root 擁有，且不得允許群組或其他人寫入。",
+        "zh-Hans-CN": "{0} 可被其他人更改：必须由您或 root 拥有，且不得允许组或其他人写入。",
+        "ja-JP": " {0} は他のユーザーが変更できます。所有者は自分または root とし、グループや全ユーザーへの書き込みを許可しないでください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configAbsolute",
+      "original": "must be an absolute path (got {0}).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "`must be an absolute path (got ${shown}).`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "必須是絕對路徑（目前為 {0}）。",
+        "zh-Hans-CN": "必须是绝对路径（当前为 {0}）。",
+        "ja-JP": "のパスは絶対パスにしてください（指定値: {0}）。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configLocalDrive",
+      "original": "must be on one of this computer's drives (got {0}).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "`must be on one of this computer's drives (got ${shown}).`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "必須位於這部電腦的磁碟機上（目前為 {0}）。",
+        "zh-Hans-CN": "必须位于此计算机的驱动器上（当前为 {0}）。",
+        "ja-JP": "はこのコンピューターのドライブ上に置いてください（指定値: {0}）。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configNetworkShare",
+      "original": "can't be on a network share ({0}).",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "`can't be on a network share (${shown}).`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "不得位於網路共用位置（{0}）。",
+        "zh-Hans-CN": "不得位于网络共享位置（{0}）。",
+        "ja-JP": "をネットワーク共有に置くことはできません（{0}）。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configUnreadable",
+      "original": "{0} doesn't exist or can't be read.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "\n        throw invalid(`${shown} doesn't exist or can't be read.`);"
+        },
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "\n    const unreadable = () => invalid(`${shown} doesn't exist or can't be read.`);"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 不存在或無法讀取。",
+        "zh-Hans-CN": "{0} 不存在或无法读取。",
+        "ja-JP": " {0} が存在しないか、読み取れません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configChangedToLink",
+      "original": "{0} is now a link: choose the file again.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "`${shown} is now a link: choose the file again.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 目前是連結：請重新選擇檔案。",
+        "zh-Hans-CN": "{0} 当前是链接：请重新选择文件。",
+        "ja-JP": " {0} がリンクに変わりました。ファイルを選び直してください。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.configTooLarge",
+      "original": "{0} is over 4 MiB.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "`${shown} is over 4 MiB.`"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "{0} 超過 4 MiB。",
+        "zh-Hans-CN": "{0} 超过 4 MiB。",
+        "ja-JP": " {0} は 4 MiB を超えています。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.notConnected",
+      "original": "Not connected.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "\n            throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');"
+        },
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "\n                    throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "尚未連線。",
+        "zh-Hans-CN": "尚未连接。",
+        "ja-JP": "接続されていません。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.closed",
+      "original": "The connection was closed.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "'The connection was closed.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "連線已關閉。",
+        "zh-Hans-CN": "连接已关闭。",
+        "ja-JP": "接続が閉じられました。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.loopbackPortFailed",
+      "original": "Could not get a free loopback port.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "'Could not get a free loopback port.'"
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法取得可用的回送連接埠。",
+        "zh-Hans-CN": "无法获取可用的回环端口。",
+        "ja-JP": "空いているループバックポートを取得できませんでした。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.promptLoadFailed",
+      "original": "The ssh prompt window didn't load.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "\"The ssh prompt window didn't load.\""
+        }
+      ],
+      "translations": {
+        "zh-Hant-TW": "無法載入 ssh 提示視窗。",
+        "zh-Hans-CN": "无法加载 ssh 提示窗口。",
+        "ja-JP": "ssh の入力ウィンドウを読み込めませんでした。"
+      },
+      "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
     }
   ]
 }

@@ -15965,6 +15965,238 @@
     "customizations.noCustomAgentsYet": {
       "value": "暂无自定义代理。",
       "reviewed": true
+    },
+    "ssh.web.connectCommand": {
+      "value": "连接到 SSH 主机…",
+      "reviewed": true
+    },
+    "ssh.web.stopCommand": {
+      "value": "停止 SSH 服务器…",
+      "reviewed": true
+    },
+    "ssh.web.switchComputer": {
+      "value": "切换到此计算机",
+      "reviewed": true
+    },
+    "ssh.web.switchTo": {
+      "value": "切换到",
+      "reviewed": true
+    },
+    "ssh.web.hostMenu": {
+      "value": "SSH 主机…",
+      "reviewed": true
+    },
+    "ssh.web.host": {
+      "value": "SSH 主机",
+      "reviewed": true
+    },
+    "ssh.web.hostInput": {
+      "value": "SSH 主机",
+      "reviewed": true
+    },
+    "ssh.web.openHost": {
+      "value": "打开 SSH 主机",
+      "reviewed": true
+    },
+    "ssh.web.connectHost": {
+      "value": "连接到 SSH 主机",
+      "reviewed": true
+    },
+    "ssh.web.showDetails": {
+      "value": "显示详细信息",
+      "reviewed": true
+    },
+    "ssh.web.unexpectedResponse": {
+      "value": "Hub 返回了意外的响应。",
+      "reviewed": true
+    },
+    "ssh.web.hostSpaces": {
+      "value": "主机名称不得包含空格。",
+      "reviewed": true
+    },
+    "ssh.web.removeFromRecent": {
+      "value": "从最近使用列表移除",
+      "reviewed": true
+    },
+    "ssh.web.hideFromList": {
+      "value": "从此列表隐藏",
+      "reviewed": true
+    },
+    "ssh.web.showInList": {
+      "value": "重新显示在列表中",
+      "reviewed": true
+    },
+    "ssh.web.enterDestination": {
+      "value": "请输入 [user@]host[:port]，或从 SSH 配置文件选择主机。",
+      "reviewed": true
+    },
+    "ssh.web.createProjectAfter": {
+      "value": "然后在该主机的窗口中创建项目。",
+      "reviewed": true
+    },
+    "ssh.web.connecting": {
+      "value": "正在连接…",
+      "reviewed": true
+    },
+    "ssh.web.connectionFailedPrefix": {
+      "value": "无法连接到",
+      "reviewed": true
+    },
+    "ssh.web.config": {
+      "value": "SSH 配置文件",
+      "reviewed": true
+    },
+    "ssh.web.configLabel": {
+      "value": "SSH 配置文件：",
+      "reviewed": true
+    },
+    "ssh.web.defaultConfig": {
+      "value": "~/.ssh/config（默认）",
+      "reviewed": true
+    },
+    "ssh.web.oneHiddenHost": {
+      "value": "1 台隐藏的主机",
+      "reviewed": true
+    },
+    "ssh.web.hiddenHosts": {
+      "value": "隐藏的主机",
+      "reviewed": true
+    },
+    "ssh.web.loadingHosts": {
+      "value": "正在加载主机…",
+      "reviewed": true
+    },
+    "ssh.web.loadHostsFailed": {
+      "value": "无法加载 SSH 主机列表。您仍可自行输入主机。",
+      "reviewed": true
+    },
+    "ssh.web.loadHostsFailedShort": {
+      "value": "无法加载 SSH 主机列表",
+      "reviewed": true
+    },
+    "ssh.web.noHostsPrefix": {
+      "value": "以下位置尚无主机：",
+      "reviewed": true
+    },
+    "ssh.web.noHostsSuffix": {
+      "value": "。请在上方输入主机。",
+      "reviewed": true
+    },
+    "ssh.web.chooseFile": {
+      "value": "选择文件…",
+      "reviewed": true
+    },
+    "ssh.web.useDefault": {
+      "value": "使用默认值",
+      "reviewed": true
+    },
+    "ssh.web.waitingConnection": {
+      "value": "正在等待 SSH 连接完成",
+      "reviewed": true
+    },
+    "ssh.web.relaunchesApp": {
+      "value": "重新启动应用",
+      "reviewed": true
+    },
+    "mcp.web.error": {
+      "value": "MCP 错误",
+      "reviewed": true
+    },
+    "mcp.web.serverError": {
+      "value": "MCP 服务器错误",
+      "reviewed": true
+    },
+    "mcp.web.viewServers": {
+      "value": "查看 MCP 服务器",
+      "reviewed": true
+    },
+    "mcp.web.storeConfigHelp": {
+      "value": "使用“添加 MCP”浏览商店，或通过 MCP 配置添加自定义服务器。",
+      "reviewed": true
+    },
+    "mcp.web.storeHelp": {
+      "value": "使用“添加 MCP”浏览商店。",
+      "reviewed": true
+    },
+    "mcp.web.unnamedServer": {
+      "value": "未命名的 MCP 服务器",
+      "reviewed": true
+    },
+    "hub.web.focusTile": {
+      "value": "聚焦此分屏",
+      "reviewed": true
+    },
+    "hub.web.tableSizeLimit": {
+      "value": "文件超过表格预览的 512 KB 限制。",
+      "reviewed": true
+    },
+    "hub.web.permissionsClick": {
+      "value": "点击",
+      "reviewed": true
+    },
+    "hub.web.permissionsOpen": {
+      "value": "打开 ↗",
+      "reviewed": true
+    },
+    "hub.web.permissionsOpenSuffix": {
+      "value": "以打开 macOS“隐私与安全性”。",
+      "reviewed": true
+    },
+    "ssh.web.connectingTo": {
+      "value": "正在连接到 {0}…",
+      "reviewed": true
+    },
+    "ssh.web.connectionFailed": {
+      "value": "无法连接到 {0}",
+      "reviewed": true
+    },
+    "ssh.web.removeRecent": {
+      "value": "从最近使用列表移除 {0}",
+      "reviewed": true
+    },
+    "ssh.web.removedRecent": {
+      "value": "已从最近使用列表移除 {0}",
+      "reviewed": true
+    },
+    "ssh.web.removeRecentFailed": {
+      "value": "无法从最近使用列表移除 {0}",
+      "reviewed": true
+    },
+    "ssh.web.hideHost": {
+      "value": "从此列表隐藏 {0}",
+      "reviewed": true
+    },
+    "ssh.web.showHost": {
+      "value": "重新在列表中显示 {0}",
+      "reviewed": true
+    },
+    "ssh.web.hidHost": {
+      "value": "已隐藏 {0}",
+      "reviewed": true
+    },
+    "ssh.web.showingHost": {
+      "value": "重新显示 {0}",
+      "reviewed": true
+    },
+    "ssh.web.configGroup": {
+      "value": "SSH 配置文件（{0}）",
+      "reviewed": true
+    },
+    "ssh.web.hiddenHostCount": {
+      "value": "{0} 台隐藏的主机",
+      "reviewed": true
+    },
+    "ssh.web.onHost": {
+      "value": "位于 {0}",
+      "reviewed": true
+    },
+    "ssh.web.connectedTo": {
+      "value": "已连接到 {0}",
+      "reviewed": true
+    },
+    "ssh.web.hostWindowNotice": {
+      "value": "此窗口的智能体、文件与终端都位于 {0}。",
+      "reviewed": true
     }
   }
 }

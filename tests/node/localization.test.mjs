@@ -9,7 +9,10 @@ import path from 'node:path';
 import test from 'node:test';
 import vm from 'node:vm';
 import { parse } from 'acorn';
-import { engineRequirePath } from '../../dist/localization/bundle/feature-provider.mjs';
+import {
+  engineRequirePath,
+  resolveLocalizationProfile,
+} from '../../dist/localization/bundle/feature-provider.mjs';
 import {
   BuildError,
   buildArtifact,
@@ -62,6 +65,51 @@ const TRANSLATIONS = {
     'window.statusBar.background': { value: '視窗列色彩。', reviewed: true },
   },
 };
+
+test('localization auto selection reads the exact application version before structural qualification', () => {
+  const profile = (version, anchor) => ({
+    profileId: `fixture-${version}`,
+    version,
+    status: 'probe-only',
+    asarSha256: 'a'.repeat(64),
+    hostAdapter: { file: 'dist/utils.js', anchor },
+  });
+  const old = profile('2.31.0', 'oldDelivery();');
+  const current = profile('2.32.1', 'sshDelivery();');
+  const context = (version, source = 'oldDelivery(); sshDelivery();') => ({
+    originalPath: 'original.asar',
+    originalHash: 'a'.repeat(64),
+    engine: {
+      extractFile: (_archive, file) =>
+        Buffer.from(file === 'package.json' ? JSON.stringify({ version }) : source),
+    },
+  });
+  assert.equal(
+    resolveLocalizationProfile([old, current], context('2.32.1')).profile.profileId,
+    current.profileId,
+  );
+  assert.equal(
+    resolveLocalizationProfile([old, current], context('2.31.0')).profile.profileId,
+    old.profileId,
+  );
+  assert.throws(
+    () => resolveLocalizationProfile([old, current], context('2.32.2')),
+    /No reviewed localization profile for application version 2\.32\.2/,
+  );
+  assert.throws(
+    () => resolveLocalizationProfile([old, current], context(undefined)),
+    /no valid localization version/,
+  );
+  assert.throws(
+    () => resolveLocalizationProfile([old, current], context('2.32.1', 'oldDelivery();')),
+    /Host delivery anchor missing/,
+  );
+  assert.equal(
+    resolveLocalizationProfile([old, current], { ...context('2.32.1'), profileId: old.profileId })
+      .profile.profileId,
+    old.profileId,
+  );
+});
 
 function syntheticSource() {
   return [

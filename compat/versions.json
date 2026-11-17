@@ -64,6 +64,22 @@
       "verified_at": "2026-11-11",
       "notes": "Hub 2.31.0 win-x64 language_server; original body and exact file identity inspected. Legacy and linked-v2 apply/status/restore succeeded on isolated full-file copies with matching restored hashes; the installed source was unchanged and never executed by validation. Live behavioral verification is pending.",
       "arch": "x86-64"
+    },
+    {
+      "id": "hub-2.32.1-win-x64",
+      "app_version": "2.32.1",
+      "channel": "antigravity",
+      "platform": "win32",
+      "binary_name": "language_server.exe",
+      "binary_size": 215547392,
+      "binary_sha256": "65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f",
+      "func": "utils.ClampCheckpointConfigForModelInfo",
+      "func_size": 128,
+      "orig_body_hex": "4885c074644885db745f83780c00751c486353144881fa409c00007f0531d290eb074881c2c063ffff89500c8b531485d27e1589d629ca39f10f42f20f1f400039700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3c3cccccccccccccccccccccccccccccccccccccccccccc",
+      "orig_body_sha256": "048bdf996a4261a772de3029774d32e830c87a153e2647eb22642cce0f0277a4",
+      "verified_at": "2026-11-16",
+      "notes": "Installed Hub 2.32.1 win-x64; original 128-byte body is unchanged. Live linked-v2 patch for Gemini 3.8 Flash IDs 1318-1320 at floor 500000: after stopping and restarting the client and Language Server, a resumed synthetic session and a new synthetic session both recorded effective checkpoint maxTokenLimit 500000 (baseline 256000). Summary and retention fields remained unchanged. Patched file SHA-256 b661864c7e6265e70a502ac0440ebce07f0b4bc1d61ab013e7fa0630b9ac7125. Other models and natural automatic compaction are not qualified by this observation.",
+      "arch": "x86-64"
     }
   ]
 }

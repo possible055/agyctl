@@ -120205,6 +120205,556 @@
       "defaultMessage": "No custom agents yet.",
       "description": "Customizations page empty-state line. Page-level string; the node is outside current writable roots until scopes extend, so the entry stays dormant until then.",
       "surface": "customizations"
+    },
+    "ssh.web.connectCommand": {
+      "messageId": "ssh.web.connectCommand",
+      "format": "plain",
+      "defaultMessage": "Connect to SSH Host…",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.stopCommand": {
+      "messageId": "ssh.web.stopCommand",
+      "format": "plain",
+      "defaultMessage": "Stop SSH Server…",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.switchComputer": {
+      "messageId": "ssh.web.switchComputer",
+      "format": "plain",
+      "defaultMessage": "Switch to This Computer",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.switchTo": {
+      "messageId": "ssh.web.switchTo",
+      "format": "plain",
+      "defaultMessage": "Switch To",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hostMenu": {
+      "messageId": "ssh.web.hostMenu",
+      "format": "plain",
+      "defaultMessage": "SSH Host…",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.host": {
+      "messageId": "ssh.web.host",
+      "format": "plain",
+      "defaultMessage": "SSH Host",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hostInput": {
+      "messageId": "ssh.web.hostInput",
+      "format": "plain",
+      "defaultMessage": "SSH host",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.openHost": {
+      "messageId": "ssh.web.openHost",
+      "format": "plain",
+      "defaultMessage": "Open SSH Host",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.connectHost": {
+      "messageId": "ssh.web.connectHost",
+      "format": "plain",
+      "defaultMessage": "Connect to SSH Host",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.showDetails": {
+      "messageId": "ssh.web.showDetails",
+      "format": "plain",
+      "defaultMessage": "Show Details",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.unexpectedResponse": {
+      "messageId": "ssh.web.unexpectedResponse",
+      "format": "plain",
+      "defaultMessage": "The Hub sent an unexpected response.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hostSpaces": {
+      "messageId": "ssh.web.hostSpaces",
+      "format": "plain",
+      "defaultMessage": "A host can't contain spaces.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.removeFromRecent": {
+      "messageId": "ssh.web.removeFromRecent",
+      "format": "plain",
+      "defaultMessage": "Remove from Recent",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hideFromList": {
+      "messageId": "ssh.web.hideFromList",
+      "format": "plain",
+      "defaultMessage": "Hide from this list",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.showInList": {
+      "messageId": "ssh.web.showInList",
+      "format": "plain",
+      "defaultMessage": "Show in the list again",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.enterDestination": {
+      "messageId": "ssh.web.enterDestination",
+      "format": "plain",
+      "defaultMessage": "Enter [user@]host[:port], or pick a host from your SSH config.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.createProjectAfter": {
+      "messageId": "ssh.web.createProjectAfter",
+      "format": "plain",
+      "defaultMessage": "Then create the project in its window.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.connecting": {
+      "messageId": "ssh.web.connecting",
+      "format": "plain",
+      "defaultMessage": "Connecting…",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.connectionFailedPrefix": {
+      "messageId": "ssh.web.connectionFailedPrefix",
+      "format": "plain",
+      "defaultMessage": "Couldn't connect to",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.config": {
+      "messageId": "ssh.web.config",
+      "format": "plain",
+      "defaultMessage": "SSH Config",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.configLabel": {
+      "messageId": "ssh.web.configLabel",
+      "format": "plain",
+      "defaultMessage": "SSH config:",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.defaultConfig": {
+      "messageId": "ssh.web.defaultConfig",
+      "format": "plain",
+      "defaultMessage": "~/.ssh/config (default)",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.oneHiddenHost": {
+      "messageId": "ssh.web.oneHiddenHost",
+      "format": "plain",
+      "defaultMessage": "1 hidden host",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hiddenHosts": {
+      "messageId": "ssh.web.hiddenHosts",
+      "format": "plain",
+      "defaultMessage": "Hidden hosts",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.loadingHosts": {
+      "messageId": "ssh.web.loadingHosts",
+      "format": "plain",
+      "defaultMessage": "Loading hosts…",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.loadHostsFailed": {
+      "messageId": "ssh.web.loadHostsFailed",
+      "format": "plain",
+      "defaultMessage": "Couldn't load your SSH hosts. You can still type one.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.loadHostsFailedShort": {
+      "messageId": "ssh.web.loadHostsFailedShort",
+      "format": "plain",
+      "defaultMessage": "Couldn't load your SSH hosts",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.noHostsPrefix": {
+      "messageId": "ssh.web.noHostsPrefix",
+      "format": "plain",
+      "defaultMessage": "No hosts in",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.noHostsSuffix": {
+      "messageId": "ssh.web.noHostsSuffix",
+      "format": "plain",
+      "defaultMessage": "yet. Type one above.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.chooseFile": {
+      "messageId": "ssh.web.chooseFile",
+      "format": "plain",
+      "defaultMessage": "Choose File…",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.useDefault": {
+      "messageId": "ssh.web.useDefault",
+      "format": "plain",
+      "defaultMessage": "Use Default",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.waitingConnection": {
+      "messageId": "ssh.web.waitingConnection",
+      "format": "plain",
+      "defaultMessage": "Waiting for the SSH connection to finish",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.relaunchesApp": {
+      "messageId": "ssh.web.relaunchesApp",
+      "format": "plain",
+      "defaultMessage": "Relaunches the app",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "mcp.web.error": {
+      "messageId": "mcp.web.error",
+      "format": "plain",
+      "defaultMessage": "MCP error",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.mcp",
+      "critical": false
+    },
+    "mcp.web.serverError": {
+      "messageId": "mcp.web.serverError",
+      "format": "plain",
+      "defaultMessage": "MCP server error",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.mcp",
+      "critical": false
+    },
+    "mcp.web.viewServers": {
+      "messageId": "mcp.web.viewServers",
+      "format": "plain",
+      "defaultMessage": "View MCP servers",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.mcp",
+      "critical": false
+    },
+    "mcp.web.storeConfigHelp": {
+      "messageId": "mcp.web.storeConfigHelp",
+      "format": "plain",
+      "defaultMessage": "Use Add MCP to browse the store, or add a custom server via the MCP config.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.mcp",
+      "critical": false
+    },
+    "mcp.web.storeHelp": {
+      "messageId": "mcp.web.storeHelp",
+      "format": "plain",
+      "defaultMessage": "Use Add MCP to browse the store.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.mcp",
+      "critical": false
+    },
+    "mcp.web.unnamedServer": {
+      "messageId": "mcp.web.unnamedServer",
+      "format": "plain",
+      "defaultMessage": "Unnamed MCP Server",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.mcp",
+      "critical": false
+    },
+    "hub.web.focusTile": {
+      "messageId": "hub.web.focusTile",
+      "format": "plain",
+      "defaultMessage": "Focus this tile",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.controls",
+      "critical": false
+    },
+    "hub.web.tableSizeLimit": {
+      "messageId": "hub.web.tableSizeLimit",
+      "format": "plain",
+      "defaultMessage": "File exceeds 512 KB table preview limit.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.controls",
+      "critical": false
+    },
+    "hub.web.permissionsClick": {
+      "messageId": "hub.web.permissionsClick",
+      "format": "plain",
+      "defaultMessage": "Click",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.controls",
+      "critical": false
+    },
+    "hub.web.permissionsOpen": {
+      "messageId": "hub.web.permissionsOpen",
+      "format": "plain",
+      "defaultMessage": "Open ↗",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.controls",
+      "critical": false
+    },
+    "hub.web.permissionsOpenSuffix": {
+      "messageId": "hub.web.permissionsOpenSuffix",
+      "format": "plain",
+      "defaultMessage": "to open macOS Privacy & Security.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {},
+      "surface": "hub.controls",
+      "critical": false
+    },
+    "ssh.web.connectingTo": {
+      "messageId": "ssh.web.connectingTo",
+      "format": "icu",
+      "defaultMessage": "Connecting to {0}…",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.connectionFailed": {
+      "messageId": "ssh.web.connectionFailed",
+      "format": "icu",
+      "defaultMessage": "Couldn't connect to {0}",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.removeRecent": {
+      "messageId": "ssh.web.removeRecent",
+      "format": "icu",
+      "defaultMessage": "Remove {0} from Recent",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.removedRecent": {
+      "messageId": "ssh.web.removedRecent",
+      "format": "icu",
+      "defaultMessage": "Removed {0} from Recent",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.removeRecentFailed": {
+      "messageId": "ssh.web.removeRecentFailed",
+      "format": "icu",
+      "defaultMessage": "Couldn't remove {0} from Recent",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hideHost": {
+      "messageId": "ssh.web.hideHost",
+      "format": "icu",
+      "defaultMessage": "Hide {0} from this list",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.showHost": {
+      "messageId": "ssh.web.showHost",
+      "format": "icu",
+      "defaultMessage": "Show {0} in the list again",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hidHost": {
+      "messageId": "ssh.web.hidHost",
+      "format": "icu",
+      "defaultMessage": "Hid {0}",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.showingHost": {
+      "messageId": "ssh.web.showingHost",
+      "format": "icu",
+      "defaultMessage": "Showing {0} again",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.configGroup": {
+      "messageId": "ssh.web.configGroup",
+      "format": "icu",
+      "defaultMessage": "SSH Config ({0})",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hiddenHostCount": {
+      "messageId": "ssh.web.hiddenHostCount",
+      "format": "icu",
+      "defaultMessage": "{0} hidden hosts",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.onHost": {
+      "messageId": "ssh.web.onHost",
+      "format": "icu",
+      "defaultMessage": "On {0}",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.connectedTo": {
+      "messageId": "ssh.web.connectedTo",
+      "format": "icu",
+      "defaultMessage": "Connected to {0}",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "ssh.web.hostWindowNotice": {
+      "messageId": "ssh.web.hostWindowNotice",
+      "format": "icu",
+      "defaultMessage": "This window's agents, files, and terminals are on {0}.",
+      "description": "Authored from the inspected Antigravity 2.32.1 embedded Hub main.js (SHA-256 4c0a1ff5659e7dd92e6ad249a386c0dbce2c8e94b88522a2f366ff20b397081e). Static display text or reviewed framing only; surrounding whitespace is retained by the DOM matcher. Dynamic host names, paths and server error details are not translation input. Offline review only; not real-client acceptance.",
+      "values": {
+        "0": "Opaque display value; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
     }
   }
 }

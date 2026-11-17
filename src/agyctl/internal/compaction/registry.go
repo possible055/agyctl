@@ -40,21 +40,23 @@ type ValueTarget struct {
 }
 
 type Target struct {
-	ID            string                 `json:"id"`
-	Product       string                 `json:"product"`
-	Channel       string                 `json:"channel"`
-	Platform      string                 `json:"platform"`
-	Arch          string                 `json:"arch"`
-	BinaryName    string                 `json:"binary_name"`
-	BinarySize    int64                  `json:"binary_size"`
-	Member        string                 `json:"member"`
-	Qualification string                 `json:"qualification"`
-	VerifiedAt    string                 `json:"verified_at"`
-	ValueTargets  map[string]ValueTarget `json:"value_targets"`
-	OutOfScope    []string               `json:"out_of_scope"`
-	Evidence      map[string]string      `json:"evidence"`
-	Notes         string                 `json:"notes"`
-	Inputs        []InputState           `json:"inputs"`
+	ID               string                 `json:"id"`
+	AppVersion       string                 `json:"app_version,omitempty"`
+	Product          string                 `json:"product"`
+	Channel          string                 `json:"channel"`
+	Platform         string                 `json:"platform"`
+	Arch             string                 `json:"arch"`
+	BinaryName       string                 `json:"binary_name"`
+	BinarySize       int64                  `json:"binary_size"`
+	Member           string                 `json:"member"`
+	Qualification    string                 `json:"qualification"`
+	VerifiedAt       string                 `json:"verified_at"`
+	ValueTargets     map[string]ValueTarget `json:"value_targets"`
+	OutOfScope       []string               `json:"out_of_scope"`
+	Evidence         map[string]string      `json:"evidence"`
+	Notes            string                 `json:"notes"`
+	Inputs           []InputState           `json:"inputs"`
+	HistoricalInputs []InputState           `json:"historical_inputs,omitempty"`
 }
 
 type Registry struct {
@@ -118,6 +120,26 @@ func validateTarget(target *Target, seenTargets map[string]bool) error {
 		if err := validateInput(&target.Inputs[ii], target, seenInputs); err != nil {
 			return err
 		}
+	}
+	seenRecipes := map[string]bool{}
+	for ii := range target.Inputs {
+		input := &target.Inputs[ii]
+		seenRecipes[input.Input+"/"+input.Fingerprint()] = true
+	}
+	for ii := range target.HistoricalInputs {
+		input := &target.HistoricalInputs[ii]
+		if err := validateInput(input, target, map[string]bool{}); err != nil {
+			return err
+		}
+		matched := false
+		for _, current := range target.Inputs {
+			matched = matched || input.Input == current.Input && input.BinarySHA == current.BinarySHA
+		}
+		key := input.Input + "/" + input.Fingerprint()
+		if !matched || seenRecipes[key] {
+			return fmt.Errorf("registry target %s has an unmatched or duplicated historical input recipe %s", target.ID, input.Input)
+		}
+		seenRecipes[key] = true
 	}
 	return nil
 }

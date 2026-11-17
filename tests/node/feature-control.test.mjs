@@ -11,6 +11,11 @@ import vm from 'node:vm';
 import { planSidecarCleanup } from '../../scripts/lib/client-processes.mjs';
 import { validateFeatureApply, withLock } from '../../scripts/lib/feature-control.mjs';
 import { normalizeModelCatalog, readModelEnum } from '../../scripts/lib/model-catalog.mjs';
+import {
+  assertNativeExpectation,
+  localizationContentIdentity,
+  nativeExpectation,
+} from '../../scripts/lib/native-binding.mjs';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
 const require = createRequire(import.meta.url);
@@ -27,6 +32,56 @@ const selection = () => ({
     ],
   },
   compaction: false,
+});
+
+test('native revisions bind mutations while localization content survives verified binary-only changes', () => {
+  const status = {
+    verified: true,
+    base_sha256: 'a'.repeat(64),
+    current_sha256: 'b'.repeat(64),
+    generation: 2,
+    assets_fingerprint: 'c'.repeat(64),
+  };
+  const expected = nativeExpectation(status);
+  assert.deepEqual(expected, {
+    base_sha256: status.base_sha256,
+    current_sha256: status.current_sha256,
+    generation: 2,
+    assets_fingerprint: status.assets_fingerprint,
+  });
+  assert.equal(nativeExpectation({ verified: false }), null);
+  assert.doesNotThrow(() => assertNativeExpectation(status, expected));
+  for (const changed of [
+    { ...status, verified: false },
+    { ...status, current_sha256: 'd'.repeat(64) },
+    { ...status, base_sha256: 'd'.repeat(64) },
+    { ...status, assets_fingerprint: 'd'.repeat(64) },
+    { ...status, generation: 3 },
+  ])
+    assert.throws(() => assertNativeExpectation(changed, expected), /changed since review/);
+  assert.throws(() => nativeExpectation({ ...status, generation: -1 }), /Invalid native/);
+  const source = {
+    lsSha256: status.base_sha256,
+    nlsHelperCalleeName: 'Fu',
+    archive: { entryCount: 1, totalUncompressedBytes: 5 },
+    assets: { 'main.js': { sha256: 'e'.repeat(64), bytes: Buffer.from('hello') } },
+  };
+  const identity = localizationContentIdentity(source);
+  assert.equal(
+    localizationContentIdentity({ ...source, lsSha256: status.current_sha256 }),
+    identity,
+  );
+  assert.notEqual(
+    localizationContentIdentity({ ...source, nlsHelperCalleeName: 'Other' }),
+    identity,
+  );
+  assert.notEqual(
+    localizationContentIdentity({
+      ...source,
+      assets: { 'main.js': { sha256: 'f'.repeat(64), bytes: Buffer.from('hello') } },
+    }),
+    identity,
+  );
 });
 
 test('orphan cleanup verifies the selected installation, role, creation times, and launcher', {
@@ -189,7 +244,7 @@ test('feature selections reject command/path injection and ambiguous model mappi
     { id: 101, limit: 400000 },
     { id: 102, limit: 750000 },
   ]);
-  for (const limit of [256000, 896000]) {
+  for (const limit of [256000, 983040]) {
     assert.deepEqual(
       validateFeatureApply({
         ...desired,
@@ -218,7 +273,7 @@ test('feature selections reject command/path injection and ambiguous model mappi
     { ...desired, limit: { enabled: true, modelLimits: [{ id: '101', limit: 1 }] } },
     { ...desired, limit: { enabled: true, modelLimits: [{ id: 101, limit: 2147483648 }] } },
     { ...desired, limit: { enabled: true, modelLimits: [{ id: 101, limit: 255999 }] } },
-    { ...desired, limit: { enabled: true, modelLimits: [{ id: 101, limit: 896001 }] } },
+    { ...desired, limit: { enabled: true, modelLimits: [{ id: 101, limit: 983041 }] } },
     {
       ...desired,
       limit: { enabled: true, modelLimits: [{ id: 101, limit: 1, command: 'ignored' }] },
@@ -231,10 +286,11 @@ test('feature selections reject command/path injection and ambiguous model mappi
   );
   assert.equal(validateFeatureApply(desired).compaction, false);
   assert.equal(validateFeatureApply({ ...desired, compaction: true }).compaction, true);
-  const existing = [{ id: 1400, limit: 900000 }];
+  assert.equal(validateFeatureApply({ ...desired, compaction: null }).compaction, null);
+  const existing = [{ id: 1400, limit: 1048576 }];
   const retained = { ...desired, limit: { enabled: true, modelLimits: existing } };
   assert.deepEqual(validateFeatureApply(retained, existing).limit.modelLimits, existing);
-  for (const modelLimits of [[{ id: 1400, limit: 900001 }], [{ id: 1401, limit: 900000 }]])
+  for (const modelLimits of [[{ id: 1400, limit: 1048577 }], [{ id: 1401, limit: 1048576 }]])
     assert.throws(
       () => validateFeatureApply({ ...desired, limit: { enabled: true, modelLimits } }, existing),
       { code: 'INVALID_SELECTION' },
@@ -381,6 +437,11 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
   assert.equal(first.installation.version, 'fixture-2.31');
   assert.deepEqual(first.features.limit, { enabled: false, modelLimits: [], savedModelLimits: [] });
   assert.deepEqual(first.features.localization, { enabled: false, locale: null, format: null });
+  assert.deepEqual(first.features.compaction, {
+    enabled: null,
+    fileState: 'unknown',
+    pending: false,
+  });
   assert.equal(first.operation, null);
   assert.equal(first.draft, null);
   const electronPackage = path.join(root, 'node_modules/electron');
@@ -414,6 +475,7 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
   );
   const desired = {
     ...selection(),
+    compaction: null,
     revision: first.revision,
     capsule: true,
     limit: { enabled: false, modelLimits: [] },
@@ -474,11 +536,13 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
         { env, windowsHide: true, encoding: 'utf8', timeout: 20000 },
       );
       assert.equal(preview.status, 1, preview.stderr || preview.stdout);
-      assert.equal(JSON.parse(preview.stdout).refusal?.kind, 'unknown-input');
-      const draft = await run('queue', { ...desired, capsule: false, compaction: true });
-      assert.equal(draft.error, undefined, JSON.stringify(draft));
-      const preflight = await run('preflight', { id: draft.draft.id });
-      assert.equal(preflight.code, 'COMPACTION_UNAVAILABLE', JSON.stringify(preflight));
+      assert.equal(JSON.parse(preview.stdout).refusal?.kind, 'unsupported-version');
+      for (const compaction of [true, false]) {
+        const draft = await run('queue', { ...desired, capsule: false, compaction });
+        assert.equal(draft.error, undefined, JSON.stringify(draft));
+        const preflight = await run('preflight', { id: draft.draft.id });
+        assert.equal(preflight.code, 'COMPACTION_UNAVAILABLE', JSON.stringify(preflight));
+      }
       assert.deepEqual(fs.readFileSync(binary), original);
       assert.deepEqual(fs.readFileSync(asarPath), archive);
       assert.equal(fs.existsSync(path.join(state, 'backups')), false);
@@ -580,7 +644,7 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
       '--binary',
       binary,
       '--model-limits',
-      '1400=900000',
+      '1400=983040',
       '--apply',
     ],
     { env, windowsHide: true, encoding: 'utf8', timeout: 20000 },
@@ -592,20 +656,20 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
     ...desired,
     revision: legacy.revision,
     capsule: false,
-    limit: { enabled: true, modelLimits: [{ id: 1400, limit: 900000 }] },
+    limit: { enabled: true, modelLimits: [{ id: 1400, limit: 983040 }] },
   };
   const preservedDraft = await run('queue', preservedSelection);
   assert.equal(preservedDraft.error, undefined, JSON.stringify(preservedDraft));
   assert.equal((await run('status')).draft.id, preservedDraft.draft.id);
   const forged = await run('queue', {
     ...preservedSelection,
-    limit: { enabled: true, modelLimits: [{ id: 1400, limit: 900001 }] },
+    limit: { enabled: true, modelLimits: [{ id: 1400, limit: 983041 }] },
   });
   assert.equal(forged.code, 'INVALID_SELECTION');
   const draftFile = path.join(state, 'management/drafts', `${preservedDraft.draft.id}.json`);
   const draftBytes = fs.readFileSync(draftFile);
   const tampered = JSON.parse(draftBytes);
-  tampered.desired.limit.modelLimits[0].limit = 900001;
+  tampered.desired.limit.modelLimits[0].limit = 983041;
   fs.writeFileSync(draftFile, JSON.stringify(tampered));
   const rejected = await run('preflight', { id: preservedDraft.draft.id });
   assert.equal(rejected.code, 'INVALID_SELECTION');

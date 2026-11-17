@@ -9,15 +9,14 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"agyctl/internal/lspatch"
 )
 
 const maxModelLimits = 128
 const modelEncoding = "linked-v2"
 
-type ModelLimit struct {
-	ID    int `json:"id"`
-	Limit int `json:"limit"`
-}
+type ModelLimit = lspatch.ModelLimit
 
 type TableWrite struct {
 	VA     uint64 `json:"va"`
@@ -135,6 +134,20 @@ func PlanModelPatch(data []byte, values []ModelLimit) (Plan, error) {
 }
 
 func (im *image) planModelPatch(data []byte, values []ModelLimit, restored map[int]bool) (Plan, error) {
+	return im.planModelPatchReserved(data, values, restored, nil)
+}
+
+// PlanModelPatchReserved allocates against the original image and excludes the
+// complete write and guard spans of every registered fixed native recipe.
+func PlanModelPatchReserved(data []byte, values []ModelLimit, reserved []lspatch.Span) (Plan, error) {
+	im, err := parseImage(data)
+	if err != nil {
+		return Plan{}, err
+	}
+	return im.planModelPatchReserved(data, values, nil, reserved)
+}
+
+func (im *image) planModelPatchReserved(data []byte, values []ModelLimit, restored map[int]bool, reserved []lspatch.Span) (Plan, error) {
 	if err := validateModelLimits(values, 1); err != nil {
 		return Plan{}, err
 	}
@@ -151,6 +164,16 @@ func (im *image) planModelPatch(data []byte, values []ModelLimit, restored map[i
 		return Plan{}, err
 	}
 	for _, node := range caves {
+		blocked := false
+		for _, span := range reserved {
+			if node.Offset-8 < span.Offset+len(span.Expected) && span.Offset < node.Offset+16 {
+				blocked = true
+				break
+			}
+		}
+		if blocked {
+			continue
+		}
 		if restored[node.Offset] || bytes.Equal(data[node.Offset:node.Offset+16], bytes.Repeat([]byte{0xcc}, 16)) {
 			nodes = append(nodes, node)
 		}
