@@ -17,16 +17,21 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 import { inspectTarget } from './lib/client-target.mjs';
 import { COMPACTION_BUILDS } from './lib/compaction-builds.mjs';
-import { buildConsumerSegments, checkConsumerSegments } from './lib/compaction-consumers.mjs';
+import {
+  buildConsumerSegments,
+  buildPromptTemplate,
+  checkConsumerSegments,
+} from './lib/compaction-consumers.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const CANONICAL_PROMPT = 'compat/compaction/summary-v1.txt';
 const REGISTRY = 'compat/compaction.json';
 
-// Fixed first-version feature definition: the summary prompt v1 plus the
-// request-retention values. There are no user-selectable variants.
+// Historical values remain the editing contract for the unchanged 2.31.2 recipes.
 const MAX_USER_REQUESTS = { source: 10, target: 30 };
 const MAX_USER_REQUEST_BYTES = { source: 1024, target: 2048 };
+const USER_REQUEST_TOTAL_BYTES = 61440;
+const CAPTURE_CURRENT_HISTORY = 0x7fffffff;
 
 function fail(message) {
   throw new Error(message);
@@ -34,6 +39,29 @@ function fail(message) {
 
 function sha256(data) {
   return createHash('sha256').update(data).digest('hex');
+}
+
+function recipeFingerprint(input) {
+  const fingerprint = createHash('sha256');
+  const byName = (a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+  for (const segment of [...input.segments].sort(byName))
+    fingerprint.update(
+      `${segment.name}\0${segment.offset}\0${segment.expected_hex.toLowerCase()}\0${segment.new_hex.toLowerCase()}\n`,
+    );
+  if (input.prompt) {
+    fingerprint.update(`@prompt-body\0${input.prompt.body_segment}\0${input.prompt.max_bytes}\n`);
+    for (const segment of [...input.prompt.segments].sort(byName))
+      fingerprint.update(
+        `@prompt/${segment.name}\0${segment.offset}\0${segment.expected_hex.toLowerCase()}\0${segment.new_hex.toLowerCase()}\n`,
+      );
+    for (const field of [...input.prompt.length_fields].sort(
+      (a, b) => (a.segment < b.segment ? -1 : a.segment > b.segment ? 1 : 0) || a.offset - b.offset,
+    ))
+      fingerprint.update(
+        `@prompt-length/${field.segment}\0${field.offset}\0${field.expected_hex.toLowerCase()}\n`,
+      );
+  }
+  return fingerprint.digest('hex');
 }
 
 function parseHex(value) {
@@ -215,9 +243,9 @@ function verifyVaOffsets(data, layout) {
 
 function buildSegments(data, canonical, padding, layout) {
   if (layout.consumerSites)
-    return buildConsumerSegments(data, canonical, layout, {
-      requests: MAX_USER_REQUESTS.target,
-      bytes: MAX_USER_REQUEST_BYTES.target,
+    return buildConsumerSegments(data, layout, {
+      requests: CAPTURE_CURRENT_HISTORY,
+      bytes: USER_REQUEST_TOTAL_BYTES,
     });
   const padded = paddedPrompt(canonical, padding);
   const segments = [];
@@ -701,7 +729,7 @@ function promptFit(layout) {
       padded_bytes: utf8Length(padded),
       fits: utf8Length(padded) === layout.rawPromptLength,
       embedded_prompt_semantics:
-        'unchanged; the normalized M124 literal is a legacy comparison table',
+        'unchanged; native mode preserves all prompt bytes and embedded settings',
     };
   return {
     build: layout.id,
@@ -772,7 +800,7 @@ function build(binaryPath, expectSha, outPath, appVersion = binaryAppVersion(bin
     );
   const segments = buildSegments(data, canonical, padding, layout);
   const output = applySegments(data, segments);
-  // Round-trip: decode every patched prompt segment back to the canonical text.
+  // Legacy prompt replacements still round-trip to the historical editing source.
   for (const segment of layout.promptSegments) {
     const length = promptLength(segment, layout);
     const replaced = segments.find((candidate) => candidate.name === segment.name);
@@ -782,7 +810,7 @@ function build(binaryPath, expectSha, outPath, appVersion = binaryAppVersion(bin
       segment.encoding === 'raw'
         ? bytes.toString('utf8')
         : decodePromptBody(bytes.toString('utf8'));
-    if (normalizePrompt(decoded) !== normalizePrompt(canonical))
+    if (!layout.consumerSites && normalizePrompt(decoded) !== normalizePrompt(canonical))
       fail(`segment ${segment.name} does not decode back to the canonical prompt`);
   }
   // Consumer recipes preserve every embedded setting; older recipes change
@@ -854,6 +882,7 @@ function build(binaryPath, expectSha, outPath, appVersion = binaryAppVersion(bin
     preserved_prompts: preservedPrompts,
     ...(layout.preservedBytes ? { preserved_bytes: preservedBytes } : {}),
     segments,
+    ...(layout.consumerSites ? { prompt: buildPromptTemplate(segments, layout) } : {}),
   };
   const resolvedOut = requireOutUnderVar(outPath);
   fs.mkdirSync(path.dirname(resolvedOut), { recursive: true });
@@ -901,14 +930,7 @@ function checkRegistry(registry = readRegistryIfExists()) {
     if (history.length !== (layout.historicalRecipes?.length ?? 0))
       problems.push(`${target.id}: historical recipes do not match their preserved contracts`);
     for (const input of history) {
-      const fingerprint = createHash('sha256');
-      for (const segment of [...input.segments].sort((a, b) =>
-        a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
-      ))
-        fingerprint.update(
-          `${segment.name}\0${segment.offset}\0${segment.expected_hex.toLowerCase()}\0${segment.new_hex.toLowerCase()}\n`,
-        );
-      const digest = fingerprint.digest('hex');
+      const digest = recipeFingerprint(input);
       const contract = layout.historicalRecipes?.find((recipe) => recipe.fingerprint === digest);
       if (
         !contract ||
@@ -951,10 +973,13 @@ function checkRegistry(registry = readRegistryIfExists()) {
             );
         }
         try {
-          checkConsumerSegments(input.segments, canonical, layout, {
-            requests: MAX_USER_REQUESTS.target,
-            bytes: MAX_USER_REQUEST_BYTES.target,
+          checkConsumerSegments(input.segments, layout, {
+            requests: CAPTURE_CURRENT_HISTORY,
+            bytes: USER_REQUEST_TOTAL_BYTES,
           });
+          const expectedPrompt = buildPromptTemplate(input.segments, layout);
+          if (JSON.stringify(input.prompt) !== JSON.stringify(expectedPrompt))
+            fail('prompt template or length fields do not reproduce the registered contract');
         } catch (error) {
           problems.push(`${target.id}/${input.input}: ${error.message}`);
         }
@@ -963,6 +988,7 @@ function checkRegistry(registry = readRegistryIfExists()) {
           version: layout.version,
           input: input.input,
           segments: input.segments.length,
+          fingerprint: recipeFingerprint(input),
         });
         continue;
       }
@@ -1141,10 +1167,12 @@ export {
   parseEmbeddedConfig,
   promptFit,
   readCanonicalPrompt,
+  recipeFingerprint,
   requireOutUnderVar,
   runCli,
   selectCompactionBuild,
   solvePadding,
+  USER_REQUEST_TOTAL_BYTES,
   verifyVaOffsets,
 };
 

@@ -17,9 +17,11 @@ import (
 )
 
 type options struct {
-	command, binary string
-	apply, json     bool
-	help            bool
+	command, binary                string
+	apply, json                    bool
+	help                           bool
+	promptMode, prompt, promptFile string
+	promptSpecified                bool
 }
 
 var errNoInstall = errors.New("language server binary not found (use --binary)")
@@ -45,12 +47,44 @@ func parseOptions(args []string) (options, error) {
 	flags.StringVar(&o.binary, "binary", "", "language server path")
 	if o.command == "patch" {
 		flags.BoolVar(&o.apply, "apply", false, "apply in place; without it the command only plans in memory")
+		flags.StringVar(&o.promptMode, "prompt-mode", "native", "summary prompt: native or custom")
+		flags.StringVar(&o.prompt, "prompt", "", "custom summary prompt text")
+		flags.StringVar(&o.promptFile, "prompt-file", "", "UTF-8 custom summary prompt file")
 	}
 	if err := flags.Parse(args); err != nil {
 		return o, err
 	}
 	if flags.NArg() > 0 {
 		return o, fmt.Errorf("unexpected argument %q", flags.Arg(0))
+	}
+	if o.command == "patch" && !o.help {
+		promptTextSet, promptFileSet := false, false
+		flags.Visit(func(f *flag.Flag) {
+			switch f.Name {
+			case "prompt-mode":
+				o.promptSpecified = true
+			case "prompt":
+				o.promptSpecified, promptTextSet = true, true
+			case "prompt-file":
+				o.promptSpecified, promptFileSet = true, true
+			}
+		})
+		if promptTextSet && promptFileSet {
+			return o, errors.New("use only one of --prompt or --prompt-file")
+		}
+		if (promptTextSet || promptFileSet) && o.promptMode != "custom" {
+			return o, errors.New("--prompt and --prompt-file require --prompt-mode custom")
+		}
+		if promptFileSet {
+			text, err := os.ReadFile(o.promptFile)
+			if err != nil {
+				return o, err
+			}
+			o.prompt = string(text)
+		}
+		if err := (lspatch.CompactionPrompt{Mode: o.promptMode, Text: o.prompt}).Validate(); err != nil {
+			return o, err
+		}
 	}
 	if o.binary == "" && !o.help {
 		return o, fmt.Errorf("%s requires --binary PATH; compaction never guesses between multiple installations", o.command)
@@ -75,7 +109,7 @@ func RunWithNative(root string, snap *assets.Snapshot, args []string, native lsp
 		return map[string]any{
 			"command":     o.command,
 			"commands":    []string{"status", "patch", "restore"},
-			"patch_flags": []string{"--binary", "--apply", "--json"},
+			"patch_flags": []string{"--binary", "--apply", "--json", "--prompt-mode", "--prompt", "--prompt-file"},
 			"notes":       []string{"patch without --apply plans in memory only and never writes", "restore rewrites the binary back to the recorded operation input", "the effective status is unknown without live evidence; disk state never proves the loaded configuration"},
 		}, 0, nil
 	}
@@ -98,13 +132,20 @@ func RunWithNative(root string, snap *assets.Snapshot, args []string, native lsp
 	}
 	if native != nil {
 		enabled := true
-		value, handled, nativeErr := native(lspatch.Request{Feature: "compaction", Command: o.command, Binary: binary, Apply: o.apply, Desired: lspatch.Desired{Compaction: &enabled}})
+		desired := lspatch.Desired{Compaction: &enabled}
+		if o.command == "patch" {
+			desired.CompactionPrompt = &lspatch.CompactionPrompt{Mode: o.promptMode, Text: o.prompt}
+		}
+		value, handled, nativeErr := native(lspatch.Request{Feature: "compaction", Command: o.command, Binary: binary, Apply: o.apply, Desired: desired})
 		if nativeErr != nil {
 			return failure(o.command, nativeErr)
 		}
 		if handled {
 			return value, 0, nil
 		}
+	}
+	if o.promptSpecified {
+		return failure(o.command, errors.New("prompt selection requires the registered shared native compaction backend"))
 	}
 	switch o.command {
 	case "status":

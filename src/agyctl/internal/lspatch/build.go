@@ -148,6 +148,34 @@ func Build(base []byte, spec Spec, config Config, refs map[string]RecipeRef) ([]
 		if refs[entry.name] != entry.contribution.Ref {
 			return nil, fmt.Errorf("native %s recipe identity or fingerprint changed", entry.name)
 		}
+		if entry.name == "compaction" && config.CompactionPrompt != nil {
+			if spec.BuildCompaction == nil {
+				return nil, errors.New("compaction prompt selection is not supported by this registered recipe")
+			}
+			contribution, err := spec.BuildCompaction(base, *config.CompactionPrompt, entry.contribution.Ref)
+			if err != nil {
+				return nil, err
+			}
+			if contribution.Ref != entry.contribution.Ref {
+				return nil, errors.New("native compaction prompt recipe fingerprint changed")
+			}
+			if len(contribution.Spans) != len(entry.contribution.Spans) {
+				return nil, errors.New("native compaction prompt omitted a registered span")
+			}
+			for _, span := range contribution.Spans {
+				registered := false
+				for _, fixed := range entry.contribution.Spans {
+					if span.Offset == fixed.Offset && bytes.Equal(span.Expected, fixed.Expected) && len(span.Replacement) == len(fixed.Replacement) {
+						registered = true
+						break
+					}
+				}
+				if !registered {
+					return nil, errors.New("native compaction prompt writes outside its registered spans")
+				}
+			}
+			entry.contribution = &contribution
+		}
 		contributions = append(contributions, *entry.contribution)
 	}
 	if len(refs) != len(contributions) {

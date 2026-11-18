@@ -218,8 +218,28 @@ func VerifyLegacyFeature(binary string, record map[string]any, current, base []b
 	if field("binary_sha256_after") != currentSHA {
 		return nil, nil
 	}
-	if contribution == nil || field("target_id")+"/"+field("input") != contribution.Ref.ID || field("recipe_fingerprint") != contribution.Ref.Fingerprint {
+	history := spec.HistoricalToolOutput
+	if feature == "compaction" {
+		history = spec.HistoricalCompaction
+	}
+	ref := RecipeRef{ID: field("target_id") + "/" + field("input"), Fingerprint: field("recipe_fingerprint")}
+	matches := 0
+	if contribution != nil && contribution.Ref == ref {
+		matches++
+	}
+	for i := range history {
+		if history[i].Ref == ref {
+			contribution = &history[i]
+			matches++
+		}
+	}
+	if matches != 1 {
 		return nil, fmt.Errorf("legacy %s recipe identity or fingerprint no longer matches the registry", label)
+	}
+	if feature == "compaction" {
+		spec.Compaction = contribution
+	} else {
+		spec.ToolOutput = contribution
 	}
 	basePath, err := VerifyLegacyBackups(binary, record, spec.BaseSHA, currentSHA)
 	if err != nil {
@@ -233,7 +253,7 @@ func VerifyLegacyFeature(binary string, record map[string]any, current, base []b
 	if !bytes.Equal(out, current) {
 		return nil, fmt.Errorf("legacy %s recipe does not reproduce the complete current image", label)
 	}
-	return &Legacy{Config: config, Recipes: refs, BasePath: basePath}, nil
+	return &Legacy{Config: config, Recipes: refs, Layout: layoutRefs(spec), BasePath: basePath}, nil
 }
 
 func VerifyLegacyBackups(binary string, record map[string]any, baseSHA, currentSHA string) (string, error) {

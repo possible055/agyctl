@@ -58,7 +58,10 @@ unreadable version sources refuse; there is no nearest-version selection. Offlin
 standalone binaries and legacy unversioned registries retain exact hash admission.
 Status and restore retain historical recipes. See
 [selection.go](../src/agyctl/internal/apptarget/selection.go). Context-limit
-admission remains byte-based, not a version allowlist.
+admission remains byte-based, not a version allowlist. On the registered 2.32.1
+original, all three Language Server features are admitted through
+[native composition](#native-feature-composition), which also recognizes its own
+managed images.
 
 The capsule anchor gate parses the embedded web bundle with bounded extraction and
 never executes it. Anchors are the capsule's one volatile upstream dependency: a
@@ -237,9 +240,9 @@ orphan does not change its plugin.
 
 `apply` rechecks target identity and the feature gates. An app update, unknown
 process state, or conflicting operation refuses the request instead of switching
-targets or bypassing checks. Host changes precede limit changes, and the sequence is
-not one atomic transaction: a later failure can leave earlier steps applied, so the
-panel reads their real state instead of claiming every step succeeded. Original
+targets or bypassing checks. Host changes precede Language Server changes, and the
+sequence is not one atomic transaction: a later failure can leave earlier steps
+applied, so the panel reads their real state instead of claiming every step succeeded. Original
 backups remain available through the recovery paths below.
 
 ## Localization preparation and apply
@@ -334,8 +337,10 @@ original bytes, code placement, and signing strategy are qualified; see
 `limit patch --model-limits '1318=300000,1400=500000'` describes the complete model
 mapping, not an incremental edit. Preview is read-only unless `--out` explicitly
 requests a new output file, and `--apply` is required to replace the installation.
-Quit the selected client before applying or restoring. To change an existing patch,
-restore first, then preview and apply the complete replacement mapping. Numeric IDs
+Quit the selected client before applying or restoring. On the registered 2.32.1
+target, applying a new complete mapping replaces the installed one through
+[native composition](#native-feature-composition). On other builds, restore first,
+then preview and apply the complete replacement mapping. Numeric IDs
 are build-specific enum values; the tool does not guess model names or account
 availability. The patch raises a candidate floor and keeps later context/output
 clamps; it does not force the session window to that value or lower a larger existing
@@ -378,15 +383,17 @@ registered values and their evidence are in
 installation, and with several installed the command refuses instead of guessing.
 
 Quit the selected client before applying or restoring (the process checks above
-apply). To change or remove the patch, run `npm run tool-output:restore`, which
-returns the binary to exactly the input it was patched from, verified against the
-recorded transaction. A binary that changed since the patch (an app update, a later
-`limit` patch, or an external edit) is refused rather than overwritten; remove the
-other patch with its own restore first. The two features share one operation lock, so
+apply). On the registered 2.32.1 target, `patch` and `restore` change only the
+tool-output part of the [native image](#native-feature-composition) and keep the
+other features. On 2.31.2, `npm run tool-output:restore` returns the binary to
+exactly the input it was patched from, verified against the recorded transaction; a
+binary that changed since the patch (an app update, a later `limit` patch, or an
+external edit) is refused rather than overwritten, so remove the other patch with
+its own restore first. All Language Server features share one operation lock, so
 they cannot mutate the same installation concurrently.
 
-State lives beside the limit records in the tool home: `tool-output-state.json` and
-`tool-output-prepare-<target>.json` transaction records, plus the feature-named
+On 2.31.2, state lives beside the limit records in the tool home:
+`tool-output-state.json` and `tool-output-prepare-<target>.json` transaction records, plus the feature-named
 tool-home backup. The tool never overwrites or deletes backups.
 `node scripts/manage.mjs status` reports the disk state under `toolOutput`; a disk
 patch does not mean the running client loaded it, and app updates never reapply
@@ -394,28 +401,37 @@ anything automatically.
 
 ## Summary compaction patch
 
-`compaction patch` applies a build-specific continuation-summary and retention
-recipe. The legacy default-string recipe alone did not establish runtime
-adoption. The registered values, the
-canonical prompt, and the binary evidence are in
-[compaction-patch.md](compaction-patch.md). Preview is always in-memory: without
-`--apply` the command writes nothing. An explicit `--binary` selects the
-installation, and with several installed the command refuses instead of guessing.
+`compaction patch` applies a build-specific summary-prompt and original-request
+retention recipe. On Windows 2.32.1 it keeps the newest original messages within a
+fixed 61,440 UTF-8 byte budget, with no separate message-count setting, and the
+summary prompt is `native` (default) or `custom`. What the recipe changes, its
+qualification, and the binary evidence are in [compaction-patch.md](compaction-patch.md).
+Preview is always in-memory: without `--apply` the command writes nothing. An
+explicit `--binary` selects the installation.
 
-The Windows 2.32.1 recipe instead patches final consumers and participates in
-[native composition](#native-feature-composition). Its current input remains an
-exact whole-file original, not an arbitrary previously patched file. The offline
-`node scripts/compaction-recipe.mjs inspect --asar ABS_ASAR_PATH` selects sites by
-version and verifies identity; `build --binary ABS_ORIGINAL --expect-sha SHA --out
-var/candidate.json` writes only a candidate. It never edits the installation or
-promotes a registry entry automatically.
+Use `--prompt-mode native`, or `--prompt-mode custom` with either `--prompt TEXT`
+or `--prompt-file PATH` (not both). Custom files are read as UTF-8 without newline
+normalization. Empty text, invalid Unicode, NUL, and more than 3,937 UTF-8 bytes
+are rejected; there is no truncation or fallback. Prompt selection requires the
+registered 2.32.1 native target; 2.31.2 refuses explicit prompt options.
+The panel offers the same choice and byte limit; the retention budget is not
+adjustable. On 2.31.2 the panel hides prompt options and uses the legacy flow.
 
-### Windows 2.32.1 consumer evidence
+The native desired configuration keeps the `compaction` boolean and adds
+`compaction_prompt: {"mode":"native","text":""}` or
+`compaction_prompt: {"mode":"custom","text":"..."}`. The choice and exact text
+participate in draft revisions, reviewed plans, active state, and complete-image
+verification. Custom mode fills only registered prompt templates and declared
+length fields, never user-selected executable offsets. Disabling compaction
+clears its prompt selection; changing another feature preserves it.
 
-Build-specific observations and reproduction details are owned by
-[compaction consumer evidence](compaction-patch.md#windows-2321-consumer-evidence).
+On 2.32.1 the recipe takes part in [native composition](#native-feature-composition)
+and admits only the exact whole-file original. To inspect a binary or rebuild a
+candidate recipe offline, see
+[reproducing the static checks](compaction-patch.md#reproducing-the-static-checks);
+those commands never edit the installation or promote a registry entry.
 
-### Legacy transaction records
+### Windows 2.31.2 transaction records
 
 Quit the selected client before applying or restoring (the process checks above
 apply). To change or remove the patch, run `npm run compaction:restore`, which

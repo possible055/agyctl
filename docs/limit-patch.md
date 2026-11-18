@@ -2,10 +2,10 @@
 
 This page describes how `agyctl limit` modifies the Antigravity desktop Language
 Server (LS): the targeted function, the admission gate, the replacement encoding,
-and recovery. It is not a specification of upstream context management. Commands
-and status readback are in
+qualification, and recovery. It is not a specification of upstream context
+management. Commands and status readback are in
 [operations](operations.md#per-model-context-settings); component boundaries are in
-[architecture](architecture.md#limit-admission-and-recovery).
+[architecture](architecture.md#language-server-patch-admission).
 
 ## Upstream clamp
 
@@ -33,26 +33,6 @@ recent conversation databases
 Neither reconstructs the upstream configuration call graph.
 
 ## Modification boundary
-
-### Windows Hub 2.32.1 live qualification
-
-On 2026-11-16, the installed `resources/bin/language_server.exe` had original
-SHA-256 `65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f`
-and size 215547392 bytes. Its `utils.ClampCheckpointConfigForModelInfo` body
-at VA `0x141823b00` (file offset `0x1823100`) matched the recorded 128-byte
-original. After applying `--model-limits 1318=500000,1319=500000,1320=500000`
-with the client and Language Server stopped, the patched SHA-256 was
-`b661864c7e6265e70a502ac0440ebce07f0b4bc1d61ab013e7fa0630b9ac7125`.
-
-After restarting both processes, `GetCascadeTrajectoryExecutorMetadatas` for
-a resumed synthetic Gemini 3.8 Flash High session and a new synthetic session
-reported `cascadeConfig.checkpointConfig.maxTokenLimit=500000`. The resumed
-session's pre-patch executor recorded 256000. Both post-patch executors retained
-`maxUserRequests=10`, `maxUserRequestBytes=1024`, and the same 3937-byte summary
-prompt digest `adc0b546b4512337f3edc1080cbcdf2d4b9303345664815694024e7304898a1c`.
-This qualifies that model path and the limit change, not other models, prompt
-replacement, retention changes, or natural automatic compaction. The exact
-build entry is in [versions.json](../compat/versions.json).
 
 The implementation is Go under
 [src/agyctl/internal/limit/](../src/agyctl/internal/limit/).
@@ -117,6 +97,27 @@ reconstruction can reuse validated node slots. Unknown bytes or an unusable addr
 map are refused. macOS mutation stays unavailable until its original bytes,
 placement, and signing strategy are qualified.
 
+## Qualification
+
+Admission is byte-based (see above); [versions.json](../compat/versions.json)
+records each inspected build with its original body and notes. Recorded live
+check on Windows stable 2.32.1, 2026-11-16:
+
+- Package member `resources/bin/language_server.exe`, 215,547,392 bytes, original
+  SHA-256 `65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f`.
+  `utils.ClampCheckpointConfigForModelInfo` at VA `0x141823b00` (file offset
+  `0x1823100`) matched the recorded 128-byte original.
+- Applying `--model-limits 1318=500000,1319=500000,1320=500000` with the client and
+  LS stopped produced SHA-256
+  `b661864c7e6265e70a502ac0440ebce07f0b4bc1d61ab013e7fa0630b9ac7125`.
+- After restarting, `GetCascadeTrajectoryExecutorMetadatas` reported
+  `checkpointConfig.maxTokenLimit=500000` for both a resumed Gemini 3.8 Flash High
+  session (256,000 before the patch) and a new one. Request retention and the summary
+  prompt were unchanged.
+
+This qualifies that model path and the limit change only, not other models or
+automatic compaction behavior.
+
 ## Backup and recovery
 
 These are the implemented conditions, not a promise that every failure restores the
@@ -143,6 +144,8 @@ previous installation.
    hash. Without one, a recognized patch must be reproducible from the original
    backup. An unrelated updated binary is not a restore target.
 
-The limit patch is independent of the Host archive transaction and of the
-[tool-output patch](tool-output-patch.md); see
-[recovery boundaries](operations.md#recovery-boundaries).
+The steps above describe the standalone limit transaction. On the registered
+2.32.1 original, the limit patch is instead one contribution to the
+[native transaction](operations.md#native-feature-composition) shared with the
+tool-output and compaction patches. Both are independent of the Host archive
+transaction; see [recovery boundaries](operations.md#recovery-boundaries).

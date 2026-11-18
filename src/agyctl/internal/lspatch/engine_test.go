@@ -500,6 +500,59 @@ func TestNativeDesiredJSONContract(t *testing.T) {
 	if err != nil || value.ToolOutput != nil || value.Limit == nil || !value.Limit.Enabled || value.Compaction == nil || !*value.Compaction {
 		t.Fatalf("partial desired: %+v %v", value, err)
 	}
+	for _, sample := range []struct {
+		input, mode, text string
+	}{
+		{`{"compaction":true,"compaction_prompt":{"mode":"native","text":""}}`, "native", ""},
+		{`{"compaction":true,"compaction_prompt":{"mode":"custom","text":"Keep corrections.\n\\literal"}}`, "custom", "Keep corrections.\n\\literal"},
+		{`{"compaction":true,"compaction_prompt":{"mode":"custom","text":"\ud83d\ude80\u597d"}}`, "custom", "🚀好"},
+		{`{"compaction":true,"compaction_prompt":{"mode":"custom","text":"` + strings.Repeat("x", 3937) + `"}}`, "custom", strings.Repeat("x", 3937)},
+	} {
+		desired, err := ParseDesired([]byte(sample.input))
+		if err != nil {
+			t.Fatal(err)
+		}
+		config, err := desired.Merge(EmptyConfig())
+		if err != nil || config.CompactionPrompt == nil || config.CompactionPrompt.Mode != sample.mode || config.CompactionPrompt.Text != sample.text {
+			t.Fatalf("prompt was not preserved: %+v %v", config, err)
+		}
+		enabledFlag, disabledFlag := true, false
+		preserved, err := (Desired{ToolOutput: &enabledFlag}).Merge(config)
+		if err != nil || !reflect.DeepEqual(preserved.CompactionPrompt, config.CompactionPrompt) {
+			t.Fatalf("unrelated feature changed the prompt: %+v %v", preserved, err)
+		}
+		disabled, err := (Desired{Compaction: &disabledFlag}).Merge(config)
+		if err != nil || disabled.Compaction || disabled.CompactionPrompt != nil {
+			t.Fatalf("disabled compaction retained a prompt contribution: %+v %v", disabled, err)
+		}
+	}
+	for _, invalid := range []string{
+		`{"compaction_prompt":null}`,
+		`{"compaction_prompt":{"mode":"other","text":""}}`,
+		`{"compaction_prompt":{"mode":"native","text":"custom text"}}`,
+		`{"compaction_prompt":{"mode":"custom","text":"  \n"}}`,
+		`{"compaction_prompt":{"mode":"custom","text":"\ufeff"}}`,
+		`{"compaction_prompt":{"mode":"custom","text":"\u0000"}}`,
+		`{"compaction_prompt":{"mode":"custom","text":"\ud800"}}`,
+		`{"compaction_prompt":{"mode":"custom","text":"\udc00"}}`,
+		`{"compaction_prompt":{"mode":"custom","text":"\ud800\u0061"}}`,
+		`{"compaction_prompt":{"mode":"custom","text":null}}`,
+		`{"compaction_prompt":{"mode":"custom","text":"ok","extra":true}}`,
+		`{"compaction_prompt":{"mode":"custom","mode":"native","text":"ok"}}`,
+		`{"compaction_prompt":{"mode":"custom","text":"` + strings.Repeat("好", 1313) + `"}}`,
+		`{"compaction":false,"compaction_prompt":{"mode":"native","text":""}}`,
+	} {
+		if _, err := ParseDesired([]byte(invalid)); err == nil {
+			t.Fatalf("accepted invalid prompt options %s", invalid)
+		}
+	}
+	promptOnly, err := ParseDesired([]byte(`{"compaction_prompt":{"mode":"custom","text":"Keep corrections"}}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := promptOnly.Merge(EmptyConfig()); err == nil || !strings.Contains(err.Error(), "requires enabled compaction") {
+		t.Fatalf("prompt enabled compaction implicitly: %v", err)
+	}
 	for _, invalid := range []string{`null`, `{"unknown":true}`, `{"tool_output":null}`, `{"compaction":true,"compaction":false}`, `{"limit":{"enabled":false}}`, `{"limit":{"enabled":null,"model_limits":[]}}`, `{"limit":{"enabled":false,"model_limits":null}}`, `{"limit":{"enabled":false,"model_limits":[{"id":1,"limit":2}]}}`, `{"limit":{"enabled":true,"model_limits":[{"id":2,"limit":2},{"id":1,"limit":2}]}}`, `{} {}`} {
 		if _, err := ParseDesired([]byte(invalid)); err == nil {
 			t.Fatalf("accepted invalid desired %s", invalid)
@@ -544,5 +597,109 @@ func TestNativeDesiredJSONContract(t *testing.T) {
 	merged, err = (Desired{Limit: &LimitConfig{ModelLimits: []ModelLimit{}}}).Merge(current)
 	if err != nil || merged.Limit.Enabled || len(merged.Limit.ModelLimits) != 0 {
 		t.Fatalf("historical limit cannot be disabled: %+v %v", merged, err)
+	}
+}
+
+func TestNativePromptStateNoOpAndIndependentRestore(t *testing.T) {
+	e, binary, base := nativeFixture(t)
+	e.Specs[0].CompactionPromptMaxBytes = 2
+	e.Specs[0].BuildCompaction = func(_ []byte, prompt CompactionPrompt, ref RecipeRef) (Contribution, error) {
+		if prompt.Mode == "native" {
+			return *e.Specs[0].Compaction, nil
+		}
+		if len(prompt.Text) != 2 {
+			return Contribution{}, errors.New("fixture custom prompt requires two bytes")
+		}
+		return Contribution{Ref: ref, Spans: []Span{{48, make([]byte, 4), []byte{'P', prompt.Text[0], prompt.Text[1], 0}}}}, nil
+	}
+	enabled, disabled := true, false
+	prompt := CompactionPrompt{Mode: "custom", Text: "ab"}
+	desired := Desired{Compaction: &enabled, ToolOutput: &enabled, CompactionPrompt: &prompt}
+	first := applyDesired(t, e, binary, desired)
+	current, err := os.ReadFile(binary)
+	if err != nil || !bytes.Equal(current[48:52], []byte{'P', 'a', 'b', 0}) || current[16] != 'T' {
+		t.Fatalf("custom prompt/native combination differs: %x %v", current, err)
+	}
+	status, err := e.Status(binary)
+	if err != nil || !reflect.DeepEqual(status["features"].(Config).CompactionPrompt, &prompt) {
+		t.Fatalf("persisted custom prompt changed: %v %v", status, err)
+	}
+	noOp := applyDesired(t, e, binary, desired)
+	if noOp["applied"] != false || noOp["generation"] != first["generation"] {
+		t.Fatalf("same prompt was not a no-op: %v", noOp)
+	}
+	applyDesired(t, e, binary, Desired{Limit: featureDesired(0, true, 3).Limit})
+	status, err = e.Status(binary)
+	if err != nil || !reflect.DeepEqual(status["features"].(Config).CompactionPrompt, &prompt) {
+		t.Fatalf("limit change lost custom prompt: %v %v", status, err)
+	}
+	applyDesired(t, e, binary, Desired{CompactionPrompt: &CompactionPrompt{Mode: "native"}})
+	assertNativeBytes(t, binary, 7, 3)
+	applyDesired(t, e, binary, Desired{Compaction: &disabled})
+	assertNativeBytes(t, binary, 3, 3)
+	status, err = e.Status(binary)
+	if err != nil || status["features"].(Config).CompactionPrompt != nil {
+		t.Fatalf("restore retained custom prompt state: %v %v", status, err)
+	}
+	applyDesired(t, e, binary, Desired{ToolOutput: &disabled, Limit: &LimitConfig{ModelLimits: []ModelLimit{}}})
+	current, err = os.ReadFile(binary)
+	if err != nil || !bytes.Equal(current, base) {
+		t.Fatalf("independent restore changed the original: %v", err)
+	}
+	e.Specs[0].BuildCompaction = func(_ []byte, _ CompactionPrompt, ref RecipeRef) (Contribution, error) {
+		return Contribution{Ref: ref, Spans: []Span{{49, make([]byte, 4), []byte{'P', 0, 0, 0}}}}, nil
+	}
+	if _, err := e.Plan(binary, desired); err == nil || !strings.Contains(err.Error(), "outside its registered spans") {
+		t.Fatalf("custom prompt escaped registered spans: %v", err)
+	}
+}
+
+func TestNativeMigratesHistoricalStandaloneCompactionWithoutLosingItsProof(t *testing.T) {
+	e, binary, base := nativeFixture(t)
+	old := *e.Specs[0].Compaction
+	old.Ref = RecipeRef{ID: "legacy-compaction/original", Fingerprint: fsx.SHA256([]byte("legacy-compaction"))}
+	e.Specs[0].HistoricalCompaction = []Contribution{old}
+	e.Specs[0].Compaction = &Contribution{Ref: RecipeRef{ID: "current-compaction/original", Fingerprint: fsx.SHA256([]byte("current-compaction"))}, Spans: []Span{{48, make([]byte, 4), []byte{'N', 0, 0, 0}}}}
+	previous := bytes.Clone(base)
+	previous[48] = 'C'
+	if err := os.WriteFile(binary, previous, 0600); err != nil {
+		t.Fatal(err)
+	}
+	sibling, toolBackup := binary+".orig", filepath.Join(filepath.Dir(binary), "verified-base.bin")
+	for _, path := range []string{sibling, toolBackup} {
+		if err := os.WriteFile(path, base, 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	record := map[string]any{
+		"action": "patch", "binary_path": binary, "binary_sha256_before": fsx.SHA256(base), "binary_sha256_after": fsx.SHA256(previous),
+		"target_id": "legacy-compaction", "input": "original", "recipe_fingerprint": old.Ref.Fingerprint,
+		"backup_sibling": sibling, "backup_sibling_sha256": fsx.SHA256(base), "repo_backup": toolBackup, "repo_backup_sha256": fsx.SHA256(base),
+	}
+	if err := writeJSON(e.Directory, filepath.Join(e.Directory, "compaction-state.json"), map[string]any{"schema": 1, "records": []map[string]any{record}}); err != nil {
+		t.Fatal(err)
+	}
+	e.Legacy = func(path string, current, original []byte, spec Spec) (*Legacy, error) {
+		return VerifyLegacyFeature(path, record, current, original, spec, "compaction")
+	}
+	status, err := e.Status(binary)
+	if err != nil || status["file_state"] != "legacy" || status["current_sha256"] != fsx.SHA256(previous) || status["recipe_update_required"] != true {
+		t.Fatalf("historical standalone proof was lost: %v %v", status, err)
+	}
+	result := applyDesired(t, e, binary, Desired{})
+	if result["file_state"] != "managed" || result["recipe_update_required"] != false {
+		t.Fatalf("historical standalone image was not migrated: %v", result)
+	}
+	current, err := os.ReadFile(binary)
+	want := bytes.Clone(base)
+	want[48] = 'N'
+	if err != nil || !bytes.Equal(current, want) {
+		t.Fatalf("migration changed unrelated bytes: %v", err)
+	}
+	for _, path := range []string{sibling, toolBackup} {
+		backup, err := os.ReadFile(path)
+		if err != nil || !bytes.Equal(backup, base) {
+			t.Fatalf("migration changed an original backup: %v", err)
+		}
 	}
 }

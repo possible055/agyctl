@@ -2,7 +2,7 @@
 
 [English](README.md) | 简体中文
 
-agyctl 为 Antigravity 桌面应用添加上下文用量面板，并提供输入栏用量胶囊、界面本地化及上下文／工具输出补丁等可选工具。当前离线兼容开发面向 Windows 正式版 2.32.1；各功能有独立的准入条件和资格状态。旧版记录仍保留用于识别与恢复。
+agyctl 为 Antigravity 桌面应用添加上下文用量面板，并提供会修改已安装应用的可选工具：输入栏用量胶囊、界面本地化，以及针对上下文上限、工具输出容量和压缩摘要的语言服务器补丁。当前目标是 Windows 版 Antigravity 2.32.1（正式版渠道）。各功能有独立的资格状态，见下方各节链接；旧版本的记录仍保留，以便识别并移除其补丁。
 
 ## 功能
 
@@ -69,7 +69,7 @@ npm run tools:build
 npm run plugin:install
 ```
 
-重新打开 Antigravity，进入 **Settings → 补丁**。界面会自动填入已安装的设置。展开**模型上下文上限**，从当前登录账号的 Language Server 模型列表选择模型；Gemini 的不同思考强度共用一行。新模型默认填入 256,000 token 且不勾选；新增或修改上限时，面板接受 256,000–983,040。**压缩摘要改善补丁**复选框与[压缩摘要补丁](#压缩摘要补丁)对应，在精确登记的 2.32.1 原生目标上可与模型上下文上限同时启用；旧目标保留冲突检查。选择功能、语言与各模型上限，点击**保存设置**，仅保存草稿而不应用。面板不显示终端命令。查找草稿 ID、在 Antigravity 关闭后应用，以及不可用模型与恢复方式，见[补丁控制](docs/operations.md#panel-patch-controls)。应用完成后重新打开，界面会从已安装文件读回设置。下方命令仍可作为替代方式使用。
+重新打开 Antigravity，进入 **Settings → 补丁**。界面会自动填入已安装的设置。展开**模型上下文上限**，从当前登录账号的 Language Server 模型列表选择模型；Gemini 的不同思考强度共用一行。新模型默认填入 256,000 token 且不勾选；新增或修改的值必须在 256,000–983,040 之间。**压缩摘要改善补丁**复选框控制[压缩摘要补丁](#压缩摘要补丁)；在 2.32.1 上可与模型上下文上限同时启用，旧版本只能二选一。点击**保存设置**只会保存草稿，不会立即应用。之后退出 Antigravity，按[补丁控制](docs/operations.md#panel-patch-controls)在终端应用草稿；该节也说明不可用模型与恢复方式。重新打开后，面板会从已安装文件读回设置。下方命令是终端替代方式。
 
 ## 输入栏胶囊
 
@@ -113,9 +113,9 @@ node scripts/manage.mjs prepare --localization --locale zh-Hans-CN
 node scripts/manage.mjs --host-apply --localization-plan '<localizationPlan 路径>'
 ```
 
-保存的计划绑定了确切的安装位置；改变 `AGYCTL_APP_DIR` 不会重定向计划。重新打开 Antigravity，检查界面语言。目前的本地化配置档都是 `probe-only`；安装成功不代表已验证真实客户端激活。
+保存的计划绑定了确切的安装位置；改变 `AGYCTL_APP_DIR` 不会重定向计划。重新打开 Antigravity，检查界面语言。
 
-为已安装来源准备时，会自动选择精确的应用版本／平台，再验证已审查的资源与适配器位点。未知版本直接拒绝，不选择邻近版本。2.32.1 配置档包含 SSH／MCP 翻译；三语 SSH 原生选档／错误回应已实测，完整远程会话验收仍待完成。
+准备时会按已安装应用的精确版本选择配置档，未知版本直接拒绝，不会改用邻近版本。2.32.1 配置档还会翻译 SSH 远程连接与 MCP 对话框。所有配置档都是 `probe-only`：安装成功不代表每个界面都已翻译，见[验证状态](docs/localization.md#verification-status)。
 
 **移除。** 先退出 Antigravity，再执行：
 
@@ -157,7 +157,7 @@ npm run limit:status
 
 面板 Settings 和胶囊详情也会显示所选安装在磁盘上的补丁状态，与服务器回报的会话容量分开。需要构建工具并安装／更新面板才能使用这个共享的只读显示；缺少面板或 CLI 时会显示不可用，不会声称补丁已应用。
 
-修改已安装补丁时，先退出 Antigravity，使用下面的命令还原，再预览并应用完整的新映射。映射会替换所选模型集合，不会合并旧 ID。`--model-limits` 不能与旧的 `--ids`／`--limit` 同时使用。旧命令仍支持一个共用下限。不传设置参数时，补丁命令会在适用时沿用检测到的已安装设置或上次保存的补丁设置，否则使用内置的 500,000 token 和默认 ID。明确还原后不会沿用已保存设置；再次应用时应传入完整映射。应用更新可能移除补丁：`settings_state` 会区分已保存设置与当前文件，不会自动重新应用。
+在 2.32.1 上修改已安装补丁时，退出 Antigravity 后直接应用完整的新映射即可。旧版本需先使用下面的命令还原，再预览并应用新映射。映射会替换所选模型集合，不会合并旧 ID。`--model-limits` 不能与旧的 `--ids`／`--limit` 同时使用。旧命令仍支持一个共用下限。不传设置参数时，补丁命令会在适用时沿用检测到的已安装设置或上次保存的补丁设置，否则使用内置的 500,000 token 和默认 ID。明确还原后不会沿用已保存设置；再次应用时应传入完整映射。应用更新可能移除补丁：`settings_state` 会区分已保存设置与当前文件，不会自动重新应用。
 
 **移除。** 先退出 Antigravity，再执行：
 
@@ -169,7 +169,7 @@ npm run limit:restore
 
 ## 原生工具输出容量补丁
 
-放宽已记录的语言服务器原生工具输出限制：Read（2,000 行／128 KiB）、传统 `grep_search`（100 笔结果）以及合并后消息转换预算下限（98,304）。这些是资格化目标，不是已实测的最大值。Windows 2.31.2 保留旧配方与 grep 修复；Windows 2.32.1 候选只包含重新定位的容量／预算段，已实测 `read_file` 行数／字节容量及模型可见传递；当前工具集未观察到传统 grep 路径。先按已安装应用的版本选择配方，再检查精确整文件 hash。配方与证据详见[工具输出补丁](docs/tool-output-patch.md)。
+放宽语言服务器的原生工具输出限制：读取文件由 800 行提高到 2,000 行、由 45 KiB 提高到 128 KiB，每步消息预算下限提高到 98,304 token，让较大的读取结果完整送达模型。传统 `grep_search` 的结果上限也提高到 100，但已测试的版本并未提供该工具。支持 Windows 2.32.1 与 2.31.2（2.31.2 配方另含原生 grep 修复）；每个版本只接受精确登记的 `language_server.exe`。这些数值是资格化目标，不是已实测的最大值。详见[状态与证据](docs/tool-output-patch.md)。
 
 ```powershell
 npm run tool-output:status    # 查看所选安装的磁盘状态
@@ -178,20 +178,26 @@ npm run tool-output:patch -- --apply    # 先退出 Antigravity
 npm run tool-output:restore   # 精确回到套用前的输入
 ```
 
-应用与还原要求客户端已关闭、备份经过校验；发现多个安装时必须显式传 `--binary`。补丁不会放宽其他工具的设置，并与上下文上限补丁共用同一把操作锁；精确登记的 2.32.1 目标支持 L／T／C 组合；旧版冲突映像会拒绝，不会被覆盖。应用更新不会自动重新应用。
+应用与还原要求客户端已关闭、备份经过校验；发现多个安装时必须显式传 `--binary`。其他工具的限制保持不变。在 2.32.1 上，此补丁可与上限及压缩补丁自由组合；在 2.31.2 上需先移除冲突的补丁。应用更新会移除补丁，不会自动重新应用。
 
 ## 压缩摘要补丁
 
-Windows 2.32.1 的登记配方修正最终摘要／保留消费端，保留 M432 原生和自定义提示词。Gemini 3.8 Flash High 已实机验证手动与自然自动压缩采用新提示词、捕获 30 条请求，以及每条最多 2,048 字节的原生 UTF-8 渲染；较低的原生预算仍保留。checkpoint 存储的原始文字可能更大。阈值与 `/compact` 保持原生行为。资格仅涵盖记录的模型路径，不代表所有模型。旧版 2.31.2 配方仍属实验功能，其替换提示词未被实机采用。详见[各版本证据](docs/compaction-patch.md)及[操作流程](docs/operations.md#summary-compaction-patch)。
+改变 Antigravity 把长对话压缩成摘要时保留的内容（Windows 2.32.1）：
+
+- **你的原始消息：** 上游只传入最近 10 条消息，并共用一个字节预算。补丁改为从最新开始完整保留你的消息，总计最多 61,440 UTF-8 字节。只有最旧的一条保留消息可能被截断，更早的消息直接省略。编号也计入预算，因此这既不是 token 数，也不是整个输入的大小。
+- **摘要提示词：** `native`（默认）保留 Antigravity 自带的提示词；`custom` 改用你的文字，最多 3,937 UTF-8 字节。
+
+压缩的触发时机与 `/compact` 本身不变。状态为 `candidate`：已在 Gemini 3.8 Flash High 上验证手动压缩；自动压缩与其他模型尚未取得验证资格。另保留一个 2.31.2 配方，但测试中其提示词修改未被采用。详见[状态与证据](docs/compaction-patch.md#status)及[操作流程](docs/operations.md#summary-compaction-patch)。
 
 ```powershell
-npm run compaction:status    # 查看所选安装的磁盘状态
-npm run compaction:patch     # 仅在内存生成计划，不写入
-npm run compaction:patch -- --apply    # 先退出 Antigravity
-npm run compaction:restore   # 精确回到套用前的输入
+npm run compaction:status -- --binary ABS_LS_PATH
+npm run compaction:patch -- --binary ABS_LS_PATH --prompt-mode native    # 仅生成计划
+npm run compaction:patch -- --binary ABS_LS_PATH --prompt-mode custom --prompt-file summary.txt    # 仅生成计划
+npm run compaction:patch -- --binary ABS_LS_PATH --prompt-mode native --apply    # 先退出 Antigravity
+npm run compaction:restore -- --binary ABS_LS_PATH
 ```
 
-应用与还原遵循与其他二进制补丁相同的关闭客户端、校验备份与显式 `--binary` 规则，共用同一把操作锁。精确登记的 2.32.1 目标通过同一原生事务组合上限、工具输出与压缩，支持独立移除和修改模型上限；旧版本保留原来的冲突与恢复检查。应用更新不会自动重新应用。面板采用相同的原生准入与已审阅计划检查，见[原生组合](docs/operations.md#native-feature-composition)。
+应用与还原遵循与其他语言服务器补丁相同的关闭客户端、校验备份与显式 `--binary` 规则。在 2.32.1 上，三个补丁合成同一个映像，因此每个都能单独启用、修改或移除，不影响其他补丁；见[原生组合](docs/operations.md#native-feature-composition)。在 2.31.2 上，它们保留各自的冲突检查。应用更新会移除补丁，不会自动重新应用。
 
 ## 兼容性检查
 

@@ -1,7 +1,8 @@
 # Development
 
-Setup, checks, project layout, build outputs, and toolchain pinning. CI job
-selection and the required gate are documented in the [CI guide](../.github/CI.md).
+Setup, checks, project layout, build outputs, supporting a new app build, and
+toolchain pinning. CI job selection and the required gate are documented in the
+[CI guide](../.github/CI.md).
 
 ## Prerequisites
 
@@ -89,11 +90,11 @@ command).
 | `src/capsule/` | Input-toolbar capsule sources |
 | `src/host/` | Neutral ASAR composition, backups, receipts, transactions, and tooling logs |
 | `src/localization/` | Localization catalogs, DOM engine, Host bootstrap, and its Host feature |
-| `src/agyctl/` | Go CLI: compatibility checker, limit patcher, tool-output patcher |
+| `src/agyctl/` | Go CLI: compatibility checker, limit, tool-output, and compaction patchers, and the native coordinator (`internal/lspatch/`) that combines them |
 | `scripts/` | Build, install, and Host entry points |
-| `compat/` | Signatures, install layout, tool-output registry, localization profiles |
+| `compat/` | Limit signatures (`versions.json`), install layout, tool-output and compaction registries, canonical summary prompt, localization profiles |
 | `tests/` | Node and Electron suites; Go tests sit beside their packages |
-| `docs/` | Architecture, operations, localization, limit patch, tool-output patch, checker, and development guides |
+| `docs/` | Architecture, operations, localization, limit, tool-output, and compaction patches, checker, and development guides |
 
 ## Build outputs
 
@@ -101,7 +102,7 @@ Everything under `dist/` is generated: edit the sources and rebuild.
 
 | Output | Produced by | Consumed by |
 | --- | --- | --- |
-| `dist/bin/<goos>-<goarch>/agyctl` (`.exe` on Windows) | `npm run tools:build` | `npm run limit:*`, `tool-output:*`, `update-check:*`, `manage.mjs status` |
+| `dist/bin/<goos>-<goarch>/agyctl` (`.exe` on Windows) | `npm run tools:build` | `npm run limit:*`, `tool-output:*`, `compaction:*`, `update-check:*`, `manage.mjs status`, panel settings |
 | `dist/host/bundle/` | `npm run host:build` | Capsule, Host, and management scripts |
 | `dist/capsule/input-capsule.js` | `npm run capsule:build` | Host `apply`/`plan --capsule-code`; `capsule:install` assembles its own copy in memory |
 | `dist/localization/bundle/` | `npm run localization:build` | `scripts/localization.mjs`, localization Host features and tests |
@@ -127,6 +128,36 @@ The Host and localization loaders compare every input and output hash in their
 edit until you rebuild. The npm wrappers `capsule:install`, `capsule:uninstall`,
 `host-patch`, `localization`, `test`, and `test:localization` rebuild the bundles
 they need first; direct `node scripts/...` calls, including `manage.mjs`, do not.
+
+## Supporting a new Antigravity build
+
+Every feature admits builds through its own data, so a new app version is added
+feature by feature; nothing is admitted by version number alone. Start with the
+[checker](update-check.md) against the new installer or installed client, then:
+
+- **Context limit:** if the clamp body matches a recorded original, `limit` already
+  admits it. Add a [versions.json](../compat/versions.json) entry only after the
+  build is verified to work; see [limit qualification](limit-patch.md#qualification).
+- **Tool output:** register the new original and its re-located segments as a
+  target with `app_version` in [tool-output.json](../compat/tool-output.json), and
+  record the static evidence in [tool-output-patch.md](tool-output-patch.md#recipe-segments).
+- **Compaction:** add the build's layout to
+  [compaction-builds.mjs](../scripts/lib/compaction-builds.mjs), generate a candidate
+  with `node scripts/compaction-recipe.mjs build` (written under `var/`), review it,
+  promote it into [compaction.json](../compat/compaction.json), and run
+  `check-registry`; see
+  [reproducing the static checks](compaction-patch.md#reproducing-the-static-checks).
+- **Localization:** add an exact version/platform profile to
+  [profiles.json](../compat/localization/profiles.json) for the observed assets, check
+  that every native adapter anchor is unique, then prepare and validate all locales;
+  see [offline inspection](localization.md#offline-inspection-and-preparation).
+- **Native composition:** the coordinator's target version is the
+  `nativeAppVersion` constant in [native.go](../src/agyctl/cmd/agyctl/native.go), so
+  combining limit, tool-output, and compaction on another build needs a code change,
+  not only registry entries.
+
+Record each feature's evidence and status in its owning document, and keep existing
+registry entries so older patches stay recognizable and removable.
 
 ## Toolchain and supply chain
 

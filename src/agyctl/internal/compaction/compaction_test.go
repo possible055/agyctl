@@ -3,6 +3,7 @@ package compaction
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/hex"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -11,6 +12,7 @@ import (
 
 	"agyctl/internal/apptarget"
 	"agyctl/internal/fsx"
+	"agyctl/internal/lspatch"
 	"agyctl/internal/testutil"
 )
 
@@ -27,6 +29,61 @@ func syntheticImage(seed byte) []byte {
 		image[i] = seed + byte(i)
 	}
 	return image
+}
+
+func TestNativePromptSelectionUsesOnlyRegisteredTemplates(t *testing.T) {
+	fixture := syntheticFixtureData(t, 0x11, nil)
+	target := &fixture.registry.Targets[0]
+	input := &target.Inputs[0]
+	input.Segments[0].Name = "body"
+	input.Segments[0].NewHex = input.Segments[0].ExpectedHex
+	code := fixture.image[0x110:0x118]
+	input.Segments = append(input.Segments, Segment{Name: "selector", Role: "prompt", Offset: 0x110, ExpectedHex: hex.EncodeToString(code), NewHex: hex.EncodeToString(code)})
+	input.Prompt = &PromptRecipe{
+		BodySegment: "body", MaxBytes: 4,
+		Segments: []Segment{
+			{Name: "body", Role: "prompt", Offset: 0x100, ExpectedHex: "41414141", NewHex: "20202020"},
+			{Name: "selector", Role: "prompt", Offset: 0x110, ExpectedHex: hex.EncodeToString(code), NewHex: "b904000000909090"},
+		},
+		LengthFields: []PromptLengthField{{Segment: "selector", Offset: 1, ExpectedHex: "04000000"}},
+	}
+	native := bytes.Clone(fixture.image)
+	copy(native[0x200:0x202], "DD")
+	input.OutputSHA = fsx.SHA256(native)
+	if err := validateTarget(target, map[string]bool{}); err != nil {
+		t.Fatal(err)
+	}
+	ref := NativeRecipe(target, input).Ref
+	for _, sample := range []struct {
+		mode, text     string
+		body, selector []byte
+	}{
+		{"native", "", []byte("AAAA"), code},
+		{"custom", "好", []byte("好 "), []byte{0xb9, 3, 0, 0, 0, 0x90, 0x90, 0x90}},
+		{"custom", "abcd", []byte("abcd"), []byte{0xb9, 4, 0, 0, 0, 0x90, 0x90, 0x90}},
+	} {
+		contribution, err := NativePromptContribution(fixture.image, target, input, lspatch.CompactionPrompt{Mode: sample.mode, Text: sample.text}, ref)
+		if err != nil {
+			t.Fatal(err)
+		}
+		out := bytes.Clone(fixture.image)
+		for _, span := range contribution.Spans {
+			copy(out[span.Offset:], span.Replacement)
+		}
+		want := bytes.Clone(native)
+		copy(want[0x100:0x104], sample.body)
+		copy(want[0x110:0x118], sample.selector)
+		if !bytes.Equal(out, want) {
+			t.Fatalf("%s prompt wrote unexpected bytes", sample.mode)
+		}
+	}
+	if _, err := NativePromptContribution(fixture.image, target, input, lspatch.CompactionPrompt{Mode: "custom", Text: "abcde"}, ref); err == nil || !strings.Contains(err.Error(), "registered 4 UTF-8 byte capacity") {
+		t.Fatalf("custom prompt bypassed registered byte capacity: %v", err)
+	}
+	input.Prompt.LengthFields[0].Offset = 2
+	if err := validatePromptRecipe(input); err == nil || !strings.Contains(err.Error(), "length field") {
+		t.Fatalf("invalid length template accepted: %v", err)
+	}
 }
 
 type syntheticFixture struct {
@@ -216,6 +273,7 @@ func TestRealRegistryLoadsAndSelfChecks(t *testing.T) {
 		fingerprint       string
 		outputs           map[string]string
 		historical        map[string]string
+		values            map[string]int
 	}{
 		"win-amd64-antigravity-2.31.2": {
 			version: "2.31.2", qualification: "candidate", segments: 13, prompts: 3,
@@ -224,16 +282,20 @@ func TestRealRegistryLoadsAndSelfChecks(t *testing.T) {
 				"47a439efe717e797533f1cdc0c303d40f264c5f1e0a1135f766b64f1208fa61e": "c6c7d81e29eeab66af720c2304c7ad6b7543c5482db48dfd1379dd7a95c33814",
 				"1c69b4fc10b15b016125d38a32a5b4fd13018dad22564207b576bbb3e759e164": "b361c8c3ed47a1e315714d1f8b8178e23f282cb4d0724be5aeb8d9380c0831d6",
 			},
+			values: map[string]int{"max_user_requests": 30, "max_user_request_bytes": 2048},
 		},
 		"win-amd64-antigravity-2.32.1": {
-			version: "2.32.1", qualification: "supported", segments: 10, prompts: 4,
-			fingerprint: "dcc5c351fcf209d0d87a9ca2cb2d43aca1994e4265882c45fa274b36ae75d499",
+			version: "2.32.1", qualification: "candidate", segments: 13, prompts: 4,
+			fingerprint: "2ebda7ec1f5c8cfb9b495217d5ac1a1b66d020502369b14849c359dc50f3810f",
 			outputs: map[string]string{
-				"65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f": "b9ba32e6e1f23227e2ac1f109e509b8e487d231397002e24a44cac1c556997da",
+				"65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f": "a5b6fa7ae779b2d81bfcf81d3cf072977c1eaa2ef5fb25645481fe38a66267c0",
 			},
 			historical: map[string]string{
 				"1b201f436605748b6ae741682e8922bb0746f7582ff6472030800c5396f0f359": "1128a0cb82de55743875cb1921565887dbc07686a934805f1caee0e81bf87cee",
+				"dcc5c351fcf209d0d87a9ca2cb2d43aca1994e4265882c45fa274b36ae75d499": "b9ba32e6e1f23227e2ac1f109e509b8e487d231397002e24a44cac1c556997da",
+				"edce28dc43923c50e8627e97731d07c72e7c1d34bdafbe9796e4b58715225995": "26bd44bef0d26bdf40c05aec9cb1decdee0eb476eccc2720968560abc153ecb9",
 			},
+			values: map[string]int{"user_request_total_bytes": 61440},
 		},
 	}
 	if len(reg.Targets) != len(contracts) {
@@ -291,11 +353,13 @@ func TestRealRegistryLoadsAndSelfChecks(t *testing.T) {
 				t.Fatalf("%s/%s changed its historical admission, output or restore fingerprint", target.ID, state.Input)
 			}
 		}
-		if target.ValueTargets["max_user_requests"].Target != 30 {
-			t.Fatalf("max_user_requests target = %v", target.ValueTargets["max_user_requests"])
+		if len(target.ValueTargets) != len(contract.values) {
+			t.Fatalf("%s value targets = %v, want %v", target.ID, target.ValueTargets, contract.values)
 		}
-		if target.ValueTargets["max_user_request_bytes"].Target != 2048 {
-			t.Fatalf("max_user_request_bytes target = %v", target.ValueTargets["max_user_request_bytes"])
+		for name, value := range contract.values {
+			if target.ValueTargets[name].Target != value {
+				t.Fatalf("%s %s target = %v, want %d", target.ID, name, target.ValueTargets[name], value)
+			}
 		}
 	}
 }
@@ -369,6 +433,30 @@ func TestPatchDryRunWritesNothing(t *testing.T) {
 	}
 	if result.(map[string]any)["binary_sha256_after"] != admOutputSHA(t, fixture) {
 		t.Fatalf("dry run output hash = %v", result.(map[string]any)["binary_sha256_after"])
+	}
+	promptPath := filepath.Join(root, "custom-summary.txt")
+	if err := os.WriteFile(promptPath, []byte("好\r\nKeep corrections."), 0600); err != nil {
+		t.Fatal(err)
+	}
+	_, code, err = RunWithNative(root, nil, []string{"patch", "--binary", binary, "--prompt-mode", "custom", "--prompt-file", promptPath}, func(request lspatch.Request) (map[string]any, bool, error) {
+		if request.Apply || request.Desired.CompactionPrompt == nil || *request.Desired.CompactionPrompt != (lspatch.CompactionPrompt{Mode: "custom", Text: "好\r\nKeep corrections."}) {
+			t.Fatalf("custom UTF-8 file changed during preview: %+v", request)
+		}
+		return map[string]any{"dry_run": true}, true, nil
+	})
+	if code != 0 || err != nil {
+		t.Fatalf("custom prompt preview: %d %v", code, err)
+	}
+	for _, sample := range []struct {
+		args    []string
+		message string
+	}{
+		{[]string{"--prompt", "must not be ignored"}, "require --prompt-mode custom"},
+		{[]string{"--prompt-mode", "custom", "--prompt", "text", "--prompt-file", promptPath}, "only one of --prompt or --prompt-file"},
+	} {
+		if _, code, err := Run(root, nil, append([]string{"patch", "--binary", binary}, sample.args...)); code == 0 || err == nil || !strings.Contains(err.Error(), sample.message) {
+			t.Fatalf("ambiguous prompt selection was accepted: %d %v", code, err)
+		}
 	}
 	if _, err = os.Stat(filepath.Join(home, "backups")); !os.IsNotExist(err) {
 		t.Fatalf("dry run created tool state: %v", err)

@@ -166,14 +166,22 @@ func (e Engine) inspect(binary string) (inspection, error) {
 				if baseSHA != spec.BaseSHA {
 					return v, errors.New("legacy native proof base source changed")
 				}
-				out, err := Build(base, spec, proof.Config, proof.Recipes)
+				proofLayout := proof.Layout
+				if proofLayout == nil {
+					proofLayout = layoutRefs(spec)
+				}
+				previousLayout, err := recordedLayout(spec, proofLayout)
+				if err != nil {
+					return v, err
+				}
+				out, err := Build(base, previousLayout, proof.Config, proof.Recipes)
 				if err != nil {
 					return v, err
 				}
 				if !bytes.Equal(current, out) {
 					return v, errors.New("legacy native proof does not reproduce the complete current file")
 				}
-				v.state = State{Schema: 1, Target: key, TargetID: spec.ID, BaseSHA: spec.BaseSHA, BasePath: proof.BasePath, Features: proof.Config, Recipes: proof.Recipes, Layout: layoutRefs(spec), CurrentSHA: sha}
+				v.state = State{Schema: 1, Target: key, TargetID: spec.ID, BaseSHA: spec.BaseSHA, BasePath: proof.BasePath, Features: proof.Config, Recipes: proof.Recipes, Layout: proofLayout, CurrentSHA: sha}
 				v.spec, v.base, v.legacy = spec, base, true
 				return v, nil
 			}
@@ -197,9 +205,18 @@ func (e Engine) report(binary string, v inspection) map[string]any {
 	} else if v.state.Generation == 0 {
 		fileState = "original"
 	}
-	return map[string]any{"binary": binary, "target_id": v.spec.ID, "identity_gate": "whole-file-sha256", "verified": true, "file_state": fileState, "base_sha256": v.state.BaseSHA, "base_binary_path": v.state.BasePath, "current_sha256": v.state.CurrentSHA, "binary_sha256": v.state.CurrentSHA, "generation": v.state.Generation, "assets_fingerprint": e.AssetsFingerprint, "features": v.state.Features, "recipes": v.state.Recipes, "layout_recipes": v.state.Layout, "disk_patch_equals_loaded": false,
+	features := v.state.Features
+	if features.Compaction && features.CompactionPrompt == nil && v.spec.BuildCompaction != nil && v.state.Recipes["compaction"] == v.spec.Compaction.Ref {
+		features.CompactionPrompt = &CompactionPrompt{Mode: "native"}
+	}
+	result := map[string]any{"binary": binary, "target_id": v.spec.ID, "identity_gate": "whole-file-sha256", "verified": true, "file_state": fileState, "base_sha256": v.state.BaseSHA, "base_binary_path": v.state.BasePath, "current_sha256": v.state.CurrentSHA, "binary_sha256": v.state.CurrentSHA, "generation": v.state.Generation, "assets_fingerprint": e.AssetsFingerprint, "features": features, "recipes": v.state.Recipes, "layout_recipes": v.state.Layout, "disk_patch_equals_loaded": false,
 		"recipe_update_required": recipeUpdateRequired(v.spec, v.state),
 		"available":              map[string]bool{"limit": v.spec.Limit != nil, "tool_output": v.spec.ToolOutput != nil, "compaction": v.spec.Compaction != nil}}
+	if v.spec.BuildCompaction != nil {
+		result["compaction_prompt_max_bytes"] = v.spec.CompactionPromptMaxBytes
+		result["compaction_retention_budget_bytes"] = CompactionRetentionBudgetBytes
+	}
+	return result
 }
 
 func (e Engine) Status(binary string) (map[string]any, error) {

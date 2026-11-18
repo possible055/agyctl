@@ -199,6 +199,24 @@ func nativeEngine(root string, snapshot *assets.Snapshot) (lspatch.Engine, error
 			if compactionInput != nil {
 				compactionRecipe := compaction.NativeRecipe(compactionTarget, compactionInput)
 				spec.Compaction = &compactionRecipe
+				if compactionInput.Prompt != nil {
+					spec.CompactionPromptMaxBytes = compactionInput.Prompt.MaxBytes
+					promptTarget := compactionTarget
+					promptInputs := map[lspatch.RecipeRef]*compaction.InputState{compactionRecipe.Ref: compactionInput}
+					for hi := range compactionTarget.HistoricalInputs {
+						historical := &compactionTarget.HistoricalInputs[hi]
+						if historical.Input == compactionInput.Input && historical.BinarySHA == input.BinarySHA && historical.Prompt != nil {
+							promptInputs[compaction.NativeRecipe(compactionTarget, historical).Ref] = historical
+						}
+					}
+					spec.BuildCompaction = func(base []byte, prompt lspatch.CompactionPrompt, ref lspatch.RecipeRef) (lspatch.Contribution, error) {
+						promptInput := promptInputs[ref]
+						if promptInput == nil {
+							return lspatch.Contribution{}, errors.New("compaction prompt template identity is not registered")
+						}
+						return compaction.NativePromptContribution(base, promptTarget, promptInput, prompt, ref)
+					}
+				}
 				for hi := range compactionTarget.HistoricalInputs {
 					historical := &compactionTarget.HistoricalInputs[hi]
 					if historical.Input == compactionInput.Input && historical.BinarySHA == input.BinarySHA {

@@ -26,15 +26,17 @@ type LimitConfig struct {
 }
 
 type Config struct {
-	Limit      LimitConfig `json:"limit"`
-	ToolOutput bool        `json:"tool_output"`
-	Compaction bool        `json:"compaction"`
+	Limit            LimitConfig       `json:"limit"`
+	ToolOutput       bool              `json:"tool_output"`
+	Compaction       bool              `json:"compaction"`
+	CompactionPrompt *CompactionPrompt `json:"compaction_prompt,omitempty"`
 }
 
 type Desired struct {
-	Limit      *LimitConfig `json:"limit,omitempty"`
-	ToolOutput *bool        `json:"tool_output,omitempty"`
-	Compaction *bool        `json:"compaction,omitempty"`
+	Limit            *LimitConfig      `json:"limit,omitempty"`
+	ToolOutput       *bool             `json:"tool_output,omitempty"`
+	Compaction       *bool             `json:"compaction,omitempty"`
+	CompactionPrompt *CompactionPrompt `json:"compaction_prompt,omitempty"`
 }
 
 func EmptyConfig() Config { return Config{Limit: LimitConfig{ModelLimits: []ModelLimit{}}} }
@@ -54,10 +56,28 @@ func (d Desired) Merge(current Config) (Config, error) {
 	if d.Compaction != nil {
 		current.Compaction = *d.Compaction
 	}
+	if d.CompactionPrompt != nil {
+		prompt := *d.CompactionPrompt
+		current.CompactionPrompt = &prompt
+	}
+	if !current.Compaction {
+		if d.CompactionPrompt != nil {
+			return Config{}, errors.New("compaction_prompt requires enabled compaction")
+		}
+		current.CompactionPrompt = nil
+	}
 	return current, current.Validate()
 }
 
 func (c Config) Validate() error {
+	if c.CompactionPrompt != nil {
+		if !c.Compaction {
+			return errors.New("compaction_prompt requires enabled compaction")
+		}
+		if err := c.CompactionPrompt.Validate(); err != nil {
+			return err
+		}
+	}
 	if c.Limit.ModelLimits == nil {
 		return errors.New("limit.model_limits must be an array")
 	}
@@ -173,6 +193,12 @@ func ParseDesired(data []byte) (Desired, error) {
 				return desired, err
 			}
 			desired.Compaction = &enabled
+		case "compaction_prompt":
+			prompt, err := parseCompactionPrompt(value)
+			if err != nil {
+				return desired, err
+			}
+			desired.CompactionPrompt = prompt
 		default:
 			return desired, fmt.Errorf("unknown desired member %q", key)
 		}
@@ -181,6 +207,9 @@ func ParseDesired(data []byte) (Desired, error) {
 	config := EmptyConfig()
 	if desired.Limit != nil {
 		config.Limit = *desired.Limit
+	}
+	if desired.CompactionPrompt != nil && desired.Compaction != nil && !*desired.Compaction {
+		return desired, errors.New("compaction_prompt requires enabled compaction")
 	}
 	return desired, config.Validate()
 }
@@ -227,6 +256,8 @@ type Spec struct {
 	Size                                       int
 	ToolOutput, Compaction                     *Contribution
 	HistoricalToolOutput, HistoricalCompaction []Contribution
+	BuildCompaction                            func([]byte, CompactionPrompt, RecipeRef) (Contribution, error)
+	CompactionPromptMaxBytes                   int
 	Limit                                      func([]byte, LimitConfig, []Span, RecipeRef) (Contribution, error)
 	LimitRef                                   RecipeRef
 	LegacyLimitRefs                            []RecipeRef
@@ -236,6 +267,7 @@ type Spec struct {
 type Legacy struct {
 	Config   Config
 	Recipes  map[string]RecipeRef
+	Layout   map[string]RecipeRef
 	BasePath string
 }
 

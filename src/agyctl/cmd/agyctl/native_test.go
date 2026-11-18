@@ -324,6 +324,85 @@ func TestNativeHistoricalRecipeMigration(t *testing.T) {
 	}
 }
 
+func TestNativeHistoricalPromptRecipeMigration(t *testing.T) {
+	for _, prompt := range []lspatch.CompactionPrompt{{Mode: "native"}, {Mode: "custom", Text: "界"}} {
+		t.Run(prompt.Mode, func(t *testing.T) {
+			root, binary, base := nativeRuntimeFixture(t)
+			registry, err := compaction.LoadRegistry(root, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			target := &registry.Targets[0]
+			input := &target.Inputs[0]
+			at := len(base) - 8
+			segment := func(name, role string, offset, length int) compaction.Segment {
+				original := hex.EncodeToString(base[offset : offset+length])
+				return compaction.Segment{Name: name, Role: role, Offset: int64(offset), ExpectedHex: original, NewHex: original}
+			}
+			input.Segments = []compaction.Segment{segment("body", "prompt", at, 3), segment("length", "prompt", at+3, 4), segment("capacity", "capacity", at+7, 1)}
+			input.Segments[2].NewHex = hex.EncodeToString([]byte{base[at+7] ^ 1})
+			input.Prompt = &compaction.PromptRecipe{BodySegment: "body", MaxBytes: 3, Segments: append([]compaction.Segment(nil), input.Segments[:2]...), LengthFields: []compaction.PromptLengthField{{Segment: "length", Offset: 0, ExpectedHex: "03000000"}}}
+			input.Prompt.Segments[0].NewHex = "202020"
+			input.Prompt.Segments[1].NewHex = "03000000"
+			output := bytes.Clone(base)
+			output[at+7] ^= 1
+			input.OutputSHA = fsx.SHA256(output)
+			load := func() lspatch.Engine {
+				t.Helper()
+				data, marshalErr := json.Marshal(registry)
+				if marshalErr != nil {
+					t.Fatal(marshalErr)
+				}
+				if writeErr := os.WriteFile(filepath.Join(root, "compat", "compaction.json"), data, 0600); writeErr != nil {
+					t.Fatal(writeErr)
+				}
+				snapshot, captureErr := assets.Capture(root, "native")
+				if captureErr != nil {
+					t.Fatal(captureErr)
+				}
+				engine, engineErr := nativeEngine(root, snapshot)
+				if engineErr != nil {
+					t.Fatal(engineErr)
+				}
+				engine.RequireStopped = func(string) error { return nil }
+				return engine
+			}
+			old := load()
+			enabled := true
+			desired := lspatch.Desired{Compaction: &enabled, CompactionPrompt: &prompt}
+			plan, err := old.Plan(binary, desired)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := old.Apply(binary, desired, plan.Expected, "native"); err != nil {
+				t.Fatal(err)
+			}
+			historical := *input
+			historical.Segments = append([]compaction.Segment(nil), input.Segments...)
+			target.HistoricalInputs = []compaction.InputState{historical}
+			input.Segments[2].NewHex = hex.EncodeToString([]byte{base[at+7] ^ 2})
+			output[at+7] = base[at+7] ^ 2
+			input.OutputSHA = fsx.SHA256(output)
+			current := load()
+			status, err := current.Status(binary)
+			if err != nil || status["verified"] != true || status["recipe_update_required"] != true {
+				t.Fatalf("historical prompt image cannot be reconstructed: %v %v", status, err)
+			}
+			plan, err = current.Plan(binary, lspatch.Desired{})
+			if err != nil || !reflect.DeepEqual(plan.Desired.CompactionPrompt, &prompt) {
+				t.Fatalf("migration lost the exact prompt selection: %+v %v", plan, err)
+			}
+			result, err := current.Apply(binary, lspatch.Desired{}, plan.Expected, "native")
+			if err != nil || result["generation"] != uint64(2) || result["recipe_update_required"] != false {
+				t.Fatalf("historical prompt migration failed: %v %v", result, err)
+			}
+			if _, err := current.Status(binary); err != nil {
+				t.Fatalf("migrated prompt image does not reconstruct: %v", err)
+			}
+		})
+	}
+}
+
 func TestDiscoveredLimitTargetUsesTheSharedNativeSnapshot(t *testing.T) {
 	root, _, base := nativeRuntimeFixture(t)
 	install := filepath.Join(root, "install")

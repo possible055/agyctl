@@ -38,31 +38,17 @@ node -e "for(const p of require('./compat/localization/profiles.json').profiles)
   and validated against the installed original LS without conflicts; native
   adapter anchors were unique and all transformed members parsed. Three-locale
   Electron DOM fixtures cover SSH/MCP controls and content-string collisions.
-  This offline check made no installed-file changes or SSH connections.
-- **Live, partial, recorded 2026-11-16 on Windows 2.32.1:** reviewed Host
-  transactions installed each locale and retained the capsule. After restarting
-  the installed client for each locale, the real SSH config-file picker title and
-  the native invalid-host response used the selected translation. The picker was
-  canceled without selecting a file; the invalid input was rejected before any
-  SSH connection. The Hub DOM engine and input capsule were present in all three
-  runs. The selected locale was restored to `zh-Hant-TW` afterwards. This does not
-  qualify successful remote connections, authentication dialogs, or every MCP
-  error state.
+- **Live, partial, recorded 2026-11-16 on Windows 2.32.1:** for each locale,
+  reviewed Host transactions installed the localization alongside the capsule, and
+  after a restart the SSH config-file picker title and the native invalid-host
+  error were translated; the Hub DOM engine and capsule were present. No SSH
+  connection was made, so successful remote connections, authentication dialogs,
+  and every MCP error state are not qualified.
 - **Manual, recorded 2026-11-14 on Windows x86-64 Antigravity 2.31.0:** translated
   quit confirmation, workspace picker, and zero-agent tray menus in all three
   locales.
 - **Unverified:** broader UI coverage, startup and foreground performance, and the
   engine's incremental memory cost. No profile is promoted by these observations.
-
-For the 2.32.1 profile, `nativeImageBinding` permits preparation from the native
-coordinator's verified original image. Preparation independently compares every
-localization asset, archive identity, and NLS helper with the installed managed
-image. Identical assets reuse the same artifact even when L/T/C bytes change.
-The reviewed Host plan still binds the current full native SHA, original SHA,
-generation, and recipe-assets fingerprint separately; changes after review
-require preparing again. Legacy profiles keep their original whole-LS binding.
-See [management](../scripts/lib/management.mjs) and
-[revision binding](../scripts/lib/native-binding.mjs).
 
 ### Catalogs and validation
 
@@ -101,7 +87,7 @@ the project-added Hub bootstrap is not an upstream localization API.
 | Selection | `select` writes a per-installation selection record; `status` reports it with the last-known runtime snapshot. Neither installs the Host bridge | [cli.ts](../src/localization/cli.ts) |
 | Host composition | A reviewed plan binds target, payloads, and observed source. It requires an existing profile; probe-only status and identity drift warn. Executable/fuse qualification and unique adapter anchors gate writes | [feature.ts](../src/localization/host/feature.ts), [compose.ts](../src/host/compose.ts) |
 | Runtime delivery | A unique `win.loadURL` anchor in `dist/utils.js` calls `loadLocalizedURL`. The archive pins only the state root and installation id (`runtime-config.json` schemaVersion 2); each launch verifies the selection and artifact, so re-selection applies on the next launch without re-patching. Events persist to JSONL plus `runtime-status.json` | [host.ts](../src/localization/runtime/host.ts), [startup.ts](../src/localization/runtime/startup.ts) |
-| Hub bootstrap | The preload invokes `agyctl:localization:bootstrap` once per document, with bounded retries while the document is not ready. The Host authorizes the current Hub main frame, its exact registered `https://127.0.0.1[:port]` origin, and the reviewed 2.31.0 manager paths/query keys, checks engine bytes against `engineSha256`, and injects `dom-engine.js` plus `index.json`. English and AST selections skip injection | [preload.ts](../src/localization/runtime/preload.ts), [hub.ts](../src/localization/runtime/hub.ts), [engine.ts](../src/localization/runtime/engine.ts) |
+| Hub bootstrap | The preload invokes `agyctl:localization:bootstrap` once per document, with bounded retries while the document is not ready. The Host authorizes the current Hub main frame, its exact registered `https://127.0.0.1[:port]` origin, and the reviewed 2.31.0 manager paths/query keys (reused by the 2.32.1 profile), checks engine bytes against `engineSha256`, and injects `dom-engine.js` plus `index.json`. English and AST selections skip injection | [preload.ts](../src/localization/runtime/preload.ts), [hub.ts](../src/localization/runtime/hub.ts), [engine.ts](../src/localization/runtime/engine.ts) |
 | Native interface | `native.json` (bound by `manifest.nativeCatalogSha256`) feeds reviewed main-process edits; see [below](#native-interface) | [native-adapters.ts](../src/localization/host/native-adapters.ts), [native.ts](../src/localization/runtime/native.ts) |
 
 Selection alone does not inject the DOM engine or prove activation. A missing
@@ -118,13 +104,16 @@ sample inspection remain available, without bypassing their own asset/structural
 checks. See [profile resolution](../src/localization/host/feature.ts) and
 [CLI source selection](../src/localization/cli.ts).
 
-Per-asset admission alone does not establish native-patch composition. The 2.32.1
-profile additionally uses the verified native image proof and content identity
-described in [verification status](#verification-status), allowing unchanged
-localization assets to reuse an artifact across coordinated L/T/C changes. Legacy
-profiles retain their whole-LS source binding. Reviewed management plans bind the
-observed native revision separately; any change after review requires preparing
-again, even when the artifact itself is reusable. Old plans must not be replayed.
+On 2.32.1 the Language Server may already carry limit, tool-output, or compaction
+patches. The profile's `nativeImageBinding` lets preparation start from the
+[native coordinator's](operations.md#native-feature-composition) verified original
+and compare every localization asset, archive identity, and NLS helper with the
+installed managed image, so an artifact is reused while those assets are unchanged.
+Reviewed Host plans still bind the current native SHA, original SHA, generation, and
+recipe-assets fingerprint; any change after review requires preparing again, and old
+plans must not be replayed. Legacy profiles keep their whole-LS source binding. See
+[management](../scripts/lib/management.mjs) and
+[revision binding](../scripts/lib/native-binding.mjs).
 
 ### Trust boundary and known limits
 

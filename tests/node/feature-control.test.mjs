@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFile, spawnSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import os from 'node:os';
@@ -287,6 +287,32 @@ test('feature selections reject command/path injection and ambiguous model mappi
   assert.equal(validateFeatureApply(desired).compaction, false);
   assert.equal(validateFeatureApply({ ...desired, compaction: true }).compaction, true);
   assert.equal(validateFeatureApply({ ...desired, compaction: null }).compaction, null);
+  assert.equal(validateFeatureApply({ ...desired, compaction: true }).compactionPrompt, null);
+  const { compaction: _compaction, ...preserved } = desired;
+  assert.equal(validateFeatureApply(preserved).compaction, null);
+  assert.equal(validateFeatureApply(preserved).compactionPrompt, null);
+  const custom = { mode: 'custom', text: `${'界'.repeat(1312)}x` };
+  assert.deepEqual(
+    validateFeatureApply({ ...desired, compaction: true, compactionPrompt: custom })
+      .compactionPrompt,
+    custom,
+  );
+  for (const prompt of [
+    { mode: 'native', text: 'ignored' },
+    { mode: 'custom', text: ' \n\t' },
+    { mode: 'custom', text: '\u0085' },
+    { mode: 'custom', text: `${custom.text}x` },
+    { mode: 'custom', text: '\ud800' },
+    { mode: 'custom', text: 'before\0after' },
+    { mode: 'file', text: 'outside.txt' },
+  ])
+    assert.throws(
+      () => validateFeatureApply({ ...desired, compaction: true, compactionPrompt: prompt }),
+      { code: 'INVALID_COMPACTION_PROMPT' },
+    );
+  assert.throws(() => validateFeatureApply({ ...desired, compactionPrompt: custom }), {
+    code: 'INVALID_SELECTION',
+  });
   const existing = [{ id: 1400, limit: 1048576 }];
   const retained = { ...desired, limit: { enabled: true, modelLimits: existing } };
   assert.deepEqual(validateFeatureApply(retained, existing).limit.modelLimits, existing);
@@ -338,6 +364,162 @@ test('production patch actions refuse a host without a UI token', async () => {
     }
     assert.equal(writes, token ? 2 : 0);
   }
+});
+
+test('summary prompt drafts preserve options through native review and verify the applied prompt', async (t) => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'agyctl-prompt-draft-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const target = {
+    asarPath: path.join(directory, 'app.asar'),
+    binaryPath: path.join(directory, 'server'),
+    executablePath: path.join(directory, 'app'),
+    version: 'fixture',
+  };
+  const native = {
+    verified: true,
+    base_sha256: 'a'.repeat(64),
+    current_sha256: 'b'.repeat(64),
+    assets_fingerprint: 'c'.repeat(64),
+    generation: 1,
+    file_state: 'managed-output',
+    features: { compaction: true, compaction_prompt: { mode: 'native', text: '' } },
+    compaction_prompt_max_bytes: 3937,
+    compaction_retention_budget_bytes: 61440,
+  };
+  const rawLimit = { binary_sha256: native.current_sha256, language_server_running: false };
+  const rawCompaction = { binary_sha256: native.current_sha256, file_state: 'managed-output' };
+  const commands = [];
+  const adapter = {
+    defaultStateRoot: () => directory,
+    hostPatchStatus: () => ({
+      currentHash: 'host',
+      unpackedHash: 'unpacked',
+      receipt: null,
+      features: { capsule: false, localization: false },
+    }),
+    clientProcessState: () => ({ state: 'closed' }),
+    ensureClientClosedFor() {},
+  };
+  const source = fs
+    .readFileSync(path.join(root, 'scripts/lib/feature-control.mjs'), 'utf8')
+    .replace(/^import .* from .*;\r?\n/gm, '')
+    .replace(/\bexport /g, '')
+    .replaceAll("await import('./host-patch.mjs')", 'featureAdapter');
+  const api = vm.runInNewContext(
+    `(() => { ${source}; return { readFeatures, queueFeatureApply, preflightFeatureDraft, applyFeatureDraft }; })()`,
+    {
+      fs,
+      path,
+      createHash,
+      randomUUID,
+      Buffer,
+      process,
+      featureAdapter: adapter,
+      repoRoot: root,
+      agyctlHome: () => directory,
+      inspectHostTarget: () => target,
+      findAsarPath: () => target.asarPath,
+      sha256FileCached: () => 'executable',
+      nativeExpectation,
+      assertNativeExpectation,
+      readModelCatalog: async () => ({ status: 'available', models: [] }),
+      normalizeNativeLimitStatus: () => ({
+        binarySha256: native.current_sha256,
+        patchKind: 'original',
+        modelLimits: [],
+        savedModelLimits: [],
+        settingsState: 'absent',
+      }),
+      runAgyctlAsync: async ([feature]) =>
+        feature === 'native' ? native : feature === 'limit' ? rawLimit : rawCompaction,
+      runAgyctl: (args) => {
+        if (args[0] === 'limit') return rawLimit;
+        commands.push(args);
+        return { expected: nativeExpectation(native) };
+      },
+    },
+  );
+  const first = await api.readFeatures();
+  const desired = {
+    ...selection(),
+    revision: first.revision,
+    compaction: true,
+    compactionPrompt: {
+      mode: 'custom',
+      text: 'Keep the newest user requests.\n"$(not a shell command)"',
+    },
+    limit: { enabled: false, modelLimits: [] },
+  };
+  const queued = await api.queueFeatureApply(desired);
+  const saved = JSON.parse(
+    fs.readFileSync(path.join(directory, 'management/drafts', `${queued.draft.id}.json`), 'utf8'),
+  );
+  assert.deepEqual(saved.desired.compactionPrompt, desired.compactionPrompt);
+  await api.preflightFeatureDraft(queued.draft.id);
+  assert.deepEqual(JSON.parse(commands.at(-1)[commands.at(-1).indexOf('--desired') + 1]), {
+    compaction: true,
+    compaction_prompt: desired.compactionPrompt,
+  });
+  native.features.compaction_prompt = { ...desired.compactionPrompt };
+  const updated = await api.readFeatures();
+  assert.notEqual(updated.revision, first.revision);
+  await assert.rejects(api.preflightFeatureDraft(queued.draft.id), { code: 'REVISION_CHANGED' });
+  commands.length = 0;
+  const unchanged = await api.queueFeatureApply({ ...desired, revision: updated.revision });
+  await api.preflightFeatureDraft(unchanged.draft.id);
+  assert.deepEqual(commands, []);
+  const disabled = await api.queueFeatureApply({
+    ...desired,
+    revision: updated.revision,
+    compaction: false,
+    compactionPrompt: null,
+  });
+  await api.preflightFeatureDraft(disabled.draft.id);
+  assert.deepEqual(JSON.parse(commands.at(-1)[commands.at(-1).indexOf('--desired') + 1]), {
+    compaction: false,
+  });
+  const nativeDraft = await api.queueFeatureApply({
+    ...desired,
+    revision: updated.revision,
+    compactionPrompt: { mode: 'native', text: '' },
+  });
+  await assert.rejects(api.applyFeatureDraft(nativeDraft.draft.id), { code: 'VERIFY_FAILED' });
+  assert.deepEqual(JSON.parse(commands.at(-1)[commands.at(-1).indexOf('--desired') + 1]), {
+    compaction: true,
+    compaction_prompt: { mode: 'native', text: '' },
+  });
+  native.verified = false;
+  delete native.compaction_prompt_max_bytes;
+  delete native.compaction_retention_budget_bytes;
+  commands.length = 0;
+  const legacy = await api.readFeatures();
+  assert.equal(legacy.features.compaction.enabled, true);
+  assert.equal(legacy.features.compaction.prompt, null);
+  for (const option of [{ compactionPrompt: null }, {}]) {
+    const preserved = await api.queueFeatureApply({
+      ...selection(),
+      revision: legacy.revision,
+      limit: { enabled: false, modelLimits: [] },
+      compaction: true,
+      ...option,
+    });
+    await api.preflightFeatureDraft(preserved.draft.id);
+    assert.deepEqual(commands, []);
+  }
+  rawCompaction.file_state = 'registered-input';
+  const original = await api.readFeatures();
+  const enabling = await api.queueFeatureApply({
+    ...selection(),
+    revision: original.revision,
+    limit: { enabled: false, modelLimits: [] },
+    compaction: true,
+    compactionPrompt: null,
+  });
+  await api.preflightFeatureDraft(enabling.draft.id);
+  assert.deepEqual(
+    commands.map((args) => Array.from(args)),
+    [['compaction', 'patch', '--binary', target.binaryPath]],
+  );
 });
 
 test('feature drafts bind revisions, refuse a running client, and apply/restore actual model limits', async (t) => {
@@ -441,6 +623,9 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
     enabled: null,
     fileState: 'unknown',
     pending: false,
+    prompt: null,
+    promptMaxBytes: null,
+    retentionBudgetBytes: null,
   });
   assert.equal(first.operation, null);
   assert.equal(first.draft, null);
@@ -487,6 +672,17 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
   assert.equal(queued.operation, null);
   assert.equal(typeof queued.draft.id, 'string');
   assert.match(queued.draft.commands.apply, /settings:apply -- --draft /);
+  const savedDraft = JSON.parse(
+    fs.readFileSync(path.join(state, 'management/drafts', `${queued.draft.id}.json`), 'utf8'),
+  );
+  assert.equal(savedDraft.desired.compaction, null);
+  assert.equal(savedDraft.desired.compactionPrompt, null);
+  const unsupportedCustom = await run('queue', {
+    ...desired,
+    compaction: true,
+    compactionPrompt: { mode: 'custom', text: 'Keep the recent requests.' },
+  });
+  assert.equal(unsupportedCustom.code, 'COMPACTION_UNAVAILABLE');
   const operations = path.join(state, 'management/features');
   const staleOperationPath = path.join(operations, fs.readdirSync(operations)[0], 'state.json');
   const staleOperation = JSON.stringify({

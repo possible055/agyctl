@@ -4,22 +4,34 @@ This page owns the `agyctl tool-output` feature: the registered capacity recipe 
 native tool outputs, its build-specific evidence, and its modification boundary.
 Commands and recovery are in
 [operations](operations.md#tool-output-capacity-patch); component boundaries are in
-[architecture](architecture.md#limit-admission-and-recovery). The feature is
-independent of the context-limit patch (`agyctl limit`), documented in
-[limit-patch.md](limit-patch.md).
+[architecture](architecture.md#language-server-patch-admission). It is a separate
+feature from the context-limit patch ([limit-patch.md](limit-patch.md)); on 2.32.1
+both are combined by [native composition](operations.md#native-feature-composition).
 
 ## Status
 
-The recipe is qualified as `candidate` in
+Both registered recipes (Windows 2.32.1 and 2.31.2) are `candidate` in
 [tool-output.json](../compat/tool-output.json). The capacity values are
-qualification targets, **not** measured upstream maxima; partial live validation
-exists for the two `viewFile` targets on Windows 2.31.2 and Windows 2.32.1 (see
-[Qualification status](#qualification-status)) and the remaining matrix items are
-still unverified.
+qualification targets, **not** measured upstream maxima. The two file-read targets
+(lines and bytes) are live-verified on both builds; the grep result cap has no
+observed live path, and the remaining items are listed under
+[qualification status](#qualification-status).
 
-## Registered build
+## Registered builds
 
-The legacy recipe targets **Antigravity App Windows 2.31.2,
+The **Windows 2.32.1** recipe targets package member
+`resources/bin/language_server.exe`, 215,547,392 bytes:
+
+| State | Whole-file SHA-256 |
+| --- | --- |
+| Original | `65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f` |
+| Standalone output | `a53f6fcc14e73fa4117acbcf70bf4c1b4497731d9b72db9ca03284b21b82dea0` |
+
+It admits only the original and changes the three capacity operands plus the
+post-merge floor. It contains none of the 2.31.2 grep transforms and does not accept
+a grep-patched baseline.
+
+The **Windows 2.31.2** recipe targets **Antigravity App Windows 2.31.2,
 `windows-amd64`**, package member `resources/bin/language_server.exe`, 197,992,960
 bytes. Only the registered whole-file inputs for this Windows x86-64 recipe are
 admitted; a close version number or successful install discovery never admits a
@@ -38,18 +50,6 @@ the grep-patched baseline preserves those fixes and changes only the capacity
 bytes. Output equality across both inputs is part of the registry self-check that
 every `patch` plan reproduces before it may write.
 
-The **Windows 2.32.1** recipe targets the same package member, 215,547,392 bytes:
-
-| State | Whole-file SHA-256 |
-| --- | --- |
-| Original | `65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f` |
-| Candidate output | `a53f6fcc14e73fa4117acbcf70bf4c1b4497731d9b72db9ca03284b21b82dea0` |
-
-It admits only the original and changes the three capacity operands plus the
-post-merge floor. It does not include the seven legacy grep transforms or accept
-the old grep-patched baseline. The old recipes and their restore fingerprints
-remain registered unchanged.
-
 ## Capacity targets
 
 | Setting | Source value | Target | Layer |
@@ -59,7 +59,8 @@ remain registered unchanged.
 | `CascadeConfig.plannerConfig.toolConfig.grep.maxGrepResults` | 50 | 100 | base default constant |
 | Post-merge step budget floor (`trajectoryConversionConfig.maxTokensPerStep`) | 32,768 | 98,304 | after manager static/dynamic settings merge |
 
-Why these layers (from isolated probes on Windows 2.31.2, recorded
+The source values are unchanged in 2.32.1. Why these layers (from isolated probes on
+Windows 2.31.2, recorded
 2026-11-14, with no installed-file changes):
 
 - **Base constants:** with no settings overriding a field, the effective merged
@@ -93,6 +94,8 @@ Out of scope for this recipe:
   config constructor belongs to `find` and stays at 50.
 
 ## Recipe segments
+
+### Windows 2.31.2
 
 [tool-output.json](../compat/tool-output.json) records, per input state, every
 segment's file offset, expected bytes, and new bytes. The three base-default
@@ -128,16 +131,15 @@ On the grep-patched input, the seven grep segments carry `role: "preserve"`
 (expected bytes equal new bytes, which proves the fixes are present). The floor
 segment transforms the recorded patched bytes to the 98,304 variant.
 
-### Reproducing the static checks
-
-All checks read file bytes only; extracted installer content is never executed.
+To reproduce the 2.31.2 static checks (all read file bytes only; extracted
+installer content is never executed):
 
 1. Confirm the whole-file SHA-256 of both recorded binaries. The external patch
    manifest (SHA-256 recorded under `evidence` in the registry) must match: every
    declared original byte sequence matches the original binary, every patched
    sequence matches the patched binary at the declared offsets, and there are no
    differences outside the declared segments.
-2. Derive file offsets from virtual addresses using image base `0x140000000`,
+2. Derive file offsets from virtual addresses using the 2.31.2 image base `0x140000000`,
    `.text` RVA `0x1000`, and raw pointer `0x600`, that is,
    `file offset = VA − 0x140000a00` inside `.text`. Re-derive the immediate
    encodings with any x86-64 disassembler rather than trusting the table above.
@@ -147,10 +149,10 @@ All checks read file bytes only; extracted installer content is never executed.
 The external report and patch manifest live outside this repository; their SHA-256
 values are in the registry's `evidence` block.
 
-### Windows 2.32.1 static evidence
+### Windows 2.32.1
 
-Recorded 2026-11-16 from the installed original; no client file was changed.
-The package member is `resources/bin/language_server.exe`. Read the segment
+Recorded 2026-11-16 from the installed original
+`resources/bin/language_server.exe`, read-only. Read the segment
 preimages and replacements from the 2.32.1 target in
 [tool-output.json](../compat/tool-output.json).
 
@@ -178,10 +180,10 @@ the PE section table, disassemble the registered preimage and replacement, and
 decode the function's pcsp, pcdata, and locals/args stack-map entries. Check all
 direct branch destinations, not only the replacement's byte length.
 
-The old `CortexToolAdapter` bridge is absent in this build. The presence of these
-config operands alone did not prove reachability. The later live check below
-confirmed `read_file` routing and model-visible capacity; it does not qualify
-search or MCP paths.
+The old `CortexToolAdapter` bridge is absent in this build, so the operands alone
+did not prove reachability; the live check under
+[qualification status](#qualification-status) confirmed `read_file` routing and
+model-visible capacity, not search or MCP paths.
 
 ## Admission gate and coexistence with limit
 
@@ -258,27 +260,25 @@ model receives the new capacity; `status` reports disk state only.
   - Non-target regression: the edit tool and `run_command` were unchanged (the
     `run_command` preview keeps head and tail with a middle-elision notice and
     points at the full output file; that is upstream behavior).
-- **Live, partial (2026-11-16, stable-channel Windows 2.32.1):** the installed
-  Language Server was restarted after applying the native L+T image. Only a newly
-  created synthetic conversation and synthetic files were inspected. The exposed
-  tool is `read_file`, and its stored step is `VIEW_FILE`; removal of the old
-  `CortexToolAdapter` does not make this capacity path unreachable.
-  - Before T, one request for a 1,200-line file ended at line 800. After T, the
-    same request returned all 1,200 lines. A separate 2,200-line file ended at
-    line 2,000, as requested by the recipe.
+- **Live, partial (2026-11-16, stable-channel Windows 2.32.1):** applied as part of
+  a native limit + tool-output image, then the Language Server was restarted and a
+  new synthetic conversation read synthetic files. The exposed tool is `read_file`,
+  stored as a `VIEW_FILE` step.
+  - A 1,200-line file read ended at line 800 before the patch and returned all
+    1,200 lines after it. A 2,200-line file ended at line 2,000.
   - A 172,500-byte UTF-8 file produced a 131,072-byte content window, plus the
     upstream 321-byte timestamp and continuation framing. The result contained
     no U+FFFD. `GetCascadeTrajectoryGeneratorMetadata(includeMessages:true)` on
     that synthetic conversation showed the same 131,393-byte tool message;
     the next conversion layer did not cut it back to the old capacity. The
     2,000-line result likewise reached the model as a 36,999-byte tool message.
-  - The context limit remained 500,000 during these checks. TW localization and
-    the input capsule were active after the same restart. This does not qualify
-    other model routes, MCP tools, or the legacy grep constructor.
+  - This does not qualify other model routes, MCP tools, or the legacy grep
+    constructor.
 
-**Not applicable on this build:** the running engine's toolset does not expose the
+**Not applicable on 2.31.2:** the running engine's toolset does not expose the
 legacy `grep_search` tool, so `grep.maxGrepResults=100` has no live execution path;
-the value is a patched constant with no observed effect.
+the value is a patched constant with no observed effect. No legacy grep path was
+observed on 2.32.1 either.
 
 **Still unverified** (all must pass before the recipe can be marked `supported`):
 MCP multi-block output, the background-output branch, `perTool` values (never

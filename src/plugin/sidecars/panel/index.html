@@ -119,11 +119,12 @@
     .empty { color: var(--muted-foreground); font-size: 12px; padding: 10px 2px; }
 
     .search { flex: 1; min-width: 140px; }
-    input[type="text"], input[type="number"], input[type="search"], select {
+    input[type="text"], input[type="number"], input[type="search"], select, textarea {
       width: 100%; min-width: 0; padding: 6px 10px; border-radius: var(--radius-md);
       border: 1px solid var(--border); background: var(--background);
     }
     select { width: auto; }
+    textarea { resize: vertical; min-height: 120px; font: 12px/1.5 var(--font-mono); }
 
     .group { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
     .group > * + * { border-top: 1px solid var(--border); }
@@ -339,8 +340,15 @@
             </details>
           </div>
           <div class="row">
-            <label class="feature-switch"><input id="feature-compaction" type="checkbox" disabled><span data-i18n="featureCompaction">壓縮摘要改善</span></label>
+            <label class="feature-switch"><input id="feature-compaction" type="checkbox" disabled><span data-i18n="featureCompaction">壓縮與原文保留補丁</span></label>
             <span id="feature-compaction-state" class="muted small" role="status"></span>
+          </div>
+          <div class="row stacked" id="feature-compaction-options">
+            <label class="field"><span data-i18n="featureCompactionPrompt">摘要提示詞</span><select id="feature-compaction-mode" disabled><option value="native" data-i18n="featureCompactionNative">原生</option><option id="feature-compaction-custom-option" value="custom" data-i18n="featureCompactionCustom">自訂</option></select></label>
+            <p class="muted small" id="feature-compaction-prompt-state" role="status"></p>
+            <label class="field" id="feature-compaction-editor" hidden><span data-i18n="featureCompactionCustomText">自訂摘要提示詞</span><textarea id="feature-compaction-text" disabled spellcheck="false"></textarea></label>
+            <span class="muted small" id="feature-compaction-bytes" role="status" hidden></span>
+            <p class="error" id="feature-compaction-error" role="status"></p>
           </div>
           <div class="row stacked">
             <div class="actions"><button type="submit" class="button primary" id="btn-apply-features" disabled data-i18n="featureApply">儲存設定</button><button type="button" class="button compact" id="btn-reload-features" data-i18n="featureReload">重新讀取</button><button type="button" class="button compact" id="btn-cancel-features" hidden data-i18n="cancel">取消</button><span class="muted small" id="feature-status" role="status"></span></div>
@@ -396,6 +404,7 @@
       let featureDraftRevision = null;
       let featureRows = [];
       let featureHiddenLimits = [];
+      let featureCompactionText = '';
       let featureDirty = false;
       let featureInFlight = false;
       let featuresStale = true;
@@ -854,14 +863,44 @@
         return ['waiting', 'preparing', 'applying'].includes(featureSnapshot?.operation?.state);
       }
 
+      function compactionPromptSelection() {
+        if ($('feature-compaction').indeterminate || !$('feature-compaction').checked) return null;
+        const max = featureSnapshot?.features.compaction.promptMaxBytes;
+        if (!Number.isInteger(max) || max < 1) return null;
+        return { mode: $('feature-compaction-mode').value, text: $('feature-compaction-mode').value === 'custom' ? featureCompactionText : '' };
+      }
+
+      function compactionPromptError() {
+        const prompt = compactionPromptSelection();
+        if (!prompt || prompt.mode === 'native') return '';
+        const max = featureSnapshot?.features.compaction.promptMaxBytes;
+        if (prompt.mode !== 'custom' || !Number.isInteger(max) || max < 1) return t().featureCompactionUnsupported;
+        if (/^[\s\p{White_Space}]*$/u.test(prompt.text) || !prompt.text.isWellFormed() || prompt.text.includes('\0') || new TextEncoder().encode(prompt.text).length > max) return t().featureCompactionInvalidPrompt(max);
+        return '';
+      }
+
       function updateFeatureControls() {
         const disabled = !featureSnapshot || featureBusy() || featureSubmitting;
         for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-compaction']) $(id).disabled = disabled;
         $('feature-compaction').disabled ||= featureSnapshot?.features.compaction.enabled === null;
         $('feature-compaction-state').textContent = featureSnapshot?.features.compaction.enabled === null ? t().featureCompactionUnknown : '';
+        const promptEnabled = !disabled && !$('feature-compaction').indeterminate && $('feature-compaction').checked;
+        const custom = $('feature-compaction-mode').value === 'custom';
+        const promptMaxBytes = featureSnapshot?.features.compaction.promptMaxBytes;
+        const customSupported = Number.isInteger(promptMaxBytes) && promptMaxBytes > 0;
+        $('feature-compaction-options').hidden = !customSupported;
+        $('feature-compaction-mode').disabled = !promptEnabled || !customSupported;
+        $('feature-compaction-custom-option').disabled = !customSupported;
+        $('feature-compaction-editor').hidden = !custom;
+        $('feature-compaction-text').disabled = !promptEnabled || !custom;
+        $('feature-compaction-bytes').hidden = !custom;
+        $('feature-compaction-bytes').textContent = customSupported ? t().featureCompactionBytes(new TextEncoder().encode(featureCompactionText).length, promptMaxBytes) : '';
+        $('feature-compaction-prompt-state').textContent = featureSnapshot?.features.compaction.enabled === true && !featureSnapshot.features.compaction.prompt ? t().featureCompactionPromptUnknown : '';
+        const promptError = compactionPromptError();
+        $('feature-compaction-error').textContent = promptError;
         $('feature-locale').disabled = disabled || !$('feature-localization').checked;
         $('feature-locale').setAttribute('aria-label', t().featureLocalization);
-        $('btn-apply-features').disabled = disabled || !featureDirty;
+        $('btn-apply-features').disabled = disabled || !featureDirty || !!promptError;
         $('btn-reload-features').disabled = featureInFlight || featureSubmitting || featureBusy();
         const operation = featureSnapshot?.operation;
         $('btn-cancel-features').hidden = !['waiting', 'preparing'].includes(operation?.state);
@@ -929,6 +968,10 @@
         $('feature-limit').checked = snapshot.features.limit.enabled;
         $('feature-compaction').checked = snapshot.features.compaction.enabled === true;
         $('feature-compaction').indeterminate = snapshot.features.compaction.enabled === null;
+        $('feature-compaction-mode').value = snapshot.features.compaction.prompt?.mode || 'native';
+        // A textarea normalizes CRLF/CR even without edits; retain the loaded text separately.
+        featureCompactionText = snapshot.features.compaction.prompt?.text || '';
+        $('feature-compaction-text').value = featureCompactionText;
         const limits = snapshot.features.limit.modelLimits.length
           ? snapshot.features.limit.modelLimits : snapshot.features.limit.savedModelLimits;
         const values = new Map(limits.map(({ id, limit }) => [id, limit]));
@@ -1002,6 +1045,8 @@
             return { id, limit };
           }).sort((a, b) => a.id - b.id);
           if (enabled && (!modelLimits.length || new Set(modelLimits.map(row => row.id)).size !== modelLimits.length)) throw new Error(t().featureInvalidLimits);
+          const promptError = compactionPromptError();
+          if (promptError) return;
           featureSubmitting = true;
           updateFeatureControls();
           const result = await request('/api/features/apply', {
@@ -1009,7 +1054,8 @@
             capsule: $('feature-capsule').checked,
             localization: { enabled: $('feature-localization').checked, locale: $('feature-locale').value },
             limit: { enabled, modelLimits },
-            compaction: $('feature-compaction').indeterminate ? null : $('feature-compaction').checked
+            compaction: $('feature-compaction').indeterminate ? null : $('feature-compaction').checked,
+            compactionPrompt: compactionPromptSelection()
           });
           featureSnapshot.operation = result.operation;
           featureSnapshot.draft = result.draft;
@@ -1092,7 +1138,11 @@
       $('session-sort').addEventListener('change', renderSessions);
       $('setting-lang').addEventListener('change', () => localeBinding.select($('setting-lang').value));
       $('setting-interval').addEventListener('change', () => { void saveInterval(); });
-      for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-locale']) $(id).addEventListener('change', markFeaturesDirty);
+      for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-locale', 'feature-compaction', 'feature-compaction-mode']) $(id).addEventListener('change', markFeaturesDirty);
+      $('feature-compaction-text').addEventListener('input', () => {
+        featureCompactionText = $('feature-compaction-text').value;
+        markFeaturesDirty();
+      });
       $('feature-form').addEventListener('submit', applyFeatures);
       $('btn-reload-features').addEventListener('click', () => { void loadFeatures(true); });
       $('btn-cancel-features').addEventListener('click', async () => {

@@ -69,14 +69,22 @@ try {
                   res.writeHead(403);
                   return res.end('Same-origin JSON action required');
                 }
-                let body = '';
+                const chunks = [];
+                let bodyBytes = 0;
                 for await (const chunk of req) {
-                  body += chunk;
-                  if (Buffer.byteLength(body) > (url.pathname === '/api/pricing' ? 65536 : 16384)) {
+                  chunks.push(chunk);
+                  bodyBytes += chunk.length;
+                  const maxBytes =
+                    url.pathname === '/api/pricing'
+                      ? 65536
+                      : url.pathname === '/api/features/apply'
+                        ? 32768
+                        : 16384;
+                  if (bodyBytes > maxBytes) {
                     throw new Error('Request body too large');
                   }
                 }
-                queryData = JSON.parse(body);
+                queryData = JSON.parse(Buffer.concat(chunks).toString('utf8'));
               }
               const result = await handler(queryData);
               if (result instanceof SidecarResponse) {

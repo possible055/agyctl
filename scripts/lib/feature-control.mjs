@@ -12,6 +12,7 @@ import { assertNativeExpectation, nativeExpectation } from './native-binding.mjs
 
 const activeStates = new Set(['waiting', 'preparing', 'applying']);
 const locales = new Set(['en', 'zh-Hant-TW', 'zh-Hans-CN', 'ja-JP']);
+const COMPACTION_PROMPT_MAX_BYTES = 3937;
 
 function failure(code, message) {
   return Object.assign(new Error(message), { code, safeForPanel: true });
@@ -28,8 +29,12 @@ function exactObject(value, keys) {
 }
 
 function normalizeFeatureApply(payload) {
+  const requiredKeys = ['revision', 'capsule', 'localization', 'limit'];
+  const optionalKeys = ['compaction', 'compactionPrompt'].filter((key) =>
+    Object.hasOwn(payload ?? {}, key),
+  );
   if (
-    !exactObject(payload, ['revision', 'capsule', 'localization', 'limit', 'compaction']) ||
+    !exactObject(payload, [...requiredKeys, ...optionalKeys]) ||
     typeof payload.revision !== 'string' ||
     !/^[a-f0-9]{64}$/.test(payload.revision) ||
     typeof payload.capsule !== 'boolean' ||
@@ -41,9 +46,18 @@ function normalizeFeatureApply(payload) {
     !Array.isArray(payload.limit.modelLimits) ||
     payload.limit.modelLimits.length > 128 ||
     (payload.limit.enabled && payload.limit.modelLimits.length === 0) ||
-    (payload.compaction !== null && typeof payload.compaction !== 'boolean')
+    (Object.hasOwn(payload, 'compaction') &&
+      payload.compaction !== null &&
+      typeof payload.compaction !== 'boolean')
   )
     throw failure('INVALID_SELECTION', 'Check the feature selections and model limits');
+  const compaction = payload.compaction ?? null;
+  let compactionPrompt = payload.compactionPrompt ?? null;
+  if (compactionPrompt !== null) {
+    compactionPrompt = normalizeCompactionPrompt(compactionPrompt);
+    if (compaction !== true)
+      throw failure('INVALID_SELECTION', 'Enable compaction before selecting its summary prompt');
+  }
   const seen = new Set();
   const modelLimits = payload.limit.modelLimits
     .map((row) => {
@@ -67,8 +81,27 @@ function normalizeFeatureApply(payload) {
     capsule: payload.capsule,
     localization: { enabled: payload.localization.enabled, locale: payload.localization.locale },
     limit: { enabled: payload.limit.enabled, modelLimits },
-    compaction: payload.compaction,
+    compaction,
+    compactionPrompt,
   };
+}
+
+function normalizeCompactionPrompt(prompt) {
+  if (
+    !exactObject(prompt, ['mode', 'text']) ||
+    !['native', 'custom'].includes(prompt.mode) ||
+    typeof prompt.text !== 'string' ||
+    !prompt.text.isWellFormed() ||
+    prompt.text.includes('\0') ||
+    (prompt.mode === 'native' && prompt.text !== '') ||
+    (prompt.mode === 'custom' && /^[\s\p{White_Space}]*$/u.test(prompt.text)) ||
+    Buffer.byteLength(prompt.text, 'utf8') > COMPACTION_PROMPT_MAX_BYTES
+  )
+    throw failure(
+      'INVALID_COMPACTION_PROMPT',
+      'Use a non-empty, valid Unicode custom prompt within the UTF-8 byte limit, or an empty native prompt',
+    );
+  return { mode: prompt.mode, text: prompt.text };
 }
 
 export function validateFeatureApply(payload, installedLimits = []) {
@@ -329,6 +362,13 @@ async function snapshot(asarPath) {
         : rawCompaction.file_state === 'registered-input'
           ? false
           : null;
+  const recordedPrompt = nativeBinding
+    ? native.features.compaction_prompt
+    : rawCompaction.compaction_prompt;
+  const compactionPrompt =
+    compactionEnabled === true && recordedPrompt != null
+      ? normalizeCompactionPrompt(recordedPrompt)
+      : null;
   const selection = selectionState(target, adapter);
   if (host.features.localization && !selection.locale)
     throw failure('STATE_UNAVAILABLE', 'Localization has no verified language selection');
@@ -347,6 +387,7 @@ async function snapshot(asarPath) {
     settingsState: limit.settingsState,
     compactionState: rawCompaction.file_state,
     compactionPrepare: rawCompaction.prepare_record ?? null,
+    compactionPrompt,
     native: nativeBinding ?? {
       fileState: native.file_state,
       prepare: native.prepare_record ?? null,
@@ -368,6 +409,13 @@ async function snapshot(asarPath) {
       enabled: compactionEnabled,
       fileState: rawCompaction.file_state,
       pending: compactionPending,
+      prompt: compactionPrompt,
+      promptMaxBytes:
+        native.compaction_prompt_max_bytes ?? rawCompaction.compaction_prompt_max_bytes ?? null,
+      retentionBudgetBytes:
+        native.compaction_retention_budget_bytes ??
+        rawCompaction.compaction_retention_budget_bytes ??
+        null,
     },
   };
   return {
@@ -432,22 +480,41 @@ function limitChanges(desired, current) {
   );
 }
 
-function compactionChanges(desiredEnabled, current) {
-  return desiredEnabled !== null && desiredEnabled !== current.enabled;
+function samePrompt(first, second) {
+  return first?.mode === second?.mode && first?.text === second?.text;
+}
+
+function compactionChanges(desired, current) {
+  return (
+    desired.compaction !== null &&
+    (desired.compaction !== current.enabled ||
+      (desired.compaction &&
+        desired.compactionPrompt !== null &&
+        !samePrompt(desired.compactionPrompt, current.prompt)))
+  );
 }
 
 function validatePatchCombination(desired, features, native) {
   if (
+    desired.compactionPrompt?.mode === 'custom' &&
+    (!Number.isInteger(features.compaction.promptMaxBytes) ||
+      features.compaction.promptMaxBytes < 1 ||
+      Buffer.byteLength(desired.compactionPrompt.text, 'utf8') > features.compaction.promptMaxBytes)
+  )
+    throw failure(
+      'COMPACTION_UNAVAILABLE',
+      'The installed binary has no verified capacity for this custom summary prompt',
+    );
+  if (
     features.compaction.pending &&
-    (limitChanges(desired.limit, features.limit) ||
-      compactionChanges(desired.compaction, features.compaction))
+    (limitChanges(desired.limit, features.limit) || compactionChanges(desired, features.compaction))
   )
     throw failure(
       'COMPACTION_RECOVERY_REQUIRED',
       'Resolve the unfinished compaction operation before trying again',
     );
   if (native.verified) return;
-  if (compactionChanges(desired.compaction, features.compaction)) {
+  if (compactionChanges(desired, features.compaction)) {
     if (desired.limit.enabled || features.limit.enabled)
       throw failure(
         'INVALID_SELECTION',
@@ -462,7 +529,7 @@ function validatePatchCombination(desired, features, native) {
 }
 
 function compactionPreflight(state, desired) {
-  if (!compactionChanges(desired.compaction, state.features.compaction)) return null;
+  if (!compactionChanges(desired, state.features.compaction)) return null;
   if (state.rawCompaction.prepare_record)
     throw failure(
       'COMPACTION_RECOVERY_REQUIRED',
@@ -476,7 +543,13 @@ function compactionPreflight(state, desired) {
     );
   if (desired.compaction) {
     try {
-      const preview = runAgyctl(['compaction', 'patch', '--binary', binary]);
+      const preview = runAgyctl([
+        'compaction',
+        'patch',
+        '--binary',
+        binary,
+        ...compactionPromptArguments(desired),
+      ]);
       return preview.binary_sha256_after;
     } catch (error) {
       if (!error.refusal) throw error;
@@ -583,6 +656,12 @@ function modelArguments(values) {
   return ['--model-limits', values.map(({ id, limit }) => `${id}=${limit}`).join(',')];
 }
 
+function compactionPromptArguments(desired) {
+  if (desired.compactionPrompt === null) return [];
+  const { mode, text } = desired.compactionPrompt;
+  return ['--prompt-mode', mode, ...(mode === 'custom' ? ['--prompt', text] : [])];
+}
+
 function preflightLimits(state, desired) {
   if (!limitChanges(desired, state.features.limit)) return;
   if (state.rawLimit.prepare_record)
@@ -648,8 +727,11 @@ function preflightNative(state, desired) {
       enabled: desired.limit.enabled,
       model_limits: desired.limit.enabled ? desired.limit.modelLimits : [],
     };
-  if (compactionChanges(desired.compaction, state.features.compaction))
+  if (compactionChanges(desired, state.features.compaction)) {
     updates.compaction = desired.compaction;
+    if (desired.compaction && desired.compactionPrompt !== null)
+      updates.compaction_prompt = desired.compactionPrompt;
+  }
   if (!Object.keys(updates).length && !state.native.recipe_update_required) return null;
   const plan = runAgyctl([
     'native',
@@ -864,10 +946,7 @@ async function executePreparedApply(operation, { cleanupSidecars = false } = {})
         ]);
       }
     }
-    if (
-      !state.native.verified &&
-      compactionChanges(desired.compaction, state.features.compaction)
-    ) {
+    if (!state.native.verified && compactionChanges(desired, state.features.compaction)) {
       if (sha256File(state.target.binaryPath) !== state.rawCompaction.binary_sha256)
         throw failure(
           'REVISION_CHANGED',
@@ -880,7 +959,14 @@ async function executePreparedApply(operation, { cleanupSidecars = false } = {})
       }
       if (desired.compaction) {
         log('Applying the compaction summary patch');
-        runAgyctl(['compaction', 'patch', '--binary', state.target.binaryPath, '--apply']);
+        runAgyctl([
+          'compaction',
+          'patch',
+          '--binary',
+          state.target.binaryPath,
+          ...compactionPromptArguments(desired),
+          '--apply',
+        ]);
       }
     }
     const actual = await snapshot(state.target.asarPath);
@@ -894,6 +980,9 @@ async function executePreparedApply(operation, { cleanupSidecars = false } = {})
       (desired.limit.enabled &&
         !sameLimits(actual.features.limit.modelLimits, desired.limit.modelLimits)) ||
       (desired.compaction !== null && actual.features.compaction.enabled !== desired.compaction) ||
+      (desired.compaction === true &&
+        desired.compactionPrompt !== null &&
+        !samePrompt(actual.features.compaction.prompt, desired.compactionPrompt)) ||
       (nativePlan && actual.native.recipe_update_required)
     )
       throw failure('VERIFY_FAILED', 'Some changes did not verify; reload the actual state');

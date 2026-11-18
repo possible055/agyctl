@@ -126,6 +126,15 @@ function panelHarness(view = 'overview', { languages = ['en'] } = {}) {
     getElementById(id) {
       if (!elements.has(id)) {
         const value = element();
+        if (id === 'feature-compaction-text') {
+          let textValue = '';
+          Object.defineProperty(value, 'value', {
+            get: () => textValue,
+            set(text) {
+              textValue = String(text).replace(/\r\n?/g, '\n');
+            },
+          });
+        }
         if (id === 'patch-localization') value.checked = false;
         elements.set(id, value);
       }
@@ -141,6 +150,7 @@ function panelHarness(view = 'overview', { languages = ['en'] } = {}) {
     localStorage: { getItem: (key) => (key === 'agyctl_view' ? view : null), setItem() {} },
     AbortController,
     AbortSignal,
+    TextEncoder,
     console,
     URL,
     URLSearchParams,
@@ -541,6 +551,7 @@ test('feature controls prefill actual settings, preserve edits and queue only th
       ],
     },
     compaction: false,
+    compactionPrompt: null,
   });
   assert.equal(queued.options.headers['X-Agyctl-Action'], '1');
   await panel.respond(queued, { operation: { id: 'job-1', state: 'waiting' } });
@@ -569,6 +580,7 @@ test('feature controls prefill actual settings, preserve edits and queue only th
   assert.equal(panel.getElement('feature-capsule').disabled, false);
   assert.equal(panel.getElement('feature-compaction').indeterminate, true);
   assert.equal(panel.getElement('feature-compaction').disabled, true);
+  assert.equal(panel.getElement('feature-compaction-custom-option').disabled, true);
   assert.equal(
     panel.getElement('feature-compaction-state').textContent,
     'State unknown; left unchanged',
@@ -583,6 +595,7 @@ test('feature controls prefill actual settings, preserve edits and queue only th
   const request = panel.allRequests.at(-1);
   assert.equal(request.url, '/api/features/apply');
   assert.equal(JSON.parse(request.options.body).compaction, null);
+  assert.equal(JSON.parse(request.options.body).compactionPrompt, null);
   assert.deepEqual(
     JSON.parse(request.options.body).limit.modelLimits,
     snapshot.features.limit.modelLimits,
@@ -599,6 +612,121 @@ test('feature controls prefill actual settings, preserve edits and queue only th
     [...panel.elements.values()].map((element) => element.textContent).join('\n'),
     /npm run|external terminal/,
   );
+  const legacyReload = panel.click('btn-reload-features');
+  await panel.respond(panel.allRequests.at(-1), {
+    ...snapshot,
+    features: { ...snapshot.features, compaction: { enabled: true, fileState: 'managed-output' } },
+  });
+  await legacyReload;
+  assert.equal(panel.getElement('feature-compaction-mode').disabled, true);
+  assert.equal(panel.getElement('feature-compaction-options').hidden, true);
+  panel.getElement('feature-capsule').checked = !snapshot.features.capsule.enabled;
+  panel.getElement('feature-capsule').listeners.get('change')();
+  const legacySaving = panel.submit('feature-form');
+  const legacyRequest = panel.allRequests.at(-1);
+  assert.equal(JSON.parse(legacyRequest.options.body).compaction, true);
+  assert.equal(JSON.parse(legacyRequest.options.body).compactionPrompt, null);
+  await panel.respond(legacyRequest, { draft: { id: 'legacy-preserved-draft' } });
+  await legacySaving;
+  const originalPrompt = 'Keep goals.\r\nKeep corrections.\rKeep work.';
+  const rawPromptReload = panel.click('btn-reload-features');
+  await panel.respond(panel.allRequests.at(-1), {
+    ...snapshot,
+    features: {
+      ...snapshot.features,
+      compaction: {
+        enabled: true,
+        prompt: { mode: 'custom', text: originalPrompt },
+        promptMaxBytes: 3937,
+        retentionBudgetBytes: 61440,
+      },
+    },
+  });
+  await rawPromptReload;
+  const promptEditor = panel.getElement('feature-compaction-text');
+  assert.equal(promptEditor.value, 'Keep goals.\nKeep corrections.\nKeep work.');
+  panel.getElement('feature-capsule').checked = !snapshot.features.capsule.enabled;
+  panel.getElement('feature-capsule').listeners.get('change')();
+  const rawPromptSaving = panel.submit('feature-form');
+  const rawPromptRequest = panel.allRequests.at(-1);
+  assert.equal(JSON.parse(rawPromptRequest.options.body).compactionPrompt.text, originalPrompt);
+  assert.equal(
+    panel.getElement('feature-compaction-bytes').textContent,
+    `${Buffer.byteLength(originalPrompt)} / 3937 UTF-8 bytes`,
+  );
+  await panel.respond(rawPromptRequest, { draft: { id: 'raw-prompt-draft' } });
+  await rawPromptSaving;
+  promptEditor.value = 'Edited goals.\r\nEdited work.';
+  promptEditor.listeners.get('input')();
+  const editedPromptSaving = panel.submit('feature-form');
+  const editedPromptRequest = panel.allRequests.at(-1);
+  assert.equal(
+    JSON.parse(editedPromptRequest.options.body).compactionPrompt.text,
+    'Edited goals.\nEdited work.',
+  );
+  await panel.respond(editedPromptRequest, { draft: { id: 'edited-prompt-draft' } });
+  await editedPromptSaving;
+  const promptReload = panel.click('btn-reload-features');
+  await panel.respond(panel.allRequests.at(-1), {
+    ...snapshot,
+    features: {
+      ...snapshot.features,
+      compaction: {
+        enabled: true,
+        prompt: null,
+        promptMaxBytes: 3937,
+        retentionBudgetBytes: 61440,
+      },
+    },
+  });
+  await promptReload;
+  assert.equal(panel.getElement('feature-compaction-mode').value, 'native');
+  assert.equal(
+    panel.getElement('feature-compaction-prompt-state').textContent,
+    'Installed prompt mode is unverified. Native is selected for the draft only.',
+  );
+  panel.getElement('feature-compaction-mode').value = 'custom';
+  panel.getElement('feature-compaction-mode').listeners.get('change')();
+  const text = panel.getElement('feature-compaction-text');
+  for (const invalid of [' ', '\u0085', '界'.repeat(1313), '\ud800', 'before\0after']) {
+    text.value = invalid;
+    text.listeners.get('input')();
+    const requestCount = panel.allRequests.length;
+    await panel.submit('feature-form');
+    assert.equal(panel.allRequests.length, requestCount);
+    assert.equal(panel.getElement('btn-apply-features').disabled, true);
+  }
+  text.value = `${'界'.repeat(1312)}x`;
+  text.listeners.get('input')();
+  assert.equal(panel.getElement('feature-compaction-bytes').textContent, '3937 / 3937 UTF-8 bytes');
+  assert.equal(panel.getElement('btn-apply-features').disabled, false);
+  const customSaving = panel.submit('feature-form');
+  const customRequest = panel.allRequests.at(-1);
+  assert.deepEqual(JSON.parse(customRequest.options.body).compactionPrompt, {
+    mode: 'custom',
+    text: text.value,
+  });
+  assert.equal(JSON.parse(customRequest.options.body).compaction, true);
+  await panel.respond(customRequest, { draft: { id: 'custom-draft' } });
+  await customSaving;
+  panel.getElement('feature-compaction-mode').value = 'native';
+  panel.getElement('feature-compaction-mode').listeners.get('change')();
+  const nativeSaving = panel.submit('feature-form');
+  const nativeRequest = panel.allRequests.at(-1);
+  assert.deepEqual(JSON.parse(nativeRequest.options.body).compactionPrompt, {
+    mode: 'native',
+    text: '',
+  });
+  await panel.respond(nativeRequest, { draft: { id: 'native-draft' } });
+  await nativeSaving;
+  panel.getElement('feature-compaction').checked = false;
+  panel.getElement('feature-compaction').listeners.get('change')();
+  const disabledSaving = panel.submit('feature-form');
+  const disabledRequest = panel.allRequests.at(-1);
+  assert.equal(JSON.parse(disabledRequest.options.body).compactionPrompt, null);
+  assert.equal(JSON.parse(disabledRequest.options.body).compaction, false);
+  await panel.respond(disabledRequest, { draft: { id: 'disabled-draft' } });
+  await disabledSaving;
 });
 
 test('grouped Gemini limits preserve mixed values until the shared field is edited', async () => {

@@ -1,9 +1,9 @@
 # Architecture
 
 `agyctl` adds usage visibility and optional client modifications to the
-Antigravity 2.31.x desktop app (stable release). The tools can also discover and
-inspect the development (Insiders) channel. Exact builds are recorded per feature
-in `compat/` (see [limit patch](limit-patch.md),
+Antigravity desktop app; the current target is Windows 2.32.1 (stable channel). The
+tools can also discover and inspect the development (Insiders) channel. Exact builds
+are recorded per feature in `compat/` (see [limit patch](limit-patch.md),
 [tool-output patch](tool-output-patch.md),
 [compaction patch](compaction-patch.md), and
 [localization](localization.md#current-status)); no feature is admitted by app
@@ -145,7 +145,8 @@ usage.
 | Panel installation | Plugin directory | Installs project sidecar files; does not modify `app.asar` or the LS |
 | Capsule | `app.asar/dist/preload.js`, `dist/input-capsule.js` | Appends a preload hook containing the capsule code and retains a capsule member |
 | Limit patch | Native LS executable | Replaces an admitted x86-64 clamp body and its model-ID table |
-| Tool-output patch | Native LS executable | Applies a fixed whole-file capacity recipe for one registered build |
+| Tool-output patch | Native LS executable | Applies a fixed whole-file capacity recipe registered per build |
+| Compaction patch | Native LS executable | Applies a whole-file summary-prompt and request-retention recipe registered per build |
 | Localization | ASAR preload, reviewed adapter targets, `dist/agyctl-localization/*` | Adds the Hub bootstrap, DOM engine, native helpers, and profile-specific adapter edits. Does not rewrite the LS asset archive or intercept Hub HTTPS |
 
 The shared [Host Composer](../src/host/compose.ts) implements ASAR composition
@@ -180,20 +181,21 @@ artifact into tool state, the Host contribution adds the bootstrap and reviewed
 native adapter edits to the ASAR, and the runtime injects the DOM engine on the
 next launch. See [localization](localization.md).
 
-### Limit admission and recovery
+### Language Server patch admission
 
 The limit patcher admits PE and ELF64 x86-64 images. It reads Mach-O ARM64 as data
 and reports its state as `unavailable`; macOS mutation needs its own reviewed bytes
 and signing evidence. Windows and Linux ARM64 are not supported. Admission compares
 the original function bytes for the detected architecture with
 [versions.json](../compat/versions.json), not the application version, so an
-unlisted version with known bytes can pass. The registry also records the
-Windows stable 2.32.1 live observation. The requested limit remains subject to the
+unlisted version with known bytes can pass. The requested limit remains subject to the
 replacement's later clamps and upstream/provider restrictions. See
 [limit patch](limit-patch.md).
 
 The tool-output patcher admits only binaries whose whole-file SHA-256 is registered
-in [tool-output.json](../compat/tool-output.json) for one qualified build. It owns
+in [tool-output.json](../compat/tool-output.json); for an installed client the
+registered target must also match the app version exactly
+([selection.go](../src/agyctl/internal/apptarget/selection.go)). It owns
 its admission, planning, transaction, and restore in
 [tooloutput](../src/agyctl/internal/tooloutput/). It shares target resolution
 ([layout](../src/agyctl/internal/layout/layout.go),
@@ -203,25 +205,31 @@ its admission, planning, transaction, and restore in
 limit feature, but does not import the limit registry. See
 [tool-output patch](tool-output-patch.md).
 
-The legacy compaction patcher follows the same whole-file admission pattern for its own
-registry, [compaction.json](../compat/compaction.json), and owns its transactions
-in [compaction](../src/agyctl/internal/compaction/). Its registered inputs are the
-tool-output patch output and the grep-patched baseline of one build; it changes
-only the summary-prompt strings and the request-retention values, and it reports
-other features' patches as conflicts instead of patching over them. See
-[compaction patch](compaction-patch.md).
+The compaction patcher follows the same whole-file admission pattern for its own
+registry, [compaction.json](../compat/compaction.json), and owns its standalone
+transactions in [compaction](../src/agyctl/internal/compaction/). On 2.31.2 its
+registered inputs are the tool-output output and the grep-patched baseline, and
+other features' patches are reported as conflicts instead of being patched over.
+See [compaction patch](compaction-patch.md).
 
-For the exact registered Windows 2.32.1 original, L/T/C mutations instead use the
-fixed-feature [native coordinator](../src/agyctl/internal/lspatch/), assembled by
-the [native CLI](../src/agyctl/cmd/agyctl/native.go). Each contribution first
-reproduces its own byte-gated recipe, and the coordinator reconstructs the entire
-desired image from the verified original. Disabled recipe spans remain reserved
-against limit-node allocation. One native active record and prepare transaction
-own that target; feature entry points cannot bypass them. Historical recipes are
-retained by exact identity and fingerprint to reproduce an older managed image
-before migrating it to current recipes. Unknown bytes and stale reviewed plans
-refuse. Other builds keep their existing feature gates and recovery paths. See
+For the exact registered Windows 2.32.1 original, limit, tool-output, and
+compaction changes all go through the
+[native coordinator](../src/agyctl/internal/lspatch/), wired up by the
+[native CLI](../src/agyctl/cmd/agyctl/native.go); the `limit`, `tool-output`, and
+`compaction` commands delegate to it for that target. Each feature still checks its
+own byte-gated recipe, and the coordinator rebuilds the complete desired image from
+the verified original. Spans of disabled recipes stay reserved so limit table nodes
+are never placed there. One active record and one prepare transaction own the
+target. Historical recipes are kept by exact identity and fingerprint so an older
+managed image can be reproduced and migrated. Unknown bytes and stale reviewed plans
+refuse. Other builds keep their per-feature gates and recovery paths. See
 [native feature composition](operations.md#native-feature-composition).
+
+Compaction's `native` prompt mode leaves upstream prompt bytes and selection
+unchanged. `custom` mode writes the user's text into fingerprinted prompt templates
+and their declared length fields inside the registered spans. The mode and text are
+configuration bound to the reviewed plan and complete-image verification; they never
+select code locations or admit other binary inputs.
 
 ASAR composition and binary patches retain original backups and hash-bound
 recovery records. Staging, per-file replacement, and prepare records are not one
@@ -243,14 +251,15 @@ Each feature gates its own writes (see
 [client modifications](operations.md#client-modifications-from-the-cli)):
 
 - limit patch: exact byte-signature match;
-- tool-output patch: registered whole-file hash;
-- compaction patch: registered whole-file hash;
+- tool-output and compaction patches: registered whole-file hash (on 2.32.1, the
+  native coordinator's verified original plus each recipe's byte gate);
 - capsule: executable and ASAR qualification plus served-bundle anchors;
 - localization: profile or structural evidence plus bound plan inputs.
 
 `node scripts/manage.mjs status` reports these gates read-only. The capsule and
-localization form one Host mutation group, admitted and journaled together; the
-binary patches are independent operations. The project never closes, relaunches, or
+localization form one Host mutation group, admitted and journaled together. The
+Language Server patches are one native transaction on 2.32.1 and independent
+operations on other builds. The project never closes, relaunches, or
 supervises the client: [winproc](../src/agyctl/internal/winproc/) only inspects
 processes so that applies refuse while the selected client or LS runs.
 

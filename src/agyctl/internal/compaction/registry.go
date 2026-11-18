@@ -2,6 +2,7 @@ package compaction
 
 import (
 	"crypto/sha256"
+	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -9,13 +10,11 @@ import (
 	"strings"
 
 	"agyctl/internal/assets"
+	"agyctl/internal/lspatch"
 )
 
-// The registry holds only fixed, whole-file-qualified recipes for the
-// summary-prompt and request-retention combination. There is no interface for
-// arbitrary prompts, offsets or values: an entry is added only after the
-// recorded input binaries were byte-verified, and the admission gate never
-// leaves the registered whole-file SHA-256s.
+// The registry admits only exact whole-file originals. Prompt choices may fill
+// registered data and length fields, never user-selected code or offsets.
 type Segment struct {
 	Name        string `json:"name"`
 	Role        string `json:"role"`
@@ -26,11 +25,25 @@ type Segment struct {
 }
 
 type InputState struct {
-	Input       string    `json:"input"`
-	BinarySHA   string    `json:"binary_sha256"`
-	OutputSHA   string    `json:"output_sha256"`
-	Segments    []Segment `json:"segments"`
+	Input       string        `json:"input"`
+	BinarySHA   string        `json:"binary_sha256"`
+	OutputSHA   string        `json:"output_sha256"`
+	Segments    []Segment     `json:"segments"`
+	Prompt      *PromptRecipe `json:"prompt,omitempty"`
 	fingerprint string
+}
+
+type PromptLengthField struct {
+	Segment     string `json:"segment"`
+	Offset      int    `json:"offset"`
+	ExpectedHex string `json:"expected_hex"`
+}
+
+type PromptRecipe struct {
+	BodySegment  string              `json:"body_segment"`
+	MaxBytes     int                 `json:"max_bytes"`
+	Segments     []Segment           `json:"segments"`
+	LengthFields []PromptLengthField `json:"length_fields"`
 }
 
 type ValueTarget struct {
@@ -161,11 +174,16 @@ func validateInput(state *InputState, target *Target, seenInputs map[string]bool
 		name       string
 	}
 	spans := make([]span, 0, len(state.Segments))
+	seenSegments := map[string]bool{}
 	for si := range state.Segments {
 		segment := &state.Segments[si]
 		if segment.Name == "" || segment.Offset < 0 {
 			return fmt.Errorf("registry target %s input %s segment %d is missing name or offset", target.ID, state.Input, si)
 		}
+		if seenSegments[segment.Name] {
+			return fmt.Errorf("registry target %s input %s repeats segment name %s", target.ID, state.Input, segment.Name)
+		}
+		seenSegments[segment.Name] = true
 		if _, known := roles[segment.Role]; !known {
 			return fmt.Errorf("registry target %s input %s segment %s declares unsupported role %q", target.ID, state.Input, segment.Name, segment.Role)
 		}
@@ -187,6 +205,9 @@ func validateInput(state *InputState, target *Target, seenInputs map[string]bool
 		if spans[i].start < spans[i-1].end {
 			return fmt.Errorf("registry target %s input %s segments %s and %s overlap", target.ID, state.Input, spans[i-1].name, spans[i].name)
 		}
+	}
+	if err := validatePromptRecipe(state); err != nil {
+		return fmt.Errorf("registry target %s input %s: %w", target.ID, state.Input, err)
 	}
 	// Pin the fingerprint now so loading validates the canonical digest once.
 	state.Fingerprint()
@@ -216,7 +237,66 @@ func (s *InputState) Fingerprint() string {
 		for _, segment := range ordered {
 			_, _ = fmt.Fprintf(digest, "%s\x00%d\x00%s\x00%s\n", segment.Name, segment.Offset, strings.ToLower(segment.ExpectedHex), strings.ToLower(segment.NewHex))
 		}
+		if s.Prompt != nil {
+			_, _ = fmt.Fprintf(digest, "@prompt-body\x00%s\x00%d\n", s.Prompt.BodySegment, s.Prompt.MaxBytes)
+			custom := append([]Segment(nil), s.Prompt.Segments...)
+			sort.Slice(custom, func(i, j int) bool { return custom[i].Name < custom[j].Name })
+			for _, segment := range custom {
+				_, _ = fmt.Fprintf(digest, "@prompt/%s\x00%d\x00%s\x00%s\n", segment.Name, segment.Offset, strings.ToLower(segment.ExpectedHex), strings.ToLower(segment.NewHex))
+			}
+			fields := append([]PromptLengthField(nil), s.Prompt.LengthFields...)
+			sort.Slice(fields, func(i, j int) bool {
+				if fields[i].Segment == fields[j].Segment {
+					return fields[i].Offset < fields[j].Offset
+				}
+				return fields[i].Segment < fields[j].Segment
+			})
+			for _, field := range fields {
+				_, _ = fmt.Fprintf(digest, "@prompt-length/%s\x00%d\x00%s\n", field.Segment, field.Offset, strings.ToLower(field.ExpectedHex))
+			}
+		}
 		s.fingerprint = hex.EncodeToString(digest.Sum(nil))
 	}
 	return s.fingerprint
+}
+
+func validatePromptRecipe(state *InputState) error {
+	policy := state.Prompt
+	if policy == nil {
+		return nil
+	}
+	if policy.MaxBytes < 1 || policy.MaxBytes > lspatch.MaxCompactionPromptBytes || policy.BodySegment == "" || len(policy.Segments) == 0 || len(policy.LengthFields) == 0 {
+		return fmt.Errorf("invalid registered compaction prompt policy")
+	}
+	fixed := map[string]Segment{}
+	for _, segment := range state.Segments {
+		fixed[segment.Name] = segment
+	}
+	custom := map[string][]byte{}
+	for _, segment := range policy.Segments {
+		original, found := fixed[segment.Name]
+		expected, err := hex.DecodeString(segment.ExpectedHex)
+		if err != nil {
+			return fmt.Errorf("invalid custom prompt preimage")
+		}
+		replacement, err := hex.DecodeString(segment.NewHex)
+		if err != nil || len(expected) == 0 || len(expected) != len(replacement) || !found || segment.Role != "prompt" || original.Role != "prompt" || original.Offset != segment.Offset || !strings.EqualFold(original.ExpectedHex, segment.ExpectedHex) || !strings.EqualFold(original.ExpectedHex, original.NewHex) || custom[segment.Name] != nil {
+			return fmt.Errorf("custom prompt template %s does not match a native-preserved registered span", segment.Name)
+		}
+		custom[segment.Name] = replacement
+	}
+	if len(custom[policy.BodySegment]) != policy.MaxBytes {
+		return fmt.Errorf("custom prompt body does not match its registered byte capacity")
+	}
+	seen := map[string]bool{}
+	for _, field := range policy.LengthFields {
+		body, found := custom[field.Segment]
+		expected, err := hex.DecodeString(field.ExpectedHex)
+		key := fmt.Sprintf("%s/%d", field.Segment, field.Offset)
+		if !found || field.Segment == policy.BodySegment || field.Offset < 0 || field.Offset > len(body)-4 || err != nil || len(expected) != 4 || binary.LittleEndian.Uint32(expected) != uint32(policy.MaxBytes) || hex.EncodeToString(body[field.Offset:field.Offset+4]) != strings.ToLower(field.ExpectedHex) || seen[key] {
+			return fmt.Errorf("invalid custom prompt length field %s", key)
+		}
+		seen[key] = true
+	}
+	return nil
 }

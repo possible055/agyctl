@@ -1,53 +1,49 @@
 # Language Server Summary Compaction Patch
 
-This page owns the `agyctl compaction` feature: the registered summary-prompt and
-request-retention recipe, its build-specific binary evidence, and its
-modification boundary. Commands and recovery are in
-[operations](operations.md#summary-compaction-patch); component boundaries are in
-[architecture](architecture.md#limit-admission-and-recovery). The feature is
-independent of the context-limit patch (`agyctl limit`, documented in
-[limit-patch.md](limit-patch.md)) and the tool-output capacity patch
-(`agyctl tool-output`, documented in
-[tool-output-patch.md](tool-output-patch.md)).
+This page owns the `agyctl compaction` feature: what the recipe changes, its
+registered builds, the binary evidence behind it, and its qualification. Commands
+and recovery are in [operations](operations.md#summary-compaction-patch); component
+boundaries are in [architecture](architecture.md#language-server-patch-admission).
+It is a separate feature from the [context-limit patch](limit-patch.md) and the
+[tool-output patch](tool-output-patch.md); on 2.32.1 all three are combined by
+[native composition](operations.md#native-feature-composition).
 
 ## Status
 
-Qualification is build-specific in [compaction.json](../compat/compaction.json):
+Qualification is recorded per build in [compaction.json](../compat/compaction.json):
 
-| Build | Status | Recorded runtime scope |
+| Build | Status | Scope of the evidence |
 | --- | --- | --- |
-| Windows 2.32.1 | `supported` | The exact current consumer recipe adopted the canonical prompt during manual and natural automatic compaction on Gemini 3.8 Flash High; request capture, rendered retention, and native feature coexistence were also verified. Other model routes are not implied. |
-| Windows 2.31.2 | `candidate` | The legacy default-string recipe completed its transaction, but the tested Gemini route did not adopt the replacement prompt; retention remains unverified. |
+| Windows 2.32.1 | `candidate` | Offline execution of the emitted code; on the installed client, exact retention rendering and native/custom prompts at manual compaction on Gemini 3.8 Flash High. Automatic compaction and other models are not qualified. See [live checks](#windows-2321-live-checks). |
+| Windows 2.31.2 | `candidate` | The transaction worked, but the tested route did not adopt the replacement prompt and retention is unverified. See [legacy qualification](#windows-2312-legacy-qualification). |
 
-See [consumer evidence](#windows-2321-consumer-evidence) and
-[legacy qualification](#windows-2312-legacy-qualification). A disk patch never
-proves what the running session loaded; `compaction status` continues to report
-`effective_state: "unknown"`, separately from a build's recorded qualification.
+A disk patch never proves what a running session loaded; `status` reports disk
+state only, with `effective_state: "unknown"`.
 
-Each build implements one fixed combination, not a set of tunable features:
+### What the 2.32.1 recipe changes
 
-- **Summary prompt v1** replaces the upstream continuation-summary prompt with
-  the canonical ten-section text in
-  [summary-v1.txt](../compat/compaction/summary-v1.txt). It keeps the
-  `<summary>` wrapper and the no-tools rule, drops the unbounded verbatim
-  user-message requirement, and prioritizes the latest user intent, unresolved
-  constraints, current work state (including the last tool call's outcome, or
-  an explicit "unknown"), and next steps.
-- **Request retention** targets 30 requests and at most 2048 rendered bytes per
-  request. The 2.32.1 consumer recipe preserves lower native allocations and
-  leaves source configuration values unchanged; the legacy recipe edits the
-  `max_user_requests` and `max_user_request_bytes` defaults instead.
-- **Untouched by design:** automatic compaction thresholds
-  (`max_token_limit`, `token_threshold`, model reporting flags), the 3.0
-  context-estimation divisor, file re-attachment, synthetic aborted tool
-  results, a forced continuation preamble, and the manual `/compact` command
-  path (command parsing, trigger flags, and handler bytes are not in any
-  registered segment). Remote settings are not rewritten. The 2.32.1 consumers
-  substitute only the recorded default/legacy prompt selections and preserve
-  other nonempty overrides, including M432. Legacy source-default changes alone
-  did not establish runtime adoption.
+- **Original user-message retention.** Upstream renders at most the 10 most recent
+  user messages within a shared byte budget. The recipe replaces that with one fixed
+  total budget of **61,440 UTF-8 bytes**, allocated newest first: newer messages stay
+  whole, only the oldest retained message can be cut, and every older message is
+  omitted. There is no message-count limit and no user-adjustable budget. Native
+  numbering, UTF-8/media truncation, and the truncation notice are kept; numbering
+  counts toward the budget, the notice and surrounding structure do not.
+- **Summary prompt.** `native` (default) leaves all upstream prompt bytes and
+  model-specific prompt selection unchanged, including the M432 profile's own prompt.
+  `custom` uses the user's exact non-empty text, at most 3,937 UTF-8 bytes, on both
+  summary consumers, M432 included. Empty text, invalid Unicode, NUL, and oversized
+  input are refused, never truncated or replaced. The native 120-byte suffix that
+  manual `/compact` appends is preserved in both modes.
 
-## Registered build
+[summary-v1.txt](../compat/compaction/summary-v1.txt) is kept as an optional
+custom-text preset and as the 2.31.2 recipe's editing source; native mode never
+selects it. Out of scope: automatic compaction thresholds, remote configuration,
+checkpoint source payloads, file reattachment, hook or sidecar rewriting, manual
+command parsing, and step compaction (`stepcompactor`), which the recipe neither
+disables nor forces on.
+
+## Registered builds
 
 ### Windows 2.32.1
 
@@ -57,13 +53,16 @@ package member `resources/bin/language_server.exe`, 215,547,392 bytes.
 | State | Whole-file SHA-256 |
 | --- | --- |
 | Original input | `65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f` |
-| Current standalone compaction output | `b9ba32e6e1f23227e2ac1f109e509b8e487d231397002e24a44cac1c556997da` |
+| Current standalone native-prompt output | `a5b6fa7ae779b2d81bfcf81d3cf072977c1eaa2ef5fb25645481fe38a66267c0` |
 
 The recipe admits only this exact original. Managed combinations are rebuilt
 from that original by [native composition](operations.md#native-feature-composition),
-not admitted as arbitrary new recipe inputs. The exact prior consumer recipe
-remains in `historical_inputs` only for native transaction migration and restore;
-it is not the currently qualified recipe.
+not admitted as arbitrary new recipe inputs. Exact prior v1/v2/v3 consumer recipes
+remain unchanged in `historical_inputs` only for native transaction migration and
+restore. Custom prompt images are deterministically assembled from the exact
+original and registered templates, not admitted as additional binary inputs. The
+historical v3 record includes its complete custom prompt metadata (fingerprint
+`edce28dc43923c50e8627e97731d07c72e7c1d34bdafbe9796e4b58715225995`).
 
 ### Windows 2.31.2 legacy inputs
 
@@ -80,83 +79,210 @@ version number or a successful install discovery never admits a binary.
 | Compaction output from the grep-patched input | `b361c8c3ed47a1e315714d1f8b8178e23f282cb4d0724be5aeb8d9380c0831d6` |
 
 Each input has its own recipe and its own output hash. The unpatched original
-(`e40f0447…`) is **not** registered: no verified copy exists locally, and a
-registry entry is added only after the exact input file was hash-verified.
+(`e40f0447…`) is **not** registered: no hash-verified copy was available, and an
+entry is added only after the exact input file is hash-verified.
 
 ## Recipe segments
 
 ### Windows 2.32.1 consumer evidence
 
-Recorded 2026-11-16 for `resources/bin/language_server.exe`, original SHA
+Recorded offline on 2026-11-18 (Asia/Taipei) for build 2.32.1, package member
+`resources/bin/language_server.exe`, original SHA-256
 `65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f`.
-The standalone C output is
-`b9ba32e6e1f23227e2ac1f109e509b8e487d231397002e24a44cac1c556997da`.
-The current recipe, metadata, addresses, and preimages are reproducible from
+The editing sources and exact preimages are
 [build layouts](../scripts/lib/compaction-builds.mjs),
 [consumer assembly](../scripts/lib/compaction-consumers.mjs), and
 [the registry](../compat/compaction.json).
 
-- The live Gemini 3.8 Flash High `useCoreDirect` route enters Cortex core's
-  `NewContextSummaryHook`, then oneharness `generateContextSummary`, not
-  `CheckpointHandler.Handle`. The replacement at VA `0x1420a4a4c..0x1420a4b80`
-  recognizes the complete legacy prompt, optionally followed by the exact native
-  120-byte on-demand instruction. It preserves the latter verbatim, M432's native
-  prompt, and all other nonempty overrides. The Handle consumer is also covered;
-  modifying raw defaults alone was insufficient.
-- One qualified call to existing `runtime.concatstring2` retains the native
-  manual instruction. The original generation call and SP remain unchanged.
-  Scalar retry values go directly to their original outgoing ABI slots; live
-  pointer roots, native heap/write-barrier operations, and Go metadata are
-  retained. Build evidence records the exact stack map, spill bounds, and call
-  addresses; this is not an arbitrary trampoline or borrowed padding region.
-- A hardware breakpoint at the actual generation call observed a 3,991-byte
-  prompt, SHA `56be593a4dfcbea1f873d52aaab6b68f96d1cf8f68b53214b59404c837034b35`,
-  exactly matching the canonical prompt plus the native manual instruction.
-  The resulting checkpoint completed with ten sections. This directly validates
-  adoption on that route rather than inferring it from headings.
-- Oneharness `PopulateAuxiliaryCheckpointData` consumes the request count at
-  `0x141cc6717`. A synthetic conversation with more than 30 requests retained
-  exactly 30, in order. The common converter's native formatter remains in use.
-  Raw checkpoint source text may exceed the rendering ceiling; stored raw text
-  and model-visible rendered retention are different observations.
-- A second synthetic conversation isolated one long request from the shared
-  waterfill budget. Its 8,434-byte Chinese/English/emoji source rendered as an
-  exact 2,043-byte UTF-8 prefix plus the native truncation notice, with no U+FFFD.
-  The consumer passes `min(native allocation, 2048)` to native UTF-8 truncation;
-  its formatting and code-point boundary can retain slightly fewer bytes. A
-  separate many-long-requests case retained lower native waterfill allocations
-  rather than inflating them to 2,048. Three original test markers and the
-  Traditional Chinese correction survived. Another continuation correctly
-  recalled completed `read_file` and `AGY_CAP_2000` without rerunning tools.
-- These consumer overrides intentionally do not rewrite the source configuration
-  object. Executor metadata can still report the upstream prompt, count 10, and
-  bytes 1024 while the above consumers use the local policy. Diagnostics report
-  that metadata honestly rather than inventing replacement values.
-- Native M432 preservation is statically and locally execution-checked; that
-  model was unavailable to the signed-in account and is not live-qualified.
-  `stepcompactor` entry points were not observed during this tested manual route;
-  their existence or absent metadata is not proof about other models. The recipe
-  does not disable or force-enable step compaction.
-- **Natural automatic compaction, 2026-11-17 (Asia/Taipei):** a new synthetic
-  Gemini 3.8 Flash High session used the unchanged native `maxTokenLimit=256000`
-  with L disabled and C/T retained. Ordinary messages incrementally built the
-  context; no slash command or threshold override was sent. The fifth increment
-  produced a completed checkpoint and normal response. The actual summary
-  consumer received exactly the 3,871-byte canonical prompt, SHA
-  `8a82c71c3fc03e10f3d2eb80efb2498b4782f190f207bfcfc505604ff9125fb4`,
-  without the manual suffix. The preceding normal request reported 60,342 input
-  tokens and 194,020 cache-read tokens; the post-compaction request reported
-  23,066 input tokens. Both original markers and the language constraint survived.
-- **Installed coexistence:** while C/T remained enabled, changing L to 550,000
-  read back as 550,000 in the executor. The production settings-draft path then
-  restored L to 500,000 without dropping C/T, TW localization, or the capsule.
-  Reapplying the same managed state preserved its generation. A reviewed Host
-  plan created before that native change refused afterwards; both installed
-  file hashes stayed unchanged by the rejected operation. Six enable orders,
-  eight subsets, and reverse independent removals were additionally exercised on
-  a real binary copy; complete image hashes were order-independent and all-off
-  restored the exact original. Interrupted-transaction recovery is covered by
-  Go tests, not a claimed live power-loss experiment.
+#### Native allocation and omission
+
+`utils.GetWaterFillAllocation` at VA `0x141823ee0` still uses its original
+prologue, allocation calls and stack size. The equal-length replacement at
+`0x141823f75..0x14182403b` checks the saved caller frame's full return address
+against the ASLR-safe RIP-relative `FormatCheckpointUserRequests` return
+`0x141820b05`. Only that path receives reverse/newest-first allocation and
+unconditionally resets `RDI` to 61,440 with `MOV EDI,61440`, regardless of the
+incoming budget. The
+parent-message route (return `0x141820c98`) and the second direct caller,
+`allocateDiscreteWaterFillBudget`, retain signed water-fill, negative-size
+clamping, and newest-first distribution of the remainder. No global priority
+change is applied to those callers; their incoming signed budgets are unchanged.
+
+The user-only remaining budget stays within `0..61440`. Its comparison with one
+and subtraction therefore use 32-bit operands without losing information. Source
+lengths, `min(entryBytes, remaining)`, indices, and stored allocations remain
+64-bit, including source lengths above `2^32`. A direct branch to the existing
+common return removes a redundant two-byte jump. Together with the two shorter
+budget instructions and one former padding byte, this fits the five-byte budget
+reset inside the original 198-byte span without moving either return sequence.
+
+The reverse loop computes `min(entryBytes, remaining)` from the last entry
+backward. After the budget is exhausted, an internal allocation sentinel of
+`-1` marks older entries. It does not send a negative limit to truncation.
+The formatter replacement at `0x141821411..0x1418214c2` clears only the marked
+private scratch string's length and skips the original truncation calls for
+that entry. The boundary and all newer entries still reach the original
+`Truncate` / `ToTruncatedBytesString` calls at `0x1418214c2` /
+`0x1418214c7`, with the same media options, live pointer slots and write-barrier
+stores. The second loop's compacted head at `0x141821653` skips empty scratch
+entries before appending any per-entry output; it does not render one truncation
+notice for every omitted message.
+
+This scratch slice is not the checkpoint payload: `formatCapturedEntries`
+constructs a local `[]string` using a stack array or `runtime.makeslice` at
+`0x141821159..0x14182119f`, stores its pointer at SP+`0x158`, and writes
+newly formatted strings into it at `0x141821315/1333` and
+`0x1418213a3/13c1`. Original `CapturedEntry` string pointer/length fields
+`+8/+0x10` are read, not rewritten. The two format strings read through the PE
+section table are `%d. %s` (VA `0x1439b92f4`, six bytes) and `%d.`
+(VA `0x14399add5`, three bytes). Consequently even a parent entry with empty
+source text has a nonempty numbered scratch string. A zero total parent budget
+bypasses truncation; a zero water-fill share of a nonempty numbered entry emits
+the nonempty native truncation notice through `ToTruncatedBytesString`
+(`0x140b68e55..0x140b68ec0`, testing the removed-byte count at `+0x20`).
+Thus the empty scratch marker is produced only by the user omission path, not
+by a legal parent empty-source entry.
+
+The expanded capture guard spans preserve the original nil branches while
+selecting current history instead of a policy count:
+`0x142222c5d..0x142222c6c` (Handle) and
+`0x141cc6712..0x141cc671f` (core). Native capture still scans backward and
+reverses the result into chronological order before formatting.
+
+#### Stack and control-flow checks
+
+No metadata is changed. The allocator keeps its original LEAVE/RET PCs at
+`0x141823f7d/3f7e` and `0x141824007/4008`; the common `MOV RAX,R8`
+is at `0x141824001`. Original `pcsp=72` and the two `pcsp=0` RET ranges
+therefore remain valid. Its overwritten span has `UnsafePoint=-1` and
+`StackMap=1`. The renderer's `0x141821611..0x1418216e7` span retains
+`pcsp=760`, `UnsafePoint=-1`, and `StackMap=13`; the existing external
+entries at `0x141821611`, `0x1418216e7`, and `0x141821718` are preserved.
+The original dispatch at `0x14182160b` now jumps to `0x141821653`.
+All existing calls and pointer roots remain; there is no executable slack arena,
+new allocation call, changed SP, or metadata patch.
+
+#### Prompt templates and offline execution
+
+Native-mode regular segments reserve all prompt/data spans with
+`new_hex == expected_hex`. Input-local `prompt` metadata declares custom
+replacement templates for the raw 3,937-byte body and both consumers. The body
+is filled with exact UTF-8 text plus unused space padding; only three declared
+four-byte body-length immediates are changed to the actual text length. Prompt
+metadata, templates and length fields participate in the recipe fingerprint.
+The current fingerprint is
+`2ebda7ec1f5c8cfb9b495217d5ac1a1b66d020502369b14849c359dc50f3810f`.
+
+The custom core consumer retains its qualified call at `0x1420a4af1` to
+`runtime.concatstring2` (`0x140070960`). Existing `pcsp=792`,
+`UnsafePoint=-1`, `StackMap=9`, scalar outgoing slots `0x40..0x60`,
+source prompt root SP+`0x230`, and final prompt slots `0x30/0x38` are
+preserved. The original generation call at `0x1420a4b80` is unchanged.
+
+Trusted emitted x86-64 blocks were executed in private executable allocations,
+not by launching or executing the inspected Language Server. Cases covered
+empty / one / more than 30 short inputs, mixed long sizes, exact 61,440-byte
+exhaustion, a single oldest partial boundary, older-message omission, parent and
+discrete water-fill including zero / negative budgets and signed-size clamping.
+User allocation was identical for incoming budgets `0`, `10240`, `61440`,
+`99999`, `2^40+7`, and `-7`; parent/discrete allocation continued to use each
+incoming signed value. A source-length case above `2^32` confirmed that it was
+not narrowed. The pre-fix v3 block failed the same user contract at incoming
+budget zero: a 19-byte entry received omission sentinel `-1`, not allocation 19.
+The v4 allocator block SHA-256 is
+`9a4f560ebe4d9929d9b72edefc40f72dfe17eb3162e927ccf560bf2709d9b8ec`.
+
+The custom Handle/core blocks, unchanged since v3, were execution-checked for
+complete / changed manual suffixes, preserved original register arguments,
+RetryConfig slots and concat arguments using a trusted concat stub. V4 changes
+only the allocator segment; all other segments and custom prompt templates are
+byte-identical to v3. Native/custom static audits checked branch targets and
+preserved call and return PCs for v4.
+
+These offline checks execute the emitted allocator and formatter argument/omission
+blocks, not upstream truncation or the complete Go runtime; the 5-byte boundary
+case checks allocation and native-call arguments only. The installed-client
+observations below are separate evidence.
+
+### Windows 2.32.1 live checks
+
+Recorded 2026-11-18 (Asia/Taipei) on the installed build with the original identity
+above, using synthetic conversations on the Gemini 3.8 Flash High core route. The
+images also carried tool-output and model limits `1318/1319/1320=500000`: native
+prompt image `7d2efd9493fcd35a0e81ed7ffdf0ffc4167fb5ec37cc6059d84ddd4adedafbe0`,
+custom prompt image `655a020ad09b022145e508fd82e72dc8f5d75e1add5bad321972c83b8a2869d9`.
+
+- **Retention.** A checkpoint with 33 text-only captured requests rendered entries 7
+  through 33: 26 whole newer entries, one partial oldest entry, and six omitted
+  older entries (the earlier v3 recipe rendered only entries 26–33 within 10,240
+  bytes). The complete section matched an independent reconstruction byte for byte,
+  including header, numbering, UTF-8 prefixes, separators, and the native truncation
+  notice. Retained numbered source was 61,439 bytes (the next code point did not
+  fit); the rendered section was 61,576 bytes, SHA-256
+  `ea6a4d21605b890ef1edcb965086a350d8d9690d6473794f7fea3e5914686cd7`, valid
+  UTF-8 with no U+FFFD.
+- **Native prompt.** At the core generation call, native mode supplied 4,057 bytes:
+  the original 3,937-byte prompt plus the 120-byte manual suffix, SHA-256
+  `c0d46ddb483333062f9842d4f410810d550d1a471ad4287b9ca70793b07e1ca8`. The manual
+  checkpoint completed.
+- **Custom prompt.** A 206-byte prompt containing Traditional Chinese, emoji, and
+  CRLF supplied exactly that text plus the suffix (326 bytes, SHA-256
+  `308a5d2951a08fa54873fb95a8f94b231f51a6afba971f4fe0138767c784461f`). The
+  checkpoint completed and contained a marker the prompt requested. Switching back
+  to native reproduced the original 4,057-byte prompt.
+- **Panel.** The panel counted the custom prompt as 206 bytes, like the CLI, even
+  though its text box normalizes CRLF to LF; blank and oversized text were blocked.
+
+To reproduce the retention observation, create a synthetic checkpoint with text-only
+requests whose total formatted size exceeds the budget and read its
+`capturedUserRequests` through `GetCascadeTrajectorySteps`. Independently allocate
+61,440 bytes in reverse order over the UTF-8 strings `${index + 1}. ${text}`: keep
+newer strings whole, shorten only the oldest boundary to a complete UTF-8 prefix,
+and omit earlier strings. Compare the complete rendered section, including original
+numbering, native separators, and the `<truncated N bytes>` notice.
+
+To read the actual bytes on Windows, set a bounded hardware execution breakpoint at
+the installed image base plus RVA `0x1820b05`, immediately after
+`FormatCheckpointUserRequests` calls `formatCapturedEntries`; the Go string return is
+`(RAX, RBX)`. For prompt adoption, break at the call at RVA `0x20a4b80`; the outgoing
+prompt pointer and length are at `SP+0x30/SP+0x38`. Read them with
+`ReadProcessMemory` and compare with the registered native body or the supplied
+custom text plus the suffix recorded in
+[build layouts](../scripts/lib/compaction-builds.mjs). Restore debug registers and
+detach in all outcomes, and never execute an extracted installer binary.
+
+These checks do not qualify other models, parent or media rendering, automatic
+compaction, or arbitrary GC schedules.
+
+### Historical v2 live evidence
+
+The v2 recipe (30 requests of at most 2,048 bytes each, summary-v1 as the prompt)
+is kept in `historical_inputs` only for migration and restore. Its observations on Windows
+2.32.1, recorded 2026-11-16/17, remain useful route evidence but do not qualify the
+current recipe:
+
+- The Gemini 3.8 Flash High `useCoreDirect` route summarizes through Cortex core's
+  `NewContextSummaryHook` and oneharness `generateContextSummary`, not
+  `CheckpointHandler.Handle`, so patching raw prompt defaults alone is not enough;
+  both consumers must be covered. The core consumer is at VA
+  `0x1420a4a4c..0x1420a4b80`; oneharness `PopulateAuxiliaryCheckpointData` reads the
+  request count at `0x141cc6717`.
+- Consumer overrides do not rewrite the source configuration object, so executor
+  metadata still reports the upstream prompt, count 10, and 1,024 bytes while the
+  patched consumers use the local policy. Diagnostics report that metadata as is.
+- Natural automatic compaction (2026-11-17) at the unchanged 256,000-token threshold
+  produced a completed checkpoint whose summary consumer received exactly the
+  3,871-byte summary-v1 prompt, SHA-256
+  `8a82c71c3fc03e10f3d2eb80efb2498b4782f190f207bfcfc505604ff9125fb4`, without the
+  manual suffix.
+- With compaction and tool-output enabled, limit changes through the settings-draft
+  path preserved both, plus localization and the capsule. On a binary copy, six
+  enable orders, eight feature subsets, and reverse removals produced
+  order-independent image hashes, and removing everything restored the exact
+  original.
+- M432 native-prompt preservation was checked statically and by offline execution;
+  that model was unavailable to the test account. `stepcompactor` entry points were
+  not reached on the tested manual route.
 
 ### Windows 2.31.2 legacy recipe
 
@@ -265,6 +391,12 @@ transaction machinery rules described in
 prepare records bind replacement and recovery, and foreign or drifted states are
 refused rather than repaired.
 
+Admission and transaction refusals exit nonzero with one JSON object containing
+`error` and `refusal.kind` (with `refusal.detail`). Callers must use that structured
+reason instead of parsing the English message. The panel maps a rejected compaction
+preview to its localized unavailable message; preflight does not modify the binary or
+complete a pending transaction.
+
 ### Windows 2.32.1 native composition
 
 Limit, tool-output, and compaction use one native transaction for the exact
@@ -280,13 +412,6 @@ The following standalone transaction and conflict rules apply only to the legacy
 2.31.2 recipe. Restore accepts its recorded output or a validated pending
 transaction, not another feature's later output.
 
-Compaction admission and transaction refusals keep a nonzero exit status and one
-JSON object containing
-`error` and `refusal.kind` (with `refusal.detail`). Callers must use that
-structured reason instead of parsing the English message. The panel maps a
-rejected compaction preview to its localized unavailable message; preflight
-does not modify the binary or complete a pending transaction.
-
 - **With `tool-output`:** the registered inputs are the tool-output patch
   output and the grep-patched baseline. Compaction only adds its own byte
   differences and preserves the tool-output and grep fixes. Restoring
@@ -301,45 +426,35 @@ does not modify the binary or complete a pending transaction.
 
 ## Qualification status
 
-The current 2.32.1 recipe is `supported` only within the recorded
-[consumer evidence](#windows-2321-consumer-evidence): Gemini 3.8 Flash High manual
-and natural automatic adoption, request capture/rendering, and native feature
-coexistence. M432 was not available for live testing, and no claim extends to all
-models or general summary-quality improvement.
+The 2.32.1 recipe is a `candidate`: its emitted code is execution-checked offline and
+its core-route behavior is [live-checked](#windows-2321-live-checks) for manual
+compaction on one model. The [v2 observations](#historical-v2-live-evidence) do not
+qualify the current retention algorithm or custom prompt templates. Promotion needs
+at least automatic compaction and other model routes. No claim is made about every
+model, complete-runtime GC behavior, or summary quality.
 
 ### Windows 2.31.2 legacy qualification
 
-Controlled live test, 2026-11-15: Antigravity 2.31.2 Windows stable, LS
-relaunched from the patched binary (`c6c7d81e…`, whole-file hash re-verified
-while running), new session on the Gemini 3.8 Flash High path with three
-planted marker facts, one user correction, an unfinished goal, then a manual
-`/compact`.
+Controlled live test, 2026-11-15, on Antigravity 2.31.2 Windows stable with the LS
+running from the patched binary (`c6c7d81e…`, hash re-verified while running): a new
+Gemini 3.8 Flash High session with three marker facts, one user correction, and an
+unfinished goal, followed by a manual `/compact`.
 
 | Check | Result |
 | --- | --- |
-| Apply / restore transaction | Applied `47a439… → c6c7d81e…` with verified backups; restore returned exactly `47a439…` (the tool-output state, from the verified `.orig.<sha>` sibling); a second apply reported `already-applied`; status reported `managed-output` throughout. |
-| Manual `/compact` | Triggered and completed normally on the patched binary; the command path is not broken by the patch. |
-| Summary output quality | Well-formed `<summary>…</summary>`; all planted markers, the language correction, and the unfinished goal were retained. |
-| Compaction thresholds | `executor_metadata` checkpoint limit read with the project's read-only diagnostics: `256000` in the patched-binary session, equal to pre-patch sessions — thresholds untouched. |
-| **Prompt adoption (M1)** | **Not effective on the tested path.** The produced summary follows the upstream seven-section structure (`Task Overview`, `Progress`, `Key Findings`, `Errors & Fixes`, `Active Context`, `Next Steps`, `Commitments & Constraints`), not the ten-section summary-v1. The LS ran from the patched bytes, so the summarizer on this path does not read the three covered prompt sources (the compiled-in raw prompt and the two `session_summary_prompt_override` values), or a higher layer such as server settings overrides them. |
-| Retention values (M2) | Unknown on this path. The summary gives no observable evidence for the 30-request / 2048-byte retention change, and the byte cap's retention use was already unverified (see [Recipe segments](#recipe-segments)). |
-| Other model paths | Not tested; each profile path stands on its own evidence. |
-| Natural auto-compaction | Not tested (native 256K threshold not reached). |
+| Apply / restore | Applied `47a439… → c6c7d81e…` with verified backups; restore returned exactly `47a439…`; a second apply reported `already-applied`. |
+| Manual `/compact` | Completed normally; markers, the correction, and the unfinished goal were retained. |
+| Thresholds | Executor checkpoint limit stayed `256000`. |
+| **Prompt adoption** | **Not effective.** The summary used upstream's seven-section structure, not summary-v1's ten sections, so this route does not read the three patched prompt sources, or a higher layer such as server settings overrides them. |
+| Retention values | No observable evidence; whether retention uses the byte cap was never established (see [recipe segments](#recipe-segments)). |
+| Other models, automatic compaction | Not tested. |
 
-Interpretation of this 2.31.2 test: the legacy recipe completed its transaction
-and did not disturb the tested manual compaction path, but its prompt change was
-not adopted and retention remained unverified. That recipe stays `candidate`.
-The later 2.32.1 consumer evidence does not establish that the legacy source
-defaults worked, nor does it authorize intercepting arbitrary remote overrides.
-
-Static verification remains: both registered recipes reproduce their
-registered output hashes; full-file diffs stay inside the 13 registered
-segments; the embedded configuration round-trips with only the expected field
-changes. Summary quality against the ten-section prompt cannot be evaluated
-while the prompt is not adopted; no claim is made that it improves summaries.
-Remaining unknowns are also recorded in the registry notes: whether retention
-actually uses `max_user_request_bytes`, its truncation/order semantics,
-upstream acceptance of the trailing-whitespace padding, which profile a live
-session selects, and whether a remote settings override replaces these values
-before use — the live test confirms the last question is real for the prompt
-override on the tested path.
+The recipe therefore stays `candidate`. Static verification still holds: both
+registered recipes reproduce their output hashes, full-file diffs stay inside the 13
+registered segments, and the embedded configuration round-trips with only the
+expected field changes. Open questions are recorded in the registry notes: whether
+retention uses `max_user_request_bytes`, its truncation and ordering, upstream
+acceptance of the whitespace padding, which profile a live session selects, and
+whether remote settings override these values (confirmed for the prompt on the
+tested route). The later 2.32.1 evidence does not show that the 2.31.2 source
+defaults work.
