@@ -264,10 +264,6 @@ func qualificationLevels(target *Target) map[string]any {
 	}
 }
 
-func targetSummary(target *Target) map[string]any {
-	return map[string]any{"target_id": target.ID, "product": target.Product, "channel": target.Channel, "platform": target.Platform, "arch": target.Arch, "binary_name": target.BinaryName, "binary_size": target.BinarySize, "member": target.Member, "qualification": target.Qualification, "verified_at": target.VerifiedAt, "value_targets": target.ValueTargets, "out_of_scope": target.OutOfScope, "notes": target.Notes, "evidence": target.Evidence}
-}
-
 // fileState classifies the installed binary for status output. A disk patch
 // does not mean the running app loaded it or that the model received the new
 // prompt or retention values; the effective state is unknown without live

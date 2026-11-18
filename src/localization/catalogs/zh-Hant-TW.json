@@ -16197,6 +16197,34 @@
     "ssh.web.hostWindowNotice": {
       "value": "此視窗的代理程式、檔案與終端機都位於 {0}。",
       "reviewed": true
+    },
+    "ssh.web.signInSubtitle": {
+      "value": "您正在 {0} 上登入，登入狀態會留在該電腦上。",
+      "reviewed": true
+    },
+    "microphone.web.permissionDenied": {
+      "value": "作業系統已封鎖麥克風存取權。請在系統設定中授予麥克風權限後再試一次。",
+      "reviewed": true
+    },
+    "microphone.web.noDevice": {
+      "value": "此電腦找不到麥克風。請連接或啟用輸入裝置後再試一次。",
+      "reviewed": true
+    },
+    "microphone.web.busy": {
+      "value": "麥克風已由另一個錄音工作階段使用中。",
+      "reviewed": true
+    },
+    "microphone.web.unsupported": {
+      "value": "此環境不支援麥克風擷取。",
+      "reviewed": true
+    },
+    "microphone.web.captureFailed": {
+      "value": "麥克風擷取失敗。",
+      "reviewed": true
+    },
+    "microphone.web.captureEnded": {
+      "value": "麥克風擷取意外結束。",
+      "reviewed": true
     }
   }
 }

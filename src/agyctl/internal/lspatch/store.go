@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 
 	"agyctl/internal/apptarget"
 	"agyctl/internal/fsx"
@@ -34,6 +35,7 @@ type prepare struct {
 	After       State    `json:"after"`
 	Expected    Expected `json:"expected"`
 	StartBackup string   `json:"operation_start_backup"`
+	Previous    *State   `json:"previous,omitempty"`
 }
 
 func targetKey(binary string) (string, string, error) {
@@ -47,6 +49,54 @@ func targetKey(binary string) (string, string, error) {
 func statePaths(directory, binary string) (string, string, error) {
 	_, id, err := targetKey(binary)
 	return filepath.Join(directory, "native-state-"+id+".json"), filepath.Join(directory, "native-prepare-"+id+".json"), err
+}
+
+func (e Engine) previousArchivePath(binary string, state State) (string, error) {
+	_, id, err := targetKey(binary)
+	return filepath.Join(e.Directory, fmt.Sprintf("native-history-%s-%d-%s.json", id, state.Generation, state.CurrentSHA)), err
+}
+
+func (e Engine) verifyPreviousArchive(binary string, state State) error {
+	path, err := e.previousArchivePath(binary, state)
+	if err != nil {
+		return err
+	}
+	var archived State
+	found, err := readJSON(path, &archived)
+	if err != nil {
+		return err
+	}
+	if !found || !reflect.DeepEqual(archived, state) {
+		return errors.New("native prior-build history does not match the verified previous state")
+	}
+	return nil
+}
+
+func (e Engine) archivePrevious(binary string, state State) error {
+	statePath, _, err := statePaths(e.Directory, binary)
+	if err != nil {
+		return err
+	}
+	var recorded State
+	found, err := readJSON(statePath, &recorded)
+	if err != nil {
+		return err
+	}
+	if !found || !reflect.DeepEqual(recorded, state) {
+		return errors.New("stale-plan: previous native active state changed before archival")
+	}
+	path, err := e.previousArchivePath(binary, state)
+	if err != nil {
+		return err
+	}
+	sha, err := fsx.Hash(statePath)
+	if err != nil {
+		return err
+	}
+	if err := fsx.EnsureBackup(statePath, path, sha); err != nil {
+		return err
+	}
+	return e.verifyPreviousArchive(binary, state)
 }
 
 func HasState(directory, binary string) (bool, error) {

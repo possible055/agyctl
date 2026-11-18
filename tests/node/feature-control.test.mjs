@@ -60,6 +60,20 @@ test('native revisions bind mutations while localization content survives verifi
   ])
     assert.throws(() => assertNativeExpectation(changed, expected), /changed since review/);
   assert.throws(() => nativeExpectation({ ...status, generation: -1 }), /Invalid native/);
+  const transition = { ...status, previous_state_sha256: 'd'.repeat(64) };
+  const transitionExpected = nativeExpectation(transition);
+  assert.equal(transitionExpected.previous_state_sha256, transition.previous_state_sha256);
+  assert.doesNotThrow(() => assertNativeExpectation(transition, transitionExpected));
+  for (const changed of [status, { ...transition, previous_state_sha256: 'e'.repeat(64) }])
+    assert.throws(
+      () => assertNativeExpectation(changed, transitionExpected),
+      /changed since review/,
+    );
+  assert.throws(() => assertNativeExpectation(transition, expected), /changed since review/);
+  assert.throws(
+    () => nativeExpectation({ ...transition, previous_state_sha256: null }),
+    /Invalid native/,
+  );
   const source = {
     lsSha256: status.base_sha256,
     nlsHelperCalleeName: 'Fu',
@@ -389,6 +403,7 @@ test('summary prompt drafts preserve options through native review and verify th
   const rawLimit = { binary_sha256: native.current_sha256, language_server_running: false };
   const rawCompaction = { binary_sha256: native.current_sha256, file_state: 'managed-output' };
   const commands = [];
+  let patchKind = 'original';
   const adapter = {
     defaultStateRoot: () => directory,
     hostPatchStatus: () => ({
@@ -425,7 +440,7 @@ test('summary prompt drafts preserve options through native review and verify th
       readModelCatalog: async () => ({ status: 'available', models: [] }),
       normalizeNativeLimitStatus: () => ({
         binarySha256: native.current_sha256,
-        patchKind: 'original',
+        patchKind,
         modelLimits: [],
         savedModelLimits: [],
         settingsState: 'absent',
@@ -520,6 +535,52 @@ test('summary prompt drafts preserve options through native review and verify th
     commands.map((args) => Array.from(args)),
     [['compaction', 'patch', '--binary', target.binaryPath]],
   );
+  native.verified = true;
+  native.update_transition_required = true;
+  native.recipe_update_required = true;
+  native.features.compaction = false;
+  rawCompaction.file_state = 'registered-input';
+  commands.length = 0;
+  const updatedOriginal = await api.readFeatures();
+  const hostOnly = {
+    ...selection(),
+    revision: updatedOriginal.revision,
+    limit: { enabled: false, modelLimits: [] },
+    compaction: false,
+  };
+  const hostDraft = await api.queueFeatureApply(hostOnly);
+  await api.preflightFeatureDraft(hostDraft.draft.id);
+  assert.deepEqual(commands, []);
+  await assert.rejects(api.queueFeatureApply({ ...hostOnly, compaction: true }), {
+    code: 'NATIVE_UPDATE_REQUIRED',
+  });
+  native.verified = false;
+  native.update_transition_required = false;
+  native.recipe_update_required = false;
+  for (const fileState of ['unsupported', 'drift']) {
+    native.file_state = fileState;
+    patchKind = fileState === 'unsupported' ? 'unknown' : 'original';
+    rawCompaction.file_state = fileState === 'unsupported' ? 'unknown' : 'registered-input';
+    commands.length = 0;
+    const unknown = await api.readFeatures();
+    assert.equal(unknown.features.limit.enabled, null);
+    assert.equal(unknown.features.compaction.enabled, null);
+    const preserve = {
+      ...selection(),
+      revision: unknown.revision,
+      limit: { enabled: null, modelLimits: [] },
+      compaction: null,
+    };
+    const draft = await api.queueFeatureApply(preserve);
+    const applied = await api.applyFeatureDraft(draft.draft.id);
+    assert.equal(applied.operation.state, 'succeeded');
+    assert.equal(applied.features.limit.enabled, null);
+    assert.deepEqual(commands, []);
+    for (const changes of [{ limit: { enabled: false, modelLimits: [] } }, { compaction: true }])
+      await assert.rejects(api.queueFeatureApply({ ...preserve, ...changes }), {
+        code: 'STATE_UNAVAILABLE',
+      });
+  }
 });
 
 test('feature drafts bind revisions, refuse a running client, and apply/restore actual model limits', async (t) => {

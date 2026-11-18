@@ -420,7 +420,7 @@ func patch(binary string, o options, reg registry, s store, candidates []layout.
 		return nil, fmt.Errorf("already patched with different settings; run 'agyctl limit restore' first to change them")
 	}
 	if pstate.Kind == "size-mismatch" {
-		return nil, fmt.Errorf("%s is not %#x bytes — different build; refusing", Func, funcSizes[pstate.Arch])
+		return nil, fmt.Errorf("%s has no implemented %s function size — different build; refusing", Func, pstate.Arch)
 	}
 	if pstate.Kind != "original" {
 		return nil, fmt.Errorf("function bytes match no recorded original in the compat registry (%d entries) — refusing", len(reg.Entries))

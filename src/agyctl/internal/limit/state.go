@@ -141,20 +141,16 @@ func loadRegistry(root string, snap *assets.Snapshot) (registry, error) {
 		if err != nil {
 			return reg, fmt.Errorf("invalid original bytes in registry: %w", err)
 		}
-		// The assemblers support exactly one admitted original size per
-		// architecture: the entry must declare that size as a positive integer
-		// matching the recorded bytes, so JSON drift fails loudly instead of
-		// silently reusing a constant or truncating a fractional size.
 		arch := stringField(entry, "arch")
-		size, ok := funcSizes[arch]
+		_, ok := funcSizes[arch]
 		if !ok {
 			return reg, fmt.Errorf("registry entry %s declares unsupported architecture %q", stringField(entry, "id"), arch)
 		}
 		raw, ok := entry["func_size"].(float64)
-		if !ok || raw <= 0 || raw != math.Trunc(raw) || int(raw) != len(body) || int(raw) != size {
+		if !ok || raw <= 0 || raw != math.Trunc(raw) || int(raw) != len(body) || !supportedOriginal(arch, body) {
 			return reg, fmt.Errorf(
-				"registry entry %s must declare func_size as a positive integer equal to the recorded body length and the supported %s function size %#x",
-				stringField(entry, "id"), arch, size)
+				"registry entry %s must declare func_size as a positive integer equal to the recorded body length and an implemented %s original signature",
+				stringField(entry, "id"), arch)
 		}
 		if fsx.SHA256(body) != stringField(entry, "orig_body_sha256") {
 			return reg, fmt.Errorf("original byte signature is inconsistent for registry entry %s", stringField(entry, "id"))

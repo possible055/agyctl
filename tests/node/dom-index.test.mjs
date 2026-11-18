@@ -171,6 +171,18 @@ test('reviewed catalogs prepare all three locales and keep aliases off the indep
     }[localeName];
     assert.equal(matchDisplayText(index, 'Hide user@主機 from this list')?.translated, remote[0]);
     assert.equal(matchDisplayText(index, 'MCP error')?.translated, remote[1]);
+    const signIn = {
+      'zh-Hant-TW': '您正在 Open Settings 上登入，登入狀態會留在該電腦上。',
+      'zh-Hans-CN': '您正在 Open Settings 上登录，登录状态会保留在该电脑上。',
+      'ja-JP': 'Open Settings でログインしています。ログイン状態はそのマシンに保持されます。',
+    }[localeName];
+    assert.equal(
+      matchDisplayText(
+        index,
+        "You're signing in on Open Settings. Your sign-in stays on that machine.",
+      )?.translated,
+      signIn,
+    );
   }
 });
 

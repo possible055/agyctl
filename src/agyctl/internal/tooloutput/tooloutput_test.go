@@ -212,6 +212,9 @@ func TestRealRegistryLoadsAndSelfChecks(t *testing.T) {
 		"win-amd64-antigravity-2.32.1": {"2.32.1", 4, map[string]inputContract{
 			"original": {"65cdb8d132fc61056625081be7d07d4d22f57eba485de7edf0d24d98e77c891f", "a53f6fcc14e73fa4117acbcf70bf4c1b4497731d9b72db9ca03284b21b82dea0", "7596c88a1085a14924361278b4085147726da76eaacecfd54ccaae489b8e44aa"},
 		}},
+		"win-amd64-antigravity-2.33.0": {"2.33.0", 4, map[string]inputContract{
+			"original": {"eb6d986dfc5a859c6e9b1b36a0601f5c362993cc16eb8962ad554c9141defc9c", "9f230dcacd9be8736ca4d80b0d178bbee5d47b50e46ad7561e76ec9525636822", "11bf399578cfb68d282583e5ef4b5ac15bd5229bcf58ad5d644fc85e143af336"},
+		}},
 	}
 	if len(reg.Targets) != len(contracts) {
 		t.Fatalf("registered build contracts changed: got %d targets, want %d", len(reg.Targets), len(contracts))
@@ -236,7 +239,7 @@ func TestRealRegistryLoadsAndSelfChecks(t *testing.T) {
 				if len(state.Segments) != contract.segments {
 					t.Fatalf("input %s segments = %d, want %d", state.Input, len(state.Segments), contract.segments)
 				}
-				if contract.version == "2.32.1" {
+				if contract.version != "2.31.2" {
 					for _, segment := range state.Segments {
 						if strings.HasPrefix(segment.Name, "grep-0") {
 							t.Fatalf("2.31.2 grep transform copied into %s: %s", target.ID, segment.Name)

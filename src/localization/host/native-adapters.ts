@@ -38,8 +38,8 @@ const roleLabels: Record<string, [string, string]> = {
 };
 
 /** Derives byte-exact, unique edits only from the reviewed native source contexts. */
-export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath: string, adapterVersion: '2' | '3' = '2'): NativeEdit[] {
-  if (adapterVersion !== '2' && adapterVersion !== '3')
+export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath: string, adapterVersion: '2' | '3' | '4' = '2'): NativeEdit[] {
+  if (adapterVersion !== '2' && adapterVersion !== '3' && adapterVersion !== '4')
     throw new ComposerError('SOURCE_MISMATCH', `Unknown native localization adapter version: ${String(adapterVersion)}`);
   const edits: NativeEdit[] = [];
   const sources = new Map<string, string>();
@@ -54,11 +54,15 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
     }
     return value;
   }
-  function edit(file: string, anchor: string, replacement: string, messageIds: string[] = []) {
+  function requireAnchor(file: string, anchor: string) {
     const content = source(file);
     const start = content.indexOf(anchor);
     if (start < 0 || content.indexOf(anchor, start + 1) >= 0)
       throw new ComposerError('SOURCE_MISMATCH', `Native capability anchor ${start < 0 ? 'missing' : 'ambiguous'} in ${file}: ${anchor.slice(0, 120)}`);
+    return { content, start };
+  }
+  function edit(file: string, anchor: string, replacement: string, messageIds: string[] = []) {
+    const { content, start } = requireAnchor(file, anchor);
     const resolved = replacement.replaceAll(ENGINE_TOKEN, engineRequirePath(file));
     edits.push({ file, anchor, replaceAnchor: resolved, messageIds, sourceSha256: sha256(Buffer.from(content)), start, end: start + anchor.length });
   }
@@ -163,41 +167,41 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
     }
   }
 
-  if (adapterVersion === '3') {
+  if (adapterVersion === '3' || adapterVersion === '4') {
     edit("dist/remote/remoteManager.js", "title: 'Choose an SSH config file'", `title: ${text("ssh.chooseConfigFile", "Choose an SSH config file")}`, ["ssh.chooseConfigFile"]);
     edit("dist/remote/remoteManager.js", "title: 'SSH connection failed'", `title: ${text("ssh.connectionFailedTitle", "SSH connection failed")}`, ["ssh.connectionFailedTitle"]);
     edit("dist/remote/remoteManager.js", "this.reportError(err, entry.label, 'Sign-in failed', win)", `this.reportError(err, entry.label, ${text("ssh.signInFailed", "Sign-in failed")}, win)`, ["ssh.signInFailed"]);
     edit("dist/remote/remoteManager.js", "this.reportError(err, entry.label, 'Could not stop the SSH server', win)", `this.reportError(err, entry.label, ${text("ssh.stopFailedTitle", "Could not stop the SSH server")}, win)`, ["ssh.stopFailedTitle"]);
-    edit("dist/remote/remoteManager.js", "\n                title: 'Stop SSH server'", `\n                title: ${text("ssh.stopServerTitle", "Stop SSH server")}`, ["ssh.stopServerTitle"]);
+    if (adapterVersion === '3') edit("dist/remote/remoteManager.js", "\n                title: 'Stop SSH server'", `\n                title: ${text("ssh.stopServerTitle", "Stop SSH server")}`, ["ssh.stopServerTitle"]);
     edit("dist/remote/remoteManager.js", "\n            title: 'Stop SSH server'", `\n            title: ${text("ssh.stopServerTitle", "Stop SSH server")}`, ["ssh.stopServerTitle"]);
     edit("dist/remote/remoteManager.js", "`Stop the Antigravity server on ${entry.label}?`", format("ssh.stopServerConfirm", "Stop the Antigravity server on {0}?", "entry.label"), ["ssh.stopServerConfirm"]);
-    edit("dist/remote/remoteManager.js", "'Agents running on this host will stop and its window will close. ' +\n                    'The server starts again the next time you connect.'", text("ssh.stopServerDetail", "Agents running on this host will stop and its window will close. The server starts again the next time you connect."), ["ssh.stopServerDetail"]);
+    if (adapterVersion === '3') edit("dist/remote/remoteManager.js", "'Agents running on this host will stop and its window will close. ' +\n                    'The server starts again the next time you connect.'", text("ssh.stopServerDetail", "Agents running on this host will stop and its window will close. The server starts again the next time you connect."), ["ssh.stopServerDetail"]);
     edit("dist/remote/remoteManager.js", "`Not connected to ${label}`", format("ssh.notConnectedTo", "Not connected to {0}", "label"), ["ssh.notConnectedTo"]);
     edit("dist/remote/remoteManager.js", "'Reconnect first, then stop its server.'", text("ssh.reconnectBeforeStop", "Reconnect first, then stop its server."), ["ssh.reconnectBeforeStop"]);
-    edit("dist/remote/remoteManager.js", "title: 'Sign in'", `title: ${text("ssh.signInTitle", "Sign in")}`, ["ssh.signInTitle"]);
-    edit("dist/remote/remoteManager.js", "`Sign in to your organization for ${entry.label}?`", format("ssh.organizationSignInConfirm", "Sign in to your organization for {0}?", "entry.label"), ["ssh.organizationSignInConfirm"]);
+    if (adapterVersion === '3') edit("dist/remote/remoteManager.js", "title: 'Sign in'", `title: ${text("ssh.signInTitle", "Sign in")}`, ["ssh.signInTitle"]);
+    if (adapterVersion === '3') edit("dist/remote/remoteManager.js", "`Sign in to your organization for ${entry.label}?`", format("ssh.organizationSignInConfirm", "Sign in to your organization for {0}?", "entry.label"), ["ssh.organizationSignInConfirm"]);
     edit("dist/remote/remoteManager.js", "'Continue only if you just chose to sign in with your organization ' +\n                `in this window. ${entry.label} will get access to your ` +\n                \"organization's Google Cloud account.\\n\"", format("ssh.organizationSignInDetail", "Continue only if you just chose to sign in with your organization in this window. {0} will get access to your organization's Google Cloud account.\n", "entry.label"), ["ssh.organizationSignInDetail"]);
     edit("dist/remote/remoteManager.js", "`Workforce pool: ${names[1]}  Provider: ${names[2]}`", format("ssh.workforceProvider", "Workforce pool: {0}  Provider: {1}", "names[1], names[2]"), ["ssh.workforceProvider"]);
     edit("dist/remote/remoteManager.js", "`Identity provider: ${provider}`", format("ssh.identityProvider", "Identity provider: {0}", "provider"), ["ssh.identityProvider"]);
     edit("dist/remote/remoteManager.js", "buttons: ['Stop Server', 'Cancel']", `buttons: [${text("ssh.stopServerAction", "Stop Server")}, ${text("common.cancel", "Cancel")}]`, ["ssh.stopServerAction","common.cancel"]);
     edit("dist/remote/remoteManager.js", "buttons: ['Sign In', 'Cancel']", `buttons: [${text("ssh.signInAction", "Sign In")}, ${text("common.cancel", "Cancel")}]`, ["ssh.signInAction","common.cancel"]);
     edit("dist/remote/sshPrompts.js", "<div id=\"retry\" class=\"note\" hidden>Asked again: your last answer may not have worked.</div>", "<div id=\"retry\" class=\"note\" hidden>" + "\${" + htmlText(text("ssh.promptRetry", "Asked again: your last answer may not have worked.")) + "}" + "</div>", ["ssh.promptRetry"]);
-    edit("dist/remote/sshPrompts.js", "<div id=\"long\" class=\"note\" hidden>That's too long.</div>", "<div id=\"long\" class=\"note\" hidden>" + "\${" + htmlText(text("ssh.promptTooLong", "That's too long.")) + "}" + "</div>", ["ssh.promptTooLong"]);
-    edit("dist/remote/sshPrompts.js", "<button id=\"cancel\">Cancel</button>", "<button id=\"cancel\">" + "\${" + htmlText(text("common.cancel", "Cancel")) + "}" + "</button>", ["common.cancel"]);
-    edit("dist/remote/sshPrompts.js", "<button id=\"continue\">Continue</button>", "<button id=\"continue\">" + "\${" + htmlText(text("common.continue", "Continue")) + "}" + "</button>", ["common.continue"]);
+    if (adapterVersion === '3') edit("dist/remote/sshPrompts.js", "<div id=\"long\" class=\"note\" hidden>That's too long.</div>", "<div id=\"long\" class=\"note\" hidden>" + "\${" + htmlText(text("ssh.promptTooLong", "That's too long.")) + "}" + "</div>", ["ssh.promptTooLong"]);
+    if (adapterVersion === '3') edit("dist/remote/sshPrompts.js", "<button id=\"cancel\">Cancel</button>", "<button id=\"cancel\">" + "\${" + htmlText(text("common.cancel", "Cancel")) + "}" + "</button>", ["common.cancel"]);
+    if (adapterVersion === '3') edit("dist/remote/sshPrompts.js", "<button id=\"continue\">Continue</button>", "<button id=\"continue\">" + "\${" + htmlText(text("common.continue", "Continue")) + "}" + "</button>", ["common.continue"]);
     edit("dist/remote/sshPrompts.js", "`SSH: ${label}`", format("ssh.promptTitle", "SSH: {0}", "label"), ["ssh.promptTitle"]);
     edit("dist/remote/sshPrompts.js", "`SSH: ${text.label}`", format("ssh.promptTitle", "SSH: {0}", "text.label"), ["ssh.promptTitle"]);
-    edit("dist/remote/sshPrompts.js", "message: confirm ? `${label} asks:` : 'Touch your security key'", `message: confirm ? ${format("ssh.promptAsks", "{0} asks:", "label")} : ${text("ssh.touchSecurityKey", "Touch your security key")}`, ["ssh.promptAsks","ssh.touchSecurityKey"]);
+    if (adapterVersion === '3') edit("dist/remote/sshPrompts.js", "message: confirm ? `${label} asks:` : 'Touch your security key'", `message: confirm ? ${format("ssh.promptAsks", "{0} asks:", "label")} : ${text("ssh.touchSecurityKey", "Touch your security key")}`, ["ssh.promptAsks","ssh.touchSecurityKey"]);
     edit("dist/remote/sshPrompts.js", "buttons: confirm ? ['Yes', 'No'] : ['Cancel']", `buttons: confirm ? [${text("ssh.yes", "Yes")}, ${text("ssh.no", "No")}] : [${text("common.cancel", "Cancel")}]`, ["ssh.yes","ssh.no","common.cancel"]);
-    edit("dist/remote/sshPrompts.js", "contents.send('ssh-prompt:show', text);", `contents.send('ssh-prompt:show', { ...text, asks: ${format("ssh.promptAsks", "{0} asks:", "text.label")} });`, ["ssh.promptAsks"]);
-    edit("dist/remote/sshPromptPreload.js", "(_event, { label, message, retry })", "(_event, { label, message, retry, asks: localizedAsks })", []);
-    edit("dist/remote/sshPromptPreload.js", "asks.textContent = `${label} asks:`;", "asks.textContent = localizedAsks ?? `${label} asks:`;", []);
+    if (adapterVersion === '3') edit("dist/remote/sshPrompts.js", "contents.send('ssh-prompt:show', text);", `contents.send('ssh-prompt:show', { ...text, asks: ${format("ssh.promptAsks", "{0} asks:", "text.label")} });`, ["ssh.promptAsks"]);
+    if (adapterVersion === '3') edit("dist/remote/sshPromptPreload.js", "(_event, { label, message, retry })", "(_event, { label, message, retry, asks: localizedAsks })", []);
+    if (adapterVersion === '3') edit("dist/remote/sshPromptPreload.js", "asks.textContent = `${label} asks:`;", "asks.textContent = localizedAsks ?? `${label} asks:`;", []);
     edit("dist/remote/sshBridge.js", "'The SSH config file must be a path of at most 4 KiB.'", text("ssh.configPathLimit", "The SSH config file must be a path of at most 4 KiB."), ["ssh.configPathLimit"]);
     edit("dist/remote/sshBridge.js", "'Enter an SSH host, for example \"devbox\" or \"user@host\".'", text("ssh.enterHost", "Enter an SSH host, for example \"devbox\" or \"user@host\"."), ["ssh.enterHost"]);
     edit("dist/remote/sshErrorText.js", "`Error code: ${err.code}\\nLogs: ${logPath()}`", format("ssh.codeAndLogs", "Error code: {0}\nLogs: {1}", "err.code, logPath()"), ["ssh.codeAndLogs"]);
     edit("dist/remote/sshErrorText.js", "`${label} reported: ${text}`", format("ssh.reportedError", "{0} reported: {1}", "label, text"), ["ssh.reportedError"]);
     edit("dist/remote/sshErrorText.js", "'The connection was closed before it finished.'", text("ssh.connectionClosedEarly", "The connection was closed before it finished."), ["ssh.connectionClosedEarly"]);
-    edit("dist/remote/sshErrorText.js", "`${what}\\nFile: ${note} on ${label}`", format("ssh.sharedHomeFile", "{0}\nFile: {1} on {2}", "what, note, label"), ["ssh.sharedHomeFile"]);
+    if (adapterVersion === '3') edit("dist/remote/sshErrorText.js", "`${what}\\nFile: ${note} on ${label}`", format("ssh.sharedHomeFile", "{0}\nFile: {1} on {2}", "what, note, label"), ["ssh.sharedHomeFile"]);
     edit("dist/remote/sshErrorText.js", "`${text}\\nLogs: ${logPath()}`", format("ssh.errorWithLogs", "{0}\nLogs: {1}", "text, logPath()"), ["ssh.errorWithLogs"]);
     edit("dist/remote/sshArgs.js", "'Invalid SSH config file.'", text("ssh.invalidConfig", "Invalid SSH config file."), ["ssh.invalidConfig"]);
     edit("dist/remote/sshArgs.js", "'SSH authentication failed. Check your password, code or keys, then try again.'", text("ssh.authFailed", "SSH authentication failed. Check your password, code or keys, then try again."), ["ssh.authFailed"]);
@@ -207,8 +211,8 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
     edit("dist/remote/sshArgs.js", "\"The host's SSH key is unknown or has changed. Save it with ssh in a terminal. If it changed, ask the host's owner first: the connection may be intercepted.\"", text("ssh.hostKeyWindows", "The host's SSH key is unknown or has changed. Save it with ssh in a terminal. If it changed, ask the host's owner first: the connection may be intercepted."), ["ssh.hostKeyWindows"]);
     edit("dist/remote/sshArgs.js", "\"The host's SSH key has changed or isn't trusted. If it changed, ask the host's owner first: the connection may be intercepted.\"", text("ssh.hostKeyChanged", "The host's SSH key has changed or isn't trusted. If it changed, ask the host's owner first: the connection may be intercepted."), ["ssh.hostKeyChanged"]);
     edit("dist/remote/sshArgs.js", "'SSH port forwarding failed. Make sure the server allows TCP forwarding (AllowTcpForwarding) for your account, then try again.'", text("ssh.forwardingFailed", "SSH port forwarding failed. Make sure the server allows TCP forwarding (AllowTcpForwarding) for your account, then try again."), ["ssh.forwardingFailed"]);
-    edit("dist/remote/sshArgs.js", "\"The SSH host isn't supported. Antigravity needs Linux on x64 or arm64 with glibc 2.26 or newer.\"", text("ssh.unsupportedHost", "The SSH host isn't supported. Antigravity needs Linux on x64 or arm64 with glibc 2.26 or newer."), ["ssh.unsupportedHost"]);
-    edit("dist/remote/sshArgs.js", "'Another host that shares your home directory runs the Antigravity server. Connect to that host instead.'", text("ssh.sharedHome", "Another host that shares your home directory runs the Antigravity server. Connect to that host instead."), ["ssh.sharedHome"]);
+    if (adapterVersion === '3') edit("dist/remote/sshArgs.js", "\"The SSH host isn't supported. Antigravity needs Linux on x64 or arm64 with glibc 2.26 or newer.\"", text("ssh.unsupportedHost", "The SSH host isn't supported. Antigravity needs Linux on x64 or arm64 with glibc 2.26 or newer."), ["ssh.unsupportedHost"]);
+    if (adapterVersion === '3') edit("dist/remote/sshArgs.js", "'Another host that shares your home directory runs the Antigravity server. Connect to that host instead.'", text("ssh.sharedHome", "Another host that shares your home directory runs the Antigravity server. Connect to that host instead."), ["ssh.sharedHome"]);
     edit("dist/remote/sshArgs.js", "\"Couldn't install the Antigravity server on the SSH host. Make sure it has free disk space, and that it or this computer can download from the internet.\"", text("ssh.installFailed", "Couldn't install the Antigravity server on the SSH host. Make sure it has free disk space, and that it or this computer can download from the internet."), ["ssh.installFailed"]);
     edit("dist/remote/sshArgs.js", "'The Antigravity server on the SSH host stopped. Reconnect to start it again.'", text("ssh.serverStopped", "The Antigravity server on the SSH host stopped. Reconnect to start it again."), ["ssh.serverStopped"]);
     edit("dist/remote/sshArgs.js", "'The SSH connection closed. Check your network connection, then reconnect.'", text("ssh.connectionClosed", "The SSH connection closed. Check your network connection, then reconnect."), ["ssh.connectionClosed"]);
@@ -223,8 +227,8 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
     edit("dist/remote/disconnectedPage.js", "`Disconnected from ${host}`", `escapeHtml(${format("ssh.disconnectedFrom", "Disconnected from {0}", "page.label")})`, ["ssh.disconnectedFrom"]);
     edit("dist/remote/disconnectedPage.js", "`Agents keep running on ${host}.`", `escapeHtml(${format("ssh.agentsKeepRunning", "Agents keep running on {0}.", "page.label")})`, ["ssh.agentsKeepRunning"]);
     edit("dist/remote/disconnectedPage.js", "`Agents keep running on ${host} unless its server stopped.`", `escapeHtml(${format("ssh.agentsMayKeepRunning", "Agents keep running on {0} unless its server stopped.", "page.label")})`, ["ssh.agentsMayKeepRunning"]);
-    edit("dist/remote/disconnectedPage.js", ">Reconnect</a>", ">\${" + htmlText(text("ssh.reconnect", "Reconnect")) + "}</a>", ["ssh.reconnect"]);
-    edit("dist/remote/disconnectedPage.js", ">Close</a>", ">\${" + htmlText(text("ssh.closeWindow", "Close")) + "}</a>", ["ssh.closeWindow"]);
+    if (adapterVersion === '3') edit("dist/remote/disconnectedPage.js", ">Reconnect</a>", ">\${" + htmlText(text("ssh.reconnect", "Reconnect")) + "}</a>", ["ssh.reconnect"]);
+    if (adapterVersion === '3') edit("dist/remote/disconnectedPage.js", ">Close</a>", ">\${" + htmlText(text("ssh.closeWindow", "Close")) + "}</a>", ["ssh.closeWindow"]);
     edit("dist/remote/sshConnection.js", "`Checking ${label}…`", format("ssh.statusChecking", "Checking {0}…", "label"), ["ssh.statusChecking"]);
     edit("dist/remote/sshConnection.js", "`Waiting for another window to finish installing on ${label}…`", format("ssh.statusWaiting", "Waiting for another window to finish installing on {0}…", "label"), ["ssh.statusWaiting"]);
     edit("dist/remote/sshConnection.js", "`Replacing an invalid server binary on ${label}…`", format("ssh.statusReplacing", "Replacing an invalid server binary on {0}…", "label"), ["ssh.statusReplacing"]);
@@ -284,11 +288,94 @@ export function buildReviewedNativeEdits(engineIO: AsarEngineLike, originalPath:
     edit("dist/remote/sshConfigHosts.js", "\n    const unreadable = () => invalid(`${shown} doesn't exist or can't be read.`);", "\n    const unreadable = () => invalid(" + format("ssh.configUnreadable", "{0} doesn't exist or can't be read.", "shown") + ");", ["ssh.configUnreadable"]);
     edit("dist/remote/sshConfigHosts.js", "`${shown} is now a link: choose the file again.`", format("ssh.configChangedToLink", "{0} is now a link: choose the file again.", "shown"), ["ssh.configChangedToLink"]);
     edit("dist/remote/sshConfigHosts.js", "`${shown} is over 4 MiB.`", format("ssh.configTooLarge", "{0} is over 4 MiB.", "shown"), ["ssh.configTooLarge"]);
-    edit("dist/remote/sshConnection.js", "\n            throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');", "\n            throw new types_1.RemoteError('CONNECTION_CLOSED', " + text("ssh.notConnected", "Not connected.") + ");", ["ssh.notConnected"]);
+    if (adapterVersion === '3') edit("dist/remote/sshConnection.js", "\n            throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');", "\n            throw new types_1.RemoteError('CONNECTION_CLOSED', " + text("ssh.notConnected", "Not connected.") + ");", ["ssh.notConnected"]);
     edit("dist/remote/sshConnection.js", "\n                    throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');", "\n                    throw new types_1.RemoteError('CONNECTION_CLOSED', " + text("ssh.notConnected", "Not connected.") + ");", ["ssh.notConnected"]);
     edit("dist/remote/sshConnection.js", "'The connection was closed.'", text("ssh.closed", "The connection was closed."), ["ssh.closed"]);
     edit("dist/remote/sshConnection.js", "'Could not get a free loopback port.'", text("ssh.loopbackPortFailed", "Could not get a free loopback port."), ["ssh.loopbackPortFailed"]);
     edit("dist/remote/sshPrompts.js", "\"The ssh prompt window didn't load.\"", text("ssh.promptLoadFailed", "The ssh prompt window didn't load."), ["ssh.promptLoadFailed"]);
+  }
+
+  if (adapterVersion === '4') {
+    requireAnchor('dist/remote/sshPromptPreload.js', "electron_1.ipcRenderer.once('ssh-prompt:show', (_event, { label, title, message, retry }) => {");
+    requireAnchor('dist/remote/sshPromptPreload.js', 'host.textContent = label;\n    heading.textContent = title;\n    text.textContent = message;\n    text.hidden = !message;\n    note.hidden = !retry;');
+    edit("dist/remote/remoteManager.js", "\n                    title: 'Stop SSH server'", "\n                    title: " + text("ssh.stopServerTitle", "Stop SSH server"), ["ssh.stopServerTitle"]);
+    edit("dist/remote/remoteManager.js", "'Agents running on this host will stop and its window will close. ' +\n                        'The server starts again the next time you connect.'", text("ssh.stopServerDetail", "Agents running on this host will stop and its window will close. The server starts again the next time you connect."), ["ssh.stopServerDetail"]);
+    edit("dist/remote/remoteManager.js", "title: 'Sign in',\n            message: `Sign in to your organization for ${entry.label}?`", "title: " + text("ssh.signInTitle", "Sign in") + ",\n            message: " + format("ssh.organizationSignInConfirm", "Sign in to your organization for {0}?", "entry.label"), ["ssh.signInTitle","ssh.organizationSignInConfirm"]);
+    edit("dist/remote/remoteManager.js", "title: 'Sign in',\n            message: `Finish this sign-in on ${entry.label}?`", "title: " + text("ssh.signInTitle", "Sign in") + ",\n            message: " + format("ssh.finishSignIn", "Finish this sign-in on {0}?", "entry.label"), ["ssh.finishSignIn","ssh.signInTitle"]);
+    edit("dist/remote/remoteManager.js", "`Continue only if you just chose to sign in from the ${entry.label} ` +\n                'window. Your browser opens the sign-in page; once you sign in, ' +\n                `${entry.label} gets access to that account.\\n` +\n                `Sign-in page: ${(0, types_1.sanitizeRemoteText)(new URL(origin).host, 200)}`", format("ssh.finishSignInDetail", "Continue only if you just chose to sign in from the {0} window. Your browser opens the sign-in page; once you sign in, {0} gets access to that account.\nSign-in page: {1}", "entry.label, (0, types_1.sanitizeRemoteText)(new URL(origin).host, 200)"), ["ssh.finishSignInDetail"]);
+    edit("dist/remote/remoteManager.js", "buttons: ['Continue', 'Cancel']", "buttons: [" + text("common.continue", "Continue") + ", " + text("common.cancel", "Cancel") + "]", ["common.continue","common.cancel"]);
+    edit("dist/remote/sshPrompts.js", "<div id=\"long\" class=\"note\" role=\"alert\" hidden>That's too long.</div>", "<div id=\"long\" class=\"note\" role=\"alert\" hidden>${" + htmlText(text("ssh.promptTooLong", "That's too long.")) + "}</div>", ["ssh.promptTooLong"]);
+    edit("dist/remote/sshPrompts.js", "<button id=\"cancel\" class=\"secondary\">Cancel</button>", "<button id=\"cancel\" class=\"secondary\">${" + htmlText(text("common.cancel", "Cancel")) + "}</button>", ["common.cancel"]);
+    edit("dist/remote/sshPrompts.js", "<button id=\"continue\" class=\"primary\">Continue</button>", "<button id=\"continue\" class=\"primary\">${" + htmlText(text("common.continue", "Continue")) + "}</button>", ["common.continue"]);
+    // Escape the framing before restoring the span; the preload inserts the host as text.
+    edit("dist/remote/sshPrompts.js", "<p class=\"context\">Connecting to <span id=\"label\"></span></p>", "<p class=\"context\">${" + htmlText(format("ssh.promptConnectingTo", "Connecting to {0}", "\"AGYCTL_HOST_LABEL\"")) + ".replace(\"AGYCTL_HOST_LABEL\", '<span id=\"label\"></span>')}</p>", ["ssh.promptConnectingTo"]);
+    edit("dist/remote/sshPrompts.js", "'Touch your security key'", text("ssh.touchSecurityKey", "Touch your security key"), ["ssh.touchSecurityKey"]);
+    edit("dist/remote/sshPrompts.js", "`Trust ${hostName(host.split(' (')[0])}?`", format("ssh.promptTrustHost", "Trust {0}?", "hostName(host.split(' (')[0])"), ["ssh.promptTrustHost"]);
+    edit("dist/remote/sshPrompts.js", "`Connect to ${hostName(host)} anyway?`", format("ssh.promptConnectAnyway", "Connect to {0} anyway?", "hostName(host)"), ["ssh.promptConnectAnyway"]);
+    edit("dist/remote/sshPrompts.js", "'Accept updated host keys?'", text("ssh.promptAcceptHostKeys", "Accept updated host keys?"), ["ssh.promptAcceptHostKeys"]);
+    edit("dist/remote/sshPrompts.js", "`Add ${baseName(key.split(' (')[0])} to ssh-agent?`", format("ssh.promptAddKey", "Add {0} to ssh-agent?", "baseName(key.split(' (')[0])"), ["ssh.promptAddKey"]);
+    edit("dist/remote/sshPrompts.js", "`Question from ${who}`", format("ssh.promptQuestion", "Question from {0}", "who"), ["ssh.promptQuestion"]);
+    edit("dist/remote/sshPrompts.js", "`Verification code for ${who}`", format("ssh.promptVerification", "Verification code for {0}", "who"), ["ssh.promptVerification"]);
+    edit("dist/remote/sshPrompts.js", "`Password for ${who}`", format("ssh.promptPassword", "Password for {0}", "who"), ["ssh.promptPassword"]);
+    edit("dist/remote/sshPrompts.js", "`PIN for ${who}`", format("ssh.promptPin", "PIN for {0}", "who"), ["ssh.promptPin"]);
+    edit("dist/remote/sshPrompts.js", "`Sign in to ${who}`", format("ssh.promptSignIn", "Sign in to {0}", "who"), ["ssh.promptSignIn"]);
+    edit("dist/remote/sshPrompts.js", "'Password'", text("ssh.credentialPassword", "Password"), ["ssh.credentialPassword"]);
+    edit("dist/remote/sshPrompts.js", "'Current password'", text("ssh.credentialCurrentPassword", "Current password"), ["ssh.credentialCurrentPassword"]);
+    edit("dist/remote/sshPrompts.js", "'New password'", text("ssh.credentialNewPassword", "New password"), ["ssh.credentialNewPassword"]);
+    edit("dist/remote/sshPrompts.js", "'Confirm new password'", text("ssh.credentialConfirmPassword", "Confirm new password"), ["ssh.credentialConfirmPassword"]);
+    edit("dist/remote/sshPrompts.js", "'Passphrase'", text("ssh.credentialPassphrase", "Passphrase"), ["ssh.credentialPassphrase"]);
+    edit("dist/remote/sshPrompts.js", "return ['PIN', what.slice(1, -1)];", "return [" + text("ssh.credentialPin", "PIN") + ", what.slice(1, -1)];", ["ssh.credentialPin"]);
+    edit("dist/remote/sshPrompts.js", "['PIN', baseName(what.slice(key + 5))]", "[" + text("ssh.credentialPin", "PIN") + ", baseName(what.slice(key + 5))]", ["ssh.credentialPin"]);
+    edit("dist/remote/sshPrompts.js", "`${asked[0]} for ${hostPromptsMarked ? asked[1] : label}`", format("ssh.promptCredentialFor", "{0} for {1}", "asked[0], hostPromptsMarked ? asked[1] : label"), ["ssh.promptCredentialFor"]);
+    edit("dist/remote/sshErrorText.js", "`Windows SSH hosts aren't supported yet. ${sshArgs_1.LINUX_HOST_NEEDED}`", format("ssh.windowsHostUnsupported", "Windows SSH hosts aren't supported yet. {0}", "sshArgs_1.LINUX_HOST_NEEDED"), ["ssh.windowsHostUnsupported"]);
+    edit("dist/remote/sshArgs.js", "'Antigravity needs a Linux host on x64 or arm64 with glibc 2.26 or newer.'", text("ssh.linuxHostNeeded", "Antigravity needs a Linux host on x64 or arm64 with glibc 2.26 or newer."), ["ssh.linuxHostNeeded"]);
+    edit("dist/remote/sshArgs.js", "`The SSH host isn't supported. ${exports.LINUX_HOST_NEEDED} Windows and macOS hosts aren't supported yet.`", format("ssh.unsupportedHostPlatforms", "The SSH host isn't supported. {0} Windows and macOS hosts aren't supported yet.", "exports.LINUX_HOST_NEEDED"), ["ssh.unsupportedHostPlatforms"]);
+    edit("dist/remote/sshArgs.js", "'Another host that shares your home directory runs the Antigravity server. Connect to that host, or connect again and choose Take Over.'", text("ssh.sharedHomeTakeOver", "Another host that shares your home directory runs the Antigravity server. Connect to that host, or connect again and choose Take Over."), ["ssh.sharedHomeTakeOver"]);
+    edit("dist/remote/sshArgs.js", "\"SSH can't use your SSH config file. Fix the problem ssh reports, or choose another config file.\"", text("ssh.configCannotUse", "SSH can't use your SSH config file. Fix the problem ssh reports, or choose another config file."), ["ssh.configCannotUse"]);
+    edit("dist/remote/disconnectedPage.js", "reconnect: 'Reconnect'", "reconnect: " + htmlText(text("ssh.reconnect", "Reconnect")), ["ssh.reconnect"]);
+    edit("dist/remote/disconnectedPage.js", "stop: 'Stop Server'", "stop: " + htmlText(text("ssh.stopServerAction", "Stop Server")), ["ssh.stopServerAction"]);
+    edit("dist/remote/disconnectedPage.js", "close: 'Close'", "close: " + htmlText(text("ssh.closeWindow", "Close")), ["ssh.closeWindow"]);
+    edit("dist/remote/disconnectedPage.js", "`Restarting the Antigravity server on ${host}…`", "escapeHtml(" + format("ssh.restartingServerOn", "Restarting the Antigravity server on {0}…", "page.label") + ")", ["ssh.restartingServerOn"]);
+    edit("dist/remote/disconnectedPage.js", "'Restarting…'", "escapeHtml(" + text("ssh.restarting", "Restarting…") + ")", ["ssh.restarting"]);
+    edit("dist/remote/disconnectedPage.js", "'This window opens it again once it has started.'", "escapeHtml(" + text("ssh.reopenAfterRestart", "This window opens it again once it has started.") + ")", ["ssh.reopenAfterRestart"]);
+    edit("dist/remote/disconnectedPage.js", "`Its server on ${host} stopped, and its agents with it.`", "escapeHtml(" + format("ssh.serverAndAgentsStopped", "Its server on {0} stopped, and its agents with it.", "page.label") + ")", ["ssh.serverAndAgentsStopped"]);
+    edit("dist/remote/disconnectedPage.js", "`Its agents on ${host} stopped with it.`", "escapeHtml(" + format("ssh.agentsStoppedWithServer", "Its agents on {0} stopped with it.", "page.label") + ")", ["ssh.agentsStoppedWithServer"]);
+    edit("dist/remote/sshConnection.js", "if (!d || !transport || this._state !== 'ready') {\n            throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');", "if (!d || !transport || this._state !== 'ready') {\n            throw new types_1.RemoteError('CONNECTION_CLOSED', " + text("ssh.notConnected", "Not connected.") + ");", ["ssh.notConnected"]);
+    edit("dist/remote/sshConnection.js", "if (!d || !transport || this._state !== 'ready' || d.httpPort === 0) {\n            throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');", "if (!d || !transport || this._state !== 'ready' || d.httpPort === 0) {\n            throw new types_1.RemoteError('CONNECTION_CLOSED', " + text("ssh.notConnected", "Not connected.") + ");", ["ssh.notConnected"]);
+    edit("dist/remote/remoteManager.js", "title: 'Choose another SSH config file'", "title: " + text("ssh.chooseAnotherConfig", "Choose another SSH config file"), ["ssh.chooseAnotherConfig"]);
+    edit("dist/remote/remoteManager.js", "buttons: ['Choose Another File…', 'Cancel']", "buttons: [" + text("ssh.chooseAnotherFile", "Choose Another File…") + ", " + text("common.cancel", "Cancel") + "]", ["ssh.chooseAnotherFile","common.cancel"]);
+    edit("dist/remote/remoteManager.js", "`${name} can't be the SSH config file`", format("ssh.configFileRefused", "{0} can't be the SSH config file", "name"), ["ssh.configFileRefused"]);
+    edit("dist/remote/remoteManager.js", "title: 'Could not restart the SSH server'", "title: " + text("ssh.restartFailedTitle", "Could not restart the SSH server"), ["ssh.restartFailedTitle"]);
+    edit("dist/remote/remoteManager.js", "`${entry.label} still runs Antigravity server ${running}.`", format("ssh.stillRunningVersion", "{0} still runs Antigravity server {1}.", "entry.label, running"), ["ssh.stillRunningVersion"]);
+    edit("dist/remote/remoteManager.js", "`${entry.label} didn't answer after this computer woke up.`", format("ssh.noAnswerAfterWake", "{0} didn't answer after this computer woke up.", "entry.label"), ["ssh.noAnswerAfterWake"]);
+    edit("dist/remote/remoteManager.js", "buttons: ['Allow', \"Don't Allow\"]", "buttons: [" + text("ssh.allowMicrophone", "Allow") + ", " + text("ssh.denyMicrophone", "Don't Allow") + "]", ["ssh.allowMicrophone","ssh.denyMicrophone"]);
+    edit("dist/remote/remoteManager.js", "title: 'Microphone access'", "title: " + text("ssh.microphoneAccess", "Microphone access"), ["ssh.microphoneAccess"]);
+    edit("dist/remote/remoteManager.js", "`Allow ${label} to use your microphone?`", format("ssh.microphoneConfirm", "Allow {0} to use your microphone?", "label"), ["ssh.microphoneConfirm"]);
+    edit("dist/remote/remoteManager.js", "`The page in this window comes from ${label}. If you allow it, that ` +\n                \"host can use this computer's microphone for voice whenever one of \" +\n                'its windows is open. Antigravity asks again after you quit it.'", format("ssh.microphoneDetail", "The page in this window comes from {0}. If you allow it, that host can use this computer's microphone for voice whenever one of its windows is open. Antigravity asks again after you quit it.", "label"), ["ssh.microphoneDetail"]);
+    edit("dist/remote/remoteManager.js", "buttons: ['Take Over', 'Cancel']", "buttons: [" + text("ssh.takeOver", "Take Over") + ", " + text("common.cancel", "Cancel") + "]", ["ssh.takeOver","common.cancel"]);
+    edit("dist/remote/remoteManager.js", "title: 'Shared home directory'", "title: " + text("ssh.sharedHomeTitle", "Shared home directory"), ["ssh.sharedHomeTitle"]);
+    edit("dist/remote/remoteManager.js", "`This window's Antigravity server runs on ${host}, another machine that shares your home directory.`", format("ssh.takeOverOwnServer", "This window's Antigravity server runs on {0}, another machine that shares your home directory.", "host"), ["ssh.takeOverOwnServer"]);
+    edit("dist/remote/remoteManager.js", "`Your Antigravity server runs on ${host}, another machine that shares your home directory.`", format("ssh.takeOverLiveServer", "Your Antigravity server runs on {0}, another machine that shares your home directory.", "host"), ["ssh.takeOverLiveServer"]);
+    edit("dist/remote/remoteManager.js", "`${host}, another machine that shares your home directory, started your Antigravity server.`", format("ssh.takeOverPreviousServer", "{0}, another machine that shares your home directory, started your Antigravity server.", "host"), ["ssh.takeOverPreviousServer"]);
+    edit("dist/remote/remoteManager.js", "`${label} reached ${here} this time. Cancel and reconnect to try again for ${host}, or take over to stop the server on ${host}, and its agents, and run it on ${here} instead.`", format("ssh.takeOverOwnDetail", "{0} reached {1} this time. Cancel and reconnect to try again for {2}, or take over to stop the server on {2}, and its agents, and run it on {1} instead.", "label, here, host"), ["ssh.takeOverOwnDetail"]);
+    edit("dist/remote/remoteManager.js", "`${label} reached ${here}. Take over to stop the server on ${host}, and its agents, and run it on ${here} instead. To keep it running, connect to ${host}.`", format("ssh.takeOverLiveDetail", "{0} reached {1}. Take over to stop the server on {2}, and its agents, and run it on {1} instead. To keep it running, connect to {2}.", "label, here, host"), ["ssh.takeOverLiveDetail"]);
+    edit("dist/remote/remoteManager.js", "`${label} reached ${here}. Take over only if that server no longer runs, for example if ${host} was shut down or replaced: if it still runs, both servers would write the same files. To check, connect to ${host}.`", format("ssh.takeOverPreviousDetail", "{0} reached {1}. Take over only if that server no longer runs, for example if {2} was shut down or replaced: if it still runs, both servers would write the same files. To check, connect to {2}.", "label, here, host"), ["ssh.takeOverPreviousDetail"]);
+    edit("dist/remote/remoteManager.js", "buttons: ['Restart', 'Later']", "buttons: [" + text("ssh.restartAction", "Restart") + ", " + text("ssh.laterAction", "Later") + "]", ["ssh.restartAction","ssh.laterAction"]);
+    edit("dist/remote/remoteManager.js", "title: 'Restart SSH server'", "title: " + text("ssh.restartServerTitle", "Restart SSH server"), ["ssh.restartServerTitle"]);
+    edit("dist/remote/remoteManager.js", "`${label} is running server ${running}; this app is ${expected}. Restart the server now?`", format("ssh.restartServerConfirm", "{0} is running server {1}; this app is {2}. Restart the server now?", "label, running, expected"), ["ssh.restartServerConfirm"]);
+    edit("dist/remote/remoteManager.js", "`Any ${what} still running on it stops. The server starts again with this app's version.`", format("ssh.restartServerDetail", "Any {0} still running on it stops. The server starts again with this app's version.", "what"), ["ssh.restartServerDetail"]);
+    edit("dist/remote/remoteManager.js", "'agent or task'", text("ssh.agentsOrTasks", "agent or task"), ["ssh.agentsOrTasks"]);
+    edit("dist/remote/remoteManager.js", "'agent, task or terminal'", text("ssh.agentsTasksOrTerminals", "agent, task or terminal"), ["ssh.agentsTasksOrTerminals"]);
+    edit("dist/remote/sshConfigHosts.js", "\"isn't an SSH config file\"", text("ssh.configNotSsh", "isn't an SSH config file"), ["ssh.configNotSsh"]);
+    edit("dist/remote/sshConfigHosts.js", "'Choose a file of ssh settings, such as ~/.ssh/config.'", text("ssh.configChooseSettings", "Choose a file of ssh settings, such as ~/.ssh/config."), ["ssh.configChooseSettings"]);
+    edit("dist/remote/sshConfigHosts.js", "\"is saved in a way ssh can't read\"", text("ssh.configUnreadableEncoding", "is saved in a way ssh can't read"), ["ssh.configUnreadableEncoding"]);
+    edit("dist/remote/sshConfigHosts.js", "'Save it as UTF-8 without a byte-order mark.'", text("ssh.configSaveUtf8", "Save it as UTF-8 without a byte-order mark."), ["ssh.configSaveUtf8"]);
+    edit("dist/remote/sshConfigHosts.js", "\"it's a binary file\"", text("ssh.configBinary", "it's a binary file"), ["ssh.configBinary"]);
+    edit("dist/remote/sshConfigHosts.js", "'it holds a key or certificate'", text("ssh.configKey", "it holds a key or certificate"), ["ssh.configKey"]);
+    edit("dist/remote/sshConfigHosts.js", "'it holds SSH public keys, like a .pub or authorized_keys file'", text("ssh.configPublicKeys", "it holds SSH public keys, like a .pub or authorized_keys file"), ["ssh.configPublicKeys"]);
+    edit("dist/remote/sshConfigHosts.js", "'it lists SSH host keys, like known_hosts'", text("ssh.configHostKeys", "it lists SSH host keys, like known_hosts"), ["ssh.configHostKeys"]);
+    edit("dist/remote/sshConfigHosts.js", "'it starts with a byte-order mark'", text("ssh.configBom", "it starts with a byte-order mark"), ["ssh.configBom"]);
+    edit("dist/remote/sshConfigHosts.js", "\"it's saved as UTF-16\"", text("ssh.configUtf16", "it's saved as UTF-16"), ["ssh.configUtf16"]);
   }
 
   for (const [file, content] of sources) {

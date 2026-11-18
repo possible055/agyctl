@@ -14,7 +14,7 @@ export interface LocalizationProfile {
   asarSha256?: string;
   exeSha256?: string;
   hostAdapter?: { file: string; sha256: string; anchor: string };
-  nativeAdapterVersion?: '2' | '3';
+  nativeAdapterVersion?: '2' | '3' | '4';
   nativeImageBinding?: boolean;
 }
 

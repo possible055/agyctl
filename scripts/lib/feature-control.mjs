@@ -42,9 +42,10 @@ function normalizeFeatureApply(payload) {
     typeof payload.localization.enabled !== 'boolean' ||
     !locales.has(payload.localization.locale) ||
     !exactObject(payload.limit, ['enabled', 'modelLimits']) ||
-    typeof payload.limit.enabled !== 'boolean' ||
+    (payload.limit.enabled !== null && typeof payload.limit.enabled !== 'boolean') ||
     !Array.isArray(payload.limit.modelLimits) ||
     payload.limit.modelLimits.length > 128 ||
+    (payload.limit.enabled === null && payload.limit.modelLimits.length !== 0) ||
     (payload.limit.enabled && payload.limit.modelLimits.length === 0) ||
     (Object.hasOwn(payload, 'compaction') &&
       payload.compaction !== null &&
@@ -348,20 +349,22 @@ async function snapshot(asarPath) {
       'REVISION_CHANGED',
       'The Language Server changed while reading settings; reload and try again',
     );
-  if (native.file_state === 'drift')
-    throw failure('STATE_UNAVAILABLE', 'The native patch state cannot be verified');
-  if (!['patched', 'original'].includes(limit.patchKind))
-    throw failure('STATE_UNAVAILABLE', 'The installed model limits cannot be verified');
+  const nativeUnverified = ['drift', 'pending'].includes(native.file_state);
+  const limitKnown =
+    !nativeUnverified &&
+    !rawLimit.prepare_record &&
+    ['patched', 'original'].includes(limit.patchKind);
   const compactionPending = !!rawCompaction.prepare_record || native.file_state === 'pending';
-  const compactionEnabled = compactionPending
-    ? null
-    : nativeBinding
-      ? native.features.compaction
-      : rawCompaction.file_state === 'managed-output'
-        ? true
-        : rawCompaction.file_state === 'registered-input'
-          ? false
-          : null;
+  const compactionEnabled =
+    compactionPending || nativeUnverified
+      ? null
+      : nativeBinding
+        ? native.features.compaction
+        : rawCompaction.file_state === 'managed-output'
+          ? true
+          : rawCompaction.file_state === 'registered-input'
+            ? false
+            : null;
   const recordedPrompt = nativeBinding
     ? native.features.compaction_prompt
     : rawCompaction.compaction_prompt;
@@ -385,6 +388,7 @@ async function snapshot(asarPath) {
     selection: selection.hash,
     savedLimits: limit.savedModelLimits,
     settingsState: limit.settingsState,
+    limitPrepare: rawLimit.prepare_record ?? null,
     compactionState: rawCompaction.file_state,
     compactionPrepare: rawCompaction.prepare_record ?? null,
     compactionPrompt,
@@ -401,7 +405,7 @@ async function snapshot(asarPath) {
       format: host.features.localization ? (selection.format ?? null) : null,
     },
     limit: {
-      enabled: limit.patchKind === 'patched',
+      enabled: limitKnown ? limit.patchKind === 'patched' : null,
       modelLimits: limit.modelLimits,
       savedModelLimits: limit.savedModelLimits,
     },
@@ -475,8 +479,9 @@ function sameLimits(first, second) {
 
 function limitChanges(desired, current) {
   return (
-    desired.enabled !== current.enabled ||
-    (desired.enabled && !sameLimits(desired.modelLimits, current.modelLimits))
+    desired.enabled !== null &&
+    (desired.enabled !== current.enabled ||
+      (desired.enabled && !sameLimits(desired.modelLimits, current.modelLimits)))
   );
 }
 
@@ -495,6 +500,22 @@ function compactionChanges(desired, current) {
 }
 
 function validatePatchCombination(desired, features, native) {
+  if (
+    native.update_transition_required &&
+    (limitChanges(desired.limit, features.limit) || compactionChanges(desired, features.compaction))
+  )
+    throw failure(
+      'NATIVE_UPDATE_REQUIRED',
+      'Review the complete native feature selection in the terminal after this app update',
+    );
+  if (
+    (features.limit.enabled === null || native.file_state === 'drift') &&
+    (limitChanges(desired.limit, features.limit) || compactionChanges(desired, features.compaction))
+  )
+    throw failure(
+      'STATE_UNAVAILABLE',
+      'The native patch state cannot be verified; leave native features unchanged',
+    );
   if (
     desired.compactionPrompt?.mode === 'custom' &&
     (!Number.isInteger(features.compaction.promptMaxBytes) ||
@@ -720,7 +741,7 @@ function preflightLimits(state, desired) {
 }
 
 function preflightNative(state, desired) {
-  if (!state.native.verified) return null;
+  if (!state.native.verified || state.native.update_transition_required) return null;
   const updates = {};
   if (limitChanges(desired.limit, state.features.limit))
     updates.limit = {
@@ -976,7 +997,7 @@ async function executePreparedApply(operation, { cleanupSidecars = false } = {})
       (localizationDesired(desired) &&
         actual.features.localization.locale !== desired.localization.locale) ||
       (localizationDesired(desired) && actual.features.localization.format !== 'dom') ||
-      actual.features.limit.enabled !== desired.limit.enabled ||
+      (desired.limit.enabled !== null && actual.features.limit.enabled !== desired.limit.enabled) ||
       (desired.limit.enabled &&
         !sameLimits(actual.features.limit.modelLimits, desired.limit.modelLimits)) ||
       (desired.compaction !== null && actual.features.compaction.enabled !== desired.compaction) ||

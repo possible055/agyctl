@@ -19,11 +19,11 @@ func settingsFromState(state PatchState) patchSettings {
 }
 
 func validateSettings(settings patchSettings) error {
-	if settings.Encoding != "" && settings.Encoding != modelEncoding {
+	if settings.Encoding != "" && settings.Encoding != modelEncoding && settings.Encoding != summaryEncoding {
 		return fmt.Errorf("unknown saved settings encoding %q", settings.Encoding)
 	}
 	minimumID := 0
-	if settings.Encoding == modelEncoding {
+	if settings.Encoding != "" {
 		minimumID = 1
 	}
 	if err := validateModelLimits(settings.ModelLimits, minimumID); err != nil {
@@ -99,7 +99,7 @@ func planSettings(data []byte, settings patchSettings) (Plan, error) {
 	if err := validateSettings(settings); err != nil {
 		return Plan{}, err
 	}
-	if settings.Encoding == modelEncoding {
+	if settings.Encoding != "" {
 		return PlanModelPatch(data, settings.ModelLimits)
 	}
 	return PlanPatch(data, settings.IDs, settings.Limit)

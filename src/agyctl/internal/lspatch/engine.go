@@ -2,6 +2,7 @@ package lspatch
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -19,6 +20,7 @@ type inspection struct {
 	pending       *prepare
 	legacy        bool
 	managed       bool
+	previous      *State
 }
 
 func (e Engine) spec(sha string) (Spec, error) {
@@ -104,6 +106,16 @@ func (e Engine) inspect(binary string) (inspection, error) {
 			return v, err
 		}
 		if !bytes.Equal(current, out) {
+			sha := fsx.SHA256(current)
+			if updated, matchErr := e.spec(sha); matchErr == nil && updated.BaseSHA != state.BaseSHA {
+				config := EmptyConfig()
+				if _, err := Build(current, updated, config, map[string]RecipeRef{}); err != nil {
+					return v, err
+				}
+				v.state = State{Schema: 1, Target: key, TargetID: updated.ID, BaseSHA: sha, BasePath: binary, Features: config, Recipes: map[string]RecipeRef{}, Layout: layoutRefs(updated), CurrentSHA: sha, Generation: state.Generation}
+				v.spec, v.base, v.previous = updated, current, &state
+				return v, nil
+			}
 			return v, refuse("drift", "current native file differs from its complete reconstructed active image")
 		}
 		v.state, v.spec, v.base = state, spec, base
@@ -191,7 +203,23 @@ func (e Engine) inspect(binary string) (inspection, error) {
 }
 
 func (e Engine) expected(state State) Expected {
-	return Expected{state.BaseSHA, state.CurrentSHA, state.Generation, e.AssetsFingerprint}
+	return Expected{BaseSHA: state.BaseSHA, CurrentSHA: state.CurrentSHA, Generation: state.Generation, AssetsFingerprint: e.AssetsFingerprint}
+}
+
+func (e Engine) expectedInspection(v inspection) Expected {
+	expected := e.expected(v.state)
+	if v.previous != nil {
+		expected.PreviousStateSHA = stateFingerprint(*v.previous)
+	}
+	return expected
+}
+
+func stateFingerprint(state State) string {
+	data, err := json.Marshal(state)
+	if err != nil {
+		panic(err)
+	}
+	return fsx.SHA256(data)
 }
 
 func recipeUpdateRequired(spec Spec, state State) bool {
@@ -205,6 +233,9 @@ func (e Engine) report(binary string, v inspection) map[string]any {
 	} else if v.state.Generation == 0 {
 		fileState = "original"
 	}
+	if v.previous != nil {
+		fileState = "updated-original"
+	}
 	features := v.state.Features
 	if features.Compaction && features.CompactionPrompt == nil && v.spec.BuildCompaction != nil && v.state.Recipes["compaction"] == v.spec.Compaction.Ref {
 		features.CompactionPrompt = &CompactionPrompt{Mode: "native"}
@@ -212,6 +243,11 @@ func (e Engine) report(binary string, v inspection) map[string]any {
 	result := map[string]any{"binary": binary, "target_id": v.spec.ID, "identity_gate": "whole-file-sha256", "verified": true, "file_state": fileState, "base_sha256": v.state.BaseSHA, "base_binary_path": v.state.BasePath, "current_sha256": v.state.CurrentSHA, "binary_sha256": v.state.CurrentSHA, "generation": v.state.Generation, "assets_fingerprint": e.AssetsFingerprint, "features": features, "recipes": v.state.Recipes, "layout_recipes": v.state.Layout, "disk_patch_equals_loaded": false,
 		"recipe_update_required": recipeUpdateRequired(v.spec, v.state),
 		"available":              map[string]bool{"limit": v.spec.Limit != nil, "tool_output": v.spec.ToolOutput != nil, "compaction": v.spec.Compaction != nil}}
+	result["update_transition_required"] = v.previous != nil
+	if v.previous != nil {
+		result["previous_native_state"] = *v.previous
+		result["previous_state_sha256"] = stateFingerprint(*v.previous)
+	}
 	if v.spec.BuildCompaction != nil {
 		result["compaction_prompt_max_bytes"] = v.spec.CompactionPromptMaxBytes
 		result["compaction_retention_budget_bytes"] = CompactionRetentionBudgetBytes
@@ -248,6 +284,9 @@ func (e Engine) plan(v inspection, desired Desired) (Plan, error) {
 	if v.pending != nil {
 		return Plan{}, errors.New("pending: resolve the prepared native transaction before planning another operation")
 	}
+	if v.previous != nil && (desired.Limit == nil || desired.ToolOutput == nil || desired.Compaction == nil) {
+		return Plan{}, refuse("update-required", "a registered app update requires an explicit complete native desired state; previous settings are not reapplied")
+	}
 	config, err := desired.Merge(v.state.Features)
 	if err != nil {
 		return Plan{}, err
@@ -262,7 +301,7 @@ func (e Engine) plan(v inspection, desired Desired) (Plan, error) {
 			changed++
 		}
 	}
-	return Plan{Expected: e.expected(v.state), Desired: config, AfterSHA: fsx.SHA256(output), BytesChanged: changed, output: output}, nil
+	return Plan{Expected: e.expectedInspection(v), Desired: config, AfterSHA: fsx.SHA256(output), BytesChanged: changed, output: output}, nil
 }
 
 func (e Engine) Plan(binary string, desired Desired) (Plan, error) {
@@ -315,8 +354,11 @@ func (e Engine) Apply(binary string, desired Desired, expected Expected, owner s
 	if v.pending != nil {
 		return e.recover(binary, desired, expected, owner, v)
 	}
-	if expected != e.expected(v.state) {
+	if expected != e.expectedInspection(v) {
 		return nil, errors.New("stale-plan: native base/current hash, generation or runtime assets changed")
+	}
+	if v.previous != nil && owner != "native" {
+		return nil, refuse("update-required", "review and apply the complete native plan before using single-feature commands after an app update")
 	}
 	plan, err := e.plan(v, desired)
 	if err != nil {
@@ -330,6 +372,11 @@ func (e Engine) Apply(binary string, desired Desired, expected Expected, owner s
 	}
 	if err := e.stopped(binary); err != nil {
 		return nil, err
+	}
+	if v.previous != nil {
+		if err := e.archivePrevious(binary, *v.previous); err != nil {
+			return nil, err
+		}
 	}
 	statePath, preparePath, err := statePaths(e.Directory, binary)
 	if err != nil {
@@ -360,7 +407,7 @@ func (e Engine) Apply(binary string, desired Desired, expected Expected, owner s
 		return nil, errors.New("native generation exhausted")
 	}
 	after.Generation++
-	pending := prepare{Schema: 1, Operation: op.ID(), Owner: owner, Before: before, After: after, Expected: expected, StartBackup: startPath}
+	pending := prepare{Schema: 1, Operation: op.ID(), Owner: owner, Before: before, After: after, Expected: expected, StartBackup: startPath, Previous: v.previous}
 	if err := writeJSON(e.Directory, preparePath, pending); err != nil {
 		return nil, err
 	}
@@ -375,7 +422,7 @@ func (e Engine) Apply(binary string, desired Desired, expected Expected, owner s
 	if err := os.Remove(preparePath); err != nil {
 		return nil, fmt.Errorf("native image and active state committed but prepare cleanup failed: %w", err)
 	}
-	v.state, v.current, v.legacy = after, plan.output, false
+	v.state, v.current, v.legacy, v.previous = after, plan.output, false, nil
 	result = e.report(binary, v)
 	result["applied"] = plan.BytesChanged != 0 || recipeUpdateRequired(v.spec, before)
 	result["bytes_changed"] = plan.BytesChanged
@@ -388,8 +435,19 @@ func (e Engine) recover(binary string, desired Desired, expected Expected, owner
 	if p.Schema != 1 || p.Operation == "" || p.Owner != owner || p.Expected != expected || expected.AssetsFingerprint != e.AssetsFingerprint || p.Before.Generation == ^uint64(0) || p.After.Generation != p.Before.Generation+1 || p.Before.BaseSHA != p.After.BaseSHA || p.Before.BasePath != p.After.BasePath || p.Before.TargetID != p.After.TargetID {
 		return nil, errors.New("pending: native transaction identity, owner or reviewed expectation does not match; refusing recovery")
 	}
-	if e.expected(p.Before) != expected {
+	if e.expectedInspection(inspection{state: p.Before, previous: p.Previous}) != expected {
 		return nil, errors.New("pending: prepared before-state proof is inconsistent")
+	}
+	if p.Previous != nil {
+		if owner != "native" || p.Previous.Generation != p.Before.Generation || p.Previous.BaseSHA == p.Before.BaseSHA || desired.Limit == nil || desired.ToolOutput == nil || desired.Compaction == nil {
+			return nil, errors.New("pending: app-update transition requires the original complete reviewed native request")
+		}
+		if _, _, _, err := e.validateState(binary, *p.Previous); err != nil {
+			return nil, err
+		}
+		if err := e.verifyPreviousArchive(binary, *p.Previous); err != nil {
+			return nil, err
+		}
 	}
 	config, err := desired.Merge(p.Before.Features)
 	if err != nil {
@@ -442,7 +500,7 @@ func (e Engine) recover(binary string, desired Desired, expected Expected, owner
 	if err != nil {
 		return nil, err
 	}
-	if found && !reflect.DeepEqual(recorded, p.Before) && !reflect.DeepEqual(recorded, p.After) {
+	if found && !reflect.DeepEqual(recorded, p.Before) && !reflect.DeepEqual(recorded, p.After) && (p.Previous == nil || !reflect.DeepEqual(recorded, *p.Previous)) {
 		return nil, errors.New("pending: active native state changed outside the prepared transaction")
 	}
 	if !found && p.Before.Generation != 0 {
@@ -527,7 +585,7 @@ func (e Engine) Handle(request Request) (map[string]any, bool, error) {
 		}
 		return result, true, nil
 	}
-	expected := e.expected(v.state)
+	expected := e.expectedInspection(v)
 	if v.pending != nil {
 		expected = v.pending.Expected
 	}

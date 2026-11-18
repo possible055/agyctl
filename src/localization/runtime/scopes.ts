@@ -48,6 +48,7 @@ export const WRITABLE_ROOT_SELECTORS = [
   SIDEBAR_APPLICATION_SELECTOR,
   '[data-testid="ssh-connect-dialog"]',
   '[data-testid="ssh-host-label"]',
+  '[data-testid="ssh-sign-in-subtitle"]',
   '[data-testid="ssh-machine-switcher-status"]',
   '[data-testid="computer-permissions-card"]',
   MCP_ERROR_BADGE_SELECTOR,
@@ -193,6 +194,8 @@ export function isAllowedMatchContext(node: Node, messageId: string): boolean {
   if (element?.matches(MCP_ERROR_TEXT_SELECTOR)) return messageId === 'hub.ui.617062906764f3b8';
   if (element?.closest('[data-testid="ssh-connect-progress"]')) return messageId === 'ssh.web.connectingTo';
   if (element?.closest('[data-testid="ssh-host-label"]')) return messageId === 'ssh.web.onHost';
+  if (element?.closest('[data-testid="ssh-sign-in-subtitle"]')) return messageId === 'ssh.web.signInSubtitle';
+  if (messageId === 'ssh.web.signInSubtitle') return false;
   if (element?.closest('[data-testid="ssh-machine-switcher-status"]')) return messageId === 'ssh.web.connectedTo';
   if (messageId === 'ssh.web.onHost') return !!element?.closest('[data-testid="ssh-host-label"]');
   if (messageId === 'ssh.web.connectedTo') return !!element?.closest('[data-testid="ssh-machine-switcher-status"],[role="alert"],[role="status"]');

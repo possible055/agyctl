@@ -335,6 +335,99 @@
           ]
         }
       ]
+    },
+    {
+      "id": "win-amd64-antigravity-2.33.0",
+      "app_version": "2.33.0",
+      "product": "Antigravity App",
+      "channel": "antigravity",
+      "platform": "win32-x64",
+      "arch": "x86-64",
+      "binary_name": "language_server.exe",
+      "binary_size": 203692544,
+      "member": "resources/bin/language_server.exe",
+      "qualification": "candidate",
+      "verified_at": "2026-11-18",
+      "capacity_targets": {
+        "viewFile.maxLinesPerView": {
+          "source_value": 800,
+          "target": 2000,
+          "layer": "base default constant"
+        },
+        "viewFile.maxBytesPerView": {
+          "source_value": 46080,
+          "target": 131072,
+          "layer": "base default constant"
+        },
+        "grep.maxGrepResults": {
+          "source_value": 50,
+          "target": 100,
+          "layer": "base default constant"
+        },
+        "postMergeStepBudgetFloor": {
+          "source_value": 32768,
+          "target": 98304,
+          "layer": "post settings merge"
+        }
+      },
+      "out_of_scope": [
+        "toolOutput.perTool[run_command].maxOutputBytes=65536",
+        "toolOutput.perTool[<mcp tool>].maxOutputBytes=131072",
+        "Grep paging, two-tier capacity APIs, edit/write tools, useCoreDirect switching",
+        "The seven 2.31.2 native grep transforms are not applicable to this build; their absence is not evidence that the upstream bugs are fixed."
+      ],
+      "evidence": {
+        "original_binary_sha256": "eb6d986dfc5a859c6e9b1b36a0601f5c362993cc16eb8962ad554c9141defc9c",
+        "derived_output_sha256": "9f230dcacd9be8736ca4d80b0d178bbee5d47b50e46ad7561e76ec9525636822",
+        "va_to_file_offset": "Derived from the PE section table: image base 0x140000000, .text RVA 0x1000, raw offset 0x600.",
+        "capacity_function": "config.defaultConversationalCascadeConfig: three immediate-only edits at 0x1419aa6c4, 0x1419aa6de and 0x1419ab635 preserve instruction boundaries and metadata. The grep object is stored at parent+0x18; the find initializer 0x1419ab6b1 (parent+0x20) remains unchanged.",
+        "step_floor_function": "CascadeManager.getCascadeConfig at 0x14294a140, size 992. Replacement [0x14294a3d2,0x14294a410) adds no call, SP change, new stack slot or pointer store. Branches target 0x14294a3ff; final jump lands at original mov rax,rdx at 0x14294a494. No original direct branch enters the replaced region.",
+        "go_metadata": "Go pclntab at file offset 0x4ab8020; pcsp=296 across replacement/landing. UnsafePoint=-1 throughout the replacement (unsafe original write barrier begins only at 0x14294a417). Source/landing StackMapIndex 6/7 both use locals bitmap 0100 (14 bits), rooting config at SP+0xb0. Args maps 04/00, no args used after landing; ArgLiveIndex=3. Metadata is unchanged.",
+        "preserved_find_initializer": "0x1419ab6b1 is the find max-results initializer and is outside every recipe segment.",
+        "field_mapping": "Named protobuf getters: CascadeConfig.GetTrajectoryConversionConfig at 0x140984080 reads +0x20; TrajectoryConversionConfig.GetMaxTokensPerStep at 0x140985580 reads +0x50 and dereferences int32. Nil paths and existing values at least 98304 remain unchanged."
+      },
+      "notes": "Candidate qualification: exact original whole-file input and equal-length recipe. Instruction, branch, stack and GC metadata checks are offline evidence only; runtime Read/Grep routing and capacity remain unqualified. No 2.31.2 grep transform is copied into this target.",
+      "inputs": [
+        {
+          "input": "original",
+          "binary_sha256": "eb6d986dfc5a859c6e9b1b36a0601f5c362993cc16eb8962ad554c9141defc9c",
+          "output_sha256": "9f230dcacd9be8736ca4d80b0d178bbee5d47b50e46ad7561e76ec9525636822",
+          "segments": [
+            {
+              "name": "viewfile-max-lines-per-view-2000",
+              "va": "0x1419aa6c4",
+              "offset": 26909892,
+              "expected_hex": "c70020030000",
+              "new_hex": "c700d0070000",
+              "role": "capacity"
+            },
+            {
+              "name": "viewfile-max-bytes-per-view-131072",
+              "va": "0x1419aa6de",
+              "offset": 26909918,
+              "expected_hex": "c70000b40000",
+              "new_hex": "c70000000200",
+              "role": "capacity"
+            },
+            {
+              "name": "grep-max-grep-results-100",
+              "va": "0x1419ab635",
+              "offset": 26913845,
+              "expected_hex": "c7400832000000",
+              "new_hex": "c7400864000000",
+              "role": "capacity"
+            },
+            {
+              "name": "post-merge-step-budget-floor-98304",
+              "va": "0x14294a3d2",
+              "offset": 43293138,
+              "expected_hex": "90488d05269e5109bb02000000b901000000e8f75096fd888424a7000000b810000000488d1deccfbb06b901000000e85aad6dfd488d15db4a2806488910",
+              "new_hex": "488b9424b00000004885d27420488b42204885c07417488b40504885c0740e8138008001007d06c70000800100e990000000909090909090909090909090",
+              "role": "transform"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

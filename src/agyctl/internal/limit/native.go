@@ -23,6 +23,29 @@ func NativeReference(root string, snapshot *assets.Snapshot) (lspatch.RecipeRef,
 	return lspatch.RecipeRef{ID: "linked-v2-reserved-v1", Fingerprint: lspatch.Fingerprint(Func, modelEncoding, "guarded-int3-reserved-v1", hex.EncodeToString(body))}, nil
 }
 
+// NativeReferenceForBase selects the planner from the exact registered original,
+// while the legacy reference remains reproducible across registry additions.
+func NativeReferenceForBase(root string, snapshot *assets.Snapshot, baseSHA string) (lspatch.RecipeRef, error) {
+	reg, err := loadRegistry(root, snapshot)
+	if err != nil {
+		return lspatch.RecipeRef{}, err
+	}
+	for i, entry := range reg.Entries {
+		if stringField(entry, "binary_sha256") != baseSHA {
+			continue
+		}
+		if len(reg.originals[i]) == summaryFuncSize {
+			body, err := assembleSummaryLimits(0, 0x34)
+			if err != nil {
+				return lspatch.RecipeRef{}, err
+			}
+			return lspatch.RecipeRef{ID: "linked-v3-summary-reserved-v1", Fingerprint: lspatch.Fingerprint(Func, summaryEncoding, summaryOriginalSHA, "guarded-int3-reserved-v1", hex.EncodeToString(body))}, nil
+		}
+		return NativeReference(root, snapshot)
+	}
+	return lspatch.RecipeRef{}, errors.New("native limit original is not registered")
+}
+
 func legacyNativeRef(canonical lspatch.RecipeRef, encoding string) lspatch.RecipeRef {
 	id := "legacy-bitset-v1"
 	if encoding == modelEncoding {
@@ -32,6 +55,9 @@ func legacyNativeRef(canonical lspatch.RecipeRef, encoding string) lspatch.Recip
 }
 
 func NativeLegacyReferences(canonical lspatch.RecipeRef) []lspatch.RecipeRef {
+	if canonical.ID != "linked-v2-reserved-v1" {
+		return nil
+	}
 	return []lspatch.RecipeRef{legacyNativeRef(canonical, ""), legacyNativeRef(canonical, modelEncoding)}
 }
 
@@ -48,6 +74,13 @@ func NativeContribution(root string, snapshot *assets.Snapshot, base []byte, con
 		return lspatch.Contribution{}, errors.New("native limit base function matches no recorded original byte signature")
 	}
 	canonical, err := NativeReference(root, snapshot)
+	im, parseErr := parseImage(base)
+	if parseErr != nil {
+		return lspatch.Contribution{}, parseErr
+	}
+	if im.entries[im.index+1]-im.entries[im.index] == summaryFuncSize {
+		canonical, err = NativeReferenceForBase(root, snapshot, fsx.SHA256(base))
+	}
 	if err != nil {
 		return lspatch.Contribution{}, err
 	}
@@ -129,6 +162,9 @@ func decorateNativeStatus(binary string, result map[string]any, reg registry, s 
 			state.Kind = "patched"
 			state.ModelLimits = config.Limit.ModelLimits
 			state.Encoding = modelEncoding
+			if refs, ok := result["recipes"].(map[string]lspatch.RecipeRef); ok && refs["limit"].ID == "linked-v3-summary-reserved-v1" {
+				state.Encoding = summaryEncoding
+			}
 		}
 	}
 	result["patch_state"] = map[string]any{"kind": state.Kind, "ids": state.IDs, "limit": state.Limit, "model_limits": state.ModelLimits, "encoding": state.Encoding}
@@ -146,7 +182,7 @@ func decorateNativeStatus(binary string, result map[string]any, reg registry, s 
 	}
 	saved, settingsState, settingsErr := savedSettingsReport(record, state)
 	if state.Kind == "patched" {
-		saved = patchSettings{Encoding: modelEncoding, ModelLimits: state.ModelLimits}
+		saved = patchSettings{Encoding: state.Encoding, ModelLimits: state.ModelLimits}
 		settingsState = "applied"
 	}
 	result["saved_settings"], result["settings_state"] = saved, settingsState

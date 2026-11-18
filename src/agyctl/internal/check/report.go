@@ -152,6 +152,9 @@ func capabilityMatrix(target, caps, extra object) object {
 		// not the admitted layout for the architecture; the matrix mirrors
 		// that refusal instead of admitting bytes recorded for another arch.
 		expectedSize := int64(128)
+		if size == 352 && format == "pe" {
+			expectedSize = 352
+		}
 		if size > 0 && size != expectedSize {
 			patchCap, patchReason = "blocked", fmt.Sprintf("clamp size %#x != %#x — different build layout", size, expectedSize)
 			break

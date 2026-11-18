@@ -73,6 +73,8 @@ function customSummaryConsumer(site, raw, lengthFields) {
 }
 
 function customCoreSummaryConsumer(site, raw, suffix, policy, lengthFields) {
+  if (policy.coreLayout === 'win2330')
+    return customCoreSummaryConsumer2330(site, raw, suffix, policy, lengthFields);
   const a = assembler(Number(site.va), site.length);
   a.emit('4889442440 48895c2448 48894c2450 f20f11442458 f20f114c2460');
   a.emit('488b8520ffffff 488b9d18feffff');
@@ -104,6 +106,44 @@ function customCoreSummaryConsumer(site, raw, suffix, policy, lengthFields) {
   a.emit('4889442430 48895c2438 8a85affdffff 88442468');
   a.emit(
     '488b4510 488b5d18 488b8d30feffff 488bbd38ffffff 488bb5e8fdffff 4c8b85f0feffff 4c8b8db8fdffff 4c8b95d8feffff 4c8b9dd0fdffff',
+  );
+  return a.finish();
+}
+
+function customCoreSummaryConsumer2330(site, raw, suffix, policy, lengthFields) {
+  const a = assembler(Number(site.va), site.length);
+  a.emit('4889442440 48895c2448 48894c2450 f20f11442458 f20f114c2460');
+  a.emit('488b8520ffffff 488b9d10feffff');
+  a.emit(`4881fb${imm32(suffix.length)}`);
+  a.branch('72', 'natural');
+  a.emit(`4889c6 4801de 4883ee${suffix.length.toString(16)}`);
+  a.relative('488d3d', Number(suffix.va));
+  a.emit(`b9${imm32(suffix.length)} fc f3a6`);
+  a.branch('75', 'natural');
+  a.emit('31c0');
+  a.relative('488d1d', Number(raw.va));
+  a.emit('b9');
+  lengthFields.push({ segment: site.name, offset: a.offset, expected_hex: imm32(raw.length) });
+  a.emit(imm32(raw.length));
+  a.relative('488d3d', Number(suffix.va));
+  a.emit(`be${imm32(suffix.length)}`);
+  a.padTo(Number(policy.addedCallVa) - Number(site.va));
+  a.relative('e8', Number(policy.concatString2Va));
+  a.branch('eb', 'selected');
+  a.label('natural');
+  a.relative('488d05', Number(raw.va));
+  a.emit('bb');
+  lengthFields.push({ segment: site.name, offset: a.offset, expected_hex: imm32(raw.length) });
+  a.emit(imm32(raw.length));
+  a.label('selected');
+  a.emit(
+    '488b95d0feffff 48891424 488b95b8fdffff 4889542408 488b95d0fdffff 4889542410 488b95c8feffff 4889542418 488b95b0fdffff 4889542420 488b95c8fdffff 4889542428',
+  );
+  a.emit('4889442430 48895c2438 8a85a7fdffff 88442468');
+  // Reload the upstream-resolved summary model from its existing GC-rooted slot.
+  a.emit('488b55f8 488b32 4c8b4208');
+  a.emit(
+    '488b4510 488b5d18 488b8d28feffff 488bbd38ffffff 4c8b8dd8fdffff 4c8b95e8feffff 4c8b9de0fdffff',
   );
   return a.finish();
 }
@@ -217,14 +257,14 @@ function priorityAllocationConsumer(site, policy, budget) {
   return a.finish();
 }
 
-function omissionConsumer(site) {
+function omissionConsumer(site, policy) {
   const a = assembler(Number(site.va), site.length);
   a.emit(
     '4c8b8538ffffff4983c010488b9db0fdffff48ffc3440fb64c245e4889cf4c8b9518ffffff4c8b9df8fdffff4889f04c8ba510feffff4889d1488b55680fb674245f',
   );
   a.label('head');
   a.emit('48898590feffff48898d90fdffff4889bd98fdffff4839da');
-  a.relative('0f8e', 0x141821f0a);
+  a.relative('0f8e', Number(policy.omissionExitVa ?? '0x141821f0a'));
   // The private rendered-string scratch slice uses an empty string for omission.
   // Native formatting always supplies a nonempty numbered entry on other paths.
   a.emit('4983780800');
@@ -235,7 +275,7 @@ function omissionConsumer(site) {
   a.emit(
     '48899db0fdffff4088b56ffdffff4c898538ffffff4c8d2c5b4c89ad20feffff4d8b384c89bd70feffff498b500848899580fdffff4c8b8580feffff4b8b04e848898528ffffff4f8b44e8084c898518feffff31c048898510feffff488b8528ffffff',
   );
-  a.relativeShort('eb', 0x141821718);
+  a.relativeShort('eb', Number(policy.renderResumeVa ?? '0x141821718'));
   return a.finish();
 }
 
@@ -286,7 +326,7 @@ function consumerSegments(read, layout, values) {
         priorityAllocationConsumer(site, layout.consumerPolicy, values.bytes),
       );
     else if (site.name === 'omit-older-render-entries')
-      replacements.set(site.name, omissionConsumer(site));
+      replacements.set(site.name, omissionConsumer(site, layout.consumerPolicy));
     else if (site.name === 'render-entry-dispatch')
       replacements.set(site.name, Buffer.from('eb46', 'hex'));
   }

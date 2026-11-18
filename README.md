@@ -2,7 +2,7 @@
 
 English | [简体中文](README.zh-CN.md)
 
-agyctl adds a context-usage panel to the Antigravity desktop app, plus optional tools that modify the installed app: an input-toolbar usage capsule, interface localization, and Language Server patches for the context limit, tool-output capacity, and summary compaction. The current target is Antigravity 2.32.1 for Windows (stable channel). Each feature has its own qualification status, linked from its section below; records for older builds are kept so their patches can still be recognized and removed.
+agyctl adds a context-usage panel to the Antigravity desktop app, plus optional tools that modify the installed app: an input-toolbar usage capsule, interface localization, and Language Server patches for the context limit, tool-output capacity, and summary compaction. The current target is Antigravity 2.33.0 for Windows (stable channel). Each feature has its own qualification status, linked from its section below; records for older builds are kept so their patches can still be recognized and removed.
 
 ## Features
 
@@ -69,7 +69,7 @@ npm run tools:build
 npm run plugin:install
 ```
 
-Reopen Antigravity and use **Settings → Patches**. Installed values are filled in automatically. Expand **Model context limits** to choose models from the signed-in account's Language Server catalog; Gemini thinking-effort variants share one row. New rows start at 256,000 tokens and unchecked; new or changed values must be 256,000–983,040. The **Summary compaction patch** checkbox controls the [compaction patch](#summary-compaction-patch); on 2.32.1 it can be combined with model context limits, while older builds allow only one of the two. Press **Save settings** to save a draft; nothing is applied yet. Then quit Antigravity and apply the draft from a terminal as described in [patch controls](docs/operations.md#panel-patch-controls), which also covers unavailable models and recovery. After reopening, the panel reads the settings back from the installed files. The commands below are the terminal alternative.
+Reopen Antigravity and use **Settings → Patches**. Installed values are filled in automatically. Expand **Model context limits** to choose models from the signed-in account's Language Server catalog; Gemini thinking-effort variants share one row. New rows start at 256,000 tokens and unchecked; new or changed values must be 256,000–983,040. The **Summary compaction patch** checkbox controls the [compaction patch](#summary-compaction-patch); on 2.33.0 and 2.32.1 it can be combined with model context limits, while older builds allow only one of the two. Unknown native states stay unchanged without blocking unrelated Host controls. Press **Save settings** to save a draft; nothing is applied yet. Then quit Antigravity and apply the draft from a terminal as described in [patch controls](docs/operations.md#panel-patch-controls), which also covers unavailable models and recovery. After reopening, the panel reads the settings back from the installed files. The commands below are the terminal alternative.
 
 ## Input-toolbar capsule
 
@@ -116,7 +116,7 @@ node scripts/manage.mjs --host-apply --localization-plan '<localizationPlan path
 
 The saved plan binds the exact installation; changing `AGYCTL_APP_DIR` does not retarget it. Reopen Antigravity and check the interface language.
 
-Preparation picks the profile for the exact installed app version and refuses unknown versions instead of using a nearby one. The 2.32.1 profile also translates the SSH remote-connection and MCP dialogs. All profiles are `probe-only`: a successful install does not prove that every screen is translated; see [verification status](docs/localization.md#verification-status).
+Preparation picks the profile for the exact installed app version and refuses unknown versions instead of using a nearby one. The 2.33.0 profile uses a new native adapter for the updated SSH and remote-connection dialogs, retaining earlier adapters for older builds. All profiles are `probe-only`: a successful install does not prove that every screen is translated; see [verification status](docs/localization.md#verification-status).
 
 **Remove.** Quit Antigravity first, then run:
 
@@ -158,7 +158,7 @@ npm run limit:status
 
 The panel's Settings and the capsule's details also show the selected installation's on-disk patch state, separately from server-reported session capacity. Build the tools and install/update the panel for this shared read-only display; a missing panel or CLI is shown as unavailable, not as an applied patch.
 
-To change an installed patch on 2.32.1, quit Antigravity and apply the complete new mapping directly. On older builds, restore first using the command below, then preview and apply the new mapping. The mapping replaces the selected model set; it does not merge with earlier IDs. `--model-limits` cannot be combined with legacy `--ids`/`--limit`. Legacy commands still accept one shared floor. With no settings flags, a patch command reuses detected installed settings or the saved last patch settings when applicable; otherwise it uses the built-in 500,000-token/default-ID combination. An explicit restore disables saved-setting reuse: pass the full mapping when applying again. An app update can remove the patch: `settings_state` distinguishes saved settings from current bytes, and nothing reapplies automatically.
+To change an installed patch on 2.33.0 or 2.32.1, quit Antigravity and apply the complete new mapping directly. On older builds, restore first using the command below, then preview and apply the new mapping. The mapping replaces the selected model set; it does not merge with earlier IDs. `--model-limits` cannot be combined with legacy `--ids`/`--limit`. Legacy commands still accept one shared floor. With no settings flags, a patch command reuses detected installed settings or the saved last patch settings when applicable; otherwise it uses the built-in 500,000-token/default-ID combination. An explicit restore disables saved-setting reuse: pass the full mapping when applying again. An app update can remove the patch: `settings_state` distinguishes saved settings from current bytes, and nothing reapplies automatically.
 
 **Remove.** Quit Antigravity first, then run:
 
@@ -170,7 +170,7 @@ Expect `restored: true` or `already_restored: true`. Run the status command agai
 
 ## Tool-output capacity patch
 
-Raises Language Server limits for native tool output: file reads go from 800 to 2,000 lines and from 45 KiB to 128 KiB, and the per-step message budget floor goes to 98,304 tokens so larger reads reach the model. The legacy `grep_search` result cap is also raised to 100, but the tested builds do not expose that tool. Supported builds are Windows 2.32.1 and 2.31.2 (the 2.31.2 recipe also carries native grep fixes); each admits only its exact registered `language_server.exe`. These values are qualification targets, not proven maxima. See [status and evidence](docs/tool-output-patch.md).
+Raises Language Server limits for native tool output: file reads go from 800 to 2,000 lines and from 45 KiB to 128 KiB, and the per-step message budget floor goes to 98,304 tokens so larger reads reach the model. The legacy `grep_search` result cap is also raised to 100, but the tested builds do not expose that tool. Supported builds are Windows 2.33.0, 2.32.1, and 2.31.2 (the 2.31.2 recipe also carries native grep fixes); each admits only its exact registered `language_server.exe`. These values are qualification targets, not proven maxima. See [status and evidence](docs/tool-output-patch.md).
 
 ```powershell
 npm run tool-output:status    # on-disk state of the selected installation
@@ -179,11 +179,11 @@ npm run tool-output:patch -- --apply    # quit Antigravity first
 npm run tool-output:restore   # back to the exact patched-from input
 ```
 
-Applying and restoring require the client to be closed, verified backups, and an explicit `--binary` when several installations exist. Other tools' limits are unchanged. On 2.32.1 this patch combines freely with the limit and compaction patches; on 2.31.2, remove a conflicting patch first. App updates remove the patch and nothing is reapplied automatically.
+Applying and restoring require the client to be closed, verified backups, and an explicit `--binary` when several installations exist. Other tools' limits are unchanged. On 2.33.0 and 2.32.1 this patch combines freely with the limit and compaction patches; on 2.31.2, remove a conflicting patch first. App updates remove the patch and nothing is reapplied automatically.
 
 ## Summary compaction patch
 
-Changes what survives when Antigravity compacts a long conversation into a summary (Windows 2.32.1):
+Changes what survives when Antigravity compacts a long conversation into a summary (Windows 2.33.0 and 2.32.1):
 
 - **Your original messages:** upstream passes only the 10 most recent messages, within a shared byte budget. The patch instead keeps your most recent messages whole, newest first, up to 61,440 UTF-8 bytes in total. Only the oldest kept message may be cut; anything older is dropped. Numbering counts toward the budget, so this is neither a token count nor the whole input size.
 - **Summary prompt:** `native` (default) keeps Antigravity's own prompt. `custom` replaces it with your text, up to 3,937 UTF-8 bytes.
@@ -198,7 +198,7 @@ npm run compaction:patch -- --binary ABS_LS_PATH --prompt-mode native --apply   
 npm run compaction:restore -- --binary ABS_LS_PATH
 ```
 
-Applying and restoring follow the same closed-client, verified-backup, and explicit-`--binary` rules as the other Language Server patches. On 2.32.1 the three patches are combined into one image, so each can be enabled, changed, or removed without touching the others; see [native composition](docs/operations.md#native-feature-composition). On 2.31.2 they keep their separate conflict checks. App updates remove the patch and nothing is reapplied automatically.
+Applying and restoring follow the same closed-client, verified-backup, and explicit-`--binary` rules as the other Language Server patches. On 2.33.0 and 2.32.1 the three patches are combined into one image, so each can be enabled, changed, or removed without touching the others; see [native composition](docs/operations.md#native-feature-composition). On 2.31.2 they keep their separate conflict checks. App updates remove the patch and nothing is reapplied automatically.
 
 ## Compatibility checker
 

@@ -87,6 +87,7 @@ test('build layouts cover their own prompt copies and request sites without over
   const shapes = {
     '2.31.2': { prompts: 3, counts: 8, initializers: 2, consumers: 0, preserved: [] },
     '2.32.1': { prompts: 1, counts: 0, initializers: 0, consumers: 12, preserved: [6307] },
+    '2.33.0': { prompts: 1, counts: 0, initializers: 0, consumers: 11, preserved: [6307] },
   };
   for (const layout of COMPACTION_BUILDS) {
     const sites = [

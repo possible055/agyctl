@@ -20,7 +20,6 @@ const STEP_RPC_DEADLINE_MS = 20_000;
 // so step reads get a wider provisional budget than the default metadata
 // budget in transport.mjs.
 const STEP_RESPONSE_MAX_BYTES = 64 * 1024 * 1024;
-const STEP_INDEX_END = 1_000_000;
 const CONCURRENCY = 3;
 const DAILY_DAYS = 14;
 const MAX_LISTED_CONVERSATIONS = 500;
@@ -349,8 +348,7 @@ async function readStepTimes(endpoint, id, known, signal) {
     LS_RPC_METHODS.steps,
     {
       cascadeId: id,
-      startIndex: known.length,
-      endIndex: STEP_INDEX_END,
+      stepOffset: known.length,
     },
     { signal, timeoutMs: STEP_RPC_DEADLINE_MS, maxBytes: STEP_RESPONSE_MAX_BYTES },
   );

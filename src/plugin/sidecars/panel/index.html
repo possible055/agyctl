@@ -335,6 +335,7 @@
             <input id="feature-limit" type="checkbox" disabled aria-labelledby="model-limits-heading">
             <details id="model-limits-details">
               <summary id="model-limits-heading" data-i18n="featureContext">模型上下文上限</summary>
+              <p class="muted small" id="feature-limit-state" role="status"></p>
               <div id="model-limits"></div>
               <p class="muted small" id="model-catalog-status" role="status"></p>
             </details>
@@ -882,6 +883,8 @@
       function updateFeatureControls() {
         const disabled = !featureSnapshot || featureBusy() || featureSubmitting;
         for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-compaction']) $(id).disabled = disabled;
+        if (featureSnapshot?.features.limit.enabled === null) $('feature-limit').disabled = true;
+        $('feature-limit-state').textContent = featureSnapshot?.features.limit.enabled === null ? t().featureLimitUnknown : '';
         $('feature-compaction').disabled ||= featureSnapshot?.features.compaction.enabled === null;
         $('feature-compaction-state').textContent = featureSnapshot?.features.compaction.enabled === null ? t().featureCompactionUnknown : '';
         const promptEnabled = !disabled && !$('feature-compaction').indeterminate && $('feature-compaction').checked;
@@ -965,7 +968,8 @@
         $('feature-capsule').checked = snapshot.features.capsule.enabled;
         $('feature-localization').checked = snapshot.features.localization.enabled;
         $('feature-locale').value = snapshot.features.localization.locale || currentLang;
-        $('feature-limit').checked = snapshot.features.limit.enabled;
+        $('feature-limit').checked = snapshot.features.limit.enabled === true;
+        $('feature-limit').indeterminate = snapshot.features.limit.enabled === null;
         $('feature-compaction').checked = snapshot.features.compaction.enabled === true;
         $('feature-compaction').indeterminate = snapshot.features.compaction.enabled === null;
         $('feature-compaction-mode').value = snapshot.features.compaction.prompt?.mode || 'native';
@@ -1033,7 +1037,7 @@
         event.preventDefault();
         if (!featureSnapshot || featureBusy() || featureSubmitting || !featureDirty) return;
         try {
-          const enabled = $('feature-limit').checked;
+          const enabled = $('feature-limit').indeterminate ? null : $('feature-limit').checked;
           const selections = enabled ? [...featureHiddenLimits, ...featureRows.flatMap(row => row.modified
             ? (row.enabled ? row.ids.map(id => ({ id, limit: row.limit })) : [])
             : row.originalLimits)] : [];

@@ -58,8 +58,8 @@ unreadable version sources refuse; there is no nearest-version selection. Offlin
 standalone binaries and legacy unversioned registries retain exact hash admission.
 Status and restore retain historical recipes. See
 [selection.go](../src/agyctl/internal/apptarget/selection.go). Context-limit
-admission remains byte-based, not a version allowlist. On the registered 2.32.1
-original, all three Language Server features are admitted through
+admission remains byte-based, not a version allowlist. On the registered 2.33.0 and 2.32.1
+originals, all three Language Server features are admitted through
 [native composition](#native-feature-composition), which also recognizes its own
 managed images.
 
@@ -194,13 +194,21 @@ restorable. The capsule shows decoded limits with the same catalog names,
 and explicit IDs when names are unknown. These are disk patch values, not confirmed
 live context capacity.
 
-Compaction disk state is tri-state: registered input is disabled, a managed output
-is enabled, and unsupported, unrecognized, or pending states are unknown. Unknown
+Model-limit and compaction disk states are tri-state: verified original/input is
+disabled, a verified patched/managed output is enabled, and unrecognized or pending
+states are unknown. Native state drift also makes both controls unknown. Unknown
 is shown with an indeterminate, disabled checkbox and a leave-unchanged notice.
-The draft stores `compaction: null` to preserve it, rather than inventing a disabled
-state. Explicitly changing an unknown state refuses in preflight. A pending
-compaction transaction also blocks native limit changes. The exact registered
-2.32.1 native target supports combined limit/compaction settings through one
+Drafts use `limit.enabled: null` with an empty map and `compaction: null` to preserve
+unknown state, rather than inventing a disabled state. Unrelated Host controls
+remain available; explicit native changes refuse when model-limit ownership is
+unknown or native state has drifted. A pending compaction transaction also blocks
+native limit changes. Failed status commands and inconsistent binary hashes still
+reject the settings read. If the native coordinator detects an app update that
+requires a complete feature review, panel native changes report
+`NATIVE_UPDATE_REQUIRED`; complete the explicit terminal transition described
+under [native composition](#native-feature-composition) before retrying. Host-only
+drafts do not trigger that transition. The exact registered
+2.33.0 and 2.32.1 native targets support combined limit/compaction settings through one
 reviewed native plan; legacy targets retain their conflict checks. Disk state
 does not by itself prove runtime compaction effectiveness.
 
@@ -293,10 +301,10 @@ reviewed apply, status, and removal; a custom path does not bypass the feature g
 
 ## Native feature composition
 
-The exact registered Windows 2.32.1 original supports one native transaction for
+The exact registered Windows 2.33.0 and 2.32.1 originals support one native transaction for
 limit, tool-output, and compaction. Version detection selects candidate data;
 whole-file originals and each feature's byte gates still decide admission. The
-existing feature commands route to the same coordinator for this target. Removing
+existing feature commands route to the same coordinator for those targets. Removing
 one feature preserves the other two; changing model limits does not require
 removing compaction. Host localization/capsule composition remains a separate
 archive transaction, not an atomic transaction with the Language Server.
@@ -314,6 +322,25 @@ This binds the original/current hashes, generation, and recipe-assets fingerprin
 an intervening change refuses instead of replanning silently. `null` is not an
 omit operation. Disabling limit requires an empty model map. Panel draft preflight
 builds one native plan, preserving tool-output when the panel changes L/C only.
+
+After an app update replaces a managed binary with an exact registered original,
+`native status` reports `file_state: "updated-original"` and
+`update_transition_required: true` only after reconstructing the previous managed
+image from its verified backup and historical recipes. Reported features describe
+the new file, not the old enabled selections. The transition requires a reviewed
+`native plan`/`apply` with all three fields explicitly present, for example:
+
+```powershell
+dist/bin/windows-amd64/agyctl.exe native plan --binary ABS_LS_PATH --desired '{"limit":{"enabled":false,"model_limits":[]},"tool_output":false,"compaction":false}' --json
+```
+
+Replace that complete selection with the settings you actually want, and pass the
+returned `expected` unchanged to `native apply`. Update expectations additionally
+bind `previous_state_sha256`; omitted fields and single-feature mutations refuse.
+Apply archives the previous active record under
+`native-history-<path-id>-<generation>-<old-current-sha>.json` before publishing the
+new generation. It never restores an old build over the new one or overwrites old
+original backups. Unknown drift still refuses.
 
 The coordinator retains one active record and a prepare record under the tool
 home, plus verified originals under `backups/`. It reproduces the complete current
@@ -337,8 +364,8 @@ original bytes, code placement, and signing strategy are qualified; see
 `limit patch --model-limits '1318=300000,1400=500000'` describes the complete model
 mapping, not an incremental edit. Preview is read-only unless `--out` explicitly
 requests a new output file, and `--apply` is required to replace the installation.
-Quit the selected client before applying or restoring. On the registered 2.32.1
-target, applying a new complete mapping replaces the installed one through
+Quit the selected client before applying or restoring. On the registered 2.33.0 and 2.32.1
+targets, applying a new complete mapping replaces the installed one through
 [native composition](#native-feature-composition). On other builds, restore first,
 then preview and apply the complete replacement mapping. Numeric IDs
 are build-specific enum values; the tool does not guess model names or account

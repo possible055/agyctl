@@ -14,7 +14,8 @@ end, and it gates nothing: each modification feature runs its own exact gate whe
 applied (see [client modifications](operations.md#client-modifications-from-the-cli)).
 
 The context probe recognizes the legacy common-floor body and independently screens
-`linked-v2` per-model bodies and their bounded table chain. Recognized per-model
+`linked-v2` and PE x86-64 `linked-v3-summary` per-model bodies and their bounded
+table chain. Recognized per-model
 fingerprints include `clamp.model_limits`. This is still not the patcher's
 placement, original-backup, or stopped-process gate; use `limit status` for the
 installed-setting readback described in
@@ -213,12 +214,23 @@ cooperative bounds, not a hard filesystem quota
 
 Context classification compares the clamp body with the originals in
 [versions.json](../compat/versions.json), using the checker's own parser. A missing
-clamp or an unexpected size (`0x80` on x86-64, `0x90` on ARM64) fails; a body that
+clamp or an unexpected size (`0x80` on x86-64, or the recognized `0x160` summary ABI
+on PE x86-64; `0x90` on ARM64) fails; a body that
 is neither a recorded original nor a recognized patch warns. See
 [probes.go](../src/agyctl/internal/check/probes.go). Symbolic-link ASAR members are
 rejected ([asar.go](../src/agyctl/internal/check/asar.go)), and ELF Go text bases
 must be proven rather than assumed
 ([pclntab_elf.go](../src/agyctl/internal/check/pclntab_elf.go)).
+
+Windows Hub 2.33.0's inspected package member
+`resources/bin/language_server.exe` has a 352-byte clamp at VA `0x141821280`, with
+original SHA-256
+`6c3e3ab006baf9105efd7d5a8545bddc8fdaef102f578d3bee9aad6967ebae25`.
+The independent checker recognizes its original only from the registry and its
+patch only from the complete screening template plus validated table nodes. It
+does not import the limit assembler or planner. A size match alone does not pass;
+the new layout does not qualify ELF or ARM64. See the
+[ABI and qualification evidence](limit-patch.md#per-model-encoding).
 
 `ui.staticHookEvidence` records only the two preload marker strings.
 `ui.capsuleIntegrity` records fuse qualification: enabled ASAR-integrity enforcement

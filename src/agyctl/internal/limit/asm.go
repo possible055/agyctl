@@ -22,8 +22,8 @@ const (
 	funcSizeAMD64 = 0x80
 )
 
-// funcSizes are the admitted original function sizes per architecture. The
-// registry loader and the per-architecture patch planners gate on them.
+// funcSizes records the legacy layout and the implemented architecture set.
+// Additional layouts require supportedOriginal's signature-specific strategy.
 var funcSizes = map[string]int{"x86-64": funcSizeAMD64}
 
 // ParseIDs delegates to the shared strict grammar and maps refusal kinds to
@@ -189,7 +189,11 @@ func PlanPatch(data []byte, ids []int, target int) (Plan, error) {
 func (im *image) planPatchAMD64(data []byte, ids []int, target int) (Plan, error) {
 	var plan Plan
 	entry := im.entries[im.index]
-	if im.entries[im.index+1]-entry != funcSizeAMD64 {
+	size := int(im.entries[im.index+1] - entry)
+	if size == summaryFuncSize {
+		return im.planModelPatch(data, uniformLimits(ids, target), nil)
+	}
+	if size != funcSizeAMD64 {
 		return plan, fmt.Errorf("%s is not %#x bytes; different build?", Func, funcSizeAMD64)
 	}
 	_, _, table, err := buildTable(ids)
@@ -273,15 +277,16 @@ func DetectState(data []byte, originals [][]byte) (PatchState, error) {
 
 func (im *image) detectStateAMD64(data []byte, state PatchState, originals [][]byte) (PatchState, error) {
 	entry := im.entries[im.index]
-	if im.entries[im.index+1]-entry != funcSizeAMD64 {
+	size := int(im.entries[im.index+1] - entry)
+	if size != funcSizeAMD64 && size != summaryFuncSize {
 		state.Kind = "size-mismatch"
 		return state, nil
 	}
-	off, err := im.offset(entry, funcSizeAMD64)
+	off, err := im.offset(entry, size)
 	if err != nil {
 		return state, err
 	}
-	body := data[off : off+funcSizeAMD64]
+	body := data[off : off+size]
 	for _, original := range originals {
 		if bytes.Equal(body, original) {
 			state.Kind = "original"
@@ -290,6 +295,9 @@ func (im *image) detectStateAMD64(data []byte, state PatchState, originals [][]b
 	}
 	if decoded, ok := im.detectModelPatch(data, state, body); ok {
 		return decoded, nil
+	}
+	if size != funcSizeAMD64 {
+		return state, nil
 	}
 	base := int(int32(binary.LittleEndian.Uint32(body[15:])))
 	span := int(body[21])

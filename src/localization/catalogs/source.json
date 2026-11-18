@@ -120755,6 +120755,71 @@
       },
       "surface": "hub.ssh",
       "critical": false
+    },
+    "ssh.web.signInSubtitle": {
+      "messageId": "ssh.web.signInSubtitle",
+      "format": "icu",
+      "defaultMessage": "You're signing in on {0}. Your sign-in stays on that machine.",
+      "description": "Reviewed Antigravity Windows 2.33.0 embedded main.js (SHA-256 f066a497c9c61198394cb3218e42ff61d85b03910d81282589c3ef066905f347): ssh-sign-in-subtitle or M0c/N0c microphone presentation text. Static review only; host labels remain opaque content and this is not real-client acceptance.",
+      "values": {
+        "0": "Opaque host display label; preserve verbatim"
+      },
+      "surface": "hub.ssh",
+      "critical": false
+    },
+    "microphone.web.permissionDenied": {
+      "messageId": "microphone.web.permissionDenied",
+      "format": "plain",
+      "defaultMessage": "Microphone access is blocked by your operating system. Grant microphone permission in System Settings and try again.",
+      "description": "Reviewed Antigravity Windows 2.33.0 embedded main.js (SHA-256 f066a497c9c61198394cb3218e42ff61d85b03910d81282589c3ef066905f347): ssh-sign-in-subtitle or M0c/N0c microphone presentation text. Static review only; host labels remain opaque content and this is not real-client acceptance.",
+      "values": {},
+      "surface": "hub.microphone",
+      "critical": false
+    },
+    "microphone.web.noDevice": {
+      "messageId": "microphone.web.noDevice",
+      "format": "plain",
+      "defaultMessage": "No microphone was found on this machine. Connect or enable an input device and try again.",
+      "description": "Reviewed Antigravity Windows 2.33.0 embedded main.js (SHA-256 f066a497c9c61198394cb3218e42ff61d85b03910d81282589c3ef066905f347): ssh-sign-in-subtitle or M0c/N0c microphone presentation text. Static review only; host labels remain opaque content and this is not real-client acceptance.",
+      "values": {},
+      "surface": "hub.microphone",
+      "critical": false
+    },
+    "microphone.web.busy": {
+      "messageId": "microphone.web.busy",
+      "format": "plain",
+      "defaultMessage": "Microphone is already in use by another recording session.",
+      "description": "Reviewed Antigravity Windows 2.33.0 embedded main.js (SHA-256 f066a497c9c61198394cb3218e42ff61d85b03910d81282589c3ef066905f347): ssh-sign-in-subtitle or M0c/N0c microphone presentation text. Static review only; host labels remain opaque content and this is not real-client acceptance.",
+      "values": {},
+      "surface": "hub.microphone",
+      "critical": false
+    },
+    "microphone.web.unsupported": {
+      "messageId": "microphone.web.unsupported",
+      "format": "plain",
+      "defaultMessage": "Microphone capture is not supported in this environment.",
+      "description": "Reviewed Antigravity Windows 2.33.0 embedded main.js (SHA-256 f066a497c9c61198394cb3218e42ff61d85b03910d81282589c3ef066905f347): ssh-sign-in-subtitle or M0c/N0c microphone presentation text. Static review only; host labels remain opaque content and this is not real-client acceptance.",
+      "values": {},
+      "surface": "hub.microphone",
+      "critical": false
+    },
+    "microphone.web.captureFailed": {
+      "messageId": "microphone.web.captureFailed",
+      "format": "plain",
+      "defaultMessage": "Microphone capture failed.",
+      "description": "Reviewed Antigravity Windows 2.33.0 embedded main.js (SHA-256 f066a497c9c61198394cb3218e42ff61d85b03910d81282589c3ef066905f347): ssh-sign-in-subtitle or M0c/N0c microphone presentation text. Static review only; host labels remain opaque content and this is not real-client acceptance.",
+      "values": {},
+      "surface": "hub.microphone",
+      "critical": false
+    },
+    "microphone.web.captureEnded": {
+      "messageId": "microphone.web.captureEnded",
+      "format": "plain",
+      "defaultMessage": "Microphone capture ended unexpectedly.",
+      "description": "Reviewed Antigravity Windows 2.33.0 embedded main.js (SHA-256 f066a497c9c61198394cb3218e42ff61d85b03910d81282589c3ef066905f347): ssh-sign-in-subtitle or M0c/N0c microphone presentation text. Static review only; host labels remain opaque content and this is not real-client acceptance.",
+      "values": {},
+      "surface": "hub.microphone",
+      "critical": false
     }
   }
 }

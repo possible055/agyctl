@@ -101,7 +101,7 @@ export function localizationNativeInventory(originalPath, profile) {
 
 export function localizationNativeEdits(originalPath, profile) {
   const adapterVersion = profile?.nativeAdapterVersion;
-  if (!['2', '3'].includes(adapterVersion))
+  if (!['2', '3', '4'].includes(adapterVersion))
     throw new Error(`Unsupported native localization adapter version: ${adapterVersion}`);
   requireLocalization('./localization-build.mjs').verifyLocalizationBuild();
   const { buildReviewedNativeEdits } = requireLocalization(

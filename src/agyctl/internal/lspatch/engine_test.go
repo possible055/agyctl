@@ -223,6 +223,184 @@ func TestNativeWholeImageAndReviewedPlanGates(t *testing.T) {
 	}
 }
 
+func TestNativeRegisteredAppUpdateRequiresCompleteReviewedTransition(t *testing.T) {
+	e, binary, oldBase := nativeFixture(t)
+	applyDesired(t, e, binary, featureDesired(0, true, 2))
+	statePath, _, err := statePaths(e.Directory, binary)
+	if err != nil {
+		t.Fatal(err)
+	}
+	previousJSON, err := os.ReadFile(statePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var previous State
+	if err := StrictJSON(previousJSON, &previous); err != nil {
+		t.Fatal(err)
+	}
+	updated := bytes.Clone(oldBase)
+	updated[0] = 2
+	spec := e.Specs[0]
+	spec.ID, spec.BaseSHA = "updated-fixture", fsx.SHA256(updated)
+	e.Specs = append(e.Specs, spec)
+	if err := os.WriteFile(binary, updated, 0600); err != nil {
+		t.Fatal(err)
+	}
+	status, err := e.Status(binary)
+	if err != nil || status["verified"] != true || status["file_state"] != "updated-original" || status["update_transition_required"] != true || status["generation"] != previous.Generation || !reflect.DeepEqual(status["features"], EmptyConfig()) {
+		t.Fatalf("updated original status = %v (%v)", status, err)
+	}
+	if _, err := e.Plan(binary, Desired{}); err == nil || !strings.Contains(err.Error(), "update-required") {
+		t.Fatalf("partial update retained previous settings: %v", err)
+	}
+	complete := EmptyConfig()
+	complete.ToolOutput = true
+	desired := Desired{Limit: &complete.Limit, ToolOutput: &complete.ToolOutput, Compaction: &complete.Compaction}
+	plan, err := e.Plan(binary, desired)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if plan.Expected.PreviousStateSHA != stateFingerprint(previous) || status["previous_state_sha256"] != plan.Expected.PreviousStateSHA {
+		t.Fatalf("update proof did not bind previous state: %v", plan.Expected)
+	}
+	afterRead, err := os.ReadFile(statePath)
+	if err != nil || !bytes.Equal(previousJSON, afterRead) {
+		t.Fatalf("read-only update proof changed previous state: %v", err)
+	}
+	if _, err := e.Apply(binary, desired, plan.Expected, "tool-output"); err == nil || !strings.Contains(err.Error(), "update-required") {
+		t.Fatalf("single-feature command bypassed reviewed transition: %v", err)
+	}
+	stale := plan.Expected
+	stale.Generation++
+	if _, err := e.Apply(binary, desired, stale, "native"); err == nil || !strings.Contains(err.Error(), "stale-plan") {
+		t.Fatalf("stale update proof accepted: %v", err)
+	}
+	result, err := e.Apply(binary, desired, plan.Expected, "native")
+	if err != nil || result["generation"] != previous.Generation+1 || result["update_transition_required"] != false || !reflect.DeepEqual(result["features"], complete) {
+		t.Fatalf("update transition = %v (%v)", result, err)
+	}
+	archive, err := e.previousArchivePath(binary, previous)
+	if err != nil {
+		t.Fatal(err)
+	}
+	archivedJSON, err := os.ReadFile(archive)
+	if err != nil || !bytes.Equal(archivedJSON, previousJSON) {
+		t.Fatalf("previous build state was not preserved byte-for-byte: %v", err)
+	}
+	backup, err := os.ReadFile(previous.BasePath)
+	if err != nil || !bytes.Equal(backup, oldBase) {
+		t.Fatalf("previous original backup changed: %v", err)
+	}
+	applyDesired(t, e, binary, Desired{ToolOutput: &complete.Compaction})
+	restored, err := os.ReadFile(binary)
+	if err != nil || !bytes.Equal(restored, updated) {
+		t.Fatalf("new build did not restore exactly: %v", err)
+	}
+	unknown := bytes.Clone(updated)
+	unknown[1] = 3
+	if err := os.WriteFile(binary, unknown, 0600); err != nil {
+		t.Fatal(err)
+	}
+	status, err = e.Status(binary)
+	if err != nil || status["verified"] != false || status["file_state"] != "drift" {
+		t.Fatalf("unknown image admitted as update: %v (%v)", status, err)
+	}
+}
+
+func TestNativeAppUpdatePreparedRecovery(t *testing.T) {
+	for _, boundary := range []string{"before", "after", "committed", "history-drift", "third-image"} {
+		t.Run(boundary, func(t *testing.T) {
+			e, binary, base := nativeFixture(t)
+			applyDesired(t, e, binary, featureDesired(0, true, 2))
+			previous := readActive(t, e, binary)
+			updated := bytes.Clone(base)
+			updated[0] = 2
+			spec := e.Specs[0]
+			spec.ID, spec.BaseSHA = "updated-fixture", fsx.SHA256(updated)
+			e.Specs = append(e.Specs, spec)
+			if err := os.WriteFile(binary, updated, 0600); err != nil {
+				t.Fatal(err)
+			}
+			v, err := e.inspect(binary)
+			if err != nil {
+				t.Fatal(err)
+			}
+			config := EmptyConfig()
+			config.ToolOutput = true
+			desired := Desired{Limit: &config.Limit, ToolOutput: &config.ToolOutput, Compaction: &config.Compaction}
+			plan, err := e.Plan(binary, desired)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := e.Apply(binary, desired, plan.Expected, "native"); err != nil {
+				t.Fatal(err)
+			}
+			after := readActive(t, e, binary)
+			before := v.state
+			before.BasePath = after.BasePath
+			start, err := e.backupPath(binary, before.CurrentSHA)
+			if err != nil {
+				t.Fatal(err)
+			}
+			pending := prepare{Schema: 1, Operation: "interrupted-update", Owner: "native", Before: before, After: after, Expected: plan.Expected, StartBackup: start, Previous: &previous}
+			statePath, preparePath, err := statePaths(e.Directory, binary)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := writeJSON(e.Directory, preparePath, pending); err != nil {
+				t.Fatal(err)
+			}
+			if boundary != "committed" {
+				if err := writeJSON(e.Directory, statePath, previous); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if boundary == "before" {
+				if err := os.WriteFile(binary, updated, 0600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if boundary == "history-drift" {
+				archive, err := e.previousArchivePath(binary, previous)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if err := os.WriteFile(archive, []byte("{}"), 0600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if boundary == "third-image" {
+				unknown := bytes.Clone(updated)
+				unknown[1] = 1
+				if err := os.WriteFile(binary, unknown, 0600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			result, err := e.Apply(binary, desired, plan.Expected, "native")
+			if boundary == "history-drift" || boundary == "third-image" {
+				want := "prior-build history"
+				if boundary == "third-image" {
+					want = "neither prepared before nor after"
+				}
+				if err == nil || !strings.Contains(err.Error(), want) {
+					t.Fatalf("accepted %s: %v (%v)", boundary, result, err)
+				}
+				return
+			}
+			if err != nil || result["prepare_record_completed"] != true || result["generation"] != previous.Generation+1 {
+				t.Fatalf("update recovery = %v (%v)", result, err)
+			}
+			actual, err := os.ReadFile(binary)
+			if err != nil || fsx.SHA256(actual) != plan.AfterSHA {
+				t.Fatalf("update recovery image: %v", err)
+			}
+			if err := e.verifyPreviousArchive(binary, previous); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
 func TestNativeMissingRecipeAndGuardConflicts(t *testing.T) {
 	e, binary, base := nativeFixture(t)
 	e.Specs[0].Compaction = nil

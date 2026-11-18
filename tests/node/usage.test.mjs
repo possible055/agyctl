@@ -121,10 +121,12 @@ function usageHarness() {
       const failure = failures.get(`${id}:${method}`) ?? failures.get(id);
       if (failure) throw failure;
       const conversation = conversations.get(id) || { entries: [], steps: [] };
-      if (method === 'GetCascadeTrajectorySteps')
+      if (method === 'GetCascadeTrajectorySteps') {
+        assert.deepEqual(Object.keys(payload).sort(), ['cascadeId', 'stepOffset']);
         return malformedSteps
           ? { steps: 'not-an-array' }
-          : { steps: conversation.steps.slice(payload.startIndex) };
+          : { steps: conversation.steps.slice(payload.stepOffset) };
+      }
       assert.equal(method, 'GetCascadeTrajectoryGeneratorMetadata');
       assert.equal(payload.includeMessages, false);
       return { generatorMetadata: conversation.entries };
@@ -315,7 +317,7 @@ test('refreshes reread only changed conversations and fetch only new steps', asy
   const result = await harness.settle();
   const reads = harness.calls.filter((call) => call.method !== 'GetAllCascadeTrajectories');
   assert.deepEqual(
-    reads.map((call) => [call.method, call.cascadeId, call.startIndex]),
+    reads.map((call) => [call.method, call.cascadeId, call.stepOffset]),
     [
       ['GetCascadeTrajectoryGeneratorMetadata', A, undefined],
       ['GetCascadeTrajectorySteps', A, 2],

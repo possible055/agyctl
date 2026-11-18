@@ -1,7 +1,7 @@
 # Architecture
 
 `agyctl` adds usage visibility and optional client modifications to the
-Antigravity desktop app; the current target is Windows 2.32.1 (stable channel). The
+Antigravity desktop app; the current target is Windows 2.33.0 (stable channel). The
 tools can also discover and inspect the development (Insiders) channel. Exact builds
 are recorded per feature in `compat/` (see [limit patch](limit-patch.md),
 [tool-output patch](tool-output-patch.md),
@@ -212,11 +212,11 @@ registered inputs are the tool-output output and the grep-patched baseline, and
 other features' patches are reported as conflicts instead of being patched over.
 See [compaction patch](compaction-patch.md).
 
-For the exact registered Windows 2.32.1 original, limit, tool-output, and
+For the exact registered Windows 2.33.0 and 2.32.1 originals, limit, tool-output, and
 compaction changes all go through the
 [native coordinator](../src/agyctl/internal/lspatch/), wired up by the
 [native CLI](../src/agyctl/cmd/agyctl/native.go); the `limit`, `tool-output`, and
-`compaction` commands delegate to it for that target. Each feature still checks its
+`compaction` commands delegate to it for those targets. Each feature still checks its
 own byte-gated recipe, and the coordinator rebuilds the complete desired image from
 the verified original. Spans of disabled recipes stay reserved so limit table nodes
 are never placed there. One active record and one prepare transaction own the
@@ -251,14 +251,14 @@ Each feature gates its own writes (see
 [client modifications](operations.md#client-modifications-from-the-cli)):
 
 - limit patch: exact byte-signature match;
-- tool-output and compaction patches: registered whole-file hash (on 2.32.1, the
+- tool-output and compaction patches: registered whole-file hash (on 2.33.0 and 2.32.1, the
   native coordinator's verified original plus each recipe's byte gate);
 - capsule: executable and ASAR qualification plus served-bundle anchors;
 - localization: profile or structural evidence plus bound plan inputs.
 
 `node scripts/manage.mjs status` reports these gates read-only. The capsule and
 localization form one Host mutation group, admitted and journaled together. The
-Language Server patches are one native transaction on 2.32.1 and independent
+Language Server patches are one native transaction on 2.33.0 and 2.32.1 and independent
 operations on other builds. The project never closes, relaunches, or
 supervises the client: [winproc](../src/agyctl/internal/winproc/) only inspects
 processes so that applies refuse while the selected client or LS runs.

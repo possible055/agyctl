@@ -51,6 +51,31 @@ func TestPerModelAssemblyContract(t *testing.T) {
 	}
 }
 
+func TestSummaryABIAssemblyPreservesRuntimeBoundaries(t *testing.T) {
+	original, err := hex.DecodeString(summaryOriginalHex)
+	if err != nil {
+		t.Fatal(err)
+	}
+	body, err := assembleSummaryLimits(0x141821280, 0x141822000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(body) != 352 || !bytes.Equal(body[:0x20], original[:0x20]) || !bytes.Equal(body[0x9e:0xa8], original[0x9e:0xa8]) || !bytes.Equal(body[0x102:], original[0x102:]) {
+		t.Fatal("summary ABI changed the frame, argument roots, call PC, epilogues or morestack path")
+	}
+	if got := int64(0x141821280+0x34) + int64(int32(binary.LittleEndian.Uint32(body[0x30:]))); got != 0x141822000 {
+		t.Fatalf("summary table VA = %#x", got)
+	}
+	if !supportedOriginal("x86-64", original) || supportedOriginal("arm64", original) {
+		t.Fatal("summary ABI admitted the wrong architecture")
+	}
+	changed := bytes.Clone(original)
+	changed[0x40] ^= 1
+	if supportedOriginal("x86-64", changed) {
+		t.Fatal("summary ABI accepted a size-only match with unknown native instructions")
+	}
+}
+
 func TestPerModelSettingsGrammar(t *testing.T) {
 	values, err := ParseModelLimits("1400=500000,1318=300000")
 	want := []ModelLimit{{ID: 1318, Limit: 300000}, {ID: 1400, Limit: 500000}}

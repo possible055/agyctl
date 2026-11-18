@@ -6,18 +6,33 @@ Commands and recovery are in
 [operations](operations.md#tool-output-capacity-patch); component boundaries are in
 [architecture](architecture.md#language-server-patch-admission). It is a separate
 feature from the context-limit patch ([limit-patch.md](limit-patch.md)); on 2.32.1
-both are combined by [native composition](operations.md#native-feature-composition).
+and 2.33.0 both are combined by
+[native composition](operations.md#native-feature-composition).
 
 ## Status
 
-Both registered recipes (Windows 2.32.1 and 2.31.2) are `candidate` in
+Registered recipes are `candidate` in
 [tool-output.json](../compat/tool-output.json). The capacity values are
-qualification targets, **not** measured upstream maxima. The two file-read targets
-(lines and bytes) are live-verified on both builds; the grep result cap has no
+qualification targets, **not** measured upstream maxima. Windows 2.33.0 has offline
+instruction, control-flow and Go metadata evidence plus a partial installed-client
+read beyond both old limits; its exact capacity boundaries remain unqualified.
+The two file-read targets (lines and bytes) are live-verified on
+Windows 2.32.1 and 2.31.2; the grep result cap has no
 observed live path, and the remaining items are listed under
 [qualification status](#qualification-status).
 
 ## Registered builds
+
+The **Windows 2.33.0** recipe targets package member
+`resources/bin/language_server.exe`, 203,692,544 bytes:
+
+| State | Whole-file SHA-256 |
+| --- | --- |
+| Original | `eb6d986dfc5a859c6e9b1b36a0601f5c362993cc16eb8962ad554c9141defc9c` |
+| Standalone output | `9f230dcacd9be8736ca4d80b0d178bbee5d47b50e46ad7561e76ec9525636822` |
+
+Only that original is admitted. The recipe changes the three capacity operands
+and post-merge floor, without importing historical grep transforms.
 
 The **Windows 2.32.1** recipe targets package member
 `resources/bin/language_server.exe`, 215,547,392 bytes:
@@ -59,7 +74,7 @@ every `patch` plan reproduces before it may write.
 | `CascadeConfig.plannerConfig.toolConfig.grep.maxGrepResults` | 50 | 100 | base default constant |
 | Post-merge step budget floor (`trajectoryConversionConfig.maxTokensPerStep`) | 32,768 | 98,304 | after manager static/dynamic settings merge |
 
-The source values are unchanged in 2.32.1. Why these layers (from isolated probes on
+The source values are unchanged in 2.32.1 and 2.33.0. Why these layers (from isolated probes on
 Windows 2.31.2, recorded
 2026-11-14, with no installed-file changes):
 
@@ -185,9 +200,60 @@ did not prove reachability; the live check under
 [qualification status](#qualification-status) confirmed `read_file` routing and
 model-visible capacity, not search or MCP paths.
 
+### Windows 2.33.0
+
+Recorded offline on 2026-11-18 from the exact original identified above, package
+member `resources/bin/language_server.exe`. The editing source is the 2.33.0
+entry in [tool-output.json](../compat/tool-output.json); existing entries are
+unchanged.
+
+| Segment | VA | File offset |
+| --- | --- | --- |
+| Read line cap | `0x1419aa6c4` | 26909892 |
+| Read byte cap | `0x1419aa6de` | 26909918 |
+| Grep result cap | `0x1419ab635` | 26913845 |
+| Post-merge floor | `0x14294a3d2` | 43293138 |
+
+The first three preimages are `c70020030000`, `c70000b40000`, and
+`c7400832000000`. They retain their instruction lengths and change only the
+immediates. The grep object is stored at parent `+0x18`; the separate 50-result
+initializer at `0x1419ab6b1` goes to parent `+0x20` (find) and is not patched.
+
+`(*CascadeManager).getCascadeConfig` is at `0x14294a140`, size 992. The 62-byte
+replacement at `[0x14294a3d2,0x14294a410)` still follows both configuration merges
+and `ApplySystemPromptTemplateOverrides`. It introduces no call, SP change, new
+stack slot, or pointer store. Conditional branches land at `0x14294a3ff`; the final
+jump lands on original `mov rax,rdx` at `0x14294a494`. No unchanged direct branch
+enters the replaced span. Logging/allocation calls in that span are skipped, not
+moved; all calls outside it retain their original PCs and targets.
+
+Named protobuf getters confirm the field chain: `CascadeConfig.GetTrajectoryConversionConfig`
+at `0x140984080` reads `[rax+0x20]`, and
+`TrajectoryConversionConfig.GetMaxTokensPerStep` at `0x140985580` reads
+`[rax+0x50]` followed by the pointed-to int32. The floor retains nil paths and
+larger signed values, setting only an existing value below 98,304.
+
+The Go pclntab is at file offset `0x4ab8020`. `pcsp=296` covers both the
+replacement and landing. `UnsafePoint=-1` covers the replacement; the native
+write-barrier unsafe range starts later, at `0x14294a417`, and is skipped.
+Source/landing stack-map indices 6/7 have the same 14-bit locals bitmap `0100`,
+retaining the merged configuration root at `SP+0xb0`. Argument maps are `04`/`00`,
+and no argument is used after the landing; arg-live index 3 is unchanged.
+
+To reproduce, read the registered original into memory, verify its whole-file
+SHA-256 and size, derive each VA/file offset from the PE section table, and require
+every `expected_hex` before applying the equal-length `new_hex`. Require the
+registered output hash and no differences outside those spans. Disassemble the
+complete containing functions in both images and check every direct branch,
+including incoming edges, and all retained call PCs. Decode Go `_func.pcsp`,
+`PCDATA_UnsafePoint`, `PCDATA_StackMapIndex`, and both pointer maps at the ranges
+above using the Go runtime's `runtime2.go`, `symtab.go`, and
+`internal/abi/symtab.go` layouts. These are read-only checks, not proof of live
+Read/Grep routing or capacity.
+
 ## Admission gate and coexistence with limit
 
-The exact Windows 2.32.1 original and its verified managed images use
+The exact Windows 2.32.1/2.33.0 originals and their verified managed images use
 [native composition](operations.md#native-feature-composition). Feature entry
 points retain the exact T recipe gate and route their changes through that shared
 whole-image transaction, preserving L/C on independent T removal. The standalone
@@ -240,6 +306,16 @@ model receives the new capacity; `status` reports disk state only.
 
 **Verified**
 
+- **Live, partial (2026-11-18, stable-channel Windows 2.33.0):** after the reviewed
+  combined native transaction and a client restart, a new synthetic Gemini 3.8
+  Flash High conversation changed executor `viewFile` metadata from 800/46,080 to
+  2,000/131,072. A single `VIEW_FILE` step returned all 1,400 numbered lines from a
+  93,800-byte synthetic file, including its final marker. This proves a read beyond
+  both old limits, not the exact new maxima or the next message-conversion layer.
+  Reproduce with a numbered ASCII file larger than 800 lines and 46,080 bytes,
+  request one native read, and inspect `GetCascadeTrajectorySteps`' `viewFile`
+  content rather than relying on the model's answer. The constructor and floor
+  sites for this exact build are documented above.
 - **Static (2026-11-14):** both input binaries were byte-checked against the
   external manifest, the recipe was derived from disassembly, and the registered
   output is reproducible in memory.

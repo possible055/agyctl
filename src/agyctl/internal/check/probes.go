@@ -21,6 +21,9 @@ var markerNames = []string{"MODEL_PLACEHOLDER", "model_profiles", "GetAvailableM
 
 const patchHex = "4885c0747a4885db74758b530881ea2605000083fa6577190fa315910c0000731081780c20a107007307c7400c20a1070083780c0075108b531481ea409c00007f0231d289500c8b531485d27e1189d629ca39f10f42f239700c760389700c488b48504885c9741780390074128b4b7085c97e0b8b501039ca0f47d1895010c3"
 
+// This screening template is intentionally independent of the limit assembler.
+const summaryPatchHex = "493b66100f86fc000000554889e54883ec20488944243048895c24380f1f40004885c974744885ff746f8b57084c8d0500000000413910740e4d6348084585c974114d01c8ebed418b500439510c730389510c83790c007512486357144881ea409c0000790231d289510c8b571485d27e0e39f2760229f239510c760389510c837940037418488b51504885d2740a803a0074058b5770eb4ee96400000048894c2440e8b8fdffff4885db75554885c07450837814007e278b50704531c085d2410f4ed03950147e16448b40144129d0488b4c24404439410c76044489410c488b4c24408b507085d27e173951107612895110909090909090909090909090909090c9c3c9c3488944240848895c241048894c241848897c2420897424286690e85b5087fe488b442408488b5c2410488b4c2418488b7c24208b7424280f1f00e9bbfeffffcccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+
 func linkedPatchTemplate() []byte {
 	head, _ := hex.DecodeString("4885c074794885db74748b5308488d35000000003916740d48637e0885ff74104801feebef8b560439500c730389500c")
 	legacy, _ := hex.DecodeString(patchHex)
@@ -28,26 +31,35 @@ func linkedPatchTemplate() []byte {
 }
 
 func isLinkedPatchBody(body []byte) bool {
-	if len(body) != 128 {
+	if len(body) != 128 && len(body) != 352 {
 		return false
 	}
 	template := linkedPatchTemplate()
+	displacement := 16
+	if len(body) == 352 {
+		template, _ = hex.DecodeString(summaryPatchHex)
+		displacement = 0x30
+	}
 	normal := bytes.Clone(body)
-	copy(normal[16:20], template[16:20])
+	copy(normal[displacement:displacement+4], template[displacement:displacement+4])
 	return bytes.Equal(normal, template)
 }
 
-// Reads the linked-v2 table independently; this screening is not the patcher's
+// Reads the linked per-model table independently; this is not the patcher's
 // original-byte, placement, or recovery gate.
 func linkedPatchLimits(data []byte, im image, f *Function, body []byte) ([]object, bool) {
 	if !isLinkedPatchBody(body) || f.Entryoff > uint64(len(data)) {
 		return nil, false
 	}
-	position := int64(f.Entryoff) + 20 + int64(int32(binary.LittleEndian.Uint32(body[16:20])))
+	displacement, relative := 16, 20
+	if len(body) == 352 {
+		displacement, relative = 0x30, 0x34
+	}
+	position := int64(f.Entryoff) + int64(relative) + int64(int32(binary.LittleEndian.Uint32(body[displacement:displacement+4])))
 	limits := []object{}
 	lastID := uint32(0)
 	for len(limits) < 128 {
-		if position < int64(f.Entryoff)+128+8 || uint64(position) > im.size || im.size-uint64(position) < 16 {
+		if position < int64(f.Entryoff)+int64(len(body))+8 || uint64(position) > im.size || im.size-uint64(position) < 16 {
 			return nil, false
 		}
 		guard, err := region(data, im.offset+uint64(position)-8, 24)
@@ -120,12 +132,18 @@ func probeLS(path string, known [][]byte) (object, error) {
 		if im.arch == "x86-64" && isLinkedPatchBody(body) {
 			if limits, valid := linkedPatchLimits(data, im, f, body); valid {
 				clamp["kind"], clamp["patch_format"], clamp["model_limits"] = "ours-patched", "linked-v2", limits
+				if len(body) == 352 {
+					clamp["patch_format"] = "linked-v3-summary"
+				}
 			}
 		}
 	}
 	kind := str(clamp["kind"])
 	size := num(clamp["size"])
 	expected := 128
+	if im.arch == "x86-64" && binaryFormat(data) == "pe" && size == 352 && (kind == "original" || kind == "ours-patched") {
+		expected = 352
+	}
 	if im.arch == "arm64" {
 		expected = 144
 	}

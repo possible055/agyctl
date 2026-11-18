@@ -219,8 +219,8 @@ func ParseExpected(data []byte) (Expected, error) {
 	if err := StrictJSON(data, &fields); err != nil {
 		return Expected{}, err
 	}
-	if len(fields) != 4 {
-		return Expected{}, errors.New("expected requires base_sha256, current_sha256, generation and assets_fingerprint")
+	if len(fields) != 4 && len(fields) != 5 {
+		return Expected{}, errors.New("expected requires base_sha256, current_sha256, generation and assets_fingerprint, with optional previous_state_sha256 for app updates")
 	}
 	for _, name := range []string{"base_sha256", "current_sha256", "generation", "assets_fingerprint"} {
 		if fields[name] == nil || bytes.Equal(bytes.TrimSpace(fields[name]), []byte("null")) {
@@ -233,6 +233,9 @@ func ParseExpected(data []byte) (Expected, error) {
 	}
 	if !validSHA(expected.BaseSHA) || !validSHA(expected.CurrentSHA) || !validSHA(expected.AssetsFingerprint) {
 		return Expected{}, errors.New("invalid native expected SHA-256 proof")
+	}
+	if raw, present := fields["previous_state_sha256"]; present && (bytes.Equal(bytes.TrimSpace(raw), []byte("null")) || !validSHA(expected.PreviousStateSHA)) {
+		return Expected{}, errors.New("invalid native previous-state SHA-256 proof")
 	}
 	return expected, nil
 }
@@ -285,6 +288,7 @@ type Expected struct {
 	CurrentSHA        string `json:"current_sha256"`
 	Generation        uint64 `json:"generation"`
 	AssetsFingerprint string `json:"assets_fingerprint"`
+	PreviousStateSHA  string `json:"previous_state_sha256,omitempty"`
 }
 
 func validSHA(value string) bool {

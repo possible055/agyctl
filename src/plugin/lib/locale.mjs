@@ -313,6 +313,7 @@ const LOCALE_CATALOGS = {
       featureContext: 'Model context limits',
       featureCompaction: 'Compaction and request retention',
       featureCompactionUnknown: 'State unknown; left unchanged',
+      featureLimitUnknown: 'State unknown; model limits will be left unchanged',
       featureCompactionPrompt: 'Summary prompt',
       featureCompactionNative: 'Native (default)',
       featureCompactionCustom: 'Custom',
@@ -346,6 +347,9 @@ const LOCALE_CATALOGS = {
       },
       featureErrors: {
         REVISION_CHANGED: 'Installation changed. Reload settings.',
+        STATE_UNAVAILABLE: 'Native patch state is unknown. Leave native features unchanged.',
+        NATIVE_UPDATE_REQUIRED:
+          'After this app update, review all native patches in the terminal first.',
         OPERATION_BUSY: 'An operation is already pending.',
         CANNOT_CANCEL: 'This operation can no longer be cancelled.',
         WAIT_TIMEOUT: 'Exit wait timed out. Apply again.',
@@ -458,6 +462,7 @@ const LOCALE_CATALOGS = {
       featureContext: '模型上下文上限',
       featureCompaction: '壓縮與原文保留補丁',
       featureCompactionUnknown: '狀態未知，保留現況',
+      featureLimitUnknown: '狀態未知，模型上限將保留現況',
       featureCompactionPrompt: '摘要提示詞',
       featureCompactionNative: '原生（預設）',
       featureCompactionCustom: '自訂',
@@ -490,6 +495,8 @@ const LOCALE_CATALOGS = {
       },
       featureErrors: {
         REVISION_CHANGED: '安裝狀態已更新，請重新讀取。',
+        STATE_UNAVAILABLE: '無法確認原生修補狀態，請保留原生功能現況。',
+        NATIVE_UPDATE_REQUIRED: '應用程式更新後，請先從終端機確認完整的原生修補設定。',
         OPERATION_BUSY: '已有待完成的作業。',
         CANNOT_CANCEL: '作業已開始，無法取消。',
         WAIT_TIMEOUT: '等待退出逾時，請重新套用。',
@@ -601,6 +608,7 @@ const LOCALE_CATALOGS = {
       featureContext: '模型上下文上限',
       featureCompaction: '压缩与原文保留补丁',
       featureCompactionUnknown: '状态未知，保留现状',
+      featureLimitUnknown: '状态未知，模型上限将保留现状',
       featureCompactionPrompt: '摘要提示词',
       featureCompactionNative: '原生（默认）',
       featureCompactionCustom: '自定义',
@@ -633,6 +641,8 @@ const LOCALE_CATALOGS = {
       },
       featureErrors: {
         REVISION_CHANGED: '安装状态已更新，请重新读取。',
+        STATE_UNAVAILABLE: '无法确认原生修补状态，请保留原生功能现状。',
+        NATIVE_UPDATE_REQUIRED: '应用程序更新后，请先从终端确认完整的原生修补设置。',
         OPERATION_BUSY: '已有待完成的操作。',
         CANNOT_CANCEL: '操作已开始，无法取消。',
         WAIT_TIMEOUT: '等待退出超时，请重新应用。',
@@ -836,6 +846,7 @@ LOCALE_CATALOGS.panel['ja-JP'] = {
   featureContext: 'モデルのコンテキスト上限',
   featureCompaction: '圧縮とリクエスト保持パッチ',
   featureCompactionUnknown: '状態不明のため変更しません',
+  featureLimitUnknown: '状態不明のためモデルの上限は変更しません',
   featureCompactionPrompt: '要約プロンプト',
   featureCompactionNative: '標準（既定）',
   featureCompactionCustom: 'カスタム',
@@ -869,6 +880,9 @@ LOCALE_CATALOGS.panel['ja-JP'] = {
   },
   featureErrors: {
     REVISION_CHANGED: 'インストール状態が変わりました。再読み込みしてください。',
+    STATE_UNAVAILABLE: 'ネイティブパッチの状態が不明です。現在の設定を維持してください。',
+    NATIVE_UPDATE_REQUIRED:
+      'アプリ更新後は、ターミナルでネイティブパッチの設定全体を確認してください。',
     OPERATION_BUSY: '保留中の操作があります。',
     CANNOT_CANCEL: '操作はすでに開始され、キャンセルできません。',
     WAIT_TIMEOUT: '終了待ちがタイムアウトしました。再度適用してください。',

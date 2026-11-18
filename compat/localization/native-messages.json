@@ -34,6 +34,10 @@
         {
           "file": "dist/remote/sshPrompts.js",
           "anchor": "buttons: confirm ? ['Yes', 'No'] : ['Cancel']"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "<button id=\"cancel\" class=\"secondary\">Cancel</button>"
         }
       ],
       "translations": {
@@ -1559,6 +1563,10 @@
         {
           "file": "dist/remote/remoteManager.js",
           "anchor": "\n            title: 'Stop SSH server'"
+        },
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "\n                    title: 'Stop SSH server'"
         }
       ],
       "translations": {
@@ -1591,6 +1599,10 @@
         {
           "file": "dist/remote/remoteManager.js",
           "anchor": "'Agents running on this host will stop and its window will close. ' +\n                    'The server starts again the next time you connect.'"
+        },
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "'Agents running on this host will stop and its window will close. ' +\n                        'The server starts again the next time you connect.'"
         }
       ],
       "translations": {
@@ -1639,6 +1651,10 @@
         {
           "file": "dist/remote/remoteManager.js",
           "anchor": "title: 'Sign in'"
+        },
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Sign in',\n            message: `Sign in to your organization for ${entry.label}?`"
         }
       ],
       "translations": {
@@ -1719,6 +1735,10 @@
         {
           "file": "dist/remote/remoteManager.js",
           "anchor": "buttons: ['Stop Server', 'Cancel']"
+        },
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "stop: 'Stop Server'"
         }
       ],
       "translations": {
@@ -1767,6 +1787,10 @@
         {
           "file": "dist/remote/sshPrompts.js",
           "anchor": "<div id=\"long\" class=\"note\" hidden>That's too long.</div>"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "<div id=\"long\" class=\"note\" role=\"alert\" hidden>That's too long.</div>"
         }
       ],
       "translations": {
@@ -1783,6 +1807,14 @@
         {
           "file": "dist/remote/sshPrompts.js",
           "anchor": "<button id=\"continue\">Continue</button>"
+        },
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Continue', 'Cancel']"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "<button id=\"continue\" class=\"primary\">Continue</button>"
         }
       ],
       "translations": {
@@ -1839,6 +1871,10 @@
         {
           "file": "dist/remote/sshPrompts.js",
           "anchor": "message: confirm ? `${label} asks:` : 'Touch your security key'"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "'Touch your security key'"
         }
       ],
       "translations": {
@@ -2399,6 +2435,10 @@
         {
           "file": "dist/remote/disconnectedPage.js",
           "anchor": ">Reconnect</a>"
+        },
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "reconnect: 'Reconnect'"
         }
       ],
       "translations": {
@@ -2415,6 +2455,10 @@
         {
           "file": "dist/remote/disconnectedPage.js",
           "anchor": ">Close</a>"
+        },
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "close: 'Close'"
         }
       ],
       "translations": {
@@ -3355,6 +3399,14 @@
         {
           "file": "dist/remote/sshConnection.js",
           "anchor": "\n                    throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');"
+        },
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "if (!d || !transport || this._state !== 'ready') {\n            throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');"
+        },
+        {
+          "file": "dist/remote/sshConnection.js",
+          "anchor": "if (!d || !transport || this._state !== 'ready' || d.httpPort === 0) {\n            throw new types_1.RemoteError('CONNECTION_CLOSED', 'Not connected.');"
         }
       ],
       "translations": {
@@ -3411,6 +3463,1080 @@
         "ja-JP": "ssh の入力ウィンドウを読み込めませんでした。"
       },
       "escapeContext": "Electron presentation or escaped HTML; preserve inserted host labels, paths, provider identifiers, prompt text and remote or system error detail verbatim"
+    },
+    {
+      "id": "ssh.finishSignIn",
+      "original": "Finish this sign-in on {0}?",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Sign in',\n            message: `Finish this sign-in on ${entry.label}?`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "要在 {0} 上完成這次登入嗎？",
+        "zh-Hans-CN": "要在 {0} 上完成此次登录吗？",
+        "ja-JP": "このログインを {0} で完了しますか？"
+      }
+    },
+    {
+      "id": "ssh.finishSignInDetail",
+      "original": "Continue only if you just chose to sign in from the {0} window. Your browser opens the sign-in page; once you sign in, {0} gets access to that account.\nSign-in page: {1}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Continue only if you just chose to sign in from the ${entry.label} ` +\n                'window. Your browser opens the sign-in page; once you sign in, ' +\n                `${entry.label} gets access to that account.\\n` +\n                `Sign-in page: ${(0, types_1.sanitizeRemoteText)(new URL(origin).host, 200)}`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "只有剛才由您在 {0} 視窗選擇登入時，才應繼續。瀏覽器將開啟登入頁面；登入後，{0} 即可存取該帳戶。\n登入頁面：{1}",
+        "zh-Hans-CN": "仅当您刚在 {0} 窗口中选择登录时才继续。浏览器将打开登录页面；登录后，{0} 即可访问该账户。\n登录页面：{1}",
+        "ja-JP": "直前に {0} のウィンドウでログインを選択した場合のみ続行してください。ブラウザーでログインページが開き、ログインすると {0} がそのアカウントにアクセスできるようになります。\nログインページ: {1}"
+      }
+    },
+    {
+      "id": "ssh.promptConnectingTo",
+      "original": "Connecting to {0}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "<p class=\"context\">Connecting to <span id=\"label\"></span></p>"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "正在連線至 {0}",
+        "zh-Hans-CN": "正在连接到 {0}",
+        "ja-JP": "{0} に接続中"
+      }
+    },
+    {
+      "id": "ssh.promptTrustHost",
+      "original": "Trust {0}?",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`Trust ${hostName(host.split(' (')[0])}?`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "要信任 {0} 嗎？",
+        "zh-Hans-CN": "要信任 {0} 吗？",
+        "ja-JP": "{0} を信頼しますか？"
+      }
+    },
+    {
+      "id": "ssh.promptConnectAnyway",
+      "original": "Connect to {0} anyway?",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`Connect to ${hostName(host)} anyway?`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "仍要連線至 {0} 嗎？",
+        "zh-Hans-CN": "仍要连接到 {0} 吗？",
+        "ja-JP": "それでも {0} に接続しますか？"
+      }
+    },
+    {
+      "id": "ssh.promptAcceptHostKeys",
+      "original": "Accept updated host keys?",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "'Accept updated host keys?'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "要接受更新的主機金鑰嗎？",
+        "zh-Hans-CN": "要接受更新后的主机密钥吗？",
+        "ja-JP": "更新されたホストキーを受け入れますか？"
+      }
+    },
+    {
+      "id": "ssh.promptAddKey",
+      "original": "Add {0} to ssh-agent?",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`Add ${baseName(key.split(' (')[0])} to ssh-agent?`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "要將 {0} 加入 ssh-agent 嗎？",
+        "zh-Hans-CN": "要将 {0} 加入 ssh-agent 吗？",
+        "ja-JP": "{0} を ssh-agent に追加しますか？"
+      }
+    },
+    {
+      "id": "ssh.promptQuestion",
+      "original": "Question from {0}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`Question from ${who}`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "來自 {0} 的問題",
+        "zh-Hans-CN": "来自 {0} 的问题",
+        "ja-JP": "{0} からの質問"
+      }
+    },
+    {
+      "id": "ssh.promptVerification",
+      "original": "Verification code for {0}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`Verification code for ${who}`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 的驗證碼",
+        "zh-Hans-CN": "{0} 的验证码",
+        "ja-JP": "{0} の確認コード"
+      }
+    },
+    {
+      "id": "ssh.promptPassword",
+      "original": "Password for {0}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`Password for ${who}`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 的密碼",
+        "zh-Hans-CN": "{0} 的密码",
+        "ja-JP": "{0} のパスワード"
+      }
+    },
+    {
+      "id": "ssh.promptPin",
+      "original": "PIN for {0}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`PIN for ${who}`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 的 PIN",
+        "zh-Hans-CN": "{0} 的 PIN",
+        "ja-JP": "{0} の PIN"
+      }
+    },
+    {
+      "id": "ssh.promptSignIn",
+      "original": "Sign in to {0}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`Sign in to ${who}`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "登入 {0}",
+        "zh-Hans-CN": "登录 {0}",
+        "ja-JP": "{0} にログイン"
+      }
+    },
+    {
+      "id": "ssh.credentialPassword",
+      "original": "Password",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "'Password'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "密碼",
+        "zh-Hans-CN": "密码",
+        "ja-JP": "パスワード"
+      }
+    },
+    {
+      "id": "ssh.credentialCurrentPassword",
+      "original": "Current password",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "'Current password'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "目前的密碼",
+        "zh-Hans-CN": "当前密码",
+        "ja-JP": "現在のパスワード"
+      }
+    },
+    {
+      "id": "ssh.credentialNewPassword",
+      "original": "New password",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "'New password'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "新密碼",
+        "zh-Hans-CN": "新密码",
+        "ja-JP": "新しいパスワード"
+      }
+    },
+    {
+      "id": "ssh.credentialConfirmPassword",
+      "original": "Confirm new password",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "'Confirm new password'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "確認新密碼",
+        "zh-Hans-CN": "确认新密码",
+        "ja-JP": "新しいパスワードの確認"
+      }
+    },
+    {
+      "id": "ssh.credentialPassphrase",
+      "original": "Passphrase",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "'Passphrase'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "金鑰密語",
+        "zh-Hans-CN": "密钥口令",
+        "ja-JP": "パスフレーズ"
+      }
+    },
+    {
+      "id": "ssh.credentialPin",
+      "original": "PIN",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "return ['PIN', what.slice(1, -1)];"
+        },
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "['PIN', baseName(what.slice(key + 5))]"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "PIN",
+        "zh-Hans-CN": "PIN",
+        "ja-JP": "PIN"
+      }
+    },
+    {
+      "id": "ssh.promptCredentialFor",
+      "original": "{0} for {1}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshPrompts.js",
+          "anchor": "`${asked[0]} for ${hostPromptsMarked ? asked[1] : label}`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{1} 的{0}",
+        "zh-Hans-CN": "{1} 的{0}",
+        "ja-JP": "{1} の{0}"
+      }
+    },
+    {
+      "id": "ssh.windowsHostUnsupported",
+      "original": "Windows SSH hosts aren't supported yet. {0}",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshErrorText.js",
+          "anchor": "`Windows SSH hosts aren't supported yet. ${sshArgs_1.LINUX_HOST_NEEDED}`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "目前尚不支援 Windows SSH 主機。{0}",
+        "zh-Hans-CN": "目前尚不支持 Windows SSH 主机。{0}",
+        "ja-JP": "Windows の SSH ホストにはまだ対応していません。{0}"
+      }
+    },
+    {
+      "id": "ssh.linuxHostNeeded",
+      "original": "Antigravity needs a Linux host on x64 or arm64 with glibc 2.26 or newer.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'Antigravity needs a Linux host on x64 or arm64 with glibc 2.26 or newer.'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "Antigravity 需要 x64 或 arm64 的 Linux 主機，且 glibc 版本為 2.26 以上。",
+        "zh-Hans-CN": "Antigravity 需要 x64 或 arm64 的 Linux 主机，且 glibc 版本为 2.26 或更新版本。",
+        "ja-JP": "Antigravity には、glibc 2.26 以降を搭載した x64 または arm64 の Linux ホストが必要です。"
+      }
+    },
+    {
+      "id": "ssh.unsupportedHostPlatforms",
+      "original": "The SSH host isn't supported. {0} Windows and macOS hosts aren't supported yet.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "`The SSH host isn't supported. ${exports.LINUX_HOST_NEEDED} Windows and macOS hosts aren't supported yet.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "不支援此 SSH 主機。{0} 目前尚不支援 Windows 與 macOS 主機。",
+        "zh-Hans-CN": "不支持此 SSH 主机。{0} 目前尚不支持 Windows 和 macOS 主机。",
+        "ja-JP": "この SSH ホストには対応していません。{0} Windows と macOS のホストにはまだ対応していません。"
+      }
+    },
+    {
+      "id": "ssh.sharedHomeTakeOver",
+      "original": "Another host that shares your home directory runs the Antigravity server. Connect to that host, or connect again and choose Take Over.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "'Another host that shares your home directory runs the Antigravity server. Connect to that host, or connect again and choose Take Over.'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "另一台共用家目錄的主機正在執行 Antigravity 伺服器。請連線至該主機，或重新連線並選擇「接管」。",
+        "zh-Hans-CN": "另一台共享主目录的主机正在运行 Antigravity 服务器。请连接到该主机，或重新连接并选择“接管”。",
+        "ja-JP": "ホームディレクトリを共有する別のホストで Antigravity サーバーが実行されています。そのホストに接続するか、接続し直して「引き継ぐ」を選択してください。"
+      }
+    },
+    {
+      "id": "ssh.configCannotUse",
+      "original": "SSH can't use your SSH config file. Fix the problem ssh reports, or choose another config file.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshArgs.js",
+          "anchor": "\"SSH can't use your SSH config file. Fix the problem ssh reports, or choose another config file.\""
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "SSH 無法使用此 SSH 設定檔。請修正 ssh 回報的問題，或選擇另一個設定檔。",
+        "zh-Hans-CN": "SSH 无法使用此 SSH 配置文件。请修复 ssh 报告的问题，或选择其他配置文件。",
+        "ja-JP": "SSH でこの SSH 設定ファイルを使用できません。ssh が報告した問題を修正するか、別の設定ファイルを選択してください。"
+      }
+    },
+    {
+      "id": "ssh.restartingServerOn",
+      "original": "Restarting the Antigravity server on {0}…",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "`Restarting the Antigravity server on ${host}…`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "正在重新啟動 {0} 上的 Antigravity 伺服器…",
+        "zh-Hans-CN": "正在重启 {0} 上的 Antigravity 服务器…",
+        "ja-JP": "{0} の Antigravity サーバーを再起動中…"
+      }
+    },
+    {
+      "id": "ssh.restarting",
+      "original": "Restarting…",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "'Restarting…'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "正在重新啟動…",
+        "zh-Hans-CN": "正在重启…",
+        "ja-JP": "再起動中…"
+      }
+    },
+    {
+      "id": "ssh.reopenAfterRestart",
+      "original": "This window opens it again once it has started.",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "'This window opens it again once it has started.'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "伺服器啟動後，此視窗將重新開啟。",
+        "zh-Hans-CN": "服务器启动后，此窗口将重新打开。",
+        "ja-JP": "サーバーが起動すると、このウィンドウが再び開きます。"
+      }
+    },
+    {
+      "id": "ssh.serverAndAgentsStopped",
+      "original": "Its server on {0} stopped, and its agents with it.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "`Its server on ${host} stopped, and its agents with it.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 上的伺服器已停止，代理也隨之停止。",
+        "zh-Hans-CN": "{0} 上的服务器已停止，智能体也随之停止。",
+        "ja-JP": "{0} のサーバーが停止し、エージェントも停止しました。"
+      }
+    },
+    {
+      "id": "ssh.agentsStoppedWithServer",
+      "original": "Its agents on {0} stopped with it.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/disconnectedPage.js",
+          "anchor": "`Its agents on ${host} stopped with it.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 上的代理已隨伺服器停止。",
+        "zh-Hans-CN": "{0} 上的智能体已随服务器停止。",
+        "ja-JP": "{0} のエージェントもサーバーとともに停止しました。"
+      }
+    },
+    {
+      "id": "ssh.chooseAnotherConfig",
+      "original": "Choose another SSH config file",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Choose another SSH config file'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "選擇另一個 SSH 設定檔",
+        "zh-Hans-CN": "选择其他 SSH 配置文件",
+        "ja-JP": "別の SSH 設定ファイルを選択"
+      }
+    },
+    {
+      "id": "ssh.chooseAnotherFile",
+      "original": "Choose Another File…",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Choose Another File…', 'Cancel']"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "選擇其他檔案…",
+        "zh-Hans-CN": "选择其他文件…",
+        "ja-JP": "別のファイルを選択…"
+      }
+    },
+    {
+      "id": "ssh.configFileRefused",
+      "original": "{0} can't be the SSH config file",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`${name} can't be the SSH config file`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 無法用作 SSH 設定檔",
+        "zh-Hans-CN": "{0} 无法用作 SSH 配置文件",
+        "ja-JP": "{0} は SSH 設定ファイルとして使用できません"
+      }
+    },
+    {
+      "id": "ssh.restartFailedTitle",
+      "original": "Could not restart the SSH server",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Could not restart the SSH server'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "無法重新啟動 SSH 伺服器",
+        "zh-Hans-CN": "无法重启 SSH 服务器",
+        "ja-JP": "SSH サーバーを再起動できませんでした"
+      }
+    },
+    {
+      "id": "ssh.stillRunningVersion",
+      "original": "{0} still runs Antigravity server {1}.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`${entry.label} still runs Antigravity server ${running}.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 仍在執行 Antigravity 伺服器 {1}。",
+        "zh-Hans-CN": "{0} 仍在运行 Antigravity 服务器 {1}。",
+        "ja-JP": "{0} では引き続き Antigravity サーバー {1} が実行されています。"
+      }
+    },
+    {
+      "id": "ssh.noAnswerAfterWake",
+      "original": "{0} didn't answer after this computer woke up.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`${entry.label} didn't answer after this computer woke up.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "此電腦喚醒後，{0} 未回應。",
+        "zh-Hans-CN": "此电脑唤醒后，{0} 未响应。",
+        "ja-JP": "このコンピューターがスリープから復帰した後、{0} から応答がありませんでした。"
+      }
+    },
+    {
+      "id": "ssh.allowMicrophone",
+      "original": "Allow",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Allow', \"Don't Allow\"]"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "允許",
+        "zh-Hans-CN": "允许",
+        "ja-JP": "許可"
+      }
+    },
+    {
+      "id": "ssh.denyMicrophone",
+      "original": "Don't Allow",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Allow', \"Don't Allow\"]"
+        }
+      ],
+      "escapeContext": "Native button label; response indices and deny defaults remain unchanged.",
+      "translations": {
+        "zh-Hant-TW": "不允許",
+        "zh-Hans-CN": "不允许",
+        "ja-JP": "許可しない"
+      }
+    },
+    {
+      "id": "ssh.microphoneAccess",
+      "original": "Microphone access",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Microphone access'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "麥克風存取權",
+        "zh-Hans-CN": "麦克风访问权限",
+        "ja-JP": "マイクへのアクセス"
+      }
+    },
+    {
+      "id": "ssh.microphoneConfirm",
+      "original": "Allow {0} to use your microphone?",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Allow ${label} to use your microphone?`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "要允許 {0} 使用麥克風嗎？",
+        "zh-Hans-CN": "要允许 {0} 使用麦克风吗？",
+        "ja-JP": "{0} にマイクの使用を許可しますか？"
+      }
+    },
+    {
+      "id": "ssh.microphoneDetail",
+      "original": "The page in this window comes from {0}. If you allow it, that host can use this computer's microphone for voice whenever one of its windows is open. Antigravity asks again after you quit it.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`The page in this window comes from ${label}. If you allow it, that ` +\n                \"host can use this computer's microphone for voice whenever one of \" +\n                'its windows is open. Antigravity asks again after you quit it.'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "此視窗的頁面來自 {0}。允許後，只要該主機的任一視窗開啟，該主機就能使用此電腦的麥克風進行語音輸入。結束 Antigravity 後，下次將重新詢問。",
+        "zh-Hans-CN": "此窗口的页面来自 {0}。允许后，只要该主机的任一窗口处于打开状态，该主机就能使用此电脑的麦克风进行语音输入。退出 Antigravity 后，下次将重新询问。",
+        "ja-JP": "このウィンドウのページは {0} から提供されています。許可すると、そのホストのウィンドウが開いている間、このコンピューターのマイクを音声入力に使用できます。Antigravity を終了すると、次回は再び確認されます。"
+      }
+    },
+    {
+      "id": "ssh.takeOver",
+      "original": "Take Over",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Take Over', 'Cancel']"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "接管",
+        "zh-Hans-CN": "接管",
+        "ja-JP": "引き継ぐ"
+      }
+    },
+    {
+      "id": "ssh.sharedHomeTitle",
+      "original": "Shared home directory",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Shared home directory'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "共用家目錄",
+        "zh-Hans-CN": "共享主目录",
+        "ja-JP": "共有ホームディレクトリ"
+      }
+    },
+    {
+      "id": "ssh.takeOverOwnServer",
+      "original": "This window's Antigravity server runs on {0}, another machine that shares your home directory.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`This window's Antigravity server runs on ${host}, another machine that shares your home directory.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "此視窗的 Antigravity 伺服器正在另一台共用家目錄的電腦 {0} 上執行。",
+        "zh-Hans-CN": "此窗口的 Antigravity 服务器正在另一台共享主目录的电脑 {0} 上运行。",
+        "ja-JP": "このウィンドウの Antigravity サーバーは、ホームディレクトリを共有する別のマシン {0} で実行されています。"
+      }
+    },
+    {
+      "id": "ssh.takeOverLiveServer",
+      "original": "Your Antigravity server runs on {0}, another machine that shares your home directory.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Your Antigravity server runs on ${host}, another machine that shares your home directory.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "您的 Antigravity 伺服器正在另一台共用家目錄的電腦 {0} 上執行。",
+        "zh-Hans-CN": "您的 Antigravity 服务器正在另一台共享主目录的电脑 {0} 上运行。",
+        "ja-JP": "Antigravity サーバーは、ホームディレクトリを共有する別のマシン {0} で実行されています。"
+      }
+    },
+    {
+      "id": "ssh.takeOverPreviousServer",
+      "original": "{0}, another machine that shares your home directory, started your Antigravity server.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`${host}, another machine that shares your home directory, started your Antigravity server.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "另一台共用家目錄的電腦 {0} 啟動了您的 Antigravity 伺服器。",
+        "zh-Hans-CN": "另一台共享主目录的电脑 {0} 启动了您的 Antigravity 服务器。",
+        "ja-JP": "ホームディレクトリを共有する別のマシン {0} が Antigravity サーバーを起動しました。"
+      }
+    },
+    {
+      "id": "ssh.takeOverOwnDetail",
+      "original": "{0} reached {1} this time. Cancel and reconnect to try again for {2}, or take over to stop the server on {2}, and its agents, and run it on {1} instead.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`${label} reached ${here} this time. Cancel and reconnect to try again for ${host}, or take over to stop the server on ${host}, and its agents, and run it on ${here} instead.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 這次連線至 {1}。取消後重新連線可再次嘗試連線至 {2}；或選擇接管，停止 {2} 上的伺服器及其代理，改在 {1} 上執行。",
+        "zh-Hans-CN": "{0} 此次连接到了 {1}。取消后重新连接可再次尝试连接到 {2}；或选择接管，停止 {2} 上的服务器及其智能体，改在 {1} 上运行。",
+        "ja-JP": "今回、{0} は {1} に接続しました。キャンセルして接続し直し {2} への接続を再試行するか、引き継いで {2} のサーバーとエージェントを停止し、代わりに {1} で実行してください。"
+      }
+    },
+    {
+      "id": "ssh.takeOverLiveDetail",
+      "original": "{0} reached {1}. Take over to stop the server on {2}, and its agents, and run it on {1} instead. To keep it running, connect to {2}.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`${label} reached ${here}. Take over to stop the server on ${host}, and its agents, and run it on ${here} instead. To keep it running, connect to ${host}.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 已連線至 {1}。接管會停止 {2} 上的伺服器及其代理，改在 {1} 上執行。若要讓原伺服器繼續執行，請連線至 {2}。",
+        "zh-Hans-CN": "{0} 已连接到 {1}。接管会停止 {2} 上的服务器及其智能体，改在 {1} 上运行。若要让原服务器继续运行，请连接到 {2}。",
+        "ja-JP": "{0} は {1} に接続しました。引き継ぐと {2} のサーバーとエージェントを停止し、代わりに {1} で実行します。実行を継続するには {2} に接続してください。"
+      }
+    },
+    {
+      "id": "ssh.takeOverPreviousDetail",
+      "original": "{0} reached {1}. Take over only if that server no longer runs, for example if {2} was shut down or replaced: if it still runs, both servers would write the same files. To check, connect to {2}.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`${label} reached ${here}. Take over only if that server no longer runs, for example if ${host} was shut down or replaced: if it still runs, both servers would write the same files. To check, connect to ${host}.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 已連線至 {1}。只有原伺服器已停止執行時才能接管，例如 {2} 已關機或更換；若原伺服器仍在執行，兩台伺服器會寫入相同檔案。請連線至 {2} 確認。",
+        "zh-Hans-CN": "{0} 已连接到 {1}。仅当原服务器已停止运行时才能接管，例如 {2} 已关机或更换；若原服务器仍在运行，两台服务器会写入相同文件。请连接到 {2} 确认。",
+        "ja-JP": "{0} は {1} に接続しました。{2} がシャットダウンまたは交換された場合など、元のサーバーが実行されていない場合のみ引き継いでください。実行中であれば、両方のサーバーが同じファイルに書き込みます。確認するには {2} に接続してください。"
+      }
+    },
+    {
+      "id": "ssh.restartAction",
+      "original": "Restart",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Restart', 'Later']"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "重新啟動",
+        "zh-Hans-CN": "重启",
+        "ja-JP": "再起動"
+      }
+    },
+    {
+      "id": "ssh.laterAction",
+      "original": "Later",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "buttons: ['Restart', 'Later']"
+        }
+      ],
+      "escapeContext": "Native button label; response indices and defer defaults remain unchanged.",
+      "translations": {
+        "zh-Hant-TW": "稍後",
+        "zh-Hans-CN": "稍后",
+        "ja-JP": "後で"
+      }
+    },
+    {
+      "id": "ssh.restartServerTitle",
+      "original": "Restart SSH server",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "title: 'Restart SSH server'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "重新啟動 SSH 伺服器",
+        "zh-Hans-CN": "重启 SSH 服务器",
+        "ja-JP": "SSH サーバーを再起動"
+      }
+    },
+    {
+      "id": "ssh.restartServerConfirm",
+      "original": "{0} is running server {1}; this app is {2}. Restart the server now?",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`${label} is running server ${running}; this app is ${expected}. Restart the server now?`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "{0} 正在執行伺服器 {1}；此應用程式的版本是 {2}。要立即重新啟動伺服器嗎？",
+        "zh-Hans-CN": "{0} 正在运行服务器 {1}；此应用的版本是 {2}。要立即重启服务器吗？",
+        "ja-JP": "{0} で実行中のサーバーは {1}、このアプリは {2} です。今すぐサーバーを再起動しますか？"
+      }
+    },
+    {
+      "id": "ssh.restartServerDetail",
+      "original": "Any {0} still running on it stops. The server starts again with this app's version.",
+      "format": "icu",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "`Any ${what} still running on it stops. The server starts again with this app's version.`"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "其上仍在執行的{0}都會停止。伺服器將以此應用程式的版本重新啟動。",
+        "zh-Hans-CN": "其上仍在运行的{0}都会停止。服务器将以此应用的版本重启。",
+        "ja-JP": "実行中の{0}はすべて停止します。サーバーはこのアプリのバージョンで再起動します。"
+      }
+    },
+    {
+      "id": "ssh.agentsOrTasks",
+      "original": "agent or task",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "'agent or task'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "代理或工作",
+        "zh-Hans-CN": "智能体或任务",
+        "ja-JP": "エージェントまたはタスク"
+      }
+    },
+    {
+      "id": "ssh.agentsTasksOrTerminals",
+      "original": "agent, task or terminal",
+      "contexts": [
+        {
+          "file": "dist/remote/remoteManager.js",
+          "anchor": "'agent, task or terminal'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "代理、工作或終端機",
+        "zh-Hans-CN": "智能体、任务或终端",
+        "ja-JP": "エージェント、タスク、端末"
+      }
+    },
+    {
+      "id": "ssh.configNotSsh",
+      "original": "isn't an SSH config file",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "\"isn't an SSH config file\""
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "不是 SSH 設定檔",
+        "zh-Hans-CN": "不是 SSH 配置文件",
+        "ja-JP": "は SSH 設定ファイルではありません"
+      }
+    },
+    {
+      "id": "ssh.configChooseSettings",
+      "original": "Choose a file of ssh settings, such as ~/.ssh/config.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "'Choose a file of ssh settings, such as ~/.ssh/config.'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "請選擇 ssh 設定檔，例如 ~/.ssh/config。",
+        "zh-Hans-CN": "请选择 ssh 配置文件，例如 ~/.ssh/config。",
+        "ja-JP": "~/.ssh/config など、ssh の設定ファイルを選択してください。"
+      }
+    },
+    {
+      "id": "ssh.configUnreadableEncoding",
+      "original": "is saved in a way ssh can't read",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "\"is saved in a way ssh can't read\""
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "儲存格式無法讓 ssh 讀取",
+        "zh-Hans-CN": "保存格式无法让 ssh 读取",
+        "ja-JP": "は ssh が読み取れない形式で保存されています"
+      }
+    },
+    {
+      "id": "ssh.configSaveUtf8",
+      "original": "Save it as UTF-8 without a byte-order mark.",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "'Save it as UTF-8 without a byte-order mark.'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "請以不含位元組順序標記的 UTF-8 格式儲存。",
+        "zh-Hans-CN": "请以不带字节顺序标记的 UTF-8 格式保存。",
+        "ja-JP": "バイトオーダーマークなしの UTF-8 で保存してください。"
+      }
+    },
+    {
+      "id": "ssh.configBinary",
+      "original": "it's a binary file",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "\"it's a binary file\""
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "這是二進位檔案",
+        "zh-Hans-CN": "这是二进制文件",
+        "ja-JP": "バイナリファイルです"
+      }
+    },
+    {
+      "id": "ssh.configKey",
+      "original": "it holds a key or certificate",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "'it holds a key or certificate'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "其中含有金鑰或憑證",
+        "zh-Hans-CN": "其中包含密钥或证书",
+        "ja-JP": "鍵または証明書が含まれています"
+      }
+    },
+    {
+      "id": "ssh.configPublicKeys",
+      "original": "it holds SSH public keys, like a .pub or authorized_keys file",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "'it holds SSH public keys, like a .pub or authorized_keys file'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "其中含有 SSH 公開金鑰，例如 .pub 或 authorized_keys 檔案",
+        "zh-Hans-CN": "其中包含 SSH 公钥，例如 .pub 或 authorized_keys 文件",
+        "ja-JP": "SSH 公開鍵（.pub や authorized_keys ファイルなど）が含まれています"
+      }
+    },
+    {
+      "id": "ssh.configHostKeys",
+      "original": "it lists SSH host keys, like known_hosts",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "'it lists SSH host keys, like known_hosts'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "其中列出 SSH 主機金鑰，例如 known_hosts",
+        "zh-Hans-CN": "其中列出 SSH 主机密钥，例如 known_hosts",
+        "ja-JP": "SSH ホストキー（known_hosts など）が記載されています"
+      }
+    },
+    {
+      "id": "ssh.configBom",
+      "original": "it starts with a byte-order mark",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "'it starts with a byte-order mark'"
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "檔案開頭含有位元組順序標記",
+        "zh-Hans-CN": "文件开头带有字节顺序标记",
+        "ja-JP": "先頭にバイトオーダーマークがあります"
+      }
+    },
+    {
+      "id": "ssh.configUtf16",
+      "original": "it's saved as UTF-16",
+      "contexts": [
+        {
+          "file": "dist/remote/sshConfigHosts.js",
+          "anchor": "\"it's saved as UTF-16\""
+        }
+      ],
+      "escapeContext": "Native presentation; preserve dynamic content and escape HTML at the rendering boundary.",
+      "translations": {
+        "zh-Hant-TW": "檔案以 UTF-16 格式儲存",
+        "zh-Hans-CN": "文件以 UTF-16 格式保存",
+        "ja-JP": "UTF-16 で保存されています"
+      }
     }
   ]
 }

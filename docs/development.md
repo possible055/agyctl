@@ -151,8 +151,8 @@ feature by feature; nothing is admitted by version number alone. Start with the
   [profiles.json](../compat/localization/profiles.json) for the observed assets, check
   that every native adapter anchor is unique, then prepare and validate all locales;
   see [offline inspection](localization.md#offline-inspection-and-preparation).
-- **Native composition:** the coordinator's target version is the
-  `nativeAppVersion` constant in [native.go](../src/agyctl/cmd/agyctl/native.go), so
+- **Native composition:** the coordinator's target versions are the
+  `nativeAppVersions` list in [native.go](../src/agyctl/cmd/agyctl/native.go), so
   combining limit, tool-output, and compaction on another build needs a code change,
   not only registry entries.
 

@@ -77,6 +77,7 @@ const REMOTE_EXPECTED = {
     '從此清單隱藏 Open Settings',
     '無法連線至 ',
     '已連線',
+    '您正在 Open Settings 上登入，登入狀態會留在該電腦上。',
   ],
   'zh-Hans-CN': [
     '使用默认值',
@@ -89,6 +90,7 @@ const REMOTE_EXPECTED = {
     '从此列表隐藏 Open Settings',
     '无法连接到 ',
     '已连接',
+    '您正在 Open Settings 上登录，登录状态会保留在该电脑上。',
   ],
   'ja-JP': [
     '既定値を使用',
@@ -101,11 +103,14 @@ const REMOTE_EXPECTED = {
     'この一覧で Open Settings を非表示にする',
     '接続できませんでした: ',
     '接続済み',
+    'Open Settings でログインしています。ログイン状態はそのマシンに保持されます。',
   ],
 }[manifest.locale];
 
 const PAGE = `<!doctype html>
 <html><body>
+<span data-testid="ssh-sign-in-subtitle" id="ssh-sign-in-subtitle">You're signing in on Open Settings. Your sign-in stays on that machine.</span>
+<button id="ssh-subtitle-collision">You're signing in on Open Settings. Your sign-in stays on that machine.</button>
 <nav>
   <button id="settings" title="Open Settings" aria-label="New Conversation">Open Settings</button>
   <button id="create">New Conversation</button>
@@ -748,13 +753,15 @@ app
         document.getElementById('mcp-view').textContent,
         document.getElementById('ssh-action').getAttribute('aria-label'),
         document.getElementById('ssh-error-heading').firstChild.data,
-        document.getElementById('ssh-connected').textContent],
+        document.getElementById('ssh-connected').textContent,
+        document.getElementById('ssh-sign-in-subtitle').textContent],
       content: ['ssh-host', 'ssh-path', 'ssh-config-path', 'ssh-raw-error', 'mcp-name', 'mcp-alert', 'mcp-banner-error'].map((id) => document.getElementById(id).textContent),
       errorHost: document.getElementById('ssh-error-heading').lastChild.data,
       configPath: document.getElementById('ssh-no-hosts').childNodes[1].data,
       mcpError: document.getElementById('mcp-raw-error').lastChild.data,
       tooltip: document.getElementById('mcp-badge').getAttribute('title'),
       input: document.getElementById('ssh-input').value,
+      subtitleCollision: document.getElementById('ssh-subtitle-collision').textContent,
     })`);
     check(
       'ssh-mcp-controls-translated',
@@ -768,7 +775,9 @@ app
         remote.configPath === 'Open Settings' &&
         remote.mcpError === 'Open Settings' &&
         remote.tooltip === 'Open Settings' &&
-        remote.input === 'user@主機',
+        remote.input === 'user@主機' &&
+        remote.subtitleCollision ===
+          "You're signing in on Open Settings. Your sign-in stays on that machine.",
       JSON.stringify(remote),
     );
     check(

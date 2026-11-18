@@ -16197,6 +16197,34 @@
     "ssh.web.hostWindowNotice": {
       "value": "此窗口的智能体、文件与终端都位于 {0}。",
       "reviewed": true
+    },
+    "ssh.web.signInSubtitle": {
+      "value": "您正在 {0} 上登录，登录状态会保留在该电脑上。",
+      "reviewed": true
+    },
+    "microphone.web.permissionDenied": {
+      "value": "操作系统已阻止麦克风访问。请在系统设置中授予麦克风权限后重试。",
+      "reviewed": true
+    },
+    "microphone.web.noDevice": {
+      "value": "此电脑未找到麦克风。请连接或启用输入设备后重试。",
+      "reviewed": true
+    },
+    "microphone.web.busy": {
+      "value": "麦克风正由另一个录音会话使用。",
+      "reviewed": true
+    },
+    "microphone.web.unsupported": {
+      "value": "此环境不支持麦克风采集。",
+      "reviewed": true
+    },
+    "microphone.web.captureFailed": {
+      "value": "麦克风采集失败。",
+      "reviewed": true
+    },
+    "microphone.web.captureEnded": {
+      "value": "麦克风采集意外结束。",
+      "reviewed": true
     }
   }
 }

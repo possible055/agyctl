@@ -80,6 +80,22 @@
       "verified_at": "2026-11-16",
       "notes": "Installed Hub 2.32.1 win-x64; original 128-byte body is unchanged. Live linked-v2 patch for Gemini 3.8 Flash IDs 1318-1320 at floor 500000: after stopping and restarting the client and Language Server, a resumed synthetic session and a new synthetic session both recorded effective checkpoint maxTokenLimit 500000 (baseline 256000). Summary and retention fields remained unchanged. Patched file SHA-256 b661864c7e6265e70a502ac0440ebce07f0b4bc1d61ab013e7fa0630b9ac7125. Other models and natural automatic compaction are not qualified by this observation.",
       "arch": "x86-64"
+    },
+    {
+      "id": "hub-2.33.0-win-x64",
+      "app_version": "2.33.0",
+      "channel": "antigravity",
+      "platform": "win32",
+      "binary_name": "language_server.exe",
+      "binary_size": 203692544,
+      "binary_sha256": "eb6d986dfc5a859c6e9b1b36a0601f5c362993cc16eb8962ad554c9141defc9c",
+      "func": "utils.ClampCheckpointConfigForModelInfo",
+      "func_size": 352,
+      "orig_body_hex": "493b66100f86fc000000554889e54883ec20488944243048895c24380f1f40004885c90f84db0000004885ff0f84d200000083790c00751f486357140f1f40004881fa409c00007f0431d2eb074881c2c063ffff89510c8b571485d27e164189d029f24439c6440f42c24439410c76044489410c837940037424488b415066904885c0747d80380074788b477085c07e718b511039c20f47d0895110eb6448894c2440e8b8fdffff4885db75554885c07450837814007e318b487085c9ba000000000f4fd13950147e18488b4c24408b590c8b701429d639f30f47de89590c90eb0c488b4c2440eb05488b4c2440837870007e0e8b51108b407039d00f42d0895110c9c3c9c3488944240848895c241048894c241848897c2420897424286690e85b5087fe488b442408488b5c2410488b4c2418488b7c24208b7424280f1f00e9bbfeffffcccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "orig_body_sha256": "6c3e3ab006baf9105efd7d5a8545bddc8fdaef102f578d3bee9aad6967ebae25",
+      "verified_at": "2026-11-18",
+      "notes": "Installed Hub 2.33.0 win-x64; new summary-model ABI qualified separately from the legacy 128-byte clamp. Original stack split, 32-byte frame, context/config roots, call PCs, epilogues and strategy-3 summary-model clamps preserved. Exact combined native L/T/C image SHA-256 8599d89aac4552bc1e2928fedaec8ff67da8ebb3661ed99fc7e7d7cba22147c2 applied through the reviewed native app-update transition after stopping the client and LS. After restarting, a new synthetic Gemini 3.8 Flash High path (1318) recorded effective maxTokenLimit 500000 (baseline 256000), unchanged same-model strategy/checkpoint model M50 and native 3937-byte prompt. This qualifies that model limit path only; other models and natural automatic compaction remain unverified.",
+      "arch": "x86-64"
     }
   ]
 }

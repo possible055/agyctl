@@ -16,9 +16,9 @@ messages and never translates Antigravity. See
 
 ## Current status
 
-The current development target is Windows x86-64 Antigravity 2.32.1
-(profile `hub-win-x64-2.32.1-5b493943`) in `zh-Hant-TW`, `zh-Hans-CN`, and `ja-JP`.
-The 2.31.0 and 2.29.x profiles remain in the registry.
+The current development target is Windows x86-64 Antigravity 2.33.0
+(profile `hub-win-x64-2.33.0-b33c8160`) in `zh-Hant-TW`, `zh-Hans-CN`, and `ja-JP`.
+The 2.32.1, 2.31.0, and 2.29.x profiles remain in the registry.
 
 Every profile in [profiles.json](../compat/localization/profiles.json) is
 `probe-only`. A `probe-only` profile can enter installation preflight with an
@@ -34,6 +34,24 @@ node -e "for(const p of require('./compat/localization/profiles.json').profiles)
 - **Automated:** isolated Electron contracts exercise production DOM and native
   preparation (`npm run test:electron`; see [development](development.md#checks)).
   They are not full client acceptance.
+- **Offline, recorded 2026-11-18 on Windows 2.33.0:** all three locales prepared
+  and validated from an immutable original LS copy, with no DOM-index conflicts.
+  Native adapter v4 admitted 266 unique edits across 19 members and re-parsed every
+  transformed member. Exact profile selection and Host structural qualification
+  passed against the paired original ASAR and executable; the profile remained
+  `probe-only`. Isolated Electron 44.10.2 fixtures passed in all three locales,
+  including the new SSH sign-in subtitle and opaque-host collision checks. These
+  checks did not install, select, or start localization in the 2.33.0 client.
+- **Live, partial, recorded 2026-11-18 on Windows 2.33.0:** reviewed Host and panel
+  draft workflows installed localization alongside the capsule. After separate
+  restarts, Traditional Chinese, Simplified Chinese and Japanese Hub navigation,
+  sidebar labels and greeting text appeared, while conversation titles and test
+  content stayed unchanged. The capsule mounted in each locale. Removing
+  localization preserved the capsule; removing the capsule then restored the
+  original ASAR SHA-256 from the profile. SSH authentication, shared-home takeover,
+  restart dialogs and all MCP states were not exercised in the installed client;
+  the profile remains `probe-only`. The isolated fixtures above are separate
+  evidence, not substitutes for those live paths.
 - **Offline, recorded 2026-11-16 on Windows 2.32.1:** all three locales prepared
   and validated against the installed original LS without conflicts; native
   adapter anchors were unique and all transformed members parsed. Three-locale
@@ -104,7 +122,7 @@ sample inspection remain available, without bypassing their own asset/structural
 checks. See [profile resolution](../src/localization/host/feature.ts) and
 [CLI source selection](../src/localization/cli.ts).
 
-On 2.32.1 the Language Server may already carry limit, tool-output, or compaction
+On 2.32.1 and 2.33.0 the Language Server may already carry limit, tool-output, or compaction
 patches. The profile's `nativeImageBinding` lets preparation start from the
 [native coordinator's](operations.md#native-feature-composition) verified original
 and compare every localization asset, archive identity, and NLS helper with the
@@ -129,6 +147,9 @@ plans must not be replayed. Legacy profiles keep their whole-LS source binding. 
   message. Non-category mention rows keep their labels, descriptions, and trailing
   labels; category rows and fixed controls remain writable. The 2.31.0 boundaries
   are centralized in [scopes.ts](../src/localization/runtime/scopes.ts).
+- The 2.33.0 SSH sign-in subtitle admits only its reviewed sentence template inside
+  `[data-testid="ssh-sign-in-subtitle"]`. Its host-label capture is opaque; the
+  same sentence outside that scope is not translated by this template.
 - A full document navigation clears the last bootstrap binding and health, so a
   fresh authorized bootstrap is required before another `active` result. SPA
   same-document navigation does not install a second engine. Navigating to an
@@ -254,6 +275,35 @@ framing over its existing IPC; it does not load the Host engine with `require`.
 Dynamic host labels, paths, usernames, raw SSH/MCP errors, and server names remain
 content. DOM protection and reviewed template contexts are in
 [scopes.ts](../src/localization/runtime/scopes.ts).
+
+The Windows 2.33.0 profile selects v4 without changing v2 or v3's edit sets. Its
+reviewed upstream source is ASAR
+`b33c81600e82e65593aa8430ef01b37d6b28d9d98f0faf45e25957783b71e64b`; its embedded
+Hub `main.js` is
+`f066a497c9c61198394cb3218e42ff61d85b03910d81282589c3ef066905f347`, with NLS
+helper `is`. The profile records the paired executable/LS identities, asset sizes,
+and `dist/utils.js` identity. The unique `win.loadURL` Host-delivery anchor is
+unchanged. To reproduce the native structural check without running any member,
+build localization, set `AGYCTL_REVIEW_ASAR` to the original archive, and run:
+
+```bash
+node --input-type=module -e "import {loadAsarEngine} from './scripts/vendor/asar-engine.cjs'; import {buildReviewedNativeEdits} from './dist/localization/bundle/feature-provider.mjs'; const edits=buildReviewedNativeEdits(loadAsarEngine(),process.env.AGYCTL_REVIEW_ASAR,'4'); console.log(edits.length,[...new Set(edits.map(e=>e.file))]);"
+```
+
+V4 preserves the existing SSH surfaces using the new exact contexts and adds the
+2.33.0 presentation paths: `promptTitle` credential/host-key framing in
+`dist/remote/sshPrompts.js`; loopback sign-in, microphone permission,
+`takeOverSheet`, and `restartSheet` in `dist/remote/remoteManager.js`; SSH-config
+file-type/encoding advice in `dist/remote/sshConfigHosts.js`; Linux-host requirements
+in `sshArgs.js`/`sshErrorText.js`; and restart/stopped-agent states and
+`BUTTON_LABELS` in `disconnectedPage.js`. The upstream prompt parser, raw prompt
+message, sandboxed preload, deny/defer defaults, button indices, and navigation
+action identifiers are unchanged. The new prompt title is localized before it is
+sent over the existing IPC; the preload continues to assign title, message, and
+host label as text. Native HTML framing and disconnected-page labels are escaped
+at the rendering boundary. Successful SSH sessions, real authentication dialogs,
+takeover/restart actions, and 2.33.0 runtime activation still require client
+acceptance; offline admission does not qualify those paths.
 
 ## Selection and status
 

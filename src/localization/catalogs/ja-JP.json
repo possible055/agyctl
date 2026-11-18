@@ -16197,6 +16197,34 @@
     "ssh.web.hostWindowNotice": {
       "value": "このウィンドウのエージェント、ファイル、ターミナルは {0} にあります。",
       "reviewed": true
+    },
+    "ssh.web.signInSubtitle": {
+      "value": "{0} でログインしています。ログイン状態はそのマシンに保持されます。",
+      "reviewed": true
+    },
+    "microphone.web.permissionDenied": {
+      "value": "オペレーティングシステムがマイクへのアクセスをブロックしています。システム設定でマイクの使用を許可してから、もう一度お試しください。",
+      "reviewed": true
+    },
+    "microphone.web.noDevice": {
+      "value": "このマシンにマイクが見つかりません。入力デバイスを接続または有効にしてから、もう一度お試しください。",
+      "reviewed": true
+    },
+    "microphone.web.busy": {
+      "value": "マイクは別の録音セッションで使用中です。",
+      "reviewed": true
+    },
+    "microphone.web.unsupported": {
+      "value": "この環境ではマイクからの録音に対応していません。",
+      "reviewed": true
+    },
+    "microphone.web.captureFailed": {
+      "value": "マイクからの録音に失敗しました。",
+      "reviewed": true
+    },
+    "microphone.web.captureEnded": {
+      "value": "マイクからの録音が予期せず終了しました。",
+      "reviewed": true
     }
   }
 }

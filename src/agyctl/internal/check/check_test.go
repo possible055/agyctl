@@ -723,6 +723,38 @@ func TestLinkedPatchScreening(t *testing.T) {
 	}
 }
 
+func TestSummaryLinkedPatchScreening(t *testing.T) {
+	body, err := hex.DecodeString(summaryPatchHex)
+	if err != nil {
+		t.Fatal(err)
+	}
+	data := bytes.Repeat([]byte{0xcc}, 1024)
+	f := &Function{Entryoff: 64, Size: 352}
+	const table = 800
+	binary.LittleEndian.PutUint32(body[0x30:], table-64-0x34)
+	copy(data[f.Entryoff:], body)
+	binary.LittleEndian.PutUint32(data[table:], 1318)
+	binary.LittleEndian.PutUint32(data[table+4:], 500000)
+	binary.LittleEndian.PutUint32(data[table+8:], 0)
+	copy(data[table+12:], "AGL2")
+	im := image{arch: "x86-64", size: uint64(len(data))}
+	limits, valid := linkedPatchLimits(data, im, f, body)
+	if !valid || len(limits) != 1 || limits[0]["id"] != uint32(1318) || limits[0]["limit"] != uint32(500000) {
+		t.Fatalf("summary ABI readback = %v (%v)", limits, valid)
+	}
+	for _, at := range []int{0xa3, 0x102, 0x120} {
+		unknown := bytes.Clone(body)
+		unknown[at] ^= 1
+		if isLinkedPatchBody(unknown) {
+			t.Fatalf("recognized modified runtime boundary %#x", at)
+		}
+	}
+	data[table-1] = 0
+	if _, valid := linkedPatchLimits(data, im, f, body); valid {
+		t.Fatal("summary ABI accepted an unguarded table")
+	}
+}
+
 func TestCLIFlagsContract(t *testing.T) {
 	o, e := parseOptions("assets", []string{"--json", "--work-dir", "work", "check", "--channel=hub", "--platform", "win-x64", "--platform=linux-x64", "--version", "2.29.0", "--matrix", "--skip-download", "--keep-work", "--reports-dir", "reports"})
 	if e != nil {
@@ -1663,6 +1695,9 @@ func TestCapabilityMatrixDistinguishesRejectionReasons(t *testing.T) {
 		{name: "arm64 clamp with x86 size", fingerprint: object{"arch": "arm64", "clamp": object{"kind": "original", "size": 128, "body_sha256": "x"}}, want: "blocked", wantReason: "unsupported architecture"},
 		{name: "unknown function bytes", fingerprint: object{"arch": "x86-64", "clamp": object{"kind": "unknown", "size": 128, "body_sha256": "x"}}, want: "blocked", wantReason: "unknown function bytes"},
 		{name: "recorded original bytes", fingerprint: object{"arch": "x86-64", "clamp": object{"kind": "original", "size": 128, "body_sha256": hashBytes(known[0])}}, want: "available", wantReason: "recorded original bytes"},
+		{name: "summary ABI recorded PE", fingerprint: object{"arch": "x86-64", "format": "pe", "clamp": object{"kind": "original", "size": 352}}, want: "available", wantReason: "recorded original bytes"},
+		{name: "summary ABI unqualified ELF", fingerprint: object{"arch": "x86-64", "format": "elf", "clamp": object{"kind": "original", "size": 352}}, want: "blocked", wantReason: "different build layout"},
+		{name: "summary ABI unknown bytes", fingerprint: object{"arch": "x86-64", "format": "pe", "clamp": object{"kind": "unknown", "size": 352}}, want: "blocked", wantReason: "unknown function bytes"},
 		{name: "already patched", fingerprint: object{"arch": "x86-64", "clamp": object{"kind": "ours-patched", "size": 128, "body_sha256": "x"}}, want: "available", wantReason: "already patched"},
 	} {
 		t.Run(row.name, func(t *testing.T) {

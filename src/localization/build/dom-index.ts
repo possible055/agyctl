@@ -31,6 +31,7 @@ const TEMPLATE_IDS = new Set([
   "ssh.web.onHost",
   "ssh.web.connectedTo",
   "ssh.web.hostWindowNotice",
+  "ssh.web.signInSubtitle",
 ]);
 
 export interface DomExactEntry {

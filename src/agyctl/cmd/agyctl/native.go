@@ -20,7 +20,16 @@ import (
 	"agyctl/internal/tooloutput"
 )
 
-const nativeAppVersion = "2.32.1"
+var nativeAppVersions = []string{"2.32.1", "2.33.0"}
+
+func nativeVersion(version string) bool {
+	for _, known := range nativeAppVersions {
+		if version == known {
+			return true
+		}
+	}
+	return false
+}
 
 // Scope selection is advisory only. Admission is repeated against the immutable
 // union snapshot and complete reconstructed images in the native backend.
@@ -59,7 +68,7 @@ func usesNative(root string, args []string) (bool, error) {
 		return owned, err
 	}
 	version, _, err := apptarget.ReadVersion(binary)
-	if err == nil && version == nativeAppVersion && strings.HasSuffix(strings.ToLower(binary), ".exe") {
+	if err == nil && nativeVersion(version) && strings.HasSuffix(strings.ToLower(binary), ".exe") {
 		return true, nil
 	}
 	var routing struct {
@@ -94,12 +103,12 @@ func usesNative(root string, args []string) (bool, error) {
 	originals := map[string]bool{}
 	outputs := map[string]bool{}
 	for _, entry := range routing.Entries {
-		if entry.AppVersion == nativeAppVersion {
+		if nativeVersion(entry.AppVersion) {
 			originals[entry.BinarySHA] = true
 		}
 	}
 	for _, target := range routing.Targets {
-		if target.AppVersion == nativeAppVersion {
+		if nativeVersion(target.AppVersion) {
 			for _, input := range target.Inputs {
 				if input.Input == "original" {
 					originals[input.BinarySHA], outputs[input.OutputSHA] = true, true
@@ -138,7 +147,7 @@ func nativeEngine(root string, snapshot *assets.Snapshot) (lspatch.Engine, error
 		if _, _, err := apptarget.ReadVersion(binary); err != nil {
 			return err
 		}
-		if _, err := apptarget.SelectBuild(binary, []string{nativeAppVersion}); err != nil {
+		if _, err := apptarget.SelectBuild(binary, nativeAppVersions); err != nil {
 			return &lspatch.Refusal{Kind: "unsupported", Cause: err}
 		}
 		return nil
@@ -151,14 +160,10 @@ func nativeEngine(root string, snapshot *assets.Snapshot) (lspatch.Engine, error
 	if err != nil {
 		return engine, err
 	}
-	limitRef, err := limit.NativeReference(root, snapshot)
-	if err != nil {
-		return engine, err
-	}
 	seen := map[string]bool{}
 	for ti := range toolRegistry.Targets {
 		target := &toolRegistry.Targets[ti]
-		if target.AppVersion != nativeAppVersion {
+		if !nativeVersion(target.AppVersion) {
 			continue
 		}
 		for ii := range target.Inputs {
@@ -170,6 +175,10 @@ func nativeEngine(root string, snapshot *assets.Snapshot) (lspatch.Engine, error
 				return engine, errors.New("ambiguous registered shared native original")
 			}
 			seen[input.BinarySHA] = true
+			limitRef, err := limit.NativeReferenceForBase(root, snapshot, input.BinarySHA)
+			if err != nil {
+				return engine, err
+			}
 			toolRecipe := tooloutput.NativeRecipe(target, input)
 			spec := lspatch.Spec{ID: target.ID, BaseSHA: input.BinarySHA, Size: int(target.BinarySize), LimitRef: limitRef, LegacyLimitRefs: limit.NativeLegacyReferences(limitRef), ToolOutput: &toolRecipe}
 			for hi := range target.HistoricalInputs {

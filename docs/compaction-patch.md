@@ -5,7 +5,7 @@ registered builds, the binary evidence behind it, and its qualification. Command
 and recovery are in [operations](operations.md#summary-compaction-patch); component
 boundaries are in [architecture](architecture.md#language-server-patch-admission).
 It is a separate feature from the [context-limit patch](limit-patch.md) and the
-[tool-output patch](tool-output-patch.md); on 2.32.1 all three are combined by
+[tool-output patch](tool-output-patch.md); on 2.32.1 and 2.33.0 all three are combined by
 [native composition](operations.md#native-feature-composition).
 
 ## Status
@@ -14,13 +14,14 @@ Qualification is recorded per build in [compaction.json](../compat/compaction.js
 
 | Build | Status | Scope of the evidence |
 | --- | --- | --- |
+| Windows 2.33.0 | `candidate` | Exact-input offline instruction/branch/Go metadata checks and emitted-block execution; installed Gemini 3.8 Flash High manual compaction with exact native/custom outgoing prompts and newest-first retention rendering. Automatic compaction and other models remain unqualified. See [2.33.0 evidence](#windows-2330-consumer-evidence). |
 | Windows 2.32.1 | `candidate` | Offline execution of the emitted code; on the installed client, exact retention rendering and native/custom prompts at manual compaction on Gemini 3.8 Flash High. Automatic compaction and other models are not qualified. See [live checks](#windows-2321-live-checks). |
 | Windows 2.31.2 | `candidate` | The transaction worked, but the tested route did not adopt the replacement prompt and retention is unverified. See [legacy qualification](#windows-2312-legacy-qualification). |
 
 A disk patch never proves what a running session loaded; `status` reports disk
 state only, with `effective_state: "unknown"`.
 
-### What the 2.32.1 recipe changes
+### What the 2.32.1 and 2.33.0 recipes change
 
 - **Original user-message retention.** Upstream renders at most the 10 most recent
   user messages within a shared byte budget. The recipe replaces that with one fixed
@@ -44,6 +45,20 @@ command parsing, and step compaction (`stepcompactor`), which the recipe neither
 disables nor forces on.
 
 ## Registered builds
+
+### Windows 2.33.0
+
+The recipe targets **Antigravity App Windows 2.33.0, `windows-amd64`**,
+package member `resources/bin/language_server.exe`, 203,692,544 bytes.
+
+| State | Whole-file SHA-256 |
+| --- | --- |
+| Original input | `eb6d986dfc5a859c6e9b1b36a0601f5c362993cc16eb8962ad554c9141defc9c` |
+| Standalone native-prompt output | `fe879c34d009976a1b0bca7f6a8bbbf1ce6c79eca58c0e5e2d4c30ed47ee00e9` |
+
+Only the exact original is admitted. Custom prompt outputs are built from the
+registered templates and original, not added as arbitrary admitted inputs. The
+2.32.1 current and historical recipes and fingerprints remain unchanged.
 
 ### Windows 2.32.1
 
@@ -83,6 +98,140 @@ Each input has its own recipe and its own output hash. The unpatched original
 entry is added only after the exact input file is hash-verified.
 
 ## Recipe segments
+
+### Windows 2.33.0 consumer evidence
+
+Recorded offline on 2026-11-18 for the original above, package member
+`resources/bin/language_server.exe`. Exact preimages, lengths, and addresses are in
+[build layouts](../scripts/lib/compaction-builds.mjs); replacement assembly is in
+[consumer assembly](../scripts/lib/compaction-consumers.mjs) and the full native
+recipe/custom templates are in [compaction.json](../compat/compaction.json).
+
+| Role | VA / span start | Length |
+| --- | --- | --- |
+| User-only allocator | `0x141821855` | 198 |
+| Retention loop entry / native truncation arguments | `0x14181e8eb` / `0x14181e8f1` | 2 / 177 |
+| Render dispatch / omission | `0x14181eaeb` / `0x14181eaf1` | 2 / 214 |
+| Handle prompt / capture | `0x1433e3409` / `0x1433e507d` | 145 / 15 |
+| Render capture count / total budget | `0x141ae3161` / `0x141ae3180` | 14 / 17 |
+| Core capture / prompt | `0x141ccf212` / `0x141cd0209` | 13 / 305 |
+| Raw prompt body | `0x143e12ef3` | 3937 |
+
+`utils.GetWaterFillAllocation` (`0x1418217c0`, 416 bytes) recognizes the full
+ASLR-safe saved caller return `0x14181dfe5` from `FormatCheckpointUserRequests`.
+Only that path resets the budget to 61,440 and allocates newest first. Parent
+return `0x14181e178` and discrete allocator return `0x14181f7d3` keep signed
+incoming-budget water-fill. Both original LEAVE/RET pairs stay at
+`0x14182185d/185e` and `0x1418218e7/18e8`: pcsp stays 72 except the two RET
+PCs, where it is zero. The rewritten range is `UnsafePoint=-1`, stack-map index 1.
+
+`utils.formatCapturedEntries` (`0x14181e1c0`, 4928 bytes) retains the native
+`Truncate`/`ToTruncatedBytesString` calls at `0x14181e9a2/0x14181e9a7` and their
+pointer slots. Retention arguments remain at pcsp 760, `UnsafePoint=-1`, map 7;
+native calls use map 12. Omission at `0x14181eaf1..0x14181ebc7` retains pcsp 760,
+`UnsafePoint=-1`, map 13. Dispatch goes to `0x14181eb33`, the resumed render path
+is `0x14181ebf8`, and the native loop exit is `0x14181f3ea`. Full-function
+disassembly checks unchanged incoming edges as well as emitted branches.
+
+The core `NewContextSummaryHook.func1` moved to `0x141ccfd20` (4288 bytes) and
+uses a `0x318` local frame, not the old `0x310`. Its native pre-hook resolves the
+summary model and performs strategy-specific routing before the replaced prompt
+consumer. Native mode preserves every byte of this function. Custom mode replaces
+only `[0x141cd0209,0x141cd033a)` after `toCoreRetryConfig`; every original call,
+including generation at `0x141cd033a`, keeps its PC and target.
+
+Custom suffix concatenation calls `runtime.concatstring2` (`0x140070960`) at
+`0x141cd0282`, within pcsp 800, `UnsafePoint=-1`, stack-map index 10. Its 39-bit
+locals bitmap is `3348d30040`, based at `SP+0x1e0`, and roots the original prompt
+at `SP+0x238`, resolved model at `SP+0x310`, prompt sections at `SP+0x1e8`, and
+tools at `SP+0x1e0`. No root slot or metadata is changed. RetryConfig fields are
+scalars saved at outgoing `SP+0x40..0x60` before concat; all source arguments and
+the resolved model's pair are reloaded after it. The selected string reaches
+original outgoing `SP+0x30/0x38` before generation (map 11). The Handle consumer
+preserves generation at `0x1433e349a`, pcsp 184 and the existing map transition
+from 0 to 1.
+
+The complete embedded configuration at offset 171173816, length 82113, stays
+byte-identical, including the new M417 profile, M667's 512000-token setting, and
+M432's separate prompt. The raw native prompt SHA-256 remains
+`adc0b546b4512337f3edc1080cbcdf2d4b9303345664815694024e7304898a1c`. M432's
+encoded body at `0x14a34d1f9` remains
+`d31ca7e29b3c7f62e47253cb8b41cef9ed99c1973af82bde375eb812e376ba4d`. The native
+120-byte manual suffix at `0x143cf57ee` remains
+`a908d23e988fce4ccd7352103d855d43531fe9a7225f65ac6b00a63db8b368fd`.
+
+To reproduce the deterministic recipe without changing installed files:
+
+```sh
+node scripts/compaction-recipe.mjs inspect --binary PATH
+node scripts/compaction-recipe.mjs build --binary PATH --expect-sha eb6d986dfc5a859c6e9b1b36a0601f5c362993cc16eb8962ad554c9141defc9c --out var/compaction/2330.json
+node scripts/compaction-recipe.mjs check-registry
+```
+
+Require the recorded output SHA and fingerprint
+`36b992067a884f69d5cc1b3328424480de0f0f5f04ebf777bf430ad38d888c8b`.
+Map addresses through the PE sections; locate Go pclntab at file offset
+`0x4ab8020` and decode `_func.pcsp`, pcdata and pointer maps using Go runtime
+`runtime2.go`, `symtab.go`, and `internal/abi/symtab.go`. Disassemble the complete
+affected functions in native/custom images; require valid branch boundaries,
+preserved original call/return PCs, and only the documented added concat call.
+
+Trusted emitted-block execution used private executable allocations and own ABI
+wrappers/stubs, never upstream executable bytes. Cases covered fixed user budget
+under incoming zero/negative/large values, more than 30 entries, source lengths
+above `2^32`, a single oldest partial boundary, omission, and parent/discrete
+signed water-fill. Custom Handle/core cases covered empty/native/M432/other
+incoming prompts, Unicode user text, intact/changed manual suffixes, preserved
+generation registers, resolved-model pair and RetryConfig fields. These blocks
+do not execute upstream truncation, model resolution, or Go stack growth/GC.
+They therefore do not qualify live rendering, automatic compaction or any model
+route. A live observer can read `(RAX,RBX)` at return RVA `0x181dfe5` and outgoing
+prompt `SP+0x30/0x38` at generation-call RVA `0x1cd033a`; the resolved model pair
+is in `(RSI,R8)`. Live validation must use the installed client and synthetic
+conversations, separately from these offline checks.
+
+#### Windows 2.33.0 live checks
+
+Recorded 2026-11-18 on the installed stable client after a reviewed native
+transaction, using a new synthetic Gemini 3.8 Flash High conversation. The combined
+native-mode image SHA-256 was
+`8599d89aac4552bc1e2928fedaec8ff67da8ebb3661ed99fc7e7d7cba22147c2`.
+Manual compaction completed with a nonempty summary and captured user requests.
+At the original core generation call RVA `0x1cd033a`, a bounded installed-process
+observer read the outgoing prompt pair at `SP+0x30/0x38`:
+
+- Native: 4,057 bytes, SHA-256
+  `c0d46ddb483333062f9842d4f410810d550d1a471ad4287b9ca70793b07e1ca8`,
+  exactly the original 3,937-byte body plus the complete 120-byte manual suffix.
+- Custom: the selected 191-byte ASCII test prompt plus that exact suffix, 311 bytes
+  total, SHA-256
+  `189e9ce574b128884c566ae57767f027da450f6c998cb957c268d2a9d51e29e0`.
+  The observed bytes were compared directly with the selected text and original
+  suffix, not inferred from executor metadata (which still reports the native
+  configuration prompt).
+
+The same synthetic conversation then supplied 40 captured requests, including one
+62,788-byte Chinese/emoji boundary message and 31 short numbered markers. At
+`FormatCheckpointUserRequests` return RVA `0x181dfe5`, the observed rendered text
+matched an independent newest-first reconstruction byte for byte: 33 retained
+entries, one oldest partial entry, all 31 short markers intact, older entries
+omitted, and valid UTF-8. Numbered retained source occupied 61,438 bytes of the
+61,440-byte budget (two bytes were unused at a UTF-8 boundary). Native header,
+separators and truncation notice brought the result to 61,598 bytes, SHA-256
+`c82a15eba239573407a111337cde6eaeddfaa23ea0ffef15c711a792cd4ac54b`.
+The checkpoint completed with all 40 captured requests and a nonempty summary.
+
+For reproduction, use the registered original above, the normal reviewed native
+apply workflow, a new synthetic conversation and the UI's `/compact` command;
+observe the documented call before the cloud request. Never attach these offsets
+to another build. To check retention, allocate 61,440 bytes across numbered source
+entries from newest to oldest, keep only the UTF-8-safe prefix of the oldest
+partial entry, then render retained entries chronologically with native framing.
+This does not qualify automatic compaction, other models or all Go GC schedules.
+The first observer captured valid
+bytes but reported a detach API error; a separate process check confirmed it was
+detached and alive. The subsequent custom observation exited cleanly, and manual
+compaction completed without an error step.
 
 ### Windows 2.32.1 consumer evidence
 

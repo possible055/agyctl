@@ -100,10 +100,9 @@ func AssembleModelLimits(funcVA, tableVA uint64) ([]byte, error) {
 func (im *image) modelCaves(data []byte) ([]TableWrite, error) {
 	nodes := []TableWrite{}
 	end := min(im.index+5000, len(im.entries)-1)
-	entry := im.entries[im.index]
 	for i := im.index + 2; i < end; i++ {
 		va := im.entries[i]
-		if va < im.textVA+24 || va-24 < entry+funcSizeAMD64 {
+		if va < im.textVA+24 || va-24 < im.entries[im.index+1] {
 			continue
 		}
 		off, err := im.offset(va-24, 24)
@@ -155,8 +154,18 @@ func (im *image) planModelPatchReserved(data []byte, values []ModelLimit, restor
 		return Plan{}, fmt.Errorf("macOS limit patching unavailable: original bytes, code placement and signing strategy are not qualified")
 	}
 	entry := im.entries[im.index]
-	if im.entries[im.index+1]-entry != funcSizeAMD64 {
-		return Plan{}, fmt.Errorf("%s is not %#x bytes; different build?", Func, funcSizeAMD64)
+	size := int(im.entries[im.index+1] - entry)
+	if size != funcSizeAMD64 && size != summaryFuncSize {
+		return Plan{}, fmt.Errorf("%s has unsupported size %#x; different build?", Func, size)
+	}
+	if size == summaryFuncSize && restored == nil {
+		off, err := im.offset(entry, size)
+		if err != nil {
+			return Plan{}, err
+		}
+		if im.format != "pe" || !supportedOriginal(im.arch, data[off:off+size]) {
+			return Plan{}, fmt.Errorf("summary ABI original byte signature does not match")
+		}
 	}
 	nodes := []TableWrite{}
 	caves, err := im.modelCaves(data)
@@ -199,10 +208,13 @@ func (im *image) planModelPatchReserved(data []byte, values []ModelLimit, restor
 		nodes[i].Data = raw
 	}
 	body, err := AssembleModelLimits(entry, nodes[0].VA)
+	if size == summaryFuncSize {
+		body, err = assembleSummaryLimits(entry, nodes[0].VA)
+	}
 	if err != nil {
 		return Plan{}, err
 	}
-	off, err := im.offset(entry, funcSizeAMD64)
+	off, err := im.offset(entry, size)
 	if err != nil {
 		return Plan{}, err
 	}
@@ -211,12 +223,18 @@ func (im *image) planModelPatchReserved(data []byte, values []ModelLimit, restor
 
 func (im *image) detectModelPatch(data []byte, state PatchState, body []byte) (PatchState, bool) {
 	entry := im.entries[im.index]
-	disp := int64(int32(binary.LittleEndian.Uint32(body[16:])))
-	first := int64(entry) + 20 + disp
+	displacement, relative, encoding := 16, 20, modelEncoding
+	assemble := AssembleModelLimits
+	if len(body) == summaryFuncSize {
+		displacement, relative, encoding = 0x30, 0x34, summaryEncoding
+		assemble = assembleSummaryLimits
+	}
+	disp := int64(int32(binary.LittleEndian.Uint32(body[displacement:])))
+	first := int64(entry) + int64(relative) + disp
 	if first < 0 {
 		return state, false
 	}
-	expected, err := AssembleModelLimits(entry, uint64(first))
+	expected, err := assemble(entry, uint64(first))
 	if err != nil || !bytes.Equal(body, expected) {
 		return state, false
 	}
@@ -264,7 +282,7 @@ func (im *image) detectModelPatch(data []byte, state PatchState, body []byte) (P
 		}
 	}
 	state.Kind = "patched"
-	state.Encoding = modelEncoding
+	state.Encoding = encoding
 	state.ModelLimits = values
 	state.TableOff = plan.TableOff
 	return state, true
