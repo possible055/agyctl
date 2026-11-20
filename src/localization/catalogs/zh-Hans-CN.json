@@ -15838,6 +15838,42 @@
       "value": "暂无对话",
       "reviewed": true
     },
+    "settings.app.subtitle": {
+      "value": "管理 Antigravity 应用设置。",
+      "reviewed": true
+    },
+    "settings.voice.description": {
+      "value": "语音模式使用的声音，由 Gemini Live 提供支持。",
+      "reviewed": true
+    },
+    "settings.shortcuts.terminalSelectAll": {
+      "value": "终端：全选",
+      "reviewed": true
+    },
+    "settings.shortcuts.submitPrompt": {
+      "value": "提交提示词（Enter 的备用快捷键）",
+      "reviewed": true
+    },
+    "settings.shortcuts.submitPromptDescription": {
+      "value": "Enter 始终用于提交。此设置会添加第二个快捷键。",
+      "reviewed": true
+    },
+    "settings.shortcuts.previousPrompt": {
+      "value": "跳转到上一条提示词",
+      "reviewed": true
+    },
+    "settings.shortcuts.nextPrompt": {
+      "value": "跳转到下一条提示词",
+      "reviewed": true
+    },
+    "settings.shortcuts.sideQuestionSelection": {
+      "value": "针对所选内容提出附加问题",
+      "reviewed": true
+    },
+    "settings.shortcuts.pinConversation": {
+      "value": "固定／取消固定对话",
+      "reviewed": true
+    },
     "settings.plan.yourPlanLabel": {
       "value": "你的方案：",
       "reviewed": true

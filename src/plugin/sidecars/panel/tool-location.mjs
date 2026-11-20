@@ -18,18 +18,26 @@ export async function readToolLocation() {
     if (error.code !== 'ENOENT') throw error;
     locator = { repositoryRoot: path.resolve(pluginRoot, '../..') };
     if (path.resolve(locator.repositoryRoot, 'src/plugin') !== path.resolve(pluginRoot))
-      throw new Error('Tool locator missing; reinstall the panel from the repository');
+      throw new Error('Tool locator missing; reinstall the panel with agyctl install');
   }
   if (
     !locator ||
     typeof locator.repositoryRoot !== 'string' ||
     !path.isAbsolute(locator.repositoryRoot)
   )
-    throw new Error('Invalid tool repository locator; reinstall the panel');
+    throw new Error('Invalid tool package locator; reinstall the panel');
   const root = await fs.realpath(locator.repositoryRoot);
   const metadata = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8'));
   if (metadata.name !== 'agyctl' || metadata.type !== 'module')
-    throw new Error('Tool repository identity mismatch');
+    throw new Error('Tool package identity mismatch');
+  let nodeExecutable = process.execPath;
+  if (locator.nodeExecutable !== undefined) {
+    if (typeof locator.nodeExecutable !== 'string' || !path.isAbsolute(locator.nodeExecutable))
+      throw new Error('Invalid saved Node.js executable; reinstall the panel');
+    nodeExecutable = await fs.realpath(locator.nodeExecutable);
+    if (!(await fs.stat(nodeExecutable)).isFile())
+      throw new Error('Saved Node.js executable is not a regular file');
+  }
   const target = targets[`${process.platform}-${process.arch}`];
   if (!target) throw new Error('Unsupported native tool target');
   const env = { ...process.env };
@@ -40,5 +48,5 @@ export async function readToolLocation() {
       if (env[key] === undefined) env[key] = locator[key];
     }
   }
-  return { root, executable: path.join(root, 'dist', 'bin', target), env };
+  return { root, executable: path.join(root, 'dist', 'bin', target), nodeExecutable, env };
 }

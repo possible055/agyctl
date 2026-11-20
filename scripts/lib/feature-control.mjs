@@ -258,10 +258,10 @@ function operationView(operation) {
 
 function draftCommands(id) {
   return {
-    preflight: `npm run settings:preflight -- --draft ${id}`,
-    apply: `npm run settings:apply -- --draft ${id}`,
-    applyWithCleanup: `npm run settings:apply -- --draft ${id} --cleanup-sidecars`,
-    status: 'npm run settings:status',
+    preflight: `agyctl settings preflight --draft ${id}`,
+    apply: `agyctl settings apply --draft ${id}`,
+    applyWithCleanup: `agyctl settings apply --draft ${id} --cleanup-sidecars`,
+    status: 'agyctl settings status',
   };
 }
 

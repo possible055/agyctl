@@ -56,7 +56,7 @@ function failureOutput(error) {
     code: error.safeForPanel ? error.code : 'FEATURE_UNAVAILABLE',
     error: error.safeForPanel
       ? error.message
-      : 'Feature control is unavailable; rebuild tools and reload',
+      : 'Feature control is unavailable; reinstall agyctl and the panel',
   };
 }
 

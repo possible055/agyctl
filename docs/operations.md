@@ -7,8 +7,51 @@ workflows, the binary patches, backups, and recovery. For setup see the
 [architecture](architecture.md); for localization stages and offline preparation see
 [localization](localization.md).
 
-Run commands from the project root. Commands that apply, remove, or restore change
-the installed client; inspection commands do not.
+The npm `agyctl` entry point runs from any directory. Run the source-checkout
+`npm run ...` commands from the project root. Commands that apply, remove, or
+restore change the installed client; inspection commands do not.
+
+## npm installation
+
+The package [CLI](../bin/agyctl.mjs) delegates to
+[installer.mjs](../scripts/lib/installer.mjs). It does not compile or download
+executables, close the client, or restart it. Quit the selected installation and
+its Language Server before applying or removing any feature, including the panel.
+`install` and `uninstall` with no feature flags select only the panel.
+
+Select individual features with `--panel`, `--capsule`, `--localization`,
+`--tool-output`, `--compaction`, and `--model-limits ID=LIMIT,...`. Localization
+defaults to `zh-Hant-TW`; `--locale` selects another canonical locale. For removal,
+use `--limit` without a mapping. `--all` selects every feature. Inspect account
+models with `agyctl models` while the selected client is running; an unavailable
+catalog or unmapped enum is never replaced with guessed IDs.
+
+`install --all` needs an explicit mapping, a verified current mapping, or an
+installer-saved mapping bound to the same installation and original binary hash.
+`--prompt-mode native` selects the registered native summary prompt. Existing
+custom prompt settings are preserved unless native mode is explicitly requested.
+Use the existing `compaction` command for custom prompt editing.
+
+Add `--dry-run --json` to inspect a plan without changing installed files. Host
+preparation may write tool-state artifacts. Every selected feature retains its
+own exact qualification gate; the compatibility checker is not an installer gate.
+The installer applies native changes before preparing a fresh Host plan, then
+installs the panel. Removing one feature preserves the unselected ones.
+
+Operations are recorded under `<AGYCTL_HOME>/installer/operations/`; saved model
+selections live under `installer/selections/`. A failure reports its phase,
+completed components, observed state, and journal path. Changes across the native
+binary, Host archive, and panel directory are **not atomic**. Inspect
+`agyctl status --json`, resolve the reported blocker, and rerun the same command.
+Do not restore another build's backups or delete journals to bypass a refusal.
+
+`status` distinguishes unavailable state from disabled state. Disk verification
+does not establish runtime activation or effective model capacity. Reopen the
+client to inspect the capsule and translated interface.
+
+Run `agyctl uninstall --all` before `npm uninstall --global agyctl`. Removing the
+npm package alone does not remove client features. Original backups, replaced
+panel directories, settings, and pricing data are retained.
 
 ## Client modifications from the CLI
 
@@ -215,13 +258,13 @@ does not by itself prove runtime compaction effectiveness.
 **Save settings** writes a draft only, to `<AGYCTL_HOME>/management/drafts/<id>.json`.
 The panel shows a short saved/not-applied status, not terminal instructions or
 commands. Opening the panel never applies saved settings. Read the draft ID from
-`draft.id` in `npm run settings:status`, then quit Antigravity yourself and run from
+`draft.id` in `agyctl settings status`, then quit Antigravity yourself and run from
 a terminal:
 
 ```bash
-npm run settings:preflight -- --draft <id>   # check without modifying installed files
-npm run settings:apply -- --draft <id>       # apply it
-npm run settings:status                      # current feature state; takes no --draft
+agyctl settings preflight --draft <id>   # check without modifying installed files
+agyctl settings apply --draft <id>       # apply it
+agyctl settings status                   # current feature state; takes no --draft
 ```
 
 `apply` refuses while the selected client or LS is running and does not wait for,
@@ -231,8 +274,14 @@ explicit extra option and is never implied.
 Preflight can prepare localization artifacts and plans under the tool-state root;
 it does not apply them to the client.
 
-The panel reaches these operations through a worker in the checkout. When started
-inside Electron, the worker re-runs itself under a standalone `node`. Without one,
+Source users can run the equivalent `npm run settings:preflight`,
+`settings:apply`, and `settings:status` scripts with `--` before their arguments.
+
+The panel reaches these operations through a worker in the installed npm package
+or checkout. Panel installation records that package root and the standalone Node
+executable. The worker uses that executable rather than depending on the sidecar's
+Electron runtime or the current directory. Older locators without a saved Node
+path retain the existing PATH-based Node probe. Without standalone Node,
 or on any other unexpected worker error, it returns `FEATURE_UNAVAILABLE` (install Node.js and
 reopen Antigravity; details go to stderr). Feature status reads do not update
 operation records or write the hash and model-catalog caches, which are bounded and

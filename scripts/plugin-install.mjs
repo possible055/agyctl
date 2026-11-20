@@ -52,9 +52,17 @@ export function installPlugin({
   sourceDir = path.join(repoRoot, 'src', 'plugin'),
   targetDir = defaultPluginDir,
   repositoryRoot = repoRoot,
+  nodeExecutable = process.execPath,
   env = process.env,
 } = {}) {
-  const locator = { repositoryRoot: path.resolve(repositoryRoot) };
+  if (!path.isAbsolute(nodeExecutable) || !fs.statSync(nodeExecutable).isFile())
+    throw new Error('Node.js executable must be an absolute regular file');
+  if (process.versions.electron && nodeExecutable === process.execPath)
+    throw new Error('Install the panel using standalone Node.js');
+  const locator = {
+    repositoryRoot: path.resolve(repositoryRoot),
+    nodeExecutable: fs.realpathSync(nodeExecutable),
+  };
   for (const key of ['AGYCTL_APP_DIR', 'AGYCTL_HOME']) {
     if (env[key] !== undefined) {
       if (!env[key].trim()) throw new Error(`${key} must not be empty`);

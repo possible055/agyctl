@@ -15838,6 +15838,42 @@
       "value": "尚無對話",
       "reviewed": true
     },
+    "settings.app.subtitle": {
+      "value": "管理 Antigravity 應用程式設定。",
+      "reviewed": true
+    },
+    "settings.voice.description": {
+      "value": "語音模式使用的聲音，由 Gemini Live 提供支援。",
+      "reviewed": true
+    },
+    "settings.shortcuts.terminalSelectAll": {
+      "value": "終端機：全選",
+      "reviewed": true
+    },
+    "settings.shortcuts.submitPrompt": {
+      "value": "送出提示（Enter 的替代快速鍵）",
+      "reviewed": true
+    },
+    "settings.shortcuts.submitPromptDescription": {
+      "value": "Enter 一律會送出。此設定會新增另一個快速鍵。",
+      "reviewed": true
+    },
+    "settings.shortcuts.previousPrompt": {
+      "value": "跳至上一個提示",
+      "reviewed": true
+    },
+    "settings.shortcuts.nextPrompt": {
+      "value": "跳至下一個提示",
+      "reviewed": true
+    },
+    "settings.shortcuts.sideQuestionSelection": {
+      "value": "針對選取範圍提出附加問題",
+      "reviewed": true
+    },
+    "settings.shortcuts.pinConversation": {
+      "value": "釘選／取消釘選對話",
+      "reviewed": true
+    },
     "settings.plan.yourPlanLabel": {
       "value": "你的方案：",
       "reviewed": true

@@ -404,10 +404,19 @@ test('plugin install replaces the package atomically and preserves the previous 
     /AGYCTL_APP_DIR must be an absolute installation root/,
   );
   assert.equal(fs.existsSync(target), false);
+  assert.throws(
+    () => installPlugin({ ...options, sourceDir: first, nodeExecutable: 'relative-node' }),
+    /Node\.js executable must be an absolute regular file/,
+  );
+  assert.equal(fs.existsSync(target), false);
   const installed = installPlugin({ ...options, sourceDir: first });
   assert.equal(installed.changed, true);
   const locator = JSON.parse(fs.readFileSync(path.join(target, 'agyctl-tools.json'), 'utf8'));
-  assert.deepEqual(locator, { repositoryRoot, ...env });
+  assert.deepEqual(locator, {
+    repositoryRoot,
+    nodeExecutable: fs.realpathSync(process.execPath),
+    ...env,
+  });
   assert.equal(installPlugin({ ...options, sourceDir: first }).changed, false);
 
   const updated = installPlugin({ ...options, sourceDir: second });

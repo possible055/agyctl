@@ -12,14 +12,15 @@ test('PR selection keeps documentation cheap without omitting runtime and depend
   };
   const cases = [
     [['docs/operations.md', 'README.zh-CN.md'], none],
-    [['src/plugin/lib/metrics-core.mjs'], { ...none, node: true }],
-    [['src/host/compose.ts'], { ...none, node: true }],
-    [['src/localization/runtime/preload.ts'], { ...none, node: true }],
-    [['compat/localization/profiles.json'], { ...none, node: true, go: true }],
-    [['scripts/capsule-build.mjs'], { ...none, node: true }],
-    [['src/localization/catalogs/zh-Hant-TW.json'], { ...none, node: true }],
-    [['compat/localization/usage-points.json'], { ...none, node: true }],
-    [['src/plugin/sidecars/panel/settings.mjs'], { ...none, node: true }],
+    [['src/plugin/lib/metrics-core.mjs'], { ...none, node: true, packaging: true }],
+    [['src/host/compose.ts'], { ...none, node: true, packaging: true }],
+    [['src/localization/runtime/preload.ts'], { ...none, node: true, packaging: true }],
+    [['compat/localization/profiles.json'], { ...none, node: true, go: true, packaging: true }],
+    [['scripts/capsule-build.mjs'], { ...none, node: true, packaging: true }],
+    [['src/localization/catalogs/zh-Hant-TW.json'], { ...none, node: true, packaging: true }],
+    [['compat/localization/usage-points.json'], { ...none, node: true, packaging: true }],
+    [['src/plugin/sidecars/panel/settings.mjs'], { ...none, node: true, packaging: true }],
+    [['bin/agyctl.mjs', 'scripts/npm-package.mjs'], { ...none, node: true, packaging: true }],
     [
       ['src/agyctl/internal/check/files.go'],
       { ...none, go: true, packaging: true, govulncheck: true },

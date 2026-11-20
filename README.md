@@ -22,7 +22,44 @@ The stable and development (Insiders) channels use the same commands below, with
 
 ## Get started
 
-You need [Node.js](https://nodejs.org/) 26.x (26.13 or newer). Clone the project and install its dependencies; run every later command from this folder in PowerShell:
+### Prebuilt npm package
+
+You need [Node.js](https://nodejs.org/) 26.x (26.13 or newer), but not Go, Git, or a compiler. Install a prepared tarball (replace the example path and `VERSION`):
+
+```powershell
+npm install --global 'C:\Downloads\agyctl-VERSION.tgz'
+agyctl --help
+agyctl models
+```
+
+`models` reads the signed-in client's catalog while Antigravity is running. Then quit Antigravity and install the panel:
+
+```powershell
+agyctl install
+agyctl status --json
+```
+
+To install all features, select the model IDs and limits explicitly. The mapping below is only an example; use the IDs returned by your selected client:
+
+```powershell
+agyctl install --all --locale zh-Hant-TW --model-limits '1318=500000,1319=500000,1320=500000' --dry-run --json
+agyctl install --all --locale zh-Hant-TW --model-limits '1318=500000,1319=500000,1320=500000'
+```
+
+`--all` can reuse a verified current or installer-saved model mapping; otherwise it requires `--model-limits`. Disabled account models are not unlocked. Use `--asar` or `AGYCTL_APP_DIR` to select an installation. Reopen Antigravity after applying changes. See [npm installation operations](docs/operations.md#npm-installation) for individual features, removal, and partial-failure recovery.
+
+Installing or removing the npm package itself never modifies Antigravity. Before removing the tool, quit the client and remove its features:
+
+```powershell
+agyctl uninstall --all
+npm uninstall --global agyctl
+```
+
+Registry installation (`npm install --global agyctl`) is available only after a maintainer publishes the package; local packaging does not publish it.
+
+### From source
+
+Clone the project and install its development dependencies. The later `npm run ...` walkthroughs run from this folder in PowerShell; building the native tool additionally requires Go:
 
 ```powershell
 git clone https://github.com/possible055/agyctl.git

@@ -75,7 +75,8 @@ writes `app.asar` or closes and restarts Antigravity.
 - Feature reads and writes go through
   [feature-control.mjs](../src/plugin/sidecars/panel/feature-control.mjs), which
   spawns [feature-control-worker.mjs](../scripts/feature-control-worker.mjs) in the
-  checkout. The worker calls
+  installed npm package or checkout, using the Node executable saved when the
+  panel was installed. The worker calls
   [feature-control.mjs](../scripts/lib/feature-control.mjs) for installed state and
   drafts, and [model-catalog.mjs](../scripts/lib/model-catalog.mjs) for model names
   (the signed-in LS catalog joined to the selected binary's literal model enum;

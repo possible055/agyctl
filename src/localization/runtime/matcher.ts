@@ -18,6 +18,22 @@ function applyCapture(pattern: string, captured: string): string {
   return pattern.replace('{0}', () => captured);
 }
 
+function translateQuotaDuration(captured: string, locale: string): string {
+  const units: Record<string, Record<string, string>> = {
+    'zh-Hant-TW': { day: '天', hour: '小時', minute: '分鐘', second: '秒' },
+    'zh-Hans-CN': { day: '天', hour: '小时', minute: '分钟', second: '秒' },
+    'ja-JP': { day: '日', hour: '時間', minute: '分', second: '秒' },
+  };
+  const labels = units[locale];
+  if (
+    !labels ||
+    !/^\d+ (?:days?|hours?|minutes?|seconds?)(?:, \d+ (?:days?|hours?|minutes?|seconds?))*$/.test(captured)
+  ) return captured;
+  return captured
+    .replace(/(\d+) (day|hour|minute|second)s?/g, (_, count: string, unit: string) => `${count} ${labels[unit]}`)
+    .replace(/, /g, ' ');
+}
+
 export function matchDisplayText(index: DomIndex, text: string): MatchResult | null {
   if (!text || text.length > MAX_TEXT) return null;
   const { lead, inner, trail } = padding(text);
@@ -34,9 +50,12 @@ export function matchDisplayText(index: DomIndex, text: string): MatchResult | n
       captured.includes('{')
     )
       continue;
+    const isQuotaDuration = template.messageId === 'settings.plan.weeklyRefreshSentence'
+      || template.messageId === 'settings.plan.fiveHourRefreshSentence';
+    const value = isQuotaDuration ? translateQuotaDuration(captured, index.locale) : captured;
     return {
       messageId: template.messageId,
-      translated: `${lead}${applyCapture(template.translation, captured)}${trail}`,
+      translated: `${lead}${applyCapture(template.translation, value)}${trail}`,
     };
   }
   return null;

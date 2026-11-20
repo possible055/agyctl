@@ -25,8 +25,10 @@ export function selectChecks(event, paths = []) {
       // The checker reads the profile store, so its Go tests must run too.
       checks.node = true;
       checks.go = true;
+      checks.packaging = true;
     } else if (file.startsWith('compat/localization/')) {
       checks.node = true;
+      checks.packaging = true;
     } else if (
       /^(scripts\/(tools-build|agyctl)\.mjs|scripts\/lib\/(agyctl|install-paths)\.mjs|package(-lock)?\.json|\.npmrc|\.nvmrc)$/.test(
         file,
@@ -36,11 +38,12 @@ export function selectChecks(event, paths = []) {
       checks.packaging = true;
       if (/^package(-lock)?\.json$/.test(file)) checks.dependencies = true;
     } else if (
-      /^(src\/(host|localization|capsule|plugin)\/|scripts\/|tests\/(node|electron)\/|tsconfig.*\.json$|biome\.jsonc$)/.test(
+      /^(bin\/|src\/(host|localization|capsule|plugin)\/|scripts\/|tests\/(node|electron)\/|tsconfig.*\.json$|biome\.jsonc$)/.test(
         file,
       )
     ) {
       checks.node = true;
+      checks.packaging = true;
     } else {
       // Shared contracts, CI configuration and unclassified paths must not silently lose coverage.
       for (const name of checkNames) checks[name] = true;

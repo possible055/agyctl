@@ -119982,6 +119982,69 @@
       "critical": false,
       "description": "Authored translations for the fixed empty-project conversation status observed in Windows Antigravity 2.31.0 sidebar; not a project or conversation name."
     },
+    "settings.app.subtitle": {
+      "messageId": "settings.app.subtitle",
+      "format": "plain",
+      "defaultMessage": "Manage Antigravity app settings.",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
+    "settings.voice.description": {
+      "messageId": "settings.voice.description",
+      "format": "plain",
+      "defaultMessage": "The voice used in Voice mode. Powered by Gemini Live.",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
+    "settings.shortcuts.terminalSelectAll": {
+      "messageId": "settings.shortcuts.terminalSelectAll",
+      "format": "plain",
+      "defaultMessage": "Terminal: Select All",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
+    "settings.shortcuts.submitPrompt": {
+      "messageId": "settings.shortcuts.submitPrompt",
+      "format": "plain",
+      "defaultMessage": "Submit Prompt (Alternate to Enter)",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
+    "settings.shortcuts.submitPromptDescription": {
+      "messageId": "settings.shortcuts.submitPromptDescription",
+      "format": "plain",
+      "defaultMessage": "Enter always submits. This adds a second shortcut.",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
+    "settings.shortcuts.previousPrompt": {
+      "messageId": "settings.shortcuts.previousPrompt",
+      "format": "plain",
+      "defaultMessage": "Jump to Previous Prompt",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
+    "settings.shortcuts.nextPrompt": {
+      "messageId": "settings.shortcuts.nextPrompt",
+      "format": "plain",
+      "defaultMessage": "Jump to Next Prompt",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
+    "settings.shortcuts.sideQuestionSelection": {
+      "messageId": "settings.shortcuts.sideQuestionSelection",
+      "format": "plain",
+      "defaultMessage": "Side Question Selection",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
+    "settings.shortcuts.pinConversation": {
+      "messageId": "settings.shortcuts.pinConversation",
+      "format": "plain",
+      "defaultMessage": "Pin / Unpin Conversation",
+      "description": "Settings text observed in the client interface.",
+      "surface": "settings"
+    },
     "settings.plan.yourPlanLabel": {
       "messageId": "settings.plan.yourPlanLabel",
       "format": "plain",

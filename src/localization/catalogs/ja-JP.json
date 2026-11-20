@@ -15838,6 +15838,42 @@
       "value": "会話はまだありません",
       "reviewed": true
     },
+    "settings.app.subtitle": {
+      "value": "Antigravity アプリの設定を管理します。",
+      "reviewed": true
+    },
+    "settings.voice.description": {
+      "value": "音声モードで使用する声です。Gemini Live を利用しています。",
+      "reviewed": true
+    },
+    "settings.shortcuts.terminalSelectAll": {
+      "value": "ターミナル：すべて選択",
+      "reviewed": true
+    },
+    "settings.shortcuts.submitPrompt": {
+      "value": "プロンプトを送信（Enter の代替）",
+      "reviewed": true
+    },
+    "settings.shortcuts.submitPromptDescription": {
+      "value": "Enter は常に送信します。もう一つのショートカットを追加します。",
+      "reviewed": true
+    },
+    "settings.shortcuts.previousPrompt": {
+      "value": "前のプロンプトに移動",
+      "reviewed": true
+    },
+    "settings.shortcuts.nextPrompt": {
+      "value": "次のプロンプトに移動",
+      "reviewed": true
+    },
+    "settings.shortcuts.sideQuestionSelection": {
+      "value": "選択範囲について追加の質問をする",
+      "reviewed": true
+    },
+    "settings.shortcuts.pinConversation": {
+      "value": "会話をピン留め／解除",
+      "reviewed": true
+    },
     "settings.plan.yourPlanLabel": {
       "value": "あなたのプラン：",
       "reviewed": true

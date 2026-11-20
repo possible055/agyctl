@@ -164,6 +164,27 @@ test('reviewed catalogs prepare all three locales and keep aliases off the indep
       matchDisplayText(index, 'Hi Alice, what can we get done today?')?.translated,
       locale.messages['composer.greeting.hi'].value.replace('{0}', 'Alice'),
     );
+    assert.equal(
+      matchDisplayText(index, 'Available AI Credits: 42')?.translated,
+      locale.messages['web.dynamic.577a7702e3ff0481'].value.replace('{0}', '42'),
+    );
+    const duration = {
+      'zh-Hant-TW': '5 天 12 小時',
+      'zh-Hans-CN': '5 天 12 小时',
+      'ja-JP': '5 日 12 時間',
+    }[localeName];
+    for (const capture of ['5 days, 12 hours', 'unknown duration']) {
+      assert.equal(
+        matchDisplayText(
+          index,
+          `You have used some of your weekly limit, it will fully refresh in ${capture}.`,
+        )?.translated,
+        locale.messages['settings.plan.weeklyRefreshSentence'].value.replace(
+          '{0}',
+          capture === 'unknown duration' ? capture : duration,
+        ),
+      );
+    }
     const remote = {
       'zh-Hant-TW': ['從此清單隱藏 user@主機', 'MCP 錯誤'],
       'zh-Hans-CN': ['从此列表隐藏 user@主機', 'MCP 错误'],

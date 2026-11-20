@@ -22,7 +22,44 @@ agyctl 为 Antigravity 桌面应用添加上下文用量面板，并提供会修
 
 ## 开始使用
 
-需要 [Node.js](https://nodejs.org/) 26.x（26.13 或更新）。克隆项目并安装依赖；之后的命令都在这个文件夹的 PowerShell 中执行：
+### 预构建 npm 软件包
+
+需要 [Node.js](https://nodejs.org/) 26.x（26.13 或更新），不需要 Go、Git 或编译器。安装已准备好的压缩包（替换示例路径和 `VERSION`）：
+
+```powershell
+npm install --global 'C:\Downloads\agyctl-VERSION.tgz'
+agyctl --help
+agyctl models
+```
+
+`models` 在 Antigravity 运行时读取已登录账户的模型目录。然后退出 Antigravity，安装面板：
+
+```powershell
+agyctl install
+agyctl status --json
+```
+
+安装全部功能时，请明确选择模型 ID 和上限。下面的映射仅为示例，应使用所选客户端实际返回的 ID：
+
+```powershell
+agyctl install --all --locale zh-Hant-TW --model-limits '1318=500000,1319=500000,1320=500000' --dry-run --json
+agyctl install --all --locale zh-Hant-TW --model-limits '1318=500000,1319=500000,1320=500000'
+```
+
+`--all` 可以复用已验证的当前映射，或安装器保存的映射；否则必须提供 `--model-limits`。这不会解锁账户尚未开放的模型。可使用 `--asar` 或 `AGYCTL_APP_DIR` 选择安装。应用修改后重新打开 Antigravity。单独安装功能、移除与部分失败的恢复方式见 [npm 安装操作](docs/operations.md#npm-installation)。
+
+安装或移除 npm 软件包本身不会修改 Antigravity。移除工具前，请先退出客户端并移除其功能：
+
+```powershell
+agyctl uninstall --all
+npm uninstall --global agyctl
+```
+
+只有维护者发布后，才能使用注册表安装命令 `npm install --global agyctl`；本地打包不会发布软件包。
+
+### 从源码安装
+
+克隆项目并安装开发依赖。之后的 `npm run ...` 示例都在这个文件夹的 PowerShell 中执行；构建原生工具还需要 Go：
 
 ```powershell
 git clone https://github.com/possible055/agyctl.git

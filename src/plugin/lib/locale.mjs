@@ -11,7 +11,7 @@ const LOCALE_CATALOGS = {
       diskLimitPatched: 'Recognized patch candidate limits',
       diskLimitSaved: 'Saved settings (not necessarily applied)',
       diskLimitHint:
-        'Build tools with npm run tools:build in the repository, or reinstall the panel if the repository moved.',
+        'Reinstall the agyctl package and panel, or rebuild the tools when running from source.',
       diskLimitSnapshot: 'Snapshot',
       diskLimitTarget: 'Selected binary',
       diskLimitStates: {
@@ -92,7 +92,7 @@ const LOCALE_CATALOGS = {
       diskLimitUnpatched: '未啟用',
       diskLimitPatched: '可辨識補丁的候選上限',
       diskLimitSaved: '已儲存設定（不代表已套用）',
-      diskLimitHint: '請在專案執行 npm run tools:build；若專案已搬移，請重新安裝面板。',
+      diskLimitHint: '請重新安裝 agyctl 套件與面板；從原始碼執行時，請重新建置工具。',
       diskLimitSnapshot: '快照時間',
       diskLimitTarget: '所選執行檔',
       diskLimitStates: {
@@ -172,7 +172,7 @@ const LOCALE_CATALOGS = {
       diskLimitUnpatched: '未启用',
       diskLimitPatched: '可识别补丁的候选上限',
       diskLimitSaved: '已保存设置（不代表已应用）',
-      diskLimitHint: '请在项目执行 npm run tools:build；若项目已移动，请重新安装面板。',
+      diskLimitHint: '请重新安装 agyctl 软件包和面板；从源码运行时，请重新构建工具。',
       diskLimitSnapshot: '快照时间',
       diskLimitTarget: '所选可执行文件',
       diskLimitStates: {
@@ -255,7 +255,7 @@ const LOCALE_CATALOGS = {
       diskLimitPatched: 'Recognized patch candidate limits',
       diskLimitSaved: 'Saved settings (not necessarily applied)',
       diskLimitHint:
-        'Build tools with npm run tools:build in the repository, or reinstall the panel if the repository moved.',
+        'Reinstall the agyctl package and panel, or rebuild the tools when running from source.',
       diskLimitSnapshot: 'Snapshot',
       diskLimitTarget: 'Selected binary',
       diskLimitStates: {
@@ -404,7 +404,7 @@ const LOCALE_CATALOGS = {
       diskLimitUnpatched: '未啟用',
       diskLimitPatched: '可辨識補丁的候選上限',
       diskLimitSaved: '已儲存設定（不代表已套用）',
-      diskLimitHint: '請在專案執行 npm run tools:build；若專案已搬移，請重新安裝面板。',
+      diskLimitHint: '請重新安裝 agyctl 套件與面板；從原始碼執行時，請重新建置工具。',
       diskLimitSnapshot: '快照時間',
       diskLimitTarget: '所選執行檔',
       diskLimitStates: {
@@ -550,7 +550,7 @@ const LOCALE_CATALOGS = {
       diskLimitUnpatched: '未启用',
       diskLimitPatched: '可识别补丁的候选上限',
       diskLimitSaved: '已保存设置（不代表已应用）',
-      diskLimitHint: '请在项目执行 npm run tools:build；若项目已移动，请重新安装面板。',
+      diskLimitHint: '请重新安装 agyctl 软件包和面板；从源码运行时，请重新构建工具。',
       diskLimitSnapshot: '快照时间',
       diskLimitTarget: '所选可执行文件',
       diskLimitStates: {
@@ -700,7 +700,7 @@ LOCALE_CATALOGS.capsule['ja-JP'] = {
   diskLimitPatched: '認識されたパッチの上限候補',
   diskLimitSaved: '保存設定（適用済みとは限りません）',
   diskLimitHint:
-    'リポジトリで npm run tools:build を実行してください。移動した場合はパネルを再インストールしてください。',
+    'agyctl パッケージとパネルを再インストールしてください。ソースから実行する場合はツールを再ビルドしてください。',
   diskLimitSnapshot: '取得日時',
   diskLimitTarget: '選択したバイナリ',
   diskLimitStates: {
@@ -787,7 +787,7 @@ LOCALE_CATALOGS.panel['ja-JP'] = {
   diskLimitPatched: '認識されたパッチの上限候補',
   diskLimitSaved: '保存設定（適用済みとは限りません）',
   diskLimitHint:
-    'リポジトリで npm run tools:build を実行してください。移動した場合はパネルを再インストールしてください。',
+    'agyctl パッケージとパネルを再インストールしてください。ソースから実行する場合はツールを再ビルドしてください。',
   diskLimitSnapshot: '取得日時',
   diskLimitTarget: '選択したバイナリ',
   diskLimitStates: {

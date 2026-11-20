@@ -17,6 +17,7 @@ const TEMPLATE_IDS = new Set([
   'web.dynamic.e2b77e2f4cdc6950',
   'settings.plan.weeklyRefreshSentence',
   'settings.plan.fiveHourRefreshSentence',
+  'web.dynamic.577a7702e3ff0481',
   "ssh.web.connectingTo",
   "ssh.web.connectionFailed",
   "ssh.web.removeRecent",

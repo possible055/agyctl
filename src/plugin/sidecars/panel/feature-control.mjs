@@ -23,9 +23,7 @@ const pending = new Map();
 
 function unavailable(message) {
   return Object.assign(
-    new Error(
-      message ?? 'Feature control is unavailable; rebuild the tools and reinstall the panel',
-    ),
+    new Error(message ?? 'Feature control is unavailable; reinstall agyctl and the panel'),
     { code: 'FEATURE_UNAVAILABLE' },
   );
 }
@@ -43,10 +41,10 @@ function discardWorker() {
 
 function startWorker() {
   return toolLocation().then(
-    ({ root, env }) =>
+    ({ root, nodeExecutable, env }) =>
       new Promise((resolve, reject) => {
         const child = spawn(
-          process.execPath,
+          nodeExecutable,
           [path.join(root, 'scripts', 'feature-control-worker.mjs')],
           { cwd: root, env, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true },
         );

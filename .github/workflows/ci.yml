@@ -162,7 +162,7 @@ jobs:
       - run: go -C src/agyctl test -count=1 ./...
 
   packaging:
-    name: Native packaging (${{ matrix.target }})
+    name: Native and npm packaging (${{ matrix.target }})
     needs: scope
     if: needs.scope.outputs.packaging == 'true'
     strategy:
@@ -212,10 +212,14 @@ jobs:
         if: runner.os != 'Linux'
         run: go -C src/agyctl test -count=1 ./internal/fsx ./internal/layout ./internal/assets ./internal/winproc
       - run: npm ci --ignore-scripts
-      - name: Build agyctl for the target
-        run: npm run tools:build
+      - name: Build all prebuilt npm package artifacts
+        run: npm run package:build
       - name: Smoke-test the built executable
         run: npm run limit:versions
+      - name: Pack and verify an isolated global installation without compilers
+        run: |
+          npm run package:pack -- --pack-destination "$RUNNER_TEMP"
+          npm run package:smoke -- "$RUNNER_TEMP/agyctl-$(node -p 'JSON.parse(require("node:fs").readFileSync("package.json", "utf8")).version').tgz"
 
   dependencies:
     name: npm advisories

@@ -732,7 +732,7 @@ test('feature drafts bind revisions, refuse a running client, and apply/restore 
   const queued = await run('queue', desired);
   assert.equal(queued.operation, null);
   assert.equal(typeof queued.draft.id, 'string');
-  assert.match(queued.draft.commands.apply, /settings:apply -- --draft /);
+  assert.equal(queued.draft.commands.apply, `agyctl settings apply --draft ${queued.draft.id}`);
   const savedDraft = JSON.parse(
     fs.readFileSync(path.join(state, 'management/drafts', `${queued.draft.id}.json`), 'utf8'),
   );
