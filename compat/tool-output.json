@@ -428,6 +428,98 @@
           ]
         }
       ]
+    },
+    {
+      "id": "win-amd64-antigravity-2.34.0",
+      "app_version": "2.34.0",
+      "product": "Antigravity App",
+      "channel": "antigravity",
+      "platform": "win32-x64",
+      "arch": "x86-64",
+      "binary_name": "language_server.exe",
+      "binary_size": 207245312,
+      "member": "resources/bin/language_server.exe",
+      "qualification": "candidate",
+      "verified_at": "2026-11-21",
+      "capacity_targets": {
+        "viewFile.maxLinesPerView": {
+          "source_value": 800,
+          "target": 2000,
+          "layer": "base default constant"
+        },
+        "viewFile.maxBytesPerView": {
+          "source_value": 46080,
+          "target": 131072,
+          "layer": "base default constant"
+        },
+        "grep.maxGrepResults": {
+          "source_value": 50,
+          "target": 100,
+          "layer": "base default constant"
+        },
+        "postMergeStepBudgetFloor": {
+          "source_value": 32768,
+          "target": 98304,
+          "layer": "post settings merge"
+        }
+      },
+      "out_of_scope": [
+        "toolOutput.perTool[run_command].maxOutputBytes=65536",
+        "toolOutput.perTool[<mcp tool>].maxOutputBytes=131072",
+        "Grep paging, two-tier capacity APIs, edit/write tools, useCoreDirect switching",
+        "The seven 2.31.2 native grep transforms are not applicable to this build; their absence is not evidence that the upstream bugs are fixed."
+      ],
+      "evidence": {
+        "original_binary_sha256": "cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9",
+        "derived_output_sha256": "498f5dd9fbd27438a6f83a6ff388c2411aed4ae954a95893c851e2979400695b",
+        "va_to_file_offset": "PE image base 0x140000000; .text RVA 0x1000, raw offset 0x600. Each site is independently mapped.",
+        "capacity_function": "2.34.0 defaultConversationalCascadeConfig: immediate-only edits at 0x141899c2d, 0x141899c47, 0x14189ab8b. The separate find initializer is preserved.",
+        "step_floor_function": "getCascadeConfig 0x1428fc080, 928 bytes. After MergeCascadeConfigsWithOverwrites 0x1428fc24c and ApplySystemPromptTemplateOverrides 0x1428fc2c7, replace [0x1428fc2cd,0x1428fc30f) with guarded floor; jump to original mov rax,rdx at 0x1428fc394. No call, stack change, pointer store, or unchanged incoming branch into replacement.",
+        "go_metadata": "Go pclntab 0x4c5f000; source pcsp=288, UnsafePoint=-1, StackMap=6; landing pcsp=288, StackMap=7. Locals maps 6/7 both 0100, rooting config at SP+0xa8. Args maps 04/00; no argument dereference follows.",
+        "field_mapping": "2.34.0 named getters CascadeConfig.GetTrajectoryConversionConfig 0x140985060 -> +0x20; TrajectoryConversionConfig.GetMaxTokensPerStep 0x140986560 -> +0x50 and int32 dereference. Nil paths and signed values >=98304 preserved."
+      },
+      "notes": "Candidate for exact Windows 2.34.0 original. Static PE/Go metadata and offline image checks only; live Read/Grep/step-budget behavior and exact boundaries remain unqualified.",
+      "inputs": [
+        {
+          "input": "original",
+          "binary_sha256": "cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9",
+          "output_sha256": "498f5dd9fbd27438a6f83a6ff388c2411aed4ae954a95893c851e2979400695b",
+          "segments": [
+            {
+              "name": "viewfile-max-lines-per-view-2000",
+              "va": "0x141899c2d",
+              "offset": 25793069,
+              "expected_hex": "c70020030000",
+              "new_hex": "c700d0070000",
+              "role": "capacity"
+            },
+            {
+              "name": "viewfile-max-bytes-per-view-131072",
+              "va": "0x141899c47",
+              "offset": 25793095,
+              "expected_hex": "c70000b40000",
+              "new_hex": "c70000000200",
+              "role": "capacity"
+            },
+            {
+              "name": "grep-max-grep-results-100",
+              "va": "0x14189ab8b",
+              "offset": 25797003,
+              "expected_hex": "c7400832000000",
+              "new_hex": "c7400864000000",
+              "role": "capacity"
+            },
+            {
+              "name": "post-merge-step-budget-floor-98304",
+              "va": "0x1428fc2cd",
+              "offset": 42973389,
+              "expected_hex": "488d05ece98b09bb02000000b9010000006690e85b329bfd8884249f000000b810000000488d1d380cf106b9010000000f1f00e85b8e72fd488d1574755b06488910",
+              "new_hex": "488b9424a80000004885d27420488b42204885c07417488b40504885c0740e8138008001007d06c70000800100e99500000090909090909090909090909090909090",
+              "role": "transform"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

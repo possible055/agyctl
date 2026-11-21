@@ -333,7 +333,7 @@ export async function prepareNavigation(
     if (snapshot.locale === 'en' || snapshot.format !== 'dom') return;
     const matched = matchHubNavigation(targetUrl);
     if (!matched.ok)
-      throw new HostError('SOURCE_MISMATCH', `Unreviewed Hub navigation target: ${targetUrl}`);
+      throw new HostError('SOURCE_MISMATCH', 'Unreviewed Hub navigation target');
     registerHubWindow(webContents, matched.origin, snapshot);
   } catch (error) {
     if (startupSnapshot) recordRuntimeFailure(error, 'runtime.prepare');

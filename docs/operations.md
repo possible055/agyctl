@@ -115,7 +115,7 @@ unreadable version sources refuse; there is no nearest-version selection. Offlin
 standalone binaries and legacy unversioned registries retain exact hash admission.
 Status and restore retain historical recipes. See
 [selection.go](../src/agyctl/internal/apptarget/selection.go). Context-limit
-admission remains byte-based, not a version allowlist. On the registered 2.33.0 and 2.32.1
+admission remains byte-based, not a version allowlist. On the registered 2.34.0, 2.33.0, and 2.32.1
 originals, all three Language Server features are admitted through
 [native composition](#native-feature-composition), which also recognizes its own
 managed images.
@@ -214,13 +214,24 @@ The panel finds the LS in one of two ways. An explicit connection needs both
 `ANTIGRAVITY_CSRF_TOKEN`; invalid or incomplete explicit settings fail instead of
 falling back to another installation's logs. With neither variable set, discovery
 uses the client logs.
+For a host-provided connection, the panel uses
+`ANTIGRAVITY_EXECUTABLE_DATA_DIR` only when it identifies a known channel's
+`sidecar_data/agyctl/panel` tree, so it can include that channel's local conversation files
+even when `GetAllCascadeTrajectories` returns an empty map. An unrecognized
+data directory does not select another channel's history.
+On the inspected Windows 2.34.0 LS, the served homepage has an empty
+`__APP_CONFIG__.csrfToken`; standalone log-and-homepage discovery cannot
+authenticate. The installed panel receives its scoped token from the client.
+After the channel-directory fix, a live Hub sidecar scan read all 59 discovered
+local conversation files and counted 4,215 server-reported requests (recorded
+2026-11-21); this does not qualify the independent discovery path.
 
 ## Panel patch controls
 
 Build the Host, localization, and native tools, then install or update the panel.
 Settings reads the selected installation's feature state and decoded model limits
 instead of showing terminal commands. Toggle the capsule, localization, and
-context-limit patches independently, choose a locale, and expand **Model context
+context-limit and tool-output capacity patches independently, choose a locale, and expand **Model context
 limits** to set each model's token limit; uncheck a model to omit it from the new
 mapping. The model list starts collapsed, like **Built-in prices**, and expanding or
 collapsing it does not change the independent patch toggle. Installed values prefill
@@ -263,11 +274,11 @@ restorable. The capsule shows decoded limits with the same catalog names,
 and explicit IDs when names are unknown. These are disk patch values, not confirmed
 live context capacity.
 
-Model-limit and compaction disk states are tri-state: verified original/input is
+Model-limit, tool-output and compaction disk states are tri-state: verified original/input is
 disabled, a verified patched/managed output is enabled, and unrecognized or pending
-states are unknown. Native state drift also makes both controls unknown. Unknown
+states are unknown. Native state drift also makes these controls unknown. Unknown
 is shown with an indeterminate, disabled checkbox and a leave-unchanged notice.
-Drafts use `limit.enabled: null` with an empty map and `compaction: null` to preserve
+Drafts use `limit.enabled: null` with an empty map, `toolOutput: null`, and `compaction: null` to preserve
 unknown state, rather than inventing a disabled state. Unrelated Host controls
 remain available; explicit native changes refuse when model-limit ownership is
 unknown or native state has drifted. A pending compaction transaction also blocks
@@ -277,9 +288,14 @@ requires a complete feature review, panel native changes report
 `NATIVE_UPDATE_REQUIRED`; complete the explicit terminal transition described
 under [native composition](#native-feature-composition) before retrying. Host-only
 drafts do not trigger that transition. The exact registered
-2.33.0 and 2.32.1 native targets support combined limit/compaction settings through one
+2.34.0, 2.33.0, and 2.32.1 native targets support combined limit/tool-output/compaction settings through one
 reviewed native plan; legacy targets retain their conflict checks. Disk state
 does not by itself prove runtime compaction effectiveness.
+
+The panel can change tool-output only when the native coordinator verifies the
+installed state and provides a matching recipe. Other states stay unknown and
+unchanged; use the standalone tool-output commands for legacy targets. The patch
+raises recorded output capacity, not the number of tool calls.
 
 **Save settings** writes a draft only, to `<AGYCTL_HOME>/management/drafts/<id>.json`.
 The panel shows a short saved/not-applied status, not terminal instructions or
@@ -376,7 +392,7 @@ reviewed apply, status, and removal; a custom path does not bypass the feature g
 
 ## Native feature composition
 
-The exact registered Windows 2.33.0 and 2.32.1 originals support one native transaction for
+The exact registered Windows 2.34.0, 2.33.0, and 2.32.1 originals support one native transaction for
 limit, tool-output, and compaction. Version detection selects candidate data;
 whole-file originals and each feature's byte gates still decide admission. The
 existing feature commands route to the same coordinator for those targets. Removing
@@ -396,7 +412,7 @@ requires `--expected` with the exact `expected` object returned by that plan.
 This binds the original/current hashes, generation, and recipe-assets fingerprint;
 an intervening change refuses instead of replanning silently. `null` is not an
 omit operation. Disabling limit requires an empty model map. Panel draft preflight
-builds one native plan, preserving tool-output when the panel changes L/C only.
+builds one native plan, preserving any omitted native feature.
 
 After an app update replaces a managed binary with an exact registered original,
 `native status` reports `file_state: "updated-original"` and
@@ -429,6 +445,37 @@ are retained. Implementation: [native CLI](../src/agyctl/cmd/agyctl/native.go),
 [coordinator](../src/agyctl/internal/lspatch/), and
 [panel execution](../scripts/lib/feature-control.mjs).
 
+**Live transaction, partial, recorded 2026-11-21 on Windows 2.34.0:** the exact
+original `resources/bin/language_server.exe` SHA-256
+`cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9`
+entered the reviewed app-update transition with all three desired fields present:
+model `1318` at 500,000, tool-output enabled, and native-mode compaction enabled.
+Generation 35's combined SHA-256 was
+`d1e800647fe06942bc431bc464de265ca26aa32f4cd3b8490282d06fe5b31b78`.
+The installed client, LS and panel started; the panel read all three disk states
+as enabled and scanned 59/59 local conversations without an RPC failure.
+While the client was stopped, disabling tool-output preserved limit and
+compaction (generation 36), disabling compaction preserved limit (37), and
+disabling limit restored the exact original SHA-256 (38). The original backup
+remained verified and `update_transition_required` cleared. This qualifies the
+transaction and basic startup, **not** effective model capacity, larger tool
+output, prompt adoption, or automatic compaction.
+
+**Further live checks, recorded 2026-11-21 on Windows 2.34.0:** a reviewed
+combined native transaction again produced the same SHA-256 above (generation
+39). New synthetic sessions read a 500,000-token model configuration and a
+76,898-byte `view_file` result; manual `/compact` used both the native and an
+exact custom prompt and completed checkpoints. Feature-specific evidence and
+limits are in [limit-patch.md](limit-patch.md#upstream-clamp),
+[tool-output-patch.md](tool-output-patch.md#windows-2340-offline-candidate), and
+[compaction-patch.md](compaction-patch.md#windows-2340-offline-consumer-evidence).
+Disabling all native features in generation 41 restored the exact original LS
+SHA-256. A separate Host apply made the Capsule visibly mount, then removing
+Capsule and localization restored the exact original ASAR SHA-256
+`8934adef0622c9271c92eea950a71848764a66f7b10023ccbd82e54b959adb0e`.
+The original backups remained verified. Neither transaction proves automatic
+compaction or an end-to-end SSH/MCP connection.
+
 ## Per-model context settings
 
 `agyctl limit` patches PE and ELF x86-64 targets. Mach-O ARM64 binaries are inspected
@@ -439,7 +486,7 @@ original bytes, code placement, and signing strategy are qualified; see
 `limit patch --model-limits '1318=300000,1400=500000'` describes the complete model
 mapping, not an incremental edit. Preview is read-only unless `--out` explicitly
 requests a new output file, and `--apply` is required to replace the installation.
-Quit the selected client before applying or restoring. On the registered 2.33.0 and 2.32.1
+Quit the selected client before applying or restoring. On the registered 2.34.0, 2.33.0, and 2.32.1
 targets, applying a new complete mapping replaces the installed one through
 [native composition](#native-feature-composition). On other builds, restore first,
 then preview and apply the complete replacement mapping. Numeric IDs

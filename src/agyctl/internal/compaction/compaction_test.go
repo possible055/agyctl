@@ -305,6 +305,14 @@ func TestRealRegistryLoadsAndSelfChecks(t *testing.T) {
 			},
 			values: map[string]int{"user_request_total_bytes": 61440},
 		},
+		"win-amd64-antigravity-2.34.0": {
+			version: "2.34.0", qualification: "candidate", segments: 12, prompts: 3,
+			fingerprint: "0403448e4431521f1f4700aca3d42f7b4e1c9a4524ec8b1efe4c9e2bf0dbb2bf",
+			outputs: map[string]string{
+				"cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9": "bd97451517eb44e7e2cb5ea27072f9880c9b147be91df11caea1e52f433d519b",
+			},
+			values: map[string]int{"user_request_total_bytes": 61440},
+		},
 	}
 	if len(reg.Targets) != len(contracts) {
 		t.Fatalf("registered build contracts changed: got %d targets, want %d", len(reg.Targets), len(contracts))

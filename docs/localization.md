@@ -16,9 +16,9 @@ messages and never translates Antigravity. See
 
 ## Current status
 
-The current development target is Windows x86-64 Antigravity 2.33.0
-(profile `hub-win-x64-2.33.0-b33c8160`) in `zh-Hant-TW`, `zh-Hans-CN`, and `ja-JP`.
-The 2.32.1, 2.31.0, and 2.29.x profiles remain in the registry.
+The current development target is Windows x86-64 Antigravity 2.34.0
+(profile `hub-win-x64-2.34.0-8934adef`) in `zh-Hant-TW`, `zh-Hans-CN`, and `ja-JP`.
+Earlier profiles remain in the registry.
 
 Every profile in [profiles.json](../compat/localization/profiles.json) is
 `probe-only`. A `probe-only` profile can enter installation preflight with an
@@ -34,6 +34,44 @@ node -e "for(const p of require('./compat/localization/profiles.json').profiles)
 - **Automated:** isolated Electron contracts exercise production DOM and native
   preparation (`npm run test:electron`; see [development](development.md#checks)).
   They are not full client acceptance.
+- **Offline, recorded 2026-11-21 on Windows 2.34.0:** all three locales prepared
+  and validated from the installed LS; adapter v4 admitted 266 edits across 19
+  ASAR members. At this offline checkpoint, no localization was installed or
+  selected. The developer AST path has no reviewed usage rules for this source.
+- **Live, partial, recorded 2026-11-21 on Windows 2.34.0:** the reviewed Host
+  transaction installed Traditional Chinese localization with Capsule on the
+  exact `8934adef...` original ASAR. The first launch reported `SOURCE_MISMATCH`:
+  the Hub URL carried a new `#t=<bootstrapToken>` fragment. In that original
+  archive, `dist/authBootstrap.js` (SHA-256
+  `3ea67da411bae7dbf19214055c815c4765d3c902e04e7e01dfa66098af56be1d`)
+  implements `withBootstrapTokenFragment`, and `dist/utils.js` calls it in
+  `loadHubWindowUrl`. The observed fragment was exactly `t=` plus 32 lowercase
+  hex characters. The runtime now admits only that form while retaining the
+  reviewed origin, path and search checks; failed navigation no longer logs the
+  token-bearing URL. After rebuilding and reapplying, the runtime reported
+  `healthState: active` with no terminal error, and the live window showed
+  Traditional Chinese Hub navigation, greeting and menu labels. Selecting new
+  artifacts and restarting separately yielded `active` with no terminal error
+  for Simplified Chinese and Japanese; both windows showed translated Hub
+  navigation, greeting and menu labels while project and conversation names
+  remained content. Removing localization kept Capsule installed; a separate
+  Capsule removal restored the exact original ASAR SHA-256 above, with its
+  verified original backup retained. Visible input-toolbar Capsule mounting and
+  SSH/MCP authentication or takeover flows were not exercised. The profile
+  therefore remains `probe-only`.
+- **Live and isolated, partial, recorded 2026-11-21 on Windows 2.34.0:** after a
+  new reviewed Host apply of Traditional Chinese localization plus Capsule, the
+  runtime again reported `active` with no terminal error. In the installed Hub,
+  `#agyctl-input-capsule` and `#agyctl-titlebar-btn` had visible layout boxes;
+  opening the titlebar button displayed `#agyctl-titlebar-popover`, and hovering
+  over the input Capsule displayed `#agyctl-input-tooltip`. No subagent composer
+  was active, so its Capsule mount was not tested. Isolated Electron 44.10.2 DOM
+  runs using the actual 2.34.0 prepared artifacts passed 58 checks per locale in
+  all three locales, including SSH/MCP fixed controls and protection of dynamic
+  hosts, paths, server names, and raw errors. These fixtures did not establish a
+  real SSH connection, authentication or takeover, or a working MCP request.
+  The Host features were removed afterward and the original ASAR hash restored;
+  the profile remains `probe-only`.
 - **Offline, recorded 2026-11-18 on Windows 2.33.0:** all three locales prepared
   and validated from an immutable original LS copy, with no DOM-index conflicts.
   Native adapter v4 admitted 266 unique edits across 19 members and re-parsed every
@@ -276,7 +314,7 @@ Dynamic host labels, paths, usernames, raw SSH/MCP errors, and server names rema
 content. DOM protection and reviewed template contexts are in
 [scopes.ts](../src/localization/runtime/scopes.ts).
 
-The Windows 2.33.0 profile selects v4 without changing v2 or v3's edit sets. Its
+The Windows 2.33.0 and 2.34.0 profiles select v4 without changing v2 or v3's edit sets. The 2.33.0
 reviewed upstream source is ASAR
 `b33c81600e82e65593aa8430ef01b37d6b28d9d98f0faf45e25957783b71e64b`; its embedded
 Hub `main.js` is

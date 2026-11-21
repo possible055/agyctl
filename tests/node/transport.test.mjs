@@ -104,18 +104,39 @@ test('callLanguageServer fails visibly instead of truncating an oversize respons
 test('discovery via env shortcut (deterministic, no network)', async () => {
   const origAddr = process.env.ANTIGRAVITY_LS_ADDRESS;
   const origToken = process.env.ANTIGRAVITY_CSRF_TOKEN;
+  const origDataDir = process.env.ANTIGRAVITY_EXECUTABLE_DATA_DIR;
   try {
     process.env.ANTIGRAVITY_LS_ADDRESS = '127.0.0.1:59999';
     process.env.ANTIGRAVITY_CSRF_TOKEN = 'unit-test-token';
+    process.env.ANTIGRAVITY_EXECUTABLE_DATA_DIR = path.join(
+      os.homedir(),
+      '.gemini',
+      'antigravity',
+      'sidecar_data',
+      'agyctl',
+      'panel',
+      'data',
+    );
     const ep = await discoverLanguageServer(true);
     if (ep.source !== 'env') throw new Error(`expected source 'env', got '${ep.source}'`);
     if (ep.port !== 59999) throw new Error(`expected port 59999, got ${ep.port}`);
     if (ep.csrfToken !== 'unit-test-token') throw new Error('csrfToken mismatch');
+    assert.equal(ep.product, 'hub');
+    assert.equal(
+      ep.conversationDir,
+      path.join(os.homedir(), '.gemini', 'antigravity', 'conversations'),
+    );
+    process.env.ANTIGRAVITY_EXECUTABLE_DATA_DIR = path.join(os.tmpdir(), 'other-client', 'data');
+    const unknown = await discoverLanguageServer(true);
+    assert.equal(unknown.product, undefined);
+    assert.equal(unknown.conversationDir, undefined);
   } finally {
     if (origAddr === undefined) delete process.env.ANTIGRAVITY_LS_ADDRESS;
     else process.env.ANTIGRAVITY_LS_ADDRESS = origAddr;
     if (origToken === undefined) delete process.env.ANTIGRAVITY_CSRF_TOKEN;
     else process.env.ANTIGRAVITY_CSRF_TOKEN = origToken;
+    if (origDataDir === undefined) delete process.env.ANTIGRAVITY_EXECUTABLE_DATA_DIR;
+    else process.env.ANTIGRAVITY_EXECUTABLE_DATA_DIR = origDataDir;
   }
 });
 
@@ -162,9 +183,11 @@ test('discovery via log + web scraping (requires live Antigravity)', async (t) =
     try {
       ep = await discoverLanguageServer(true);
     } catch (error) {
-      // Only a genuine environment absence may skip: a broken discovery
-      // regression must fail, not hide behind the skip path.
-      if (!/No Language Server listening port|discovery failed/i.test(error.message)) throw error;
+      if (/Homepage response contains no csrfToken/.test(error.message)) {
+        t.skip('The running Language Server does not expose a homepage CSRF token');
+        return;
+      }
+      if (!/No Language Server listening port found in logs/.test(error.message)) throw error;
       t.skip('Language Server is not running or its log is missing');
       return;
     }

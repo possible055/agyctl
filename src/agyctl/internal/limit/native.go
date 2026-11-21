@@ -35,11 +35,11 @@ func NativeReferenceForBase(root string, snapshot *assets.Snapshot, baseSHA stri
 			continue
 		}
 		if len(reg.originals[i]) == summaryFuncSize {
-			body, err := assembleSummaryLimits(0, 0x34)
+			body, err := assembleSummaryLimitsForOriginal(reg.originals[i], 0, 0x34)
 			if err != nil {
 				return lspatch.RecipeRef{}, err
 			}
-			return lspatch.RecipeRef{ID: "linked-v3-summary-reserved-v1", Fingerprint: lspatch.Fingerprint(Func, summaryEncoding, summaryOriginalSHA, "guarded-int3-reserved-v1", hex.EncodeToString(body))}, nil
+			return lspatch.RecipeRef{ID: "linked-v3-summary-reserved-v1", Fingerprint: lspatch.Fingerprint(Func, summaryEncoding, fsx.SHA256(reg.originals[i]), "guarded-int3-reserved-v1", hex.EncodeToString(body))}, nil
 		}
 		return NativeReference(root, snapshot)
 	}

@@ -5,7 +5,7 @@ registered builds, the binary evidence behind it, and its qualification. Command
 and recovery are in [operations](operations.md#summary-compaction-patch); component
 boundaries are in [architecture](architecture.md#language-server-patch-admission).
 It is a separate feature from the [context-limit patch](limit-patch.md) and the
-[tool-output patch](tool-output-patch.md); on 2.32.1 and 2.33.0 all three are combined by
+[tool-output patch](tool-output-patch.md); on 2.32.1, 2.33.0, and 2.34.0 all three are combined by
 [native composition](operations.md#native-feature-composition).
 
 ## Status
@@ -14,6 +14,7 @@ Qualification is recorded per build in [compaction.json](../compat/compaction.js
 
 | Build | Status | Scope of the evidence |
 | --- | --- | --- |
+| Windows 2.34.0 | `candidate` | Exact-input offline 12-span reconstruction and live native/custom manual prompt adoption on Gemini 3.8 Flash High. Retention and automatic compaction remain unqualified. See [2.34.0 evidence](#windows-2340-offline-consumer-evidence). |
 | Windows 2.33.0 | `candidate` | Exact-input offline instruction/branch/Go metadata checks and emitted-block execution; installed Gemini 3.8 Flash High manual compaction with exact native/custom outgoing prompts and newest-first retention rendering. Automatic compaction and other models remain unqualified. See [2.33.0 evidence](#windows-2330-consumer-evidence). |
 | Windows 2.32.1 | `candidate` | Offline execution of the emitted code; on the installed client, exact retention rendering and native/custom prompts at manual compaction on Gemini 3.8 Flash High. Automatic compaction and other models are not qualified. See [live checks](#windows-2321-live-checks). |
 | Windows 2.31.2 | `candidate` | The transaction worked, but the tested route did not adopt the replacement prompt and retention is unverified. See [legacy qualification](#windows-2312-legacy-qualification). |
@@ -21,7 +22,7 @@ Qualification is recorded per build in [compaction.json](../compat/compaction.js
 A disk patch never proves what a running session loaded; `status` reports disk
 state only, with `effective_state: "unknown"`.
 
-### What the 2.32.1 and 2.33.0 recipes change
+### What the 2.32.1, 2.33.0, and 2.34.0 recipes change
 
 - **Original user-message retention.** Upstream renders at most the 10 most recent
   user messages within a shared byte budget. The recipe replaces that with one fixed
@@ -45,6 +46,19 @@ command parsing, and step compaction (`stepcompactor`), which the recipe neither
 disables nor forces on.
 
 ## Registered builds
+
+### Windows 2.34.0
+
+The recipe targets **Antigravity App Windows 2.34.0, `windows-amd64`**,
+package member `resources/bin/language_server.exe`, 207,245,312 bytes.
+
+| State | Whole-file SHA-256 |
+| --- | --- |
+| Original input | `cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9` |
+| Standalone native-prompt output | `bd97451517eb44e7e2cb5ea27072f9880c9b147be91df11caea1e52f433d519b` |
+
+Only the exact original is admitted. The custom prompt template is separately
+fingerprinted within the same input recipe; it does not admit arbitrary images.
 
 ### Windows 2.33.0
 
@@ -98,6 +112,73 @@ Each input has its own recipe and its own output hash. The unpatched original
 entry is added only after the exact input file is hash-verified.
 
 ## Recipe segments
+
+### Windows 2.34.0 offline consumer evidence
+
+Recorded on 2026-11-21 from the exact original above, package member
+`resources/bin/language_server.exe`. Go pclntab at file offset `0x4c5f000`
+resolves the containing functions; the PE section table maps every recorded
+VA to its file offset. The 12 segment identities, complete preimages,
+replacements, and custom prompt template are in
+[compaction.json](../compat/compaction.json), with their build layout in
+[compaction-builds.mjs](../scripts/lib/compaction-builds.mjs).
+
+| Site | VA | File offset |
+| --- | --- | --- |
+| Retention loop / UTF-8 ceiling | `0x141836cab` / `0x141836cb1` | 25387691 / 25387697 |
+| Render dispatch / omission | `0x141836eab` / `0x141836eb1` | 25388203 / 25388209 |
+| Newest-first allocation | `0x141839c15` | 25399829 |
+| Rendered count / byte budget | `0x1419dc001` / `0x1419dc020` | 27112961 / 27112992 |
+| Core capture / summary consumer | `0x141f37e72` / `0x141f38e69` | 32732274 / 32736361 |
+| Handle summary consumer / capture | `0x14341ade9` / `0x14341ca5d` | 54633449 / 54640733 |
+| Preserved native raw prompt | `0x143f8cbae` | 66631086 |
+
+Ten original spans match 2.33.0 exactly at relocated addresses. The 177-byte
+retention span differs at only offsets 67–68, where a RIP-relative type address
+changes; the 145-byte Handle span differs at only offsets 98–100, where its
+RIP-relative native-prompt address changes. Both new preimages were captured
+from 2.34.0, and the replacements were regenerated from 2.34.0 VAs; no old
+displacement was copied. The unchanged embedded M432 prompt is at file offset
+174698771 (6,565 encoded bytes), and the unchanged 120-byte manual suffix at
+65426200. The 93,644-byte outer JSON begins at 174644690 and was parsed before
+and after recipe construction, with embedded settings unchanged.
+
+Static disassembly of complete original and native/custom candidate functions
+confirmed instruction boundaries, valid direct-branch targets, preserved
+incoming branches, and unchanged original call PCs; the only added custom call
+is `runtime.concatstring2` from `0x141f38ee2` to `0x140070a00`. `GetWaterFill`
+retains both LEAVE/RET pairs at `0x141839c1d/1e` and `0x141839ca7/a8`;
+its rewrite has `pcsp=72`, `UnsafePoint=-1`, StackMap 1. Renderer omission has
+`pcsp=760`, `UnsafePoint=-1`, StackMap 13. The custom core call has
+`pcsp=800`, `UnsafePoint=-1`, StackMap 10; the original generation call at
+`0x141f38f9a` has StackMap 11. Existing source/model/tools roots at
+`SP+0x238/+0x310/+0x1e0` remain in the map. The standalone native image
+reproduced the registered SHA-256 above, and the combined native plan with
+seven limit mappings reproduced SHA-256
+`425c825bb4b96214eae08aa2866b76d668e105982f7b006e377f3977f67f286d`.
+
+Reproduce with `node scripts/compaction-recipe.mjs build --binary ABS_PATH
+--expect-sha cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9
+--out var/compaction-2340.json`, then `check-registry` and a read-only
+`agyctl native plan` with all three desired features. These are offline checks;
+a later [live native transaction and startup](operations.md#native-feature-composition)
+read back the enabled disk state.
+
+In a further 2026-11-21 installed-client check, a new synthetic Gemini 3.8 Flash
+High session used manual `/compact`. A process-local hardware breakpoint at the
+original generation call `0x141f38f9a` observed the outgoing prompt pair at
+`RSP+0x30/0x38`. Native mode sent 4,057 bytes (the 3,937-byte native prompt plus
+its unchanged 120-byte manual suffix), SHA-256
+`c0d46ddb483333062f9842d4f410810d550d1a471ad4287b9ca70793b07e1ca8`.
+The custom text `AGY234_CUSTOM_PROMPT_20261121: Summarize the conversation
+faithfully in one sentence.` sent exactly that UTF-8 text plus the same suffix:
+205 bytes, SHA-256
+`986196287cc0a8c4f6a14efbe4a44e9b35a34ca9c14f100f445a38194e911766`.
+Both manual checkpoints completed, returned a nonempty summary through
+`GetCascadeTrajectorySteps`, and accepted a follow-up request without an error
+step. The observer detached and the LS remained alive. These observations qualify
+manual prompt adoption on this model only; UTF-8 retention rendering, other
+models, and naturally triggered automatic compaction remain unqualified.
 
 ### Windows 2.33.0 consumer evidence
 

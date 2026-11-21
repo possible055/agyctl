@@ -209,7 +209,15 @@ func (im *image) planModelPatchReserved(data []byte, values []ModelLimit, restor
 	}
 	body, err := AssembleModelLimits(entry, nodes[0].VA)
 	if size == summaryFuncSize {
-		body, err = assembleSummaryLimits(entry, nodes[0].VA)
+		off, offsetErr := im.offset(entry, size)
+		if offsetErr != nil {
+			return Plan{}, offsetErr
+		}
+		original, ok := summaryOriginalForBody(data[off : off+size])
+		if !ok {
+			return Plan{}, fmt.Errorf("summary ABI original or preserved morestack path does not match")
+		}
+		body, err = assembleSummaryLimitsForOriginal(original, entry, nodes[0].VA)
 	}
 	if err != nil {
 		return Plan{}, err
@@ -227,7 +235,13 @@ func (im *image) detectModelPatch(data []byte, state PatchState, body []byte) (P
 	assemble := AssembleModelLimits
 	if len(body) == summaryFuncSize {
 		displacement, relative, encoding = 0x30, 0x34, summaryEncoding
-		assemble = assembleSummaryLimits
+		original, ok := summaryOriginalForBody(body)
+		if !ok {
+			return state, false
+		}
+		assemble = func(funcVA, tableVA uint64) ([]byte, error) {
+			return assembleSummaryLimitsForOriginal(original, funcVA, tableVA)
+		}
 	}
 	disp := int64(int32(binary.LittleEndian.Uint32(body[displacement:])))
 	first := int64(entry) + int64(relative) + disp

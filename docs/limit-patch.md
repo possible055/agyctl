@@ -23,7 +23,7 @@ generated legacy replacement's clamp tail. See
 [asm.go](../src/agyctl/internal/limit/asm.go) and
 [model_limits.go](../src/agyctl/internal/limit/model_limits.go).
 
-Windows Hub 2.33.0 has a different ABI and behavior. Its 352-byte clamp in package
+Windows Hub 2.33.0 and 2.34.0 have a different ABI and behavior. Their 352-byte clamp in package
 member `resources/bin/language_server.exe` uses `RCX` for configuration, `RDI` for
 the model, and `ESI` for the output allowance; `RAX/RBX` carry the context pair.
 Strategy `3` resolves an independent summary model through `utils.summaryModelInfo`
@@ -144,6 +144,42 @@ check on Windows stable 2.32.1, 2026-11-16:
 This qualifies that model path and the limit change only, not other models or
 automatic compaction behavior.
 
+### Windows 2.34.0 offline candidate
+
+The inspected installed package member `resources/bin/language_server.exe` is
+207,245,312 bytes, SHA-256
+`cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9`.
+Go pclntab at file offset `0x4c5f000` resolves
+`utils.ClampCheckpointConfigForModelInfo` to VA `0x141839640`, file offset
+`25398336`, size 352. Its original body SHA-256 is
+`74838fc0fceb71fd74a2fd8311840498b82baa1afe6ae638ffe284a82dcc122f`.
+Relative to 2.33.0, only body offsets `0x121..0x123` change: the original
+morestack call's relative displacement is `3bcd85`, not `5b5087`. The 2.34.0
+recipe is admitted by this exact body and whole-file hash, and assembly preserves
+the 2.34.0 stack split, spills, original call PC and target, epilogues, and
+morestack path. A 2.33.0 body or size-only match cannot select the new recipe.
+
+On 2026-11-21, an offline seven-model native plan generated a limit-only image
+SHA-256 `5fd1cd97f54797fdb1dd76e5ed366ff7fcd69273c9475da960b549b3c1c6aa16`.
+The combined limit/tool-output/compaction candidate is
+`425c825bb4b96214eae08aa2866b76d668e105982f7b006e377f3977f67f286d`,
+matching an independent read-only `agyctl native plan` for that selection.
+Disassembly confirmed all direct branches land on instruction boundaries and
+the original call PCs/targets and ABI ranges above remain intact. `DetectState`
+recognized the candidate as `linked-v3-summary` with seven model limits. These
+are static and offline checks. A later [live native transaction and startup](operations.md#native-feature-composition)
+read back model `1318` at 500,000. In a further 2026-11-21 live check, a new
+synthetic Gemini 3.8 Flash High session on the original LS reported
+`executorMetadata[].cascadeConfig.checkpointConfig.maxTokenLimit=256000` through
+`GetCascadeTrajectoryExecutorMetadatas`. After enabling model ID `1318` at 500,000
+in the combined native image and restarting, a second new session reported
+`500000` and completed a response. This qualifies adoption of the configured
+limit for that model path, **not** successful use of a context larger than 256,000
+tokens, provider capacity, other models, or automatic compaction. Reproduce the
+gate with the exact installed original, the 2.34.0
+entry in [versions.json](../compat/versions.json), and a read-only `native plan`
+with explicit model limits.
+
 ### Windows 2.33.0 evidence
 
 The inspected original package member is 203,692,544 bytes, SHA-256
@@ -222,7 +258,7 @@ previous installation.
    backup. An unrelated updated binary is not a restore target.
 
 The steps above describe the standalone limit transaction. On the registered
-2.32.1 and 2.33.0 originals, the limit patch is instead one contribution to the
+2.32.1, 2.33.0, and 2.34.0 originals, the limit patch is instead one contribution to the
 [native transaction](operations.md#native-feature-composition) shared with the
 tool-output and compaction patches. Both are independent of the Host archive
 transaction; see [recovery boundaries](operations.md#recovery-boundaries).

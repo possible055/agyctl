@@ -273,6 +273,7 @@ test('feature selections reject command/path injection and ambiguous model mappi
     { ...desired, localization: { enabled: true, locale: '../outside' } },
     { ...desired, limit: { enabled: true, modelLimits: [] } },
     { ...desired, compaction: 'true' },
+    { ...desired, toolOutput: 'true' },
     { ...desired, compaction: undefined },
     {
       ...desired,
@@ -304,6 +305,8 @@ test('feature selections reject command/path injection and ambiguous model mappi
   assert.equal(validateFeatureApply({ ...desired, compaction: true }).compactionPrompt, null);
   const { compaction: _compaction, ...preserved } = desired;
   assert.equal(validateFeatureApply(preserved).compaction, null);
+  assert.equal(validateFeatureApply(preserved).toolOutput, null);
+  assert.equal(validateFeatureApply({ ...preserved, toolOutput: true }).toolOutput, true);
   assert.equal(validateFeatureApply(preserved).compactionPrompt, null);
   const custom = { mode: 'custom', text: `${'界'.repeat(1312)}x` };
   assert.deepEqual(
@@ -399,13 +402,19 @@ test('summary prompt drafts preserve options through native review and verify th
     assets_fingerprint: 'c'.repeat(64),
     generation: 1,
     file_state: 'managed-output',
-    features: { compaction: true, compaction_prompt: { mode: 'native', text: '' } },
+    features: {
+      tool_output: false,
+      compaction: true,
+      compaction_prompt: { mode: 'native', text: '' },
+    },
+    available: { tool_output: true },
     compaction_prompt_max_bytes: 3937,
     compaction_retention_budget_bytes: 61440,
   };
   const rawLimit = { binary_sha256: native.current_sha256, language_server_running: false };
   const rawCompaction = { binary_sha256: native.current_sha256, file_state: 'managed-output' };
   const commands = [];
+  let applyToolOutput = false;
   let patchKind = 'original';
   const adapter = {
     defaultStateRoot: () => directory,
@@ -453,11 +462,50 @@ test('summary prompt drafts preserve options through native review and verify th
       runAgyctl: (args) => {
         if (args[0] === 'limit') return rawLimit;
         commands.push(args);
+        if (applyToolOutput && args[0] === 'native' && args[1] === 'apply') {
+          const updates = JSON.parse(args[args.indexOf('--desired') + 1]);
+          if (Object.hasOwn(updates, 'tool_output'))
+            native.features.tool_output = updates.tool_output;
+        }
         return { expected: nativeExpectation(native) };
       },
     },
   );
   const first = await api.readFeatures();
+  assert.equal(first.features.toolOutput.enabled, false);
+  const toolDraft = await api.queueFeatureApply({
+    ...selection(),
+    revision: first.revision,
+    limit: { enabled: null, modelLimits: [] },
+    compaction: null,
+    toolOutput: true,
+  });
+  await api.preflightFeatureDraft(toolDraft.draft.id);
+  assert.deepEqual(JSON.parse(commands.at(-1)[commands.at(-1).indexOf('--desired') + 1]), {
+    tool_output: true,
+  });
+  await assert.rejects(api.applyFeatureDraft(toolDraft.draft.id), { code: 'VERIFY_FAILED' });
+  native.features.tool_output = true;
+  const enabledTool = await api.readFeatures();
+  assert.equal(enabledTool.features.toolOutput.enabled, true);
+  const disableTool = await api.queueFeatureApply({
+    ...selection(),
+    revision: enabledTool.revision,
+    limit: { enabled: null, modelLimits: [] },
+    compaction: null,
+    toolOutput: false,
+  });
+  await api.preflightFeatureDraft(disableTool.draft.id);
+  assert.deepEqual(JSON.parse(commands.at(-1)[commands.at(-1).indexOf('--desired') + 1]), {
+    tool_output: false,
+  });
+  applyToolOutput = true;
+  const disabledToolResult = await api.applyFeatureDraft(disableTool.draft.id);
+  assert.equal(disabledToolResult.features.toolOutput.enabled, false);
+  assert.equal(disabledToolResult.operation.state, 'succeeded');
+  applyToolOutput = false;
+  native.features.tool_output = false;
+  commands.length = 0;
   const desired = {
     ...selection(),
     revision: first.revision,
@@ -557,6 +605,9 @@ test('summary prompt drafts preserve options through native review and verify th
   await assert.rejects(api.queueFeatureApply({ ...hostOnly, compaction: true }), {
     code: 'NATIVE_UPDATE_REQUIRED',
   });
+  await assert.rejects(api.queueFeatureApply({ ...hostOnly, toolOutput: true }), {
+    code: 'NATIVE_UPDATE_REQUIRED',
+  });
   native.verified = false;
   native.update_transition_required = false;
   native.recipe_update_required = false;
@@ -568,6 +619,7 @@ test('summary prompt drafts preserve options through native review and verify th
     const unknown = await api.readFeatures();
     assert.equal(unknown.features.limit.enabled, null);
     assert.equal(unknown.features.compaction.enabled, null);
+    assert.equal(unknown.features.toolOutput.enabled, null);
     const preserve = {
       ...selection(),
       revision: unknown.revision,
@@ -579,6 +631,9 @@ test('summary prompt drafts preserve options through native review and verify th
     assert.equal(applied.operation.state, 'succeeded');
     assert.equal(applied.features.limit.enabled, null);
     assert.deepEqual(commands, []);
+    await assert.rejects(api.queueFeatureApply({ ...preserve, toolOutput: true }), {
+      code: 'STATE_UNAVAILABLE',
+    });
     for (const changes of [{ limit: { enabled: false, modelLimits: [] } }, { compaction: true }])
       await assert.rejects(api.queueFeatureApply({ ...preserve, ...changes }), {
         code: 'STATE_UNAVAILABLE',

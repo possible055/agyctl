@@ -30,7 +30,7 @@ function exactObject(value, keys) {
 
 function normalizeFeatureApply(payload) {
   const requiredKeys = ['revision', 'capsule', 'localization', 'limit'];
-  const optionalKeys = ['compaction', 'compactionPrompt'].filter((key) =>
+  const optionalKeys = ['compaction', 'compactionPrompt', 'toolOutput'].filter((key) =>
     Object.hasOwn(payload ?? {}, key),
   );
   if (
@@ -47,6 +47,9 @@ function normalizeFeatureApply(payload) {
     payload.limit.modelLimits.length > 128 ||
     (payload.limit.enabled === null && payload.limit.modelLimits.length !== 0) ||
     (payload.limit.enabled && payload.limit.modelLimits.length === 0) ||
+    (Object.hasOwn(payload, 'toolOutput') &&
+      payload.toolOutput !== null &&
+      typeof payload.toolOutput !== 'boolean') ||
     (Object.hasOwn(payload, 'compaction') &&
       payload.compaction !== null &&
       typeof payload.compaction !== 'boolean')
@@ -82,6 +85,7 @@ function normalizeFeatureApply(payload) {
     capsule: payload.capsule,
     localization: { enabled: payload.localization.enabled, locale: payload.localization.locale },
     limit: { enabled: payload.limit.enabled, modelLimits },
+    toolOutput: payload.toolOutput ?? null,
     compaction,
     compactionPrompt,
   };
@@ -409,6 +413,15 @@ async function snapshot(asarPath) {
       modelLimits: limit.modelLimits,
       savedModelLimits: limit.savedModelLimits,
     },
+    toolOutput: {
+      enabled:
+        nativeBinding &&
+        !nativeUnverified &&
+        native.available?.tool_output === true &&
+        typeof native.features?.tool_output === 'boolean'
+          ? native.features.tool_output
+          : null,
+    },
     compaction: {
       enabled: compactionEnabled,
       fileState: rawCompaction.file_state,
@@ -499,10 +512,24 @@ function compactionChanges(desired, current) {
   );
 }
 
+function toolOutputChanges(desired, current) {
+  return desired.toolOutput !== null && desired.toolOutput !== current.enabled;
+}
+
 function validatePatchCombination(desired, features, native) {
   if (
+    toolOutputChanges(desired, features.toolOutput) &&
+    (!native.verified || features.toolOutput.enabled === null)
+  )
+    throw failure(
+      'STATE_UNAVAILABLE',
+      'The tool-output patch state cannot be verified; leave it unchanged',
+    );
+  if (
     native.update_transition_required &&
-    (limitChanges(desired.limit, features.limit) || compactionChanges(desired, features.compaction))
+    (limitChanges(desired.limit, features.limit) ||
+      compactionChanges(desired, features.compaction) ||
+      toolOutputChanges(desired, features.toolOutput))
   )
     throw failure(
       'NATIVE_UPDATE_REQUIRED',
@@ -510,7 +537,9 @@ function validatePatchCombination(desired, features, native) {
     );
   if (
     (features.limit.enabled === null || native.file_state === 'drift') &&
-    (limitChanges(desired.limit, features.limit) || compactionChanges(desired, features.compaction))
+    (limitChanges(desired.limit, features.limit) ||
+      compactionChanges(desired, features.compaction) ||
+      toolOutputChanges(desired, features.toolOutput))
   )
     throw failure(
       'STATE_UNAVAILABLE',
@@ -528,7 +557,9 @@ function validatePatchCombination(desired, features, native) {
     );
   if (
     features.compaction.pending &&
-    (limitChanges(desired.limit, features.limit) || compactionChanges(desired, features.compaction))
+    (limitChanges(desired.limit, features.limit) ||
+      compactionChanges(desired, features.compaction) ||
+      toolOutputChanges(desired, features.toolOutput))
   )
     throw failure(
       'COMPACTION_RECOVERY_REQUIRED',
@@ -748,6 +779,8 @@ function preflightNative(state, desired) {
       enabled: desired.limit.enabled,
       model_limits: desired.limit.enabled ? desired.limit.modelLimits : [],
     };
+  if (toolOutputChanges(desired, state.features.toolOutput))
+    updates.tool_output = desired.toolOutput;
   if (compactionChanges(desired, state.features.compaction)) {
     updates.compaction = desired.compaction;
     if (desired.compaction && desired.compactionPrompt !== null)
@@ -1000,6 +1033,7 @@ async function executePreparedApply(operation, { cleanupSidecars = false } = {})
       (desired.limit.enabled !== null && actual.features.limit.enabled !== desired.limit.enabled) ||
       (desired.limit.enabled &&
         !sameLimits(actual.features.limit.modelLimits, desired.limit.modelLimits)) ||
+      (desired.toolOutput !== null && actual.features.toolOutput.enabled !== desired.toolOutput) ||
       (desired.compaction !== null && actual.features.compaction.enabled !== desired.compaction) ||
       (desired.compaction === true &&
         desired.compactionPrompt !== null &&

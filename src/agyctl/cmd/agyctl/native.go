@@ -20,7 +20,7 @@ import (
 	"agyctl/internal/tooloutput"
 )
 
-var nativeAppVersions = []string{"2.32.1", "2.33.0"}
+var nativeAppVersions = []string{"2.32.1", "2.33.0", "2.34.0"}
 
 func nativeVersion(version string) bool {
 	for _, known := range nativeAppVersions {

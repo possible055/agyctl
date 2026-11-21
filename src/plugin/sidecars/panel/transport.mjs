@@ -27,6 +27,19 @@ export function conversationProducts() {
   ];
 }
 
+/** @param {string|undefined} dataDir */
+function productForSidecarDataDir(dataDir) {
+  if (!dataDir) return null;
+  for (const candidate of conversationProducts()) {
+    const root = path.dirname(candidate.conversationDir);
+    const relative = path.relative(root, path.resolve(dataDir));
+    const parts = relative.split(path.sep);
+    if (parts[0] === 'sidecar_data' && parts[1] === 'agyctl' && parts[2] === 'panel')
+      return candidate;
+  }
+  return null;
+}
+
 /**
  * 發現 Language Server 連接埠與 CSRF Token
  */
@@ -39,11 +52,13 @@ export async function discoverLanguageServer(force = false, conversationId = nul
     if (!envAddr || !envToken)
       throw new Error('ANTIGRAVITY_LS_ADDRESS and ANTIGRAVITY_CSRF_TOKEN must be set together');
     const { host, port } = parseHostPort(envAddr);
+    const product = productForSidecarDataDir(process.env.ANTIGRAVITY_EXECUTABLE_DATA_DIR);
     cachedLsEndpoint = {
       host,
       port,
       protocol: 'http:',
       csrfToken: envToken,
+      ...(product && { product: product.product, conversationDir: product.conversationDir }),
       source: 'env',
     };
     lastDiscoveryTime = Date.now();

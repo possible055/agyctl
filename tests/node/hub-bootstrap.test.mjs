@@ -8,11 +8,13 @@ import {
 } from '../../dist/localization/bundle/localization-cli.mjs';
 
 test('Hub navigation accepts only the reviewed loopback document', () => {
+  const bootstrapToken = 'a'.repeat(32);
   const matched = matchHubNavigation('https://127.0.0.1:43123/');
   assert.equal(matched.ok, true);
   assert.equal(matched.origin, 'https://127.0.0.1:43123');
   assert.equal(matched.pathname, '/');
   assert.equal(matchHubNavigation('https://127.0.0.1/').ok, true);
+  assert.equal(matchHubNavigation(`https://127.0.0.1:43123/#t=${bootstrapToken}`).ok, true);
   assert.equal(matchHubNavigation('http://127.0.0.1/').ok, false);
   assert.equal(matchHubNavigation('https://localhost/').ok, false);
   assert.equal(matchHubNavigation('https://127.0.0.1/main.js').ok, false);
@@ -59,6 +61,9 @@ test('Hub navigation accepts only the reviewed loopback document', () => {
     '/c/%5Capi',
     '/c/%ZZ',
     '/#fragment',
+    '/#t=short',
+    `/#T=${bootstrapToken}`,
+    `/#t=${bootstrapToken}&other=1`,
   ])
     assert.equal(matchHubNavigation(`https://127.0.0.1:43123${route}`).ok, false, route);
   assert.equal(matchHubNavigation('https://[::1]/').ok, false);

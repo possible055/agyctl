@@ -341,6 +341,10 @@
             </details>
           </div>
           <div class="row">
+            <label class="feature-switch"><input id="feature-tool-output" type="checkbox" disabled><span data-i18n="featureToolOutput">工具輸出容量補丁</span></label>
+            <span id="feature-tool-output-state" class="muted small" role="status"></span>
+          </div>
+          <div class="row">
             <label class="feature-switch"><input id="feature-compaction" type="checkbox" disabled><span data-i18n="featureCompaction">壓縮與原文保留補丁</span></label>
             <span id="feature-compaction-state" class="muted small" role="status"></span>
           </div>
@@ -882,11 +886,13 @@
 
       function updateFeatureControls() {
         const disabled = !featureSnapshot || featureBusy() || featureSubmitting;
-        for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-compaction']) $(id).disabled = disabled;
+        for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-compaction', 'feature-tool-output']) $(id).disabled = disabled;
         if (featureSnapshot?.features.limit.enabled === null) $('feature-limit').disabled = true;
         $('feature-limit-state').textContent = featureSnapshot?.features.limit.enabled === null ? t().featureLimitUnknown : '';
         $('feature-compaction').disabled ||= featureSnapshot?.features.compaction.enabled === null;
         $('feature-compaction-state').textContent = featureSnapshot?.features.compaction.enabled === null ? t().featureCompactionUnknown : '';
+        $('feature-tool-output').disabled ||= featureSnapshot?.features.toolOutput.enabled === null;
+        $('feature-tool-output-state').textContent = featureSnapshot?.features.toolOutput.enabled === null ? t().featureToolOutputUnknown : '';
         const promptEnabled = !disabled && !$('feature-compaction').indeterminate && $('feature-compaction').checked;
         const custom = $('feature-compaction-mode').value === 'custom';
         const promptMaxBytes = featureSnapshot?.features.compaction.promptMaxBytes;
@@ -972,6 +978,8 @@
         $('feature-limit').indeterminate = snapshot.features.limit.enabled === null;
         $('feature-compaction').checked = snapshot.features.compaction.enabled === true;
         $('feature-compaction').indeterminate = snapshot.features.compaction.enabled === null;
+        $('feature-tool-output').checked = snapshot.features.toolOutput.enabled === true;
+        $('feature-tool-output').indeterminate = snapshot.features.toolOutput.enabled === null;
         $('feature-compaction-mode').value = snapshot.features.compaction.prompt?.mode || 'native';
         // A textarea normalizes CRLF/CR even without edits; retain the loaded text separately.
         featureCompactionText = snapshot.features.compaction.prompt?.text || '';
@@ -1058,6 +1066,7 @@
             capsule: $('feature-capsule').checked,
             localization: { enabled: $('feature-localization').checked, locale: $('feature-locale').value },
             limit: { enabled, modelLimits },
+            toolOutput: $('feature-tool-output').indeterminate ? null : $('feature-tool-output').checked,
             compaction: $('feature-compaction').indeterminate ? null : $('feature-compaction').checked,
             compactionPrompt: compactionPromptSelection()
           });
@@ -1142,7 +1151,7 @@
       $('session-sort').addEventListener('change', renderSessions);
       $('setting-lang').addEventListener('change', () => localeBinding.select($('setting-lang').value));
       $('setting-interval').addEventListener('change', () => { void saveInterval(); });
-      for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-locale', 'feature-compaction', 'feature-compaction-mode']) $(id).addEventListener('change', markFeaturesDirty);
+      for (const id of ['feature-capsule', 'feature-localization', 'feature-limit', 'feature-locale', 'feature-compaction', 'feature-compaction-mode', 'feature-tool-output']) $(id).addEventListener('change', markFeaturesDirty);
       $('feature-compaction-text').addEventListener('input', () => {
         featureCompactionText = $('feature-compaction-text').value;
         markFeaturesDirty();

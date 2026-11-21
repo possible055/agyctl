@@ -527,6 +527,7 @@ test('feature controls prefill actual settings, preserve edits and queue only th
     features: {
       capsule: { enabled: true },
       localization: { enabled: true, locale: 'zh-Hant-TW' },
+      toolOutput: { enabled: true },
       limit: {
         enabled: true,
         modelLimits: [
@@ -544,6 +545,9 @@ test('feature controls prefill actual settings, preserve edits and queue only th
     snapshot,
   );
   assert.equal(panel.getElement('feature-capsule').checked, true);
+  assert.equal(panel.getElement('feature-tool-output').checked, true);
+  panel.getElement('feature-tool-output').checked = false;
+  panel.getElement('feature-tool-output').listeners.get('change')();
   assert.equal(panel.getElement('feature-locale').value, 'zh-Hant-TW');
   const row = panel.getElement('model-limits').children[0];
   assert.equal(panel.getElement('model-limits').children.length, 3);
@@ -618,6 +622,7 @@ test('feature controls prefill actual settings, preserve edits and queue only th
       ],
     },
     compaction: false,
+    toolOutput: false,
     compactionPrompt: null,
   });
   assert.equal(queued.options.headers['X-Agyctl-Action'], '1');
@@ -640,13 +645,19 @@ test('feature controls prefill actual settings, preserve edits and queue only th
   await panel.respond(panel.allRequests.at(-1), {
     ...snapshot,
     catalog: { status: 'unavailable', models: [] },
-    features: { ...snapshot.features, compaction: { enabled: null, fileState: 'unknown' } },
+    features: {
+      ...snapshot.features,
+      toolOutput: { enabled: null },
+      compaction: { enabled: null, fileState: 'unknown' },
+    },
   });
   await reloading;
   assert.equal(panel.getElement('model-limits').children.length, 0);
   assert.equal(panel.getElement('feature-capsule').disabled, false);
   assert.equal(panel.getElement('feature-compaction').indeterminate, true);
   assert.equal(panel.getElement('feature-compaction').disabled, true);
+  assert.equal(panel.getElement('feature-tool-output').indeterminate, true);
+  assert.equal(panel.getElement('feature-tool-output').disabled, true);
   assert.equal(panel.getElement('feature-compaction-custom-option').disabled, true);
   assert.equal(
     panel.getElement('feature-compaction-state').textContent,
@@ -662,6 +673,7 @@ test('feature controls prefill actual settings, preserve edits and queue only th
   const request = panel.allRequests.at(-1);
   assert.equal(request.url, '/api/features/apply');
   assert.equal(JSON.parse(request.options.body).compaction, null);
+  assert.equal(JSON.parse(request.options.body).toolOutput, null);
   assert.equal(JSON.parse(request.options.body).compactionPrompt, null);
   assert.deepEqual(
     JSON.parse(request.options.body).limit.modelLimits,
@@ -835,6 +847,7 @@ test('grouped Gemini limits preserve mixed values until the shared field is edit
       features: {
         capsule: { enabled: false },
         localization: { enabled: false, locale: 'en' },
+        toolOutput: { enabled: false },
         limit: {
           enabled: true,
           modelLimits: [

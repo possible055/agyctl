@@ -74,6 +74,14 @@ func TestSummaryABIAssemblyPreservesRuntimeBoundaries(t *testing.T) {
 	if supportedOriginal("x86-64", changed) {
 		t.Fatal("summary ABI accepted a size-only match with unknown native instructions")
 	}
+	newOriginal := summaryOriginal2340()
+	newBody, err := assembleSummaryLimitsForOriginal(newOriginal, 0x141839640, 0x141839c00)
+	if err != nil || !supportedOriginal("x86-64", newOriginal) || !bytes.Equal(newBody[0x102:], newOriginal[0x102:]) || bytes.Equal(newBody[0x102:], original[0x102:]) {
+		t.Fatalf("2.34.0 summary ABI did not preserve its own morestack path: %v", err)
+	}
+	if recovered, ok := summaryOriginalForBody(newBody); !ok || !bytes.Equal(recovered, newOriginal) {
+		t.Fatal("2.34.0 patched summary body did not recover its exact original ABI")
+	}
 }
 
 func TestPerModelSettingsGrammar(t *testing.T) {

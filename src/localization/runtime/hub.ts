@@ -1,7 +1,7 @@
 export const BOOTSTRAP_CHANNEL = 'agyctl:localization:bootstrap';
 export const BOOTSTRAP_RESULT_CHANNEL = 'agyctl:localization:bootstrap-result';
 
-// Reviewed Windows 2.31.0 route/search contract, retained for the exact-gated 2.32.1 adapter.
+// Reviewed document routes and the 2.34.0 single-use UI bootstrap fragment.
 const HUB_DOCUMENT_PATHS = new Set([
   '/',
   '/customizations',
@@ -67,7 +67,8 @@ export function matchHubNavigation(targetUrl: string): HubNavigationMatch {
   }
   if (url.protocol !== 'https:') return { ok: false, code: 'HUB_URL_INVALID' };
   if (url.hostname !== '127.0.0.1') return { ok: false, code: 'HUB_URL_INVALID' };
-  if (url.hash !== '') return { ok: false, code: 'HUB_URL_INVALID' };
+  if (url.hash !== '' && !/^#t=[0-9a-f]{32}$/.test(url.hash))
+    return { ok: false, code: 'HUB_URL_INVALID' };
   const pathname = url.pathname === '/' ? '/' : url.pathname.replace(/\/$/, '');
   if (
     !HUB_DOCUMENT_PATHS.has(pathname) &&

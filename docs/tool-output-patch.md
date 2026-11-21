@@ -6,14 +6,16 @@ Commands and recovery are in
 [operations](operations.md#tool-output-capacity-patch); component boundaries are in
 [architecture](architecture.md#language-server-patch-admission). It is a separate
 feature from the context-limit patch ([limit-patch.md](limit-patch.md)); on 2.32.1
-and 2.33.0 both are combined by
+2.33.0, and 2.34.0 both are combined by
 [native composition](operations.md#native-feature-composition).
 
 ## Status
 
 Registered recipes are `candidate` in
 [tool-output.json](../compat/tool-output.json). The capacity values are
-qualification targets, **not** measured upstream maxima. Windows 2.33.0 has offline
+qualification targets, **not** measured upstream maxima. Windows 2.34.0 has a
+live `view_file` result beyond the old line and byte defaults, but not an exact
+boundary or grep/MCP result. Windows 2.33.0 has offline
 instruction, control-flow and Go metadata evidence plus a partial installed-client
 read beyond both old limits; its exact capacity boundaries remain unqualified.
 The two file-read targets (lines and bytes) are live-verified on
@@ -22,6 +24,18 @@ observed live path, and the remaining items are listed under
 [qualification status](#qualification-status).
 
 ## Registered builds
+
+The **Windows 2.34.0** recipe targets package member
+`resources/bin/language_server.exe`, 207,245,312 bytes:
+
+| State | Whole-file SHA-256 |
+| --- | --- |
+| Original | `cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9` |
+| Standalone output | `498f5dd9fbd27438a6f83a6ff388c2411aed4ae954a95893c851e2979400695b` |
+
+Only this original is admitted. Its fourth segment is newly derived from the
+2.34.0 control flow, not the 2.33.0 byte recipe. The live `view_file` path is
+partially qualified below; exact capacity boundaries remain unqualified.
 
 The **Windows 2.33.0** recipe targets package member
 `resources/bin/language_server.exe`, 203,692,544 bytes:
@@ -74,7 +88,7 @@ every `patch` plan reproduces before it may write.
 | `CascadeConfig.plannerConfig.toolConfig.grep.maxGrepResults` | 50 | 100 | base default constant |
 | Post-merge step budget floor (`trajectoryConversionConfig.maxTokensPerStep`) | 32,768 | 98,304 | after manager static/dynamic settings merge |
 
-The source values are unchanged in 2.32.1 and 2.33.0. Why these layers (from isolated probes on
+The source values are unchanged in 2.32.1, 2.33.0, and 2.34.0. Why these layers (from isolated probes on
 Windows 2.31.2, recorded
 2026-11-14, with no installed-file changes):
 
@@ -200,6 +214,53 @@ did not prove reachability; the live check under
 [qualification status](#qualification-status) confirmed `read_file` routing and
 model-visible capacity, not search or MCP paths.
 
+### Windows 2.34.0 offline candidate
+
+On 2026-11-21, the exact original above was inspected as package member
+`resources/bin/language_server.exe`; registered byte spans are in
+[tool-output.json](../compat/tool-output.json). PE `.text` maps a VA to file
+offset by subtracting `0x140000a00` (image base `0x140000000`, RVA `0x1000`,
+raw offset `0x600`). The three default-constant sites are:
+
+| Operand | VA | File offset |
+| --- | --- | --- |
+| `viewFile.maxLinesPerView` | `0x141899c2d` | 25793069 |
+| `viewFile.maxBytesPerView` | `0x141899c47` | 25793095 |
+| `grep.maxGrepResults` | `0x14189ab8b` | 25797003 |
+
+All three retain their instruction boundaries and change only immediate values.
+They are in `config.defaultConversationalCascadeConfig`; the separate find
+initializer remains untouched.
+
+The old floor site cannot be relocated mechanically: 2.34.0
+`(*CascadeManager).getCascadeConfig` is VA `0x1428fc080`, size 928, with a
+different control flow. Its recorded path calls
+`MergeCascadeConfigsWithOverwrites` at `0x1428fc24c`, then
+`ApplySystemPromptTemplateOverrides` at `0x1428fc2c7`. The new 66-byte
+replacement at `[0x1428fc2cd,0x1428fc30f)` is after both calls. It loads the
+rooted merged configuration from `SP+0xa8`, follows the nil-guarded `+0x20`
+trajectory-conversion configuration and `+0x50` int32 field, and raises only
+signed values below 98,304. Named protobuf getters at `0x140985060` and
+`0x140986560` independently confirm these offsets. The final jump lands at
+the original `mov rax,rdx` at `0x1428fc394`; no unchanged branch enters the
+replaced span. It adds no call, stack change, or pointer store.
+
+Go pclntab at `0x4c5f000` reports `pcsp=288` and `UnsafePoint=-1` over the
+replacement. Source StackMap 6 and landing StackMap 7 have the same locals
+bitmap `0100`, preserving the `SP+0xa8` root; argument maps are `04`/`00` and
+the return tail dereferences no arguments. Complete-function disassembly of
+the standalone candidate confirmed instruction boundaries, incoming branches,
+and unchanged retained call PCs. A later [live native transaction and startup](operations.md#native-feature-composition)
+read back the enabled disk state. In a further 2026-11-21 live check, a new
+synthetic Gemini 3.8 Flash High executor reported `viewFile.maxLinesPerView=2000`
+and `maxBytesPerView=131072` through `GetCascadeTrajectoryExecutorMetadatas`,
+versus `800` and `46080` on the original LS. A single `view_file` call read a
+950-line, 76,898-byte local test file; the final marker was present in the
+completed `CORTEX_STEP_TYPE_VIEW_FILE` result returned by
+`GetCascadeTrajectorySteps` (86,363 serialized JSON bytes). This qualifies an
+actual file-read result beyond both old defaults, **not** the exact 2,000-line or
+128-KiB boundaries, grep, MCP, or a general step-budget maximum.
+
 ### Windows 2.33.0
 
 Recorded offline on 2026-11-18 from the exact original identified above, package
@@ -253,7 +314,7 @@ Read/Grep routing or capacity.
 
 ## Admission gate and coexistence with limit
 
-The exact Windows 2.32.1/2.33.0 originals and their verified managed images use
+The exact Windows 2.32.1/2.33.0/2.34.0 originals and their verified managed images use
 [native composition](operations.md#native-feature-composition). Feature entry
 points retain the exact T recipe gate and route their changes through that shared
 whole-image transaction, preserving L/C on independent T removal. The standalone
