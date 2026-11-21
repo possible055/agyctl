@@ -7,6 +7,8 @@ extend-ignore-re = [
   '"/NH"',
   "'/FI'",
   '"/FI"',
+  # PowerShell case-insensitive not-equal operator.
+  '\-ine\b',
   # Upstream content-hash message IDs (e.g. hub.ui.<hex>, web.dynamic.<hex>,
   # static.gap.<hex>, workbench.nls.transparecyRequired.<hex>): dotted
   # identifiers that end in a hex hash. Keys must match upstream bytes

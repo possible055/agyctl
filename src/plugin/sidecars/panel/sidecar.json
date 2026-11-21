@@ -1,7 +1,7 @@
 {
   "command": "node",
   "args": ["main.mjs"],
-  "restart_policy": "always",
+  "restart_policy": "on-failure",
   "display_name": "agyctl",
   "description": "Cross-session token usage, cost estimates, quotas, settings, and patch management (Zero CDP)",
   "has_web_ui": true,

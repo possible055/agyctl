@@ -15874,6 +15874,30 @@
       "value": "会話をピン留め／解除",
       "reviewed": true
     },
+    "settings.appearance.contrastStrong": {
+      "value": "強い",
+      "reviewed": true
+    },
+    "settings.appearance.defaultDark": {
+      "value": "既定のダーク",
+      "reviewed": true
+    },
+    "settings.appearance.widthNarrow": {
+      "value": "狭い",
+      "reviewed": true
+    },
+    "settings.appearance.widthWide": {
+      "value": "広い",
+      "reviewed": true
+    },
+    "settings.appearance.widthFill": {
+      "value": "全幅",
+      "reviewed": true
+    },
+    "settings.account.signOut": {
+      "value": "ログアウト",
+      "reviewed": true
+    },
     "settings.plan.yourPlanLabel": {
       "value": "あなたのプラン：",
       "reviewed": true

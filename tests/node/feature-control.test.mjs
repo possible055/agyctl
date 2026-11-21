@@ -340,7 +340,7 @@ test('feature selections reject command/path injection and ambiguous model mappi
 test('production patch actions refuse a host without a UI token', async () => {
   const source = fs
     .readFileSync(path.join(root, 'src/plugin/sidecars/panel/main.mjs'), 'utf8')
-    .replace(/^import .* from .*;\r?\n/gm, '')
+    .replace(/^import[^;]*;\r?\n/gm, '')
     .replace("await import('sidecar_sdk')", 'fixtureSdk');
   for (const token of [undefined, 'fixture-token']) {
     const handlers = new Map();
@@ -354,7 +354,10 @@ test('production patch actions refuse a host without a UI token', async () => {
     }
     await vm.runInNewContext(`(async () => { ${source} })()`, {
       fixtureSdk: { SidecarApp, Response: class {} },
-      process: { env: token ? { ANTIGRAVITY_SIDECAR_UI_TOKEN: token } : {} },
+      process: {
+        env: token ? { ANTIGRAVITY_SIDECAR_UI_TOKEN: token } : {},
+        once() {},
+      },
       queueFeatureApply: () => {
         writes++;
         return {

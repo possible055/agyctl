@@ -12363,7 +12363,7 @@
       "reviewed": true
     },
     "web.dynamic.043e8c022bb5ed12": {
-      "value": "{0}{1} 个词元",
+      "value": "{0}{1} 个token",
       "reviewed": true
     },
     "web.dynamic.f9afaf7c9cc6eddf": {
@@ -12655,7 +12655,7 @@
       "reviewed": true
     },
     "web.dynamic.1ae122608b6e3638": {
-      "value": "（{0} 个词元）",
+      "value": "（{0} 个token）",
       "reviewed": true
     },
     "web.dynamic.b091e392a87f1a48": {
@@ -12711,7 +12711,7 @@
       "reviewed": true
     },
     "web.dynamic.da284c85a3c61046": {
-      "value": "已使用 {0}／{1} 个词元",
+      "value": "已使用 {0}／{1} 个token",
       "reviewed": true
     },
     "web.dynamic.7bf8e50f3ff7f8d4": {
@@ -13399,7 +13399,7 @@
       "reviewed": true
     },
     "web.dynamic.fe24c3e67564c3db": {
-      "value": "{0}：{1} 个词元",
+      "value": "{0}：{1} 个token",
       "reviewed": true
     },
     "web.dynamic.89b1a8807688b62c": {
@@ -13423,7 +13423,7 @@
       "reviewed": true
     },
     "web.dynamic.f2255ccb9805be8a": {
-      "value": "超出规则词元预算。上下文中的完整规则内容（{0} 个词元）已替换为轻量的文件路径指针。",
+      "value": "超出规则token预算。上下文中的完整规则内容（{0} 个token）已替换为轻量的文件路径指针。",
       "reviewed": true
     },
     "web.dynamic.0b6d9ba44ce5c56d": {
@@ -13431,15 +13431,15 @@
       "reviewed": true
     },
     "web.dynamic.ae92600983cbe7da": {
-      "value": "此 MCP 服务器的所有工具（{0} 个词元）超出自定义内容预算，已从上下文排除。",
+      "value": "此 MCP 服务器的所有工具（{0} 个token）超出自定义内容预算，已从上下文排除。",
       "reviewed": true
     },
     "web.dynamic.995923c4ac9ff9f4": {
-      "value": "此 MCP 服务器的 {0} 个工具（{2} 个词元）超出自定义内容预算，已从上下文排除。{1, select, other {}}",
+      "value": "此 MCP 服务器的 {0} 个工具（{2} 个token）超出自定义内容预算，已从上下文排除。{1, select, other {}}",
       "reviewed": true
     },
     "web.dynamic.c898b4e946e5a474": {
-      "value": "超出自定义内容词元预算（{0} 个词元），已从上下文排除。",
+      "value": "超出自定义内容token预算（{0} 个token），已从上下文排除。",
       "reviewed": true
     },
     "web.dynamic.136d8f4a07450f42": {
@@ -15872,6 +15872,30 @@
     },
     "settings.shortcuts.pinConversation": {
       "value": "固定／取消固定对话",
+      "reviewed": true
+    },
+    "settings.appearance.contrastStrong": {
+      "value": "强烈",
+      "reviewed": true
+    },
+    "settings.appearance.defaultDark": {
+      "value": "默认深色",
+      "reviewed": true
+    },
+    "settings.appearance.widthNarrow": {
+      "value": "窄",
+      "reviewed": true
+    },
+    "settings.appearance.widthWide": {
+      "value": "宽",
+      "reviewed": true
+    },
+    "settings.appearance.widthFill": {
+      "value": "填满",
+      "reviewed": true
+    },
+    "settings.account.signOut": {
+      "value": "退出登录",
       "reviewed": true
     },
     "settings.plan.yourPlanLabel": {

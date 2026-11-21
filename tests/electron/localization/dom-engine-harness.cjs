@@ -174,6 +174,13 @@ const PAGE = `<!doctype html>
   <div><span id="workflow-name" data-testid="menu-option-label">Open Settings</span><span id="workflow-description" data-testid="menu-option-description">Open Settings</span></div>
 </div>
 <div data-testid="aux-pane-split"><h1 class="text-xl font-medium text-foreground select-none m-0" id="unapproved-page-heading">Customizations</h1></div>
+<div data-testid="sidecars-view" data-sidecar-type="automation"><div data-testid="sidecar-list-empty"><p id="automation-description">Run a prompt on a schedule, like a morning summary of yesterday's changes. Runs show up here.</p></div></div>
+<button id="automation-collision">Run a prompt on a schedule, like a morning summary of yesterday's changes. Runs show up here.</button>
+<button id="strong-collision">Strong</button>
+<button id="plan-collision">Your Plan: Google AI Pro</button>
+<div role="dialog"><button id="appearance-strong">Strong</button><span id="account-plan">Your Plan: Google AI Pro</span><p id="account-telemetry">When toggled on, Antigravity collects usage data to help Google enhance performance and features.</p></div>
+<div class="settings-modal-backdrop"><div role="dialog"></div><div role="listbox"><div id="theme-popup-option">Default Dark</div></div></div>
+<div role="listbox"><div id="theme-collision">Default Dark</div></div>
 <input id="prompt" placeholder="Ask anything, @ to mention" value="Open Settings">
 <div role="dialog"><div data-testid="progress-update-response-text" id="ai" title="Open Settings">Open Settings</div></div>
 <div data-testid="conversation-list"><button id="named">Open Settings</button></div>
@@ -741,6 +748,56 @@ app
       userBoundaries.heading,
     );
     check('button-translated', afterStart.settings === EXPECTED.settings, afterStart.settings);
+    const themePopup = await wc.executeJavaScript(
+      `['theme-popup-option', 'theme-collision'].map(id => document.getElementById(id).textContent)`,
+    );
+    const expectedTheme = {
+      'zh-Hant-TW': '預設深色',
+      'zh-Hans-CN': '默认深色',
+      'ja-JP': '既定のダーク',
+    }[manifest.locale];
+    check(
+      'settings-theme-portal',
+      themePopup[0] === expectedTheme && themePopup[1] === 'Default Dark',
+      JSON.stringify(themePopup),
+    );
+    const screenshotStrings = await wc.executeJavaScript(
+      `['automation-description', 'automation-collision', 'appearance-strong', 'strong-collision', 'account-plan', 'plan-collision', 'account-telemetry'].map(id => document.getElementById(id).textContent)`,
+    );
+    const expectedScreenshotStrings = {
+      'zh-Hant-TW': [
+        '依排程執行提示，例如每天早上整理昨天的變更。執行紀錄會顯示在這裡。',
+        '強烈',
+        '您的方案：Google AI Pro',
+        '開啟時，Antigravity 會收集使用資料，協助 Google 改善效能與功能。',
+      ],
+      'zh-Hans-CN': [
+        '按计划执行提示，例如每天早上汇总昨天的更改。运行记录会显示在这里。',
+        '强烈',
+        '您的方案：Google AI Pro',
+        '开启时，Antigravity 会收集使用数据，帮助 Google 改善性能和功能。',
+      ],
+      'ja-JP': [
+        '昨日の変更を朝にまとめるなど、プロンプトをスケジュールに従って実行できます。実行履歴はここに表示されます。',
+        '強い',
+        'ご利用のプラン：Google AI Pro',
+        '有効にすると、Antigravity は使用状況データを収集し、Google による性能と機能の改善に役立てます。',
+      ],
+    }[manifest.locale];
+    check(
+      'settings-and-automation-scopes',
+      JSON.stringify(screenshotStrings) ===
+        JSON.stringify([
+          expectedScreenshotStrings[0],
+          "Run a prompt on a schedule, like a morning summary of yesterday's changes. Runs show up here.",
+          expectedScreenshotStrings[1],
+          'Strong',
+          expectedScreenshotStrings[2],
+          'Your Plan: Google AI Pro',
+          expectedScreenshotStrings[3],
+        ]),
+      JSON.stringify(screenshotStrings),
+    );
     check('menu-translated', afterStart.create === EXPECTED.create, afterStart.create);
     check('greeting-keeps-name', afterStart.greeting === EXPECTED.greeting, afterStart.greeting);
     const remote = await wc.executeJavaScript(`({

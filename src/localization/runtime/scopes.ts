@@ -12,6 +12,7 @@ const PAGE_HEADING_MESSAGE_IDS: Record<string, string> = {
 };
 
 const SIDEBAR_LIST_SELECTOR = '[data-testid="conversation-list-sidebar"]';
+const AUTOMATION_EMPTY_SELECTOR = '[data-testid="sidecars-view"][data-sidecar-type="automation"] [data-testid="sidecar-list-empty"] > p';
 const MCP_ERROR_BADGE_SELECTOR = 'span.inline-flex.rounded-full.text-error[title]';
 const MCP_ERROR_TEXT_SELECTOR = '[data-testid="mcp-server-row"] div.text-red-500.break-words';
 const SSH_ERROR_HEADING_SELECTOR = '[data-testid="ssh-connect-error"] > div > span:first-child';
@@ -45,6 +46,7 @@ export const WRITABLE_ROOT_SELECTORS = [
   '[data-testid="home-greeting"] > h1',
   APPLICATION_INPUT_SELECTOR,
   APPLICATION_PAGE_HEADING_SELECTOR,
+  AUTOMATION_EMPTY_SELECTOR,
   SIDEBAR_APPLICATION_SELECTOR,
   '[data-testid="ssh-connect-dialog"]',
   '[data-testid="ssh-host-label"]',
@@ -188,6 +190,13 @@ export function isPlanInstructionMessage(messageId: string): boolean {
 
 export function isAllowedMatchContext(node: Node, messageId: string): boolean {
   const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
+  if (element?.matches(AUTOMATION_EMPTY_SELECTOR)) return messageId === 'hub.ui.6104e79e98469b28';
+  if (messageId === 'hub.ui.6104e79e98469b28') return false;
+  if (messageId === 'settings.appearance.defaultDark')
+    return !!element?.closest('[role="dialog"], .settings-modal-backdrop [role="listbox"]');
+  if (messageId.startsWith('settings.appearance.') || messageId === 'settings.account.signOut' ||
+      ['web.dynamic.71ad58dead35d173', 'web.dynamic.a830029ab6b18a96', 'web.dynamic.b3cf67f59a4576f3', 'web.dynamic.e281e0f3072a9d41'].includes(messageId))
+    return !!element?.closest('[role="dialog"]');
   if (node.nodeType === Node.ELEMENT_NODE && element?.matches(MCP_ERROR_BADGE_SELECTOR)) return false;
   if (node.nodeType === Node.ELEMENT_NODE && element?.matches('[data-testid="ssh-connect-host-option"]')) return false;
   if (element?.matches(SSH_ERROR_HEADING_SELECTOR)) return messageId === 'ssh.web.connectionFailedPrefix';

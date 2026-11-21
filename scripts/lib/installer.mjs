@@ -7,6 +7,7 @@ import { prepareManagement } from '../manage.mjs';
 import { inspectPlugin, installPlugin } from '../plugin-install.mjs';
 import { uninstallPlugin } from '../plugin-uninstall.mjs';
 import { repoRoot, runAgyctl, runAgyctlAsync } from './agyctl.mjs';
+import { cleanupOrphanSidecars } from './client-processes.mjs';
 import { inspectHostTarget } from './client-target.mjs';
 import { agyctlHome, findAsarPath, sha256File } from './install-paths.mjs';
 import { assertNativeExpectation } from './native-binding.mjs';
@@ -291,9 +292,12 @@ function verifyNative(actual, desired, plan) {
     throw new Error('Native all-off state did not restore the exact original bytes');
 }
 
-export async function executeInstaller(options) {
+export async function executeInstaller(options, onProgress = () => {}) {
+  onProgress('Locating the selected Antigravity installation...');
   const target = inspectHostTarget(options.asarPath ?? findAsarPath());
+  onProgress(`Target: ${target.asarPath}`);
   if (options.command === 'models') {
+    onProgress('Reading the account model catalog...');
     const { readModelCatalog } = await import('./model-catalog.mjs');
     const catalog = await readModelCatalog(target.binaryPath);
     if (catalog.status !== 'available')
@@ -302,19 +306,32 @@ export async function executeInstaller(options) {
       );
     return { command: 'models', state: 'read-only', target, features: catalog };
   }
-  const before = await snapshot(target);
+  onProgress('Inspecting current features and client processes...');
+  let before = await snapshot(target);
   if (options.command === 'status')
     return {
       command: 'status',
       state: before.errors.length ? 'incomplete' : 'read-only',
       ...before,
     };
+  if (
+    !options.dryRun &&
+    process.platform === 'win32' &&
+    process.arch === 'x64' &&
+    before.process.languageServerRunning === true
+  ) {
+    onProgress('Checking for verified orphan sidecars from the closed client...');
+    const cleanup = cleanupOrphanSidecars(target);
+    onProgress(`Cleaned ${cleanup.cleaned} verified orphan sidecars; rechecking feature state...`);
+    before = await snapshot(target);
+  }
   const nativeSelected =
     options.selected.limit || options.selected.toolOutput || options.selected.compaction;
   const hostSelected = options.selected.capsule || options.selected.localization;
   let nativePlan;
   let desired;
   if (nativeSelected) {
+    onProgress('Planning native feature changes...');
     if (before.native?.verified !== true)
       throw new Error(
         `The native state is unverified (${before.native?.file_state ?? 'unavailable'}); recover or qualify it before installation/removal`,
@@ -346,14 +363,19 @@ export async function executeInstaller(options) {
       throw new Error('The current panel installation could not be inspected');
     if (options.command === 'install') inspectPlugin(path.join(repoRoot, 'src', 'plugin'));
   }
-  if (!options.dryRun) assertStopped(before);
+  if (!options.dryRun) {
+    onProgress('Checking that the client and Language Server are stopped...');
+    assertStopped(before);
+  }
+  if (hostSelected) onProgress('Checking capsule and localization changes...');
   const hostPrepared = hostSelected ? await prepareHost(options, target) : null;
   const planned = {
     native: desired ?? null,
     host: hostPrepared,
     panel: options.selected.panel ? options.command === 'install' : null,
   };
-  if (options.dryRun)
+  if (options.dryRun) {
+    onProgress('Plan ready; no installed client files were changed.');
     return {
       command: options.command,
       state: 'planned',
@@ -362,6 +384,7 @@ export async function executeInstaller(options) {
       process: before.process,
       errors: before.errors,
     };
+  }
   const journalPath = path.resolve(
     agyctlHome(),
     'installer',
@@ -382,15 +405,21 @@ export async function executeInstaller(options) {
     recovery:
       'Inspect agyctl status --asar for this target, then rerun the same command. Components are independently verified; cross-component changes are not atomic. Backups and user data are retained.',
   };
-  const record = (phase) => {
+  const record = (phase, message) => {
     journal.phase = phase;
     journal.updatedAt = new Date().toISOString();
     writeDocument(journalPath, journal);
+    if (message) onProgress(message);
   };
-  record('preflight-complete');
+  record('preflight-complete', `Preflight complete. Operation journal: ${journalPath}`);
   try {
     if (nativeSelected) {
-      record('native-applying');
+      record(
+        'native-applying',
+        options.command === 'install'
+          ? 'Applying native feature patches...'
+          : 'Restoring native feature patches...',
+      );
       runAgyctl([
         'native',
         'apply',
@@ -401,6 +430,7 @@ export async function executeInstaller(options) {
         '--expected',
         JSON.stringify(nativePlan.expected),
       ]);
+      onProgress('Verifying native feature changes...');
       const actual = runAgyctl(['native', 'status', '--binary', target.binaryPath]);
       verifyNative(actual, desired, nativePlan);
       const mapping = desired.limit.enabled
@@ -414,14 +444,20 @@ export async function executeInstaller(options) {
           modelLimits: mapping,
         });
       journal.completed.push('native');
-      record('native-verified');
+      record('native-verified', 'Native feature changes verified.');
     }
     if (hostSelected) {
-      record('host-preparing');
+      record('host-preparing', 'Preparing capsule and localization changes...');
       const prepared = nativeSelected ? await prepareHost(options, target) : hostPrepared;
       const adapter = await import('./host-patch.mjs');
+      onProgress('Rechecking client processes before capsule and localization changes...');
       assertStopped(await snapshot(target));
-      record('host-applying');
+      record(
+        'host-applying',
+        options.command === 'install'
+          ? 'Applying capsule and localization changes...'
+          : 'Removing the selected capsule and localization features...',
+      );
       if (options.command === 'uninstall')
         hostCommand([
           'remove',
@@ -448,6 +484,7 @@ export async function executeInstaller(options) {
           '--capsule-code',
           prepared.capsuleCode,
         ]);
+      onProgress('Verifying capsule and localization changes...');
       const host = adapter.hostPatchStatus({ asarPath: target.asarPath });
       for (const name of ['capsule', 'localization']) {
         const expected = options.selected[name]
@@ -464,11 +501,15 @@ export async function executeInstaller(options) {
       )
         throw new Error('Host all-off state did not restore the exact original archive');
       journal.completed.push('host');
-      record('host-verified');
+      record('host-verified', 'Capsule and localization changes verified.');
     }
     if (options.selected.panel) {
+      onProgress('Rechecking client processes before panel changes...');
       assertStopped(await snapshot(target));
-      record('panel-applying');
+      record(
+        'panel-applying',
+        options.command === 'install' ? 'Installing the panel...' : 'Removing the panel...',
+      );
       journal.panel =
         options.command === 'install'
           ? installPlugin({
@@ -480,11 +521,12 @@ export async function executeInstaller(options) {
       if (inspectPlugin().installed !== (options.command === 'install'))
         throw new Error('Panel post-apply verification failed');
       journal.completed.push('panel');
-      record('panel-verified');
+      record('panel-verified', 'Panel changes verified.');
     }
+    onProgress('Inspecting the final feature state...');
     journal.after = await snapshot(target);
     journal.state = 'complete';
-    record('complete');
+    record('complete', 'Operation complete.');
     return {
       command: options.command,
       state: 'complete',
@@ -496,6 +538,7 @@ export async function executeInstaller(options) {
   } catch (error) {
     journal.state = 'failed';
     journal.error = error.message;
+    onProgress('Operation failed; inspecting the current state for recovery...');
     journal.after = await snapshot(target);
     let journalError;
     try {

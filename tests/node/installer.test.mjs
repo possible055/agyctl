@@ -1,6 +1,35 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
+import os from 'node:os';
+import path from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 import { desiredNativeConfig, parseInstallerArgs } from '../../scripts/lib/installer.mjs';
+
+test('installer CLI reports progress before target validation without contaminating JSON output', () => {
+  const cli = fileURLToPath(new URL('../../bin/agyctl.mjs', import.meta.url));
+  const asar = path.join(os.tmpdir(), `agyctl-missing-${randomUUID()}`, 'resources', 'app.asar');
+  for (const json of [false, true]) {
+    const result = spawnSync(
+      process.execPath,
+      [cli, 'uninstall', '--all', '--asar', asar, ...(json ? ['--json'] : [])],
+      { encoding: 'utf8', windowsHide: true },
+    );
+    assert.ifError(result.error);
+    assert.equal(result.status, 1);
+    if (json) {
+      assert.equal(result.stderr, '');
+      const refusal = JSON.parse(result.stdout);
+      assert.equal(refusal.code, 'ENOENT');
+      assert.match(refusal.error, /ENOENT/);
+    } else {
+      assert.equal(result.stdout, '');
+      assert.match(result.stderr, /^\[\d+\.\ds\] .+\r?\n/);
+      assert.match(result.stderr, /ENOENT/);
+    }
+  }
+});
 
 test('installer selection is explicit, canonical, and rejects ambiguous arguments', () => {
   assert.deepEqual(parseInstallerArgs(['install']).selected, { panel: true });

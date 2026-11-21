@@ -12363,7 +12363,7 @@
       "reviewed": true
     },
     "web.dynamic.043e8c022bb5ed12": {
-      "value": "{0}{1} 個詞元",
+      "value": "{0}{1} 個token",
       "reviewed": true
     },
     "web.dynamic.f9afaf7c9cc6eddf": {
@@ -12655,7 +12655,7 @@
       "reviewed": true
     },
     "web.dynamic.1ae122608b6e3638": {
-      "value": "（{0} 個詞元）",
+      "value": "（{0} 個token）",
       "reviewed": true
     },
     "web.dynamic.b091e392a87f1a48": {
@@ -12711,7 +12711,7 @@
       "reviewed": true
     },
     "web.dynamic.da284c85a3c61046": {
-      "value": "已使用 {0}／{1} 個詞元",
+      "value": "已使用 {0}／{1} 個token",
       "reviewed": true
     },
     "web.dynamic.7bf8e50f3ff7f8d4": {
@@ -13399,7 +13399,7 @@
       "reviewed": true
     },
     "web.dynamic.fe24c3e67564c3db": {
-      "value": "{0}：{1} 個詞元",
+      "value": "{0}：{1} 個token",
       "reviewed": true
     },
     "web.dynamic.89b1a8807688b62c": {
@@ -13423,7 +13423,7 @@
       "reviewed": true
     },
     "web.dynamic.f2255ccb9805be8a": {
-      "value": "超出規則詞元預算。上下文中的完整規則內容（{0} 個詞元）已改為輕量的檔案路徑指標。",
+      "value": "超出規則token預算。上下文中的完整規則內容（{0} 個token）已改為輕量的檔案路徑指標。",
       "reviewed": true
     },
     "web.dynamic.0b6d9ba44ce5c56d": {
@@ -13431,15 +13431,15 @@
       "reviewed": true
     },
     "web.dynamic.ae92600983cbe7da": {
-      "value": "此 MCP 伺服器的所有工具（{0} 個詞元）超出自訂內容預算，已從上下文排除。",
+      "value": "此 MCP 伺服器的所有工具（{0} 個token）超出自訂內容預算，已從上下文排除。",
       "reviewed": true
     },
     "web.dynamic.995923c4ac9ff9f4": {
-      "value": "此 MCP 伺服器的 {0} 個工具（{2} 個詞元）超出自訂內容預算，已從上下文排除。{1, select, other {}}",
+      "value": "此 MCP 伺服器的 {0} 個工具（{2} 個token）超出自訂內容預算，已從上下文排除。{1, select, other {}}",
       "reviewed": true
     },
     "web.dynamic.c898b4e946e5a474": {
-      "value": "超出自訂內容詞元預算（{0} 個詞元），已從上下文排除。",
+      "value": "超出自訂內容token預算（{0} 個token），已從上下文排除。",
       "reviewed": true
     },
     "web.dynamic.136d8f4a07450f42": {
@@ -15872,6 +15872,30 @@
     },
     "settings.shortcuts.pinConversation": {
       "value": "釘選／取消釘選對話",
+      "reviewed": true
+    },
+    "settings.appearance.contrastStrong": {
+      "value": "強烈",
+      "reviewed": true
+    },
+    "settings.appearance.defaultDark": {
+      "value": "預設深色",
+      "reviewed": true
+    },
+    "settings.appearance.widthNarrow": {
+      "value": "窄",
+      "reviewed": true
+    },
+    "settings.appearance.widthWide": {
+      "value": "寬",
+      "reviewed": true
+    },
+    "settings.appearance.widthFill": {
+      "value": "填滿",
+      "reviewed": true
+    },
+    "settings.account.signOut": {
+      "value": "登出",
       "reviewed": true
     },
     "settings.plan.yourPlanLabel": {

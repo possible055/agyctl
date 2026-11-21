@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { once } from 'node:events';
 import fs from 'node:fs';
+import net from 'node:net';
+import readline from 'node:readline';
 import test from 'node:test';
 import vm from 'node:vm';
 import { assembleCapsule } from '../../scripts/capsule-build.mjs';
@@ -12,6 +16,69 @@ import {
 } from '../../src/plugin/lib/metrics-core.mjs';
 import { isValidConversationId } from '../../src/plugin/lib/poll-policy.mjs';
 import { renderPanelPage } from '../../src/plugin/sidecars/panel/page.mjs';
+
+test('panel lifetime follows the main process even when its intermediate launcher survives', {
+  skip:
+    (process.platform !== 'win32' || process.arch !== 'x64') && 'Windows x86-64 host monitoring',
+  timeout: 20000,
+}, async (t) => {
+  const lifetime = new URL('../../src/plugin/lib/host-lifetime.mjs', import.meta.url).href;
+  const listener = net.createServer();
+  listener.listen(0, '127.0.0.1');
+  await once(listener, 'listening');
+  const connected = once(listener, 'connection', { signal: t.signal });
+  // Detached fixtures reproduce Hub leftovers instead of Windows reaping the Node child tree.
+  const sidecarSource = `
+    import { connect } from 'node:net';
+    import { watchHostProcess } from ${JSON.stringify(lifetime)};
+    setTimeout(() => process.exit(2), 15000).unref();
+    const socket = connect(${listener.address().port}, '127.0.0.1');
+    await watchHostProcess((error) => {
+      socket.end(JSON.stringify({ event: 'stopped', error: error?.message ?? null }) + '\\n', () => process.exit(error ? 1 : 0));
+    });
+    socket.write(JSON.stringify({ event: 'ready' }) + '\\n');
+  `;
+  const launcherSource = `
+    import { spawn } from 'node:child_process';
+    setTimeout(() => process.exit(2), 15000).unref();
+    const child = spawn(process.execPath, ['--input-type=module', '-e', ${JSON.stringify(sidecarSource)}], {
+      stdio: ['ignore', 'inherit', 'inherit'], detached: true, windowsHide: true,
+    });
+    child.on('exit', (code) => process.exit(code ?? 1));
+  `;
+  const ownerSource = `
+    import { spawn } from 'node:child_process';
+    setTimeout(() => process.exit(2), 15000).unref();
+    spawn(process.execPath, ['--import=data:text/javascript,', '--input-type=module', '-e', ${JSON.stringify(launcherSource)}], {
+      stdio: ['ignore', 'inherit', 'inherit'], detached: true, windowsHide: true,
+    });
+    process.stdin.once('data', () => process.exit(0));
+  `;
+  const owner = spawn(process.execPath, ['--input-type=module', '-e', ownerSource], {
+    stdio: ['pipe', 'pipe', 'pipe'],
+    windowsHide: true,
+  });
+  const ownerExit = once(owner, 'exit');
+  let errors = '';
+  owner.stderr.setEncoding('utf8');
+  owner.stderr.on('data', (chunk) => (errors += chunk));
+  const messages = [];
+  let socket;
+  try {
+    [socket] = await connected;
+    for await (const line of readline.createInterface({ input: socket })) {
+      const message = JSON.parse(line);
+      messages.push(message);
+      if (message.event === 'ready') owner.stdin.end('exit');
+    }
+    assert.deepEqual(await ownerExit, [0, null], errors);
+    assert.deepEqual(messages, [{ event: 'ready' }, { event: 'stopped', error: null }], errors);
+  } finally {
+    owner.kill();
+    socket?.destroy();
+    listener.close();
+  }
+});
 
 const turn = (input, model = 'gemini-4-argon') => ({
   chatModel: {

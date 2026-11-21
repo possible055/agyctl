@@ -46,6 +46,7 @@ Examples:
 Model IDs are not inferred from names; disabled account models are not unlocked.
 Close the selected Antigravity client and Language Server before installation/removal.
 No command automatically closes or restarts the client. Backups and user data are retained.
+On Windows x86-64, installation/removal can clean verified orphan sidecars after the client exits.
 Dry runs may prepare tool-state artifacts, but never modify installed client files.
 On partial failure, inspect the reported operation journal, then rerun the same command.
 Run agyctl uninstall --all before npm uninstall -g agyctl to remove client features.`;
@@ -69,7 +70,14 @@ try {
   } else {
     const { executeInstaller, parseInstallerArgs } = await import('../scripts/lib/installer.mjs');
     const options = parseInstallerArgs(argv);
-    const result = await executeInstaller(options);
+    const startedAt = performance.now();
+    const onProgress = options.json
+      ? undefined
+      : (message) => {
+          const elapsed = ((performance.now() - startedAt) / 1000).toFixed(1);
+          fs.writeSync(process.stderr.fd, `[${elapsed}s] ${message}\n`);
+        };
+    const result = await executeInstaller(options, onProgress);
     if (options.json) console.log(JSON.stringify(result, null, 2));
     else {
       console.log(`${result.command}: ${result.state}`);

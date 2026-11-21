@@ -120045,6 +120045,48 @@
       "description": "Settings text observed in the client interface.",
       "surface": "settings"
     },
+    "settings.appearance.contrastStrong": {
+      "messageId": "settings.appearance.contrastStrong",
+      "format": "plain",
+      "defaultMessage": "Strong",
+      "description": "Settings interface text observed in the client.",
+      "surface": "settings"
+    },
+    "settings.appearance.defaultDark": {
+      "messageId": "settings.appearance.defaultDark",
+      "format": "plain",
+      "defaultMessage": "Default Dark",
+      "description": "Settings interface text observed in the client.",
+      "surface": "settings"
+    },
+    "settings.appearance.widthNarrow": {
+      "messageId": "settings.appearance.widthNarrow",
+      "format": "plain",
+      "defaultMessage": "Narrow",
+      "description": "Settings interface text observed in the client.",
+      "surface": "settings"
+    },
+    "settings.appearance.widthWide": {
+      "messageId": "settings.appearance.widthWide",
+      "format": "plain",
+      "defaultMessage": "Wide",
+      "description": "Settings interface text observed in the client.",
+      "surface": "settings"
+    },
+    "settings.appearance.widthFill": {
+      "messageId": "settings.appearance.widthFill",
+      "format": "plain",
+      "defaultMessage": "Fill",
+      "description": "Settings interface text observed in the client.",
+      "surface": "settings"
+    },
+    "settings.account.signOut": {
+      "messageId": "settings.account.signOut",
+      "format": "plain",
+      "defaultMessage": "Sign Out",
+      "description": "Settings interface text observed in the client.",
+      "surface": "settings"
+    },
     "settings.plan.yourPlanLabel": {
       "messageId": "settings.plan.yourPlanLabel",
       "format": "plain",

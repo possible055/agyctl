@@ -17,6 +17,7 @@ function toolLocation() {
 let worker = null;
 /** @type {Promise<unknown> | null} */
 let starting = null;
+let stopped = false;
 let nextId = 1;
 /** @type {Map<string, { resolve: (value: any) => void, reject: (error: Error) => void, timer: NodeJS.Timeout }>} */
 const pending = new Map();
@@ -39,10 +40,16 @@ function discardWorker() {
   if (handle) handle.child.kill();
 }
 
+export function closeFeatureWorker() {
+  stopped = true;
+  discardWorker();
+}
+
 function startWorker() {
   return toolLocation().then(
     ({ root, nodeExecutable, env }) =>
       new Promise((resolve, reject) => {
+        if (stopped) throw unavailable('The panel is shutting down');
         const child = spawn(
           nodeExecutable,
           [path.join(root, 'scripts', 'feature-control-worker.mjs')],
@@ -109,6 +116,7 @@ process.on('exit', () => {
 });
 
 async function request(action, payload) {
+  if (stopped) throw unavailable('The panel is shutting down');
   if (!worker) {
     if (!starting) starting = startWorker().finally(() => (starting = null));
     try {

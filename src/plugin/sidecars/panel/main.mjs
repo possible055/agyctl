@@ -1,4 +1,10 @@
-import { cancelFeatureApply, queueFeatureApply, readFeatures } from './feature-control.mjs';
+import { watchHostProcess } from '../../lib/host-lifetime.mjs';
+import {
+  cancelFeatureApply,
+  closeFeatureWorker,
+  queueFeatureApply,
+  readFeatures,
+} from './feature-control.mjs';
 import { readContextLimitDiagnostics } from './limit-diagnostics.mjs';
 import { readLimitStatus } from './limit-status.mjs';
 import { renderPanelPage } from './page.mjs';
@@ -41,7 +47,7 @@ try {
       this.apis.set(`${method}:${path}`, handler);
     }
     run() {
-      import('node:http').then(({ createServer }) => {
+      return import('node:http').then(({ createServer }) => {
         const port = process.env.ANTIGRAVITY_SIDECAR_WEB_PORT || 8787;
         const server = createServer(async (req, res) => {
           const url = new URL(req.url, `http://localhost:${port}`);
@@ -104,10 +110,21 @@ try {
           res.writeHead(404);
           res.end('Not found');
         });
-        server.listen(port, '127.0.0.1', () => {
-          console.log(`[agyctl Mock Server] Listening on http://localhost:${port}`);
+        this.server = server;
+        return new Promise((resolve, reject) => {
+          server.once('error', reject);
+          server.listen(port, '127.0.0.1', () => {
+            console.log(
+              `[agyctl Mock Server] Listening on http://localhost:${server.address().port}`,
+            );
+            resolve(server);
+          });
         });
       });
+    }
+    close() {
+      if (!this.server) return Promise.resolve();
+      return new Promise((resolve) => this.server.close(resolve));
     }
   };
 }
@@ -229,4 +246,44 @@ app.api(
   'GET',
 );
 
-app.run();
+let server;
+let stopWatching = () => {};
+let stopping = false;
+async function shutdown(reason) {
+  if (stopping) return;
+  stopping = true;
+  console.error(`[agyctl] ${reason}`);
+  stopWatching();
+  closeFeatureWorker();
+  const deadline = setTimeout(() => process.exit(0), 5000);
+  try {
+    server?.closeAllConnections();
+    await app.close();
+  } catch (error) {
+    console.error('[agyctl] Shutdown:', error.message);
+  } finally {
+    clearTimeout(deadline);
+    process.exit(0);
+  }
+}
+
+process.once('SIGINT', () => void shutdown('Stopping the panel.'));
+process.once('SIGTERM', () => void shutdown('Stopping the panel.'));
+if (productionSdk && process.platform === 'win32' && process.arch === 'x64') {
+  try {
+    stopWatching = await watchHostProcess((error) => {
+      void shutdown(error ? `Cannot monitor the client: ${error.message}` : 'Antigravity exited.');
+    });
+  } catch (error) {
+    await shutdown(`Cannot verify the client lifetime: ${error.message}`);
+  }
+}
+if (!stopping) {
+  try {
+    server = await app.run();
+  } catch (error) {
+    stopWatching();
+    closeFeatureWorker();
+    throw error;
+  }
+}

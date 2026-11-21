@@ -19,6 +19,13 @@ executables, close the client, or restart it. Quit the selected installation and
 its Language Server before applying or removing any feature, including the panel.
 `install` and `uninstall` with no feature flags select only the panel.
 
+On Windows x86-64, if the running-process check blocks a non-dry-run install or
+uninstall, the installer attempts the verified orphan sidecar cleanup described
+under [panel patch controls](#panel-patch-controls), then inspects the target again.
+A live client, a live Language Server, or an unverified process still refuses the
+operation without stopping anything. `status`, `models`, and `--dry-run` never
+stop processes.
+
 Select individual features with `--panel`, `--capsule`, `--localization`,
 `--tool-output`, `--compaction`, and `--model-limits ID=LIMIT,...`. Localization
 defaults to `zh-Hant-TW`; `--locale` selects another canonical locale. For removal,
@@ -37,6 +44,13 @@ preparation may write tool-state artifacts. Every selected feature retains its
 own exact qualification gate; the compatibility checker is not an installer gate.
 The installer applies native changes before preparing a fresh Host plan, then
 installs the panel. Removing one feature preserves the unselected ones.
+
+Without `--json`, the CLI writes progress messages and elapsed seconds to stderr
+before installation discovery, inspection, planning, changes, and verification.
+These are phase updates, not a percentage or a remaining-time estimate. A phase
+can remain on screen while the tool reads and hashes large client files or
+verifies an archive; the elapsed time updates when the next phase begins.
+`--json` suppresses progress and keeps the structured result on stdout.
 
 Operations are recorded under `<AGYCTL_HOME>/installer/operations/`; saved model
 selections live under `installer/selections/`. A failure reports its phase,
@@ -169,6 +183,18 @@ sidecar can hold its working directory open and block directory moves on Windows
 
 Neither command deletes data, and removal leaves the panel data directory untouched.
 Reopen Antigravity and verify the panel's presence or absence afterwards.
+
+On Windows x86-64, the production panel [monitors its launcher ancestry](../src/plugin/lib/host-lifetime.mjs)
+and binds to the main Antigravity process using executable paths, creation order,
+and an open process handle. A surviving shell or Language Server does not keep
+the panel alive after that main process exits. If ownership cannot be verified,
+the panel logs the reason and stops instead of running without a lifetime binding.
+The [shutdown path](../src/plugin/sidecars/panel/main.mjs) stops the feature worker,
+closes active HTTP connections and the SDK server, and bounds shutdown to five
+seconds. Normal exits are not restarted by the panel's `on-failure` restart policy.
+Closing a window while the main process remains alive does not trigger this path.
+Automatic main-process binding is not implemented on Linux or macOS; signal-driven
+shutdown remains available there.
 
 The panel data directory is `ANTIGRAVITY_EXECUTABLE_DATA_DIR` when the host provides
 it, otherwise `~/.gemini/antigravity/sidecar_data/agyctl/panel/data`. That fallback
