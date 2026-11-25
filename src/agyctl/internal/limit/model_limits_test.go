@@ -74,13 +74,22 @@ func TestSummaryABIAssemblyPreservesRuntimeBoundaries(t *testing.T) {
 	if supportedOriginal("x86-64", changed) {
 		t.Fatal("summary ABI accepted a size-only match with unknown native instructions")
 	}
-	newOriginal := summaryOriginal2340()
-	newBody, err := assembleSummaryLimitsForOriginal(newOriginal, 0x141839640, 0x141839c00)
-	if err != nil || !supportedOriginal("x86-64", newOriginal) || !bytes.Equal(newBody[0x102:], newOriginal[0x102:]) || bytes.Equal(newBody[0x102:], original[0x102:]) {
-		t.Fatalf("2.34.0 summary ABI did not preserve its own morestack path: %v", err)
-	}
-	if recovered, ok := summaryOriginalForBody(newBody); !ok || !bytes.Equal(recovered, newOriginal) {
-		t.Fatal("2.34.0 patched summary body did not recover its exact original ABI")
+	for _, tc := range []struct {
+		label    string
+		original []byte
+		funcVA   uint64
+		tableVA  uint64
+	}{
+		{"2.34.0", summaryOriginalWithMorestack(0x3b, 0xcd, 0x85), 0x141839640, 0x141839c00},
+		{"2.35.1", summaryOriginalWithMorestack(0x3b, 0xd9, 0x85), 0x141838a40, 0x141839000},
+	} {
+		newBody, err := assembleSummaryLimitsForOriginal(tc.original, tc.funcVA, tc.tableVA)
+		if err != nil || !supportedOriginal("x86-64", tc.original) || !bytes.Equal(newBody[0x102:], tc.original[0x102:]) || bytes.Equal(newBody[0x102:], original[0x102:]) {
+			t.Fatalf("%s summary ABI did not preserve its own morestack path: %v", tc.label, err)
+		}
+		if recovered, ok := summaryOriginalForBody(newBody); !ok || !bytes.Equal(recovered, tc.original) {
+			t.Fatalf("%s patched summary body did not recover its exact original ABI", tc.label)
+		}
 	}
 }
 

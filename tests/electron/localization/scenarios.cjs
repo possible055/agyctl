@@ -458,6 +458,123 @@ async function scenarioProductionHook() {
       'return to original registered origin',
     );
 
+    // Live zero-restart switching: alternate DOM locale -> en restore -> original LOCALE.
+    const altLocale = LOCALE === 'ja-JP' ? 'zh-Hant-TW' : 'ja-JP';
+    const altExpectedSettings = altLocale === 'ja-JP' ? '設定を開く' : '開啟設定';
+    const altNativeQuit = altLocale === 'ja-JP' ? '終了' : '結束';
+    const altIndex = `${JSON.stringify({
+      schemaVersion: 1,
+      locale: altLocale,
+      exact: {
+        'Open Settings': { messageId: 'nav.openSettings', translation: altExpectedSettings },
+      },
+      templates: [],
+    })}\n`;
+    const altNative = `${JSON.stringify({
+      schemaVersion: 1,
+      locale: altLocale,
+      messages: { 'session.quit': altNativeQuit },
+    })}\n`;
+    const altIndexSha = digest(Buffer.from(altIndex));
+    const altNativeSha = digest(Buffer.from(altNative));
+    const altArtifactId = digest(Buffer.from(`alt-${altLocale}-${altIndexSha}`));
+    const altDir = path.join(artifact.stateRoot, 'artifacts', altArtifactId);
+    fs.mkdirSync(altDir, { recursive: true });
+    fs.writeFileSync(path.join(altDir, 'index.json'), altIndex);
+    fs.writeFileSync(path.join(altDir, 'native.json'), altNative);
+    fs.writeFileSync(
+      path.join(altDir, 'manifest.json'),
+      JSON.stringify({
+        schemaVersion: 2,
+        format: 'dom',
+        artifactId: altArtifactId,
+        profileId: preparedManifest.profileId,
+        locale: altLocale,
+        formatLocale: altLocale,
+        engineVersion: preparedManifest.engineVersion,
+        engineSha256: world.engineSha256,
+        scopesVersion: preparedManifest.scopesVersion,
+        indexSha256: altIndexSha,
+        catalogSha256: preparedManifest.catalogSha256,
+        adapterVersion: preparedManifest.adapterVersion,
+        toolchainSha256: preparedManifest.toolchainSha256,
+        nativeCatalogSha256: altNativeSha,
+      }),
+    );
+    await routed.wc.executeJavaScript('window.__LIVE_SWITCH_MARKER__ = true');
+    writeSelection(artifact.stateRoot, installationId, {
+      artifactId: altArtifactId,
+      locale: altLocale,
+    });
+    const switchedToAlt = runtime.refreshHostLocalization();
+    await waitForPage(
+      routed.wc,
+      (page) => page.settings === altExpectedSettings && page.ai === 'Open Settings',
+      'live switch to alternate DOM locale without reload',
+    );
+    const liveSwitchedMarker = await routed.wc.executeJavaScript(
+      'window.__LIVE_SWITCH_MARKER__ === true',
+    );
+    check(
+      'production-live-switch-to-alternate-locale',
+      switchedToAlt.changed === true &&
+        switchedToAlt.locale === altLocale &&
+        runtime.nativeCatalogLocale() === altLocale &&
+        runtime.nativeText('session.quit', 'Quit') === altNativeQuit &&
+        liveSwitchedMarker === true,
+      JSON.stringify({
+        switchedToAlt,
+        nativeLocale: runtime.nativeCatalogLocale(),
+        liveSwitchedMarker,
+      }),
+    );
+    const enAst = writeAstArtifact(world);
+    const enManifestPath = path.join(
+      enAst.stateRoot,
+      'artifacts',
+      enAst.artifactId,
+      'manifest.json',
+    );
+    const enManifest = JSON.parse(fs.readFileSync(enManifestPath, 'utf8'));
+    enManifest.locale = 'en';
+    enManifest.formatLocale = 'en';
+    fs.writeFileSync(enManifestPath, JSON.stringify(enManifest));
+    writeSelection(artifact.stateRoot, installationId, {
+      artifactId: enAst.artifactId,
+      locale: 'en',
+    });
+    const switchedToEn = runtime.refreshHostLocalization();
+    await waitForPage(
+      routed.wc,
+      (page) => page.settings === 'Open Settings' && !page.engine,
+      'live restore to original English without reload',
+    );
+    const markerAfterEn = await routed.wc.executeJavaScript(
+      'window.__LIVE_SWITCH_MARKER__ === true',
+    );
+    check(
+      'production-live-switch-to-english-restores',
+      switchedToEn.changed === true &&
+        switchedToEn.locale === 'en' &&
+        runtime.nativeCatalogLocale() === null &&
+        markerAfterEn === true,
+      JSON.stringify({ switchedToEn, nativeLocale: runtime.nativeCatalogLocale(), markerAfterEn }),
+    );
+    writeSelection(artifact.stateRoot, installationId, artifact);
+    const switchedBack = runtime.refreshHostLocalization();
+    await waitForPage(
+      routed.wc,
+      (page) => page.settings === EXPECTED.settings && page.engine,
+      'live switch back to initial locale',
+    );
+    check(
+      'production-live-switch-restores-initial-locale',
+      switchedBack.changed === true &&
+        switchedBack.locale === LOCALE &&
+        runtime.nativeCatalogLocale() === LOCALE,
+      JSON.stringify(switchedBack),
+    );
+
     fs.rmSync(selectionPath);
     const second = open();
     await runtime.loadLocalizedURL(second.wc, HUB_URL);

@@ -120925,6 +120925,4986 @@
       "values": {},
       "surface": "hub.microphone",
       "critical": false
+    },
+    "hub.ui.b81aa3299dae3647": {
+      "messageId": "hub.ui.b81aa3299dae3647",
+      "format": "plain",
+      "defaultMessage": "Agent settings and permissions for conversations outside of projects.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5016e54430e66d62": {
+      "messageId": "hub.ui.5016e54430e66d62",
+      "format": "plain",
+      "defaultMessage": "Inherit Global",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9dd1810322529357": {
+      "messageId": "hub.ui.9dd1810322529357",
+      "format": "plain",
+      "defaultMessage": "Manage project folders, agent settings, and permissions.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.86c5d8967ce412d3": {
+      "messageId": "hub.ui.86c5d8967ce412d3",
+      "format": "plain",
+      "defaultMessage": "To modify editor settings, open Settings within the editor window.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.63b717f7649733fa": {
+      "messageId": "hub.ui.63b717f7649733fa",
+      "format": "plain",
+      "defaultMessage": "Chat Settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.269cc00340008ef5": {
+      "messageId": "hub.ui.269cc00340008ef5",
+      "format": "plain",
+      "defaultMessage": "Block all browser JavaScript execution.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fea49cd464cbfd2d": {
+      "messageId": "hub.ui.fea49cd464cbfd2d",
+      "format": "plain",
+      "defaultMessage": "Manually customize individual settings.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4b873161f7a23f7e": {
+      "messageId": "hub.ui.4b873161f7a23f7e",
+      "format": "plain",
+      "defaultMessage": "Deny List Terminal Commands",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c4d6bb200f4c058a": {
+      "messageId": "hub.ui.c4d6bb200f4c058a",
+      "format": "plain",
+      "defaultMessage": "Folders",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a3e1386bbabf13ff": {
+      "messageId": "hub.ui.a3e1386bbabf13ff",
+      "format": "plain",
+      "defaultMessage": "Feature Request",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9a70d0007209f453": {
+      "messageId": "hub.ui.9a70d0007209f453",
+      "format": "plain",
+      "defaultMessage": "Disables all safety barriers for maximal iteration velocity.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c1ab9f877b8d6c16": {
+      "messageId": "hub.ui.c1ab9f877b8d6c16",
+      "format": "plain",
+      "defaultMessage": "Bug Report",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a4d5a599ce8510a5": {
+      "messageId": "hub.ui.a4d5a599ce8510a5",
+      "format": "plain",
+      "defaultMessage": "Show Selection Actions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.53b42090b267e68c": {
+      "messageId": "hub.ui.53b42090b267e68c",
+      "format": "plain",
+      "defaultMessage": "Full machine",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.83fdca3fffdc303b": {
+      "messageId": "hub.ui.83fdca3fffdc303b",
+      "format": "plain",
+      "defaultMessage": "All terminal commands require review. The agent can read or write to any file in the machine.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6dad5052383d5030": {
+      "messageId": "hub.ui.6dad5052383d5030",
+      "format": "plain",
+      "defaultMessage": "Toggle Developer Tools",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4997b635e053fc1d": {
+      "messageId": "hub.ui.4997b635e053fc1d",
+      "format": "plain",
+      "defaultMessage": "Path to the Chrome/Chromium executable. Leave empty for auto-detection.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6bf180c1b0f744d4": {
+      "messageId": "hub.ui.6bf180c1b0f744d4",
+      "format": "plain",
+      "defaultMessage": "Browser User Profile Path",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.92ca9c9d123c42d7": {
+      "messageId": "hub.ui.92ca9c9d123c42d7",
+      "format": "plain",
+      "defaultMessage": "Next Pane Tab",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.95215b435d5a56ca": {
+      "messageId": "hub.ui.95215b435d5a56ca",
+      "format": "plain",
+      "defaultMessage": "Previous Pane Tab",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.629337dc2b9c9a12": {
+      "messageId": "hub.ui.629337dc2b9c9a12",
+      "format": "plain",
+      "defaultMessage": "Show \"Edit\" and \"Chat\" buttons when selecting text in the editor.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3ac14c5b5c7f9b8c": {
+      "messageId": "hub.ui.3ac14c5b5c7f9b8c",
+      "format": "plain",
+      "defaultMessage": "Auth and Billing",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9003e1b7e7c2912b": {
+      "messageId": "hub.ui.9003e1b7e7c2912b",
+      "format": "plain",
+      "defaultMessage": "Permanently delete",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a13b6ae655c929ed": {
+      "messageId": "hub.ui.a13b6ae655c929ed",
+      "format": "plain",
+      "defaultMessage": "Thought Process",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f1da1790c30522ed": {
+      "messageId": "hub.ui.f1da1790c30522ed",
+      "format": "plain",
+      "defaultMessage": "Open Editor Settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dcdcde120ec79563": {
+      "messageId": "hub.ui.dcdcde120ec79563",
+      "format": "plain",
+      "defaultMessage": "Requires manual review for all terminal commands and file accesses outside of the working folders.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1d2f1b7b7cea4125": {
+      "messageId": "hub.ui.1d2f1b7b7cea4125",
+      "format": "plain",
+      "defaultMessage": "Remote Control Issue",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.23a06914f4610215": {
+      "messageId": "hub.ui.23a06914f4610215",
+      "format": "plain",
+      "defaultMessage": "General Feedback",
+      "surface": "hub.reviewed"
+    },
+    "settings.appearance.defaultLight": {
+      "messageId": "settings.appearance.defaultLight",
+      "format": "plain",
+      "defaultMessage": "Default Light",
+      "surface": "settings"
+    },
+    "hub.ui.a234d1aa1451b651": {
+      "messageId": "hub.ui.a234d1aa1451b651",
+      "format": "plain",
+      "defaultMessage": "The browser subagent can be invoked by typing /browser in the conversation input box.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c1af8370c5f68986": {
+      "messageId": "hub.ui.c1af8370c5f68986",
+      "format": "plain",
+      "defaultMessage": "Search tasks...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6123645767d50771": {
+      "messageId": "hub.ui.6123645767d50771",
+      "format": "plain",
+      "defaultMessage": "Marketplace Gallery URL",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b94ab56aaca86273": {
+      "messageId": "hub.ui.b94ab56aaca86273",
+      "format": "plain",
+      "defaultMessage": "Chrome Binary Path",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7fb90de3a33cab49": {
+      "messageId": "hub.ui.7fb90de3a33cab49",
+      "format": "plain",
+      "defaultMessage": "Prompt for approval before running browser scripts.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b8c209cdead61a09": {
+      "messageId": "hub.ui.b8c209cdead61a09",
+      "format": "plain",
+      "defaultMessage": "Ask",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.079d1d54f3c6269b": {
+      "messageId": "hub.ui.079d1d54f3c6269b",
+      "format": "plain",
+      "defaultMessage": "Strict Mode",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.68324d2dc5b5ceff": {
+      "messageId": "hub.ui.68324d2dc5b5ceff",
+      "format": "plain",
+      "defaultMessage": "Allow full browser script execution without prompting.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cea1a4d5477bdc50": {
+      "messageId": "hub.ui.cea1a4d5477bdc50",
+      "format": "plain",
+      "defaultMessage": "Browser CDP Port",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.728cb3db7cc78a96": {
+      "messageId": "hub.ui.728cb3db7cc78a96",
+      "format": "plain",
+      "defaultMessage": "Toggle Auxiliary Pane",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.54421810157a0868": {
+      "messageId": "hub.ui.54421810157a0868",
+      "format": "plain",
+      "defaultMessage": "Port number for Chrome DevTools Protocol remote debugging. Leave empty for default (9222).",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7923d4b84c2a1cc8": {
+      "messageId": "hub.ui.7923d4b84c2a1cc8",
+      "format": "plain",
+      "defaultMessage": "Editor Settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dcb3e1c00e79236d": {
+      "messageId": "hub.ui.dcb3e1c00e79236d",
+      "format": "plain",
+      "defaultMessage": "Knowledge",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.275326389234f6ab": {
+      "messageId": "hub.ui.275326389234f6ab",
+      "format": "plain",
+      "defaultMessage": "Turbo mode",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.25286f1757c4993e": {
+      "messageId": "hub.ui.25286f1757c4993e",
+      "format": "plain",
+      "defaultMessage": "Marketplace Item URL",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6733cfdb6d49dd93": {
+      "messageId": "hub.ui.6733cfdb6d49dd93",
+      "format": "plain",
+      "defaultMessage": "Require Review",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6c582b62e0e5aa05": {
+      "messageId": "hub.ui.6c582b62e0e5aa05",
+      "format": "plain",
+      "defaultMessage": "Fast",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6ec427879b4bf05a": {
+      "messageId": "hub.ui.6ec427879b4bf05a",
+      "format": "plain",
+      "defaultMessage": "Allow List Terminal Commands",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e1a74102e0b60d9a": {
+      "messageId": "hub.ui.e1a74102e0b60d9a",
+      "format": "plain",
+      "defaultMessage": "Custom path for the browser user profile directory. Leave empty for default (~/.gemini/antigravity-browser-profile).",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dbcd5e7bb7a0f538": {
+      "messageId": "hub.ui.dbcd5e7bb7a0f538",
+      "format": "plain",
+      "defaultMessage": "Light",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.60acc53f13a5d1bf": {
+      "messageId": "hub.ui.60acc53f13a5d1bf",
+      "format": "plain",
+      "defaultMessage": "Dark",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6725e7bbcd28f3a8": {
+      "messageId": "hub.ui.6725e7bbcd28f3a8",
+      "format": "plain",
+      "defaultMessage": "System",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f7ca95a868431b32": {
+      "messageId": "hub.ui.f7ca95a868431b32",
+      "format": "plain",
+      "defaultMessage": "Guidelines for interacting with GitHub and request permissions from the user when commands fail due to restrictions in the agent environment.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1ac1468563107940": {
+      "messageId": "hub.ui.1ac1468563107940",
+      "format": "plain",
+      "defaultMessage": "Search or enter a URL",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3c71e0e8a88fc860": {
+      "messageId": "hub.ui.3c71e0e8a88fc860",
+      "format": "plain",
+      "defaultMessage": "Ran command",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.31d7dceb897d35cd": {
+      "messageId": "hub.ui.31d7dceb897d35cd",
+      "format": "plain",
+      "defaultMessage": "Curated sets of plugins for common workflows and roles.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b0f8a3973cf69f50": {
+      "messageId": "hub.ui.b0f8a3973cf69f50",
+      "format": "plain",
+      "defaultMessage": "Rules token budget exceeded. Large rules are demoted to path pointers.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.515bf8644de9ceb0": {
+      "messageId": "hub.ui.515bf8644de9ceb0",
+      "format": "plain",
+      "defaultMessage": "Your This Computer setting",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ea61bc15688d1e48": {
+      "messageId": "hub.ui.ea61bc15688d1e48",
+      "format": "plain",
+      "defaultMessage": "Copied!",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.55d23266c29b948f": {
+      "messageId": "hub.ui.55d23266c29b948f",
+      "format": "plain",
+      "defaultMessage": "No Model Selected",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3ea9f6a0c2f684b2": {
+      "messageId": "hub.ui.3ea9f6a0c2f684b2",
+      "format": "plain",
+      "defaultMessage": "Ask anything, @ to mention, / for actions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1c8ac867f052ea4a": {
+      "messageId": "hub.ui.1c8ac867f052ea4a",
+      "format": "plain",
+      "defaultMessage": "Visit",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d6b8b1dd14bb372d": {
+      "messageId": "hub.ui.d6b8b1dd14bb372d",
+      "format": "plain",
+      "defaultMessage": "How loud Jetski's voice is.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0c153843dfe32656": {
+      "messageId": "hub.ui.0c153843dfe32656",
+      "format": "plain",
+      "defaultMessage": "Telemetry is off for this conversation.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bca82adc9f9b3bc7": {
+      "messageId": "hub.ui.bca82adc9f9b3bc7",
+      "format": "plain",
+      "defaultMessage": "Analyzed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bc1ebaff8e758e06": {
+      "messageId": "hub.ui.bc1ebaff8e758e06",
+      "format": "plain",
+      "defaultMessage": "Post Invocation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.033efc9dfbbace40": {
+      "messageId": "hub.ui.033efc9dfbbace40",
+      "format": "plain",
+      "defaultMessage": "Change...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b9e07681e1f99f81": {
+      "messageId": "hub.ui.b9e07681e1f99f81",
+      "format": "plain",
+      "defaultMessage": "No resources added yet.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.558be6c04c73108a": {
+      "messageId": "hub.ui.558be6c04c73108a",
+      "format": "plain",
+      "defaultMessage": "Copy sign-in link",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e4e0bdae470984c7": {
+      "messageId": "hub.ui.e4e0bdae470984c7",
+      "format": "plain",
+      "defaultMessage": "Worktrees are a git feature. This folder is shared as is.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fb7e81225d4f45ed": {
+      "messageId": "hub.ui.fb7e81225d4f45ed",
+      "format": "plain",
+      "defaultMessage": "Search past worktrees...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.348daf908778b4ce": {
+      "messageId": "hub.ui.348daf908778b4ce",
+      "format": "plain",
+      "defaultMessage": "Browse the Marketplace",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a2a9753211e5c0db": {
+      "messageId": "hub.ui.a2a9753211e5c0db",
+      "format": "plain",
+      "defaultMessage": "Manage project folders and settings.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.060603f5304eac8b": {
+      "messageId": "hub.ui.060603f5304eac8b",
+      "format": "plain",
+      "defaultMessage": "Post Tool Use",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c4191aa89479b4e5": {
+      "messageId": "hub.ui.c4191aa89479b4e5",
+      "format": "plain",
+      "defaultMessage": "Build on Google's developer platforms, including Android, Chrome, Gemini, and Google Cloud.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dd10e856b9b9a033": {
+      "messageId": "hub.ui.dd10e856b9b9a033",
+      "format": "plain",
+      "defaultMessage": "Inline Actions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.463816d07097e1a7": {
+      "messageId": "hub.ui.463816d07097e1a7",
+      "format": "plain",
+      "defaultMessage": "Reading",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.43d2d4466a96a5c0": {
+      "messageId": "hub.ui.43d2d4466a96a5c0",
+      "format": "plain",
+      "defaultMessage": "Hide breakdowns",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ef97432a7589a59c": {
+      "messageId": "hub.ui.ef97432a7589a59c",
+      "format": "plain",
+      "defaultMessage": "Configure tab completion, suggestions, and navigation behavior.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cc849385646ba0d6": {
+      "messageId": "hub.ui.cc849385646ba0d6",
+      "format": "plain",
+      "defaultMessage": "Reveal in Finder",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e23f3cc44a50a5e3": {
+      "messageId": "hub.ui.e23f3cc44a50a5e3",
+      "format": "plain",
+      "defaultMessage": "Pinned Actions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.76f68a75f01ed76f": {
+      "messageId": "hub.ui.76f68a75f01ed76f",
+      "format": "plain",
+      "defaultMessage": "Business",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d97cf74f8deeb850": {
+      "messageId": "hub.ui.d97cf74f8deeb850",
+      "format": "plain",
+      "defaultMessage": "Plan work, track issues, sign documents, and manage your notes and files.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.47a8a543f5081899": {
+      "messageId": "hub.ui.47a8a543f5081899",
+      "format": "plain",
+      "defaultMessage": "Sort Workspaces",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7616b5ee647397d4": {
+      "messageId": "hub.ui.7616b5ee647397d4",
+      "format": "plain",
+      "defaultMessage": "Your quota for this model is running low.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0c2504c9358e60f9": {
+      "messageId": "hub.ui.0c2504c9358e60f9",
+      "format": "plain",
+      "defaultMessage": "Other Customizations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.980b4edd7eeb1b2e": {
+      "messageId": "hub.ui.980b4edd7eeb1b2e",
+      "format": "plain",
+      "defaultMessage": "Configure link opening and built-in browser preferences.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.386fffa765c6794a": {
+      "messageId": "hub.ui.386fffa765c6794a",
+      "format": "plain",
+      "defaultMessage": "Enforce settings that prevent the agent from autonomously running targeted exploits and require human review for all agent actions. Visit antigravity.google/docs/strict-mode for details.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.85c1562cd9ce8d74": {
+      "messageId": "hub.ui.85c1562cd9ce8d74",
+      "format": "plain",
+      "defaultMessage": "Developer Tools",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.36655f7c71e4013d": {
+      "messageId": "hub.ui.36655f7c71e4013d",
+      "format": "plain",
+      "defaultMessage": "Checking for a local clone",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.96392f91a0b70a07": {
+      "messageId": "hub.ui.96392f91a0b70a07",
+      "format": "plain",
+      "defaultMessage": "Copied version details",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d37078fe6a1faa15": {
+      "messageId": "hub.ui.d37078fe6a1faa15",
+      "format": "plain",
+      "defaultMessage": "Copied to clipboard",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ef1382fd87c0a51c": {
+      "messageId": "hub.ui.ef1382fd87c0a51c",
+      "format": "plain",
+      "defaultMessage": "Record voice memo",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cf924a0ffe4b617d": {
+      "messageId": "hub.ui.cf924a0ffe4b617d",
+      "format": "plain",
+      "defaultMessage": "Table options",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.84fd2c260db5c3a4": {
+      "messageId": "hub.ui.84fd2c260db5c3a4",
+      "format": "plain",
+      "defaultMessage": "Automation credentials expired",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.58c3de40566b874e": {
+      "messageId": "hub.ui.58c3de40566b874e",
+      "format": "plain",
+      "defaultMessage": "Your Remote setting",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f85d082224b7a307": {
+      "messageId": "hub.ui.f85d082224b7a307",
+      "format": "plain",
+      "defaultMessage": "Side question answered.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2afb17673ff90662": {
+      "messageId": "hub.ui.2afb17673ff90662",
+      "format": "plain",
+      "defaultMessage": "Running command",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7f9d4ae9238f4593": {
+      "messageId": "hub.ui.7f9d4ae9238f4593",
+      "format": "plain",
+      "defaultMessage": "View archived in the sidebar (Display options menu).",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f8fe0f2b0d52aaf4": {
+      "messageId": "hub.ui.f8fe0f2b0d52aaf4",
+      "format": "plain",
+      "defaultMessage": "Proceed in Sandbox",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.97bd37991bf15a1e": {
+      "messageId": "hub.ui.97bd37991bf15a1e",
+      "format": "plain",
+      "defaultMessage": "Not cloned locally",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.00a9bf84a0a13922": {
+      "messageId": "hub.ui.00a9bf84a0a13922",
+      "format": "plain",
+      "defaultMessage": "Automation saved",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.93483c938871b25a": {
+      "messageId": "hub.ui.93483c938871b25a",
+      "format": "plain",
+      "defaultMessage": "Weekly limit",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.49a0053f3b0d5045": {
+      "messageId": "hub.ui.49a0053f3b0d5045",
+      "format": "plain",
+      "defaultMessage": "Copy code",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.408801cff5d42adb": {
+      "messageId": "hub.ui.408801cff5d42adb",
+      "format": "plain",
+      "defaultMessage": "Side Panel",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f19611c61ca5f369": {
+      "messageId": "hub.ui.f19611c61ca5f369",
+      "format": "plain",
+      "defaultMessage": "Full access",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.af7a94b91a7493fa": {
+      "messageId": "hub.ui.af7a94b91a7493fa",
+      "format": "plain",
+      "defaultMessage": "Waiting for your approval",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.207207acea5b0f4d": {
+      "messageId": "hub.ui.207207acea5b0f4d",
+      "format": "plain",
+      "defaultMessage": "Sort Projects",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.53e63ed06152028c": {
+      "messageId": "hub.ui.53e63ed06152028c",
+      "format": "plain",
+      "defaultMessage": "Toggle Full Screen",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4cc78da18efee791": {
+      "messageId": "hub.ui.4cc78da18efee791",
+      "format": "plain",
+      "defaultMessage": "Pre Invocation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2e1a4c07ce94cb0c": {
+      "messageId": "hub.ui.2e1a4c07ce94cb0c",
+      "format": "plain",
+      "defaultMessage": "Strict",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.582971124d69444b": {
+      "messageId": "hub.ui.582971124d69444b",
+      "format": "plain",
+      "defaultMessage": "Search past workspaces...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9705d4a8953c30ec": {
+      "messageId": "hub.ui.9705d4a8953c30ec",
+      "format": "plain",
+      "defaultMessage": "No pinned conversations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.09c6f7bf8cdf5ee5": {
+      "messageId": "hub.ui.09c6f7bf8cdf5ee5",
+      "format": "plain",
+      "defaultMessage": "Project 4K",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f395ae5e32b4cc24": {
+      "messageId": "hub.ui.f395ae5e32b4cc24",
+      "format": "plain",
+      "defaultMessage": "Open in Editor",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2cd57109145ab1cb": {
+      "messageId": "hub.ui.2cd57109145ab1cb",
+      "format": "plain",
+      "defaultMessage": "Verbose",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8e25832407ee8bec": {
+      "messageId": "hub.ui.8e25832407ee8bec",
+      "format": "plain",
+      "defaultMessage": "Workspace Settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4e35d30cb97d27b7": {
+      "messageId": "hub.ui.4e35d30cb97d27b7",
+      "format": "plain",
+      "defaultMessage": "Rewinds the conversation only. Files in this folder stay as they are now.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.280d70385991efbf": {
+      "messageId": "hub.ui.280d70385991efbf",
+      "format": "plain",
+      "defaultMessage": "Submit comment",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.02d543906827f91b": {
+      "messageId": "hub.ui.02d543906827f91b",
+      "format": "plain",
+      "defaultMessage": "Customization token budget exceeded. Large customizations are excluded from context.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cfcf8cc115650a14": {
+      "messageId": "hub.ui.cfcf8cc115650a14",
+      "format": "plain",
+      "defaultMessage": "No more older messages",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7636275303de3a4a": {
+      "messageId": "hub.ui.7636275303de3a4a",
+      "format": "plain",
+      "defaultMessage": "Worktrees are not available for this project",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.106c3af60039fb12": {
+      "messageId": "hub.ui.106c3af60039fb12",
+      "format": "plain",
+      "defaultMessage": "Autonomous Mode",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5ca9b7ef41d27b22": {
+      "messageId": "hub.ui.5ca9b7ef41d27b22",
+      "format": "plain",
+      "defaultMessage": "Worktree Branches",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.994554867c4456e5": {
+      "messageId": "hub.ui.994554867c4456e5",
+      "format": "plain",
+      "defaultMessage": "Mark Read",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.41d70bb0060eec16": {
+      "messageId": "hub.ui.41d70bb0060eec16",
+      "format": "plain",
+      "defaultMessage": "Scroll to Bottom",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ccd136641c56c741": {
+      "messageId": "hub.ui.ccd136641c56c741",
+      "format": "plain",
+      "defaultMessage": "Cloud Hosting & Deployment",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b749e205302cc219": {
+      "messageId": "hub.ui.b749e205302cc219",
+      "format": "plain",
+      "defaultMessage": "Copy to clipboard",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d70b9e24bca26b40": {
+      "messageId": "hub.ui.d70b9e24bca26b40",
+      "format": "plain",
+      "defaultMessage": "Created",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2454b121ba74a55c": {
+      "messageId": "hub.ui.2454b121ba74a55c",
+      "format": "plain",
+      "defaultMessage": "Select branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2e9b4b7b2f1a986b": {
+      "messageId": "hub.ui.2e9b4b7b2f1a986b",
+      "format": "plain",
+      "defaultMessage": "Hide breakdown",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.03b44986f928aece": {
+      "messageId": "hub.ui.03b44986f928aece",
+      "format": "plain",
+      "defaultMessage": "Unknown Environment",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e568522d25967dcd": {
+      "messageId": "hub.ui.e568522d25967dcd",
+      "format": "plain",
+      "defaultMessage": "Worktrees are available for Git repositories",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7cff9649e26cce59": {
+      "messageId": "hub.ui.7cff9649e26cce59",
+      "format": "plain",
+      "defaultMessage": "The agent always asks for review.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b090562f538c288d": {
+      "messageId": "hub.ui.b090562f538c288d",
+      "format": "plain",
+      "defaultMessage": "Delete plugin",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f565318d124534cf": {
+      "messageId": "hub.ui.f565318d124534cf",
+      "format": "plain",
+      "defaultMessage": "Unarchive",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.65659145569b894b": {
+      "messageId": "hub.ui.65659145569b894b",
+      "format": "plain",
+      "defaultMessage": "Notice",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.417c4041593abe91": {
+      "messageId": "hub.ui.417c4041593abe91",
+      "format": "plain",
+      "defaultMessage": "5h limit",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a1e3ce6dfde9d3dc": {
+      "messageId": "hub.ui.a1e3ce6dfde9d3dc",
+      "format": "plain",
+      "defaultMessage": "Your AI credits balance is too low to continue.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7dc3eb8bf3386f32": {
+      "messageId": "hub.ui.7dc3eb8bf3386f32",
+      "format": "plain",
+      "defaultMessage": "Configure Branches",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b6a7c95e785f14dd": {
+      "messageId": "hub.ui.b6a7c95e785f14dd",
+      "format": "plain",
+      "defaultMessage": "Ran",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b64ac05f17e64d03": {
+      "messageId": "hub.ui.b64ac05f17e64d03",
+      "format": "plain",
+      "defaultMessage": "Live",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ee3c716130546a45": {
+      "messageId": "hub.ui.ee3c716130546a45",
+      "format": "plain",
+      "defaultMessage": "Unpin",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e6f7e0a0c966f815": {
+      "messageId": "hub.ui.e6f7e0a0c966f815",
+      "format": "plain",
+      "defaultMessage": "Cancel (Ctrl+D)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cc1878584858a31e": {
+      "messageId": "hub.ui.cc1878584858a31e",
+      "format": "plain",
+      "defaultMessage": "Context Menus",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.827c420d6a254e1d": {
+      "messageId": "hub.ui.827c420d6a254e1d",
+      "format": "plain",
+      "defaultMessage": "No folders added yet.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0061577bc222d862": {
+      "messageId": "hub.ui.0061577bc222d862",
+      "format": "plain",
+      "defaultMessage": "Hide tools",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2f5e378b09e33110": {
+      "messageId": "hub.ui.2f5e378b09e33110",
+      "format": "plain",
+      "defaultMessage": "Adds an Autonomous Mode switch to the modes dropdown below the input box. Turns sent with it on run non-interactively: the agent does not ask questions or request new permissions.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.74bed7b49a5d8b99": {
+      "messageId": "hub.ui.74bed7b49a5d8b99",
+      "format": "plain",
+      "defaultMessage": "Select a folder",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7c785df990653861": {
+      "messageId": "hub.ui.7c785df990653861",
+      "format": "plain",
+      "defaultMessage": "Inherits your Global Permissions when working in this project.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.39c32394761c042b": {
+      "messageId": "hub.ui.39c32394761c042b",
+      "format": "plain",
+      "defaultMessage": "Exploring",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.906a7a8ae8264f28": {
+      "messageId": "hub.ui.906a7a8ae8264f28",
+      "format": "plain",
+      "defaultMessage": "Maximize Width",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c840ba4da80e9014": {
+      "messageId": "hub.ui.c840ba4da80e9014",
+      "format": "plain",
+      "defaultMessage": "Side Panel Preview",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5e656a1621785289": {
+      "messageId": "hub.ui.5e656a1621785289",
+      "format": "plain",
+      "defaultMessage": "Design, creative, and media tools.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0098030c2a671521": {
+      "messageId": "hub.ui.0098030c2a671521",
+      "format": "plain",
+      "defaultMessage": "Pre Tool Use",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3bc27f3aa8aed4f0": {
+      "messageId": "hub.ui.3bc27f3aa8aed4f0",
+      "format": "plain",
+      "defaultMessage": "Search tabs, files and more",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ea5ba511ca19b3d2": {
+      "messageId": "hub.ui.ea5ba511ca19b3d2",
+      "format": "plain",
+      "defaultMessage": "Connect to WSL",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.87568475f506dde7": {
+      "messageId": "hub.ui.87568475f506dde7",
+      "format": "plain",
+      "defaultMessage": "Proceeded with",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.298ff31c3b73af59": {
+      "messageId": "hub.ui.298ff31c3b73af59",
+      "format": "plain",
+      "defaultMessage": "Toggle Maximize Auxiliary Pane",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e12154eb4ca97411": {
+      "messageId": "hub.ui.e12154eb4ca97411",
+      "format": "plain",
+      "defaultMessage": "Google Workspace",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.211684e1513468b5": {
+      "messageId": "hub.ui.211684e1513468b5",
+      "format": "plain",
+      "defaultMessage": "Verbose Agent Chat",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.adfb42a3c90b287c": {
+      "messageId": "hub.ui.adfb42a3c90b287c",
+      "format": "plain",
+      "defaultMessage": "Explored",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6f6817d96e83edf2": {
+      "messageId": "hub.ui.6f6817d96e83edf2",
+      "format": "plain",
+      "defaultMessage": "File Viewer",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0692c6b24634b2ce": {
+      "messageId": "hub.ui.0692c6b24634b2ce",
+      "format": "plain",
+      "defaultMessage": "Telemetry is turned off in settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.13fb26ccfd97853a": {
+      "messageId": "hub.ui.13fb26ccfd97853a",
+      "format": "plain",
+      "defaultMessage": "Untitled Conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fab4539d26e078ca": {
+      "messageId": "hub.ui.fab4539d26e078ca",
+      "format": "plain",
+      "defaultMessage": "Editing",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.86fc6393188e136d": {
+      "messageId": "hub.ui.86fc6393188e136d",
+      "format": "plain",
+      "defaultMessage": "Remote Permissions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.74273989b0966e23": {
+      "messageId": "hub.ui.74273989b0966e23",
+      "format": "plain",
+      "defaultMessage": "Redo",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a4948f756e38153b": {
+      "messageId": "hub.ui.a4948f756e38153b",
+      "format": "plain",
+      "defaultMessage": "Automation credentials expiring soon",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.701986f254d7ef57": {
+      "messageId": "hub.ui.701986f254d7ef57",
+      "format": "plain",
+      "defaultMessage": "Copy error messages",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8829b3ac6b144654": {
+      "messageId": "hub.ui.8829b3ac6b144654",
+      "format": "plain",
+      "defaultMessage": "Modify permissions for file and terminal tools.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d276044dad968742": {
+      "messageId": "hub.ui.d276044dad968742",
+      "format": "plain",
+      "defaultMessage": "Show in File Manager",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ec0788b50818dd5d": {
+      "messageId": "hub.ui.ec0788b50818dd5d",
+      "format": "plain",
+      "defaultMessage": "Telemetry is off for all conversations.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bb28e6a970682e29": {
+      "messageId": "hub.ui.bb28e6a970682e29",
+      "format": "plain",
+      "defaultMessage": "Design, Creative & Media",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f34df942bf09868f": {
+      "messageId": "hub.ui.f34df942bf09868f",
+      "format": "plain",
+      "defaultMessage": "Refreshing credentials...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.55f92dca00f59521": {
+      "messageId": "hub.ui.55f92dca00f59521",
+      "format": "plain",
+      "defaultMessage": "Deploy and host your apps, sites, and their backends.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.08661dab88fd1708": {
+      "messageId": "hub.ui.08661dab88fd1708",
+      "format": "plain",
+      "defaultMessage": "APIs, services, and tools to build, test, secure, and run your apps.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4348f529fdcbcaa2": {
+      "messageId": "hub.ui.4348f529fdcbcaa2",
+      "format": "plain",
+      "defaultMessage": "Copy version details",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7117f0807129493f": {
+      "messageId": "hub.ui.7117f0807129493f",
+      "format": "plain",
+      "defaultMessage": "Edited",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f81280bf42a80c31": {
+      "messageId": "hub.ui.f81280bf42a80c31",
+      "format": "plain",
+      "defaultMessage": "Productivity & Project Management",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7bc9dc25dd46db5d": {
+      "messageId": "hub.ui.7bc9dc25dd46db5d",
+      "format": "plain",
+      "defaultMessage": "Rules and customization token budgets exceeded. Large rules are demoted to path pointers and large customizations are excluded from context.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e9ade4d71613789a": {
+      "messageId": "hub.ui.e9ade4d71613789a",
+      "format": "plain",
+      "defaultMessage": "Start Voice mode",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cafd4f1ace3f2d94": {
+      "messageId": "hub.ui.cafd4f1ace3f2d94",
+      "format": "plain",
+      "defaultMessage": "The voice Jetski speaks with.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8cb1eb7714ff54de": {
+      "messageId": "hub.ui.8cb1eb7714ff54de",
+      "format": "plain",
+      "defaultMessage": "Setup Script",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.80028baf013c0dc2": {
+      "messageId": "hub.ui.80028baf013c0dc2",
+      "format": "plain",
+      "defaultMessage": "Validation timed out.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0cef8306c956e80f": {
+      "messageId": "hub.ui.0cef8306c956e80f",
+      "format": "plain",
+      "defaultMessage": "+ Add Folder",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.22a970d2e5b1cc23": {
+      "messageId": "hub.ui.22a970d2e5b1cc23",
+      "format": "plain",
+      "defaultMessage": "Completed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c7c13c5a73428638": {
+      "messageId": "hub.ui.c7c13c5a73428638",
+      "format": "plain",
+      "defaultMessage": "Display and preserve intermediate thinking steps.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2e4112bc7e968734": {
+      "messageId": "hub.ui.2e4112bc7e968734",
+      "format": "plain",
+      "defaultMessage": "Workspace File Explorer",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.125c7a44e8f5808c": {
+      "messageId": "hub.ui.125c7a44e8f5808c",
+      "format": "plain",
+      "defaultMessage": "Cannot revert to a message that was cleared to save space",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.13ca2ee2499310d9": {
+      "messageId": "hub.ui.13ca2ee2499310d9",
+      "format": "plain",
+      "defaultMessage": "Canceled",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bab37d62472990c0": {
+      "messageId": "hub.ui.bab37d62472990c0",
+      "format": "plain",
+      "defaultMessage": "See more",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.94ea9b1d33a02975": {
+      "messageId": "hub.ui.94ea9b1d33a02975",
+      "format": "plain",
+      "defaultMessage": "Show less",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a92f0449a9f7235b": {
+      "messageId": "hub.ui.a92f0449a9f7235b",
+      "format": "plain",
+      "defaultMessage": "Working",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c4939c3f7df96847": {
+      "messageId": "hub.ui.c4939c3f7df96847",
+      "format": "plain",
+      "defaultMessage": "All Files",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8c17ab4415e05f3e": {
+      "messageId": "hub.ui.8c17ab4415e05f3e",
+      "format": "plain",
+      "defaultMessage": "Cannot revert a message sent while the agent was running",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.440af5f903368e9d": {
+      "messageId": "hub.ui.440af5f903368e9d",
+      "format": "plain",
+      "defaultMessage": "Payments, CRM, accounting, data, identity, customer support, marketing, and workflow automation.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f17671d83db0da48": {
+      "messageId": "hub.ui.f17671d83db0da48",
+      "format": "plain",
+      "defaultMessage": "Load older messages",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ac628ed29ae79f0d": {
+      "messageId": "hub.ui.ac628ed29ae79f0d",
+      "format": "plain",
+      "defaultMessage": "Main Agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5ec6578c52984f37": {
+      "messageId": "hub.ui.5ec6578c52984f37",
+      "format": "plain",
+      "defaultMessage": "Allowed Domains",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1aaa0800292194e0": {
+      "messageId": "hub.ui.1aaa0800292194e0",
+      "format": "plain",
+      "defaultMessage": "Best of N Models",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.58e663dc8898e9f4": {
+      "messageId": "hub.ui.58e663dc8898e9f4",
+      "format": "plain",
+      "defaultMessage": "Unpin conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.965673916b978246": {
+      "messageId": "hub.ui.965673916b978246",
+      "format": "plain",
+      "defaultMessage": "Cannot revert this message",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.db82efcc4eb76eda": {
+      "messageId": "hub.ui.db82efcc4eb76eda",
+      "format": "plain",
+      "defaultMessage": "Demoted",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1e1270a58101c25e": {
+      "messageId": "hub.ui.1e1270a58101c25e",
+      "format": "plain",
+      "defaultMessage": "Interrupt the agent and send immediately",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.003517e17cf1b6fe": {
+      "messageId": "hub.ui.003517e17cf1b6fe",
+      "format": "plain",
+      "defaultMessage": "Disabled by organization policy",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5c5d7f06c38c7f55": {
+      "messageId": "hub.ui.5c5d7f06c38c7f55",
+      "format": "plain",
+      "defaultMessage": "Authenticated via Enterprise Gateway",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9b84a51f099a2d80": {
+      "messageId": "hub.ui.9b84a51f099a2d80",
+      "format": "plain",
+      "defaultMessage": "Inherits your Global Permissions when working in these conversations.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.acbdf18882d79a9f": {
+      "messageId": "hub.ui.acbdf18882d79a9f",
+      "format": "plain",
+      "defaultMessage": "This project overrides your global permission settings.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2ee4eba29d32dd4c": {
+      "messageId": "hub.ui.2ee4eba29d32dd4c",
+      "format": "plain",
+      "defaultMessage": "Configure editor-specific behaviors and shortcuts.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1e4ce9cd955f07b1": {
+      "messageId": "hub.ui.1e4ce9cd955f07b1",
+      "format": "plain",
+      "defaultMessage": "Daily limit",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.aeffb9182e3d7f3d": {
+      "messageId": "hub.ui.aeffb9182e3d7f3d",
+      "format": "plain",
+      "defaultMessage": "Triggered",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d70604e843046137": {
+      "messageId": "hub.ui.d70604e843046137",
+      "format": "plain",
+      "defaultMessage": "Recommended",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c23ef99fa27a249d": {
+      "messageId": "hub.ui.c23ef99fa27a249d",
+      "format": "plain",
+      "defaultMessage": "Minimize Width",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b2e91e9ba07e98bc": {
+      "messageId": "hub.ui.b2e91e9ba07e98bc",
+      "format": "plain",
+      "defaultMessage": "Connect to Google Workspace, including Docs, Sheets, Slides, Drive, and Calendar.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.51add8fabbd9c568": {
+      "messageId": "hub.ui.51add8fabbd9c568",
+      "format": "plain",
+      "defaultMessage": "Undo to this point",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.37511d821be14cdd": {
+      "messageId": "hub.ui.37511d821be14cdd",
+      "format": "plain",
+      "defaultMessage": "Queue until after the current turn",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bdaeec33ca6d1e39": {
+      "messageId": "hub.ui.bdaeec33ca6d1e39",
+      "format": "plain",
+      "defaultMessage": "Your Plan",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.602cc4da981d5dad": {
+      "messageId": "hub.ui.602cc4da981d5dad",
+      "format": "plain",
+      "defaultMessage": "Delete agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.04342fbd5d112bac": {
+      "messageId": "hub.ui.04342fbd5d112bac",
+      "format": "plain",
+      "defaultMessage": "Maximize Pane",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bed2cb4c0a5d3481": {
+      "messageId": "hub.ui.bed2cb4c0a5d3481",
+      "format": "plain",
+      "defaultMessage": "Remote Control link",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e4eef78c75e37d58": {
+      "messageId": "hub.ui.e4eef78c75e37d58",
+      "format": "plain",
+      "defaultMessage": "Describe the bug you encountered...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d9f05495672f9049": {
+      "messageId": "hub.ui.d9f05495672f9049",
+      "format": "plain",
+      "defaultMessage": "Failed to terminate task",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fcfae2d191747fa0": {
+      "messageId": "hub.ui.fcfae2d191747fa0",
+      "format": "plain",
+      "defaultMessage": "Showing the last good view.json; the current file is over 64 KB.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9fc7f11668697dc6": {
+      "messageId": "hub.ui.9fc7f11668697dc6",
+      "format": "plain",
+      "defaultMessage": "Searched",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6dcafdb1cd3e8ed9": {
+      "messageId": "hub.ui.6dcafdb1cd3e8ed9",
+      "format": "plain",
+      "defaultMessage": "Retry narrator's page",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cfed3e4fe486006b": {
+      "messageId": "hub.ui.cfed3e4fe486006b",
+      "format": "plain",
+      "defaultMessage": "Checking availability…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1b8bfb0ebb5a0e65": {
+      "messageId": "hub.ui.1b8bfb0ebb5a0e65",
+      "format": "plain",
+      "defaultMessage": "Couldn't load cookies.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3a798489a35c1a5b": {
+      "messageId": "hub.ui.3a798489a35c1a5b",
+      "format": "plain",
+      "defaultMessage": "Interrupt Agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8e321eeec3364748": {
+      "messageId": "hub.ui.8e321eeec3364748",
+      "format": "plain",
+      "defaultMessage": "Telemetry will be enabled for this conversation; click to disable.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4820fb31c3757a49": {
+      "messageId": "hub.ui.4820fb31c3757a49",
+      "format": "plain",
+      "defaultMessage": "Branch, current: Select branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7f39bc1169c62474": {
+      "messageId": "hub.ui.7f39bc1169c62474",
+      "format": "plain",
+      "defaultMessage": "Watching for a swarm",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1da2219d1620c74a": {
+      "messageId": "hub.ui.1da2219d1620c74a",
+      "format": "plain",
+      "defaultMessage": "Cannot promote during Battle Mode — end the battle first",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e6db5f3cc2f975b9": {
+      "messageId": "hub.ui.e6db5f3cc2f975b9",
+      "format": "plain",
+      "defaultMessage": "Configure built-in browser, link opening, and browser subagent preferences",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e6b5af21d69528a6": {
+      "messageId": "hub.ui.e6b5af21d69528a6",
+      "format": "plain",
+      "defaultMessage": "Cookies and other site data",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0c07dbf15254ae90": {
+      "messageId": "hub.ui.0c07dbf15254ae90",
+      "format": "plain",
+      "defaultMessage": "Explored files and artifact",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a0a266427c81e32c": {
+      "messageId": "hub.ui.a0a266427c81e32c",
+      "format": "plain",
+      "defaultMessage": "Our most advanced model yet.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3291f7627e7279f9": {
+      "messageId": "hub.ui.3291f7627e7279f9",
+      "format": "plain",
+      "defaultMessage": "Even pacing",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.711930ab05487872": {
+      "messageId": "hub.ui.711930ab05487872",
+      "format": "plain",
+      "defaultMessage": "Pause replay",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9954909af1d5f27b": {
+      "messageId": "hub.ui.9954909af1d5f27b",
+      "format": "plain",
+      "defaultMessage": "Conversation workspace",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6312b4b9baf12770": {
+      "messageId": "hub.ui.6312b4b9baf12770",
+      "format": "plain",
+      "defaultMessage": "Drive",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.05b1481f666050d1": {
+      "messageId": "hub.ui.05b1481f666050d1",
+      "format": "plain",
+      "defaultMessage": "Folder where files downloaded in the built-in browser are saved",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ec4900b2df233ab5": {
+      "messageId": "hub.ui.ec4900b2df233ab5",
+      "format": "plain",
+      "defaultMessage": "Waiting for the first update",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d6dae66b2a4bb3a0": {
+      "messageId": "hub.ui.d6dae66b2a4bb3a0",
+      "format": "plain",
+      "defaultMessage": "Terminal sandbox is not supported in this environment",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4bcab793306aca46": {
+      "messageId": "hub.ui.4bcab793306aca46",
+      "format": "plain",
+      "defaultMessage": "Last Workspace",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.db5d332e8da1c25d": {
+      "messageId": "hub.ui.db5d332e8da1c25d",
+      "format": "plain",
+      "defaultMessage": "Pick up this remote conversation on your phone or in any browser. Scan the QR code or open the link below.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7f98b07841ce7b81": {
+      "messageId": "hub.ui.7f98b07841ce7b81",
+      "format": "plain",
+      "defaultMessage": "Good to see you. What's next?",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4a4703d804b0df4b": {
+      "messageId": "hub.ui.4a4703d804b0df4b",
+      "format": "plain",
+      "defaultMessage": "Terminate task",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.eda81d2d8b458754": {
+      "messageId": "hub.ui.eda81d2d8b458754",
+      "format": "plain",
+      "defaultMessage": "Antigravity (AGY) Style",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.073ffa9558f46084": {
+      "messageId": "hub.ui.073ffa9558f46084",
+      "format": "plain",
+      "defaultMessage": "Microphone problem",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b3d390ffe923a8bb": {
+      "messageId": "hub.ui.b3d390ffe923a8bb",
+      "format": "plain",
+      "defaultMessage": "Compare then and now",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c05668bd926aafbf": {
+      "messageId": "hub.ui.c05668bd926aafbf",
+      "format": "plain",
+      "defaultMessage": "Split Left",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.56c92521cdc682e1": {
+      "messageId": "hub.ui.56c92521cdc682e1",
+      "format": "plain",
+      "defaultMessage": "Show or hide each member's posts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dd66507d03f47a4e": {
+      "messageId": "hub.ui.dd66507d03f47a4e",
+      "format": "plain",
+      "defaultMessage": "Hidden from the board; click to show",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6f675373d52bed1e": {
+      "messageId": "hub.ui.6f675373d52bed1e",
+      "format": "plain",
+      "defaultMessage": "One goal",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.edbc30549728d91e": {
+      "messageId": "hub.ui.edbc30549728d91e",
+      "format": "plain",
+      "defaultMessage": "Configure what the agent can do in local and remote conversations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d9291fcc9b28b0f8": {
+      "messageId": "hub.ui.d9291fcc9b28b0f8",
+      "format": "plain",
+      "defaultMessage": "Saved setup routine",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6a1da8454fa179f5": {
+      "messageId": "hub.ui.6a1da8454fa179f5",
+      "format": "plain",
+      "defaultMessage": "Project 4K interface without developer tooling",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4d87504d72bd3b43": {
+      "messageId": "hub.ui.4d87504d72bd3b43",
+      "format": "plain",
+      "defaultMessage": "Authorization code was rejected. Paste a fresh code and try again.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.250e25c05efc495b": {
+      "messageId": "hub.ui.250e25c05efc495b",
+      "format": "plain",
+      "defaultMessage": "Agent working",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b3eb37acb66ba4bb": {
+      "messageId": "hub.ui.b3eb37acb66ba4bb",
+      "format": "plain",
+      "defaultMessage": "Quit",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a591fc35d74e39e8": {
+      "messageId": "hub.ui.a591fc35d74e39e8",
+      "format": "plain",
+      "defaultMessage": "Send messages with the keyboard's Enter key instead of starting a new line",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d3051b2c6314ac54": {
+      "messageId": "hub.ui.d3051b2c6314ac54",
+      "format": "plain",
+      "defaultMessage": "Review bundle before adding",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.038805d33ddaaa5d": {
+      "messageId": "hub.ui.038805d33ddaaa5d",
+      "format": "plain",
+      "defaultMessage": "The narrator's view.json is over 64 KB, so it isn't shown.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e572d4e5551a4c41": {
+      "messageId": "hub.ui.e572d4e5551a4c41",
+      "format": "plain",
+      "defaultMessage": "Scrub through board posts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cf959c2dbbf16bfa": {
+      "messageId": "hub.ui.cf959c2dbbf16bfa",
+      "format": "plain",
+      "defaultMessage": "Command Palette...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.caed3072fd76a4b6": {
+      "messageId": "hub.ui.caed3072fd76a4b6",
+      "format": "plain",
+      "defaultMessage": "Limited time",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.556ec949035d8d21": {
+      "messageId": "hub.ui.556ec949035d8d21",
+      "format": "plain",
+      "defaultMessage": "Hide killed and inactive members from the graph",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7a1896edb46dc9f6": {
+      "messageId": "hub.ui.7a1896edb46dc9f6",
+      "format": "plain",
+      "defaultMessage": "Workspace setting",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e0839b7377716d94": {
+      "messageId": "hub.ui.e0839b7377716d94",
+      "format": "plain",
+      "defaultMessage": "via @all",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.eb6906c0c0694f63": {
+      "messageId": "hub.ui.eb6906c0c0694f63",
+      "format": "plain",
+      "defaultMessage": "Agent said",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f05fefe200f27914": {
+      "messageId": "hub.ui.f05fefe200f27914",
+      "format": "plain",
+      "defaultMessage": "Waiting for output…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e7409e100d5cf6dd": {
+      "messageId": "hub.ui.e7409e100d5cf6dd",
+      "format": "plain",
+      "defaultMessage": "Carries out the plan: searches, edits, builds, and tests. Pick a faster, cheaper model.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a15deca13ddc0290": {
+      "messageId": "hub.ui.a15deca13ddc0290",
+      "format": "plain",
+      "defaultMessage": "Optimize the interface and terminal output for screen readers",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a7d8725f044617b5": {
+      "messageId": "hub.ui.a7d8725f044617b5",
+      "format": "plain",
+      "defaultMessage": "The voice used in Voice mode. Powered by Gemini Live",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e1262e1ea1207316": {
+      "messageId": "hub.ui.e1262e1ea1207316",
+      "format": "plain",
+      "defaultMessage": "Reopen Folder in WSL",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.daa85534fa9b1400": {
+      "messageId": "hub.ui.daa85534fa9b1400",
+      "format": "plain",
+      "defaultMessage": "Orchestrator Model",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.64278e81eb37aa53": {
+      "messageId": "hub.ui.64278e81eb37aa53",
+      "format": "plain",
+      "defaultMessage": "Previous post (←)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8d977231d6a77cb2": {
+      "messageId": "hub.ui.8d977231d6a77cb2",
+      "format": "plain",
+      "defaultMessage": "Stop this agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.afb118fcb16c3727": {
+      "messageId": "hub.ui.afb118fcb16c3727",
+      "format": "plain",
+      "defaultMessage": "Reconnecting",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e5342b07fb755d3d": {
+      "messageId": "hub.ui.e5342b07fb755d3d",
+      "format": "plain",
+      "defaultMessage": "Posts in every channel",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4b135377375c438f": {
+      "messageId": "hub.ui.4b135377375c438f",
+      "format": "plain",
+      "defaultMessage": "Default and Auto need the terminal sandbox, which isn't available on this host.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.97aec9f94bee6814": {
+      "messageId": "hub.ui.97aec9f94bee6814",
+      "format": "plain",
+      "defaultMessage": "Loading subagent transcript...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cb7daa53627cb62f": {
+      "messageId": "hub.ui.cb7daa53627cb62f",
+      "format": "plain",
+      "defaultMessage": "Every command requires approval",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.07189207790a7aa3": {
+      "messageId": "hub.ui.07189207790a7aa3",
+      "format": "plain",
+      "defaultMessage": "Show killed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2623454e20f8f6a3": {
+      "messageId": "hub.ui.2623454e20f8f6a3",
+      "format": "plain",
+      "defaultMessage": "Cleared built-in browser data",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1d36da8581e01919": {
+      "messageId": "hub.ui.1d36da8581e01919",
+      "format": "plain",
+      "defaultMessage": "Full Access",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a3894d9516e2500f": {
+      "messageId": "hub.ui.a3894d9516e2500f",
+      "format": "plain",
+      "defaultMessage": "Play replay",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fd8a2d6ab7495e08": {
+      "messageId": "hub.ui.fd8a2d6ab7495e08",
+      "format": "plain",
+      "defaultMessage": "How loud Antigravity's voice is",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4a8123475e0fea9f": {
+      "messageId": "hub.ui.4a8123475e0fea9f",
+      "format": "plain",
+      "defaultMessage": "Discard comment draft",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.34963f22f31f3e6b": {
+      "messageId": "hub.ui.34963f22f31f3e6b",
+      "format": "plain",
+      "defaultMessage": "Default needs the terminal sandbox, which isn't available on this host.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.012a283b46ca4f34": {
+      "messageId": "hub.ui.012a283b46ca4f34",
+      "format": "plain",
+      "defaultMessage": "The team",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cdc517667d9ab31a": {
+      "messageId": "hub.ui.cdc517667d9ab31a",
+      "format": "plain",
+      "defaultMessage": "Each takes a task, and they run in parallel.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d434e617211f4c89": {
+      "messageId": "hub.ui.d434e617211f4c89",
+      "format": "plain",
+      "defaultMessage": "Input Box",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.086e97efcffff894": {
+      "messageId": "hub.ui.086e97efcffff894",
+      "format": "plain",
+      "defaultMessage": "posted with no mention",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1edf0870cbf8fd40": {
+      "messageId": "hub.ui.1edf0870cbf8fd40",
+      "format": "plain",
+      "defaultMessage": "Automatically decide if commands run",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.36233f1f1232ab55": {
+      "messageId": "hub.ui.36233f1f1232ab55",
+      "format": "plain",
+      "defaultMessage": "main: the whole swarm reads it",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.db114adc75c87150": {
+      "messageId": "hub.ui.db114adc75c87150",
+      "format": "plain",
+      "defaultMessage": "No branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a02f1cea3c1d6c6e": {
+      "messageId": "hub.ui.a02f1cea3c1d6c6e",
+      "format": "plain",
+      "defaultMessage": "Thinking…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8730d3c2022abf1f": {
+      "messageId": "hub.ui.8730d3c2022abf1f",
+      "format": "plain",
+      "defaultMessage": "Latest",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2ced179124da0d23": {
+      "messageId": "hub.ui.2ced179124da0d23",
+      "format": "plain",
+      "defaultMessage": "Explored files",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.15007ce23e9a075b": {
+      "messageId": "hub.ui.15007ce23e9a075b",
+      "format": "plain",
+      "defaultMessage": "Choose where terminal sessions appear",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6f086cd4dddc6fd6": {
+      "messageId": "hub.ui.6f086cd4dddc6fd6",
+      "format": "plain",
+      "defaultMessage": "System alerts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1fe61a24aa487fc1": {
+      "messageId": "hub.ui.1fe61a24aa487fc1",
+      "format": "plain",
+      "defaultMessage": "Binary file — cannot display diff",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e4280da225fbc414": {
+      "messageId": "hub.ui.e4280da225fbc414",
+      "format": "plain",
+      "defaultMessage": "Split Up",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.689c05994987626f": {
+      "messageId": "hub.ui.689c05994987626f",
+      "format": "plain",
+      "defaultMessage": "@all posts, drawn by Expand @all",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f8ee93b32b90c16b": {
+      "messageId": "hub.ui.f8ee93b32b90c16b",
+      "format": "plain",
+      "defaultMessage": "Account connection was not completed.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.28e4c2eede7b680d": {
+      "messageId": "hub.ui.28e4c2eede7b680d",
+      "format": "plain",
+      "defaultMessage": "Edited files and artifacts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c11430e8ff9deea0": {
+      "messageId": "hub.ui.c11430e8ff9deea0",
+      "format": "plain",
+      "defaultMessage": "Waiting: turn ended, asleep on the board until a post wakes it",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3d5aa057ac428944": {
+      "messageId": "hub.ui.3d5aa057ac428944",
+      "format": "plain",
+      "defaultMessage": "Show posts in one channel",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e20faafe8ba216d3": {
+      "messageId": "hub.ui.e20faafe8ba216d3",
+      "format": "plain",
+      "defaultMessage": "Select branch...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bd35427cd5861c65": {
+      "messageId": "hub.ui.bd35427cd5861c65",
+      "format": "plain",
+      "defaultMessage": "Ask anything, @ for context, / for commands",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ba17ee9e6b1c0ed1": {
+      "messageId": "hub.ui.ba17ee9e6b1c0ed1",
+      "format": "plain",
+      "defaultMessage": "Waiting for your reply in chat",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4693afe8a90f7fd4": {
+      "messageId": "hub.ui.4693afe8a90f7fd4",
+      "format": "plain",
+      "defaultMessage": "Managed by application menu",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.03da0c9d4a8cbbb5": {
+      "messageId": "hub.ui.03da0c9d4a8cbbb5",
+      "format": "plain",
+      "defaultMessage": "Previous post",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d0652ad307845171": {
+      "messageId": "hub.ui.d0652ad307845171",
+      "format": "plain",
+      "defaultMessage": "Add anyway",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.aa335ed5df95b08a": {
+      "messageId": "hub.ui.aa335ed5df95b08a",
+      "format": "plain",
+      "defaultMessage": "Changes could not be saved",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5b7163071efc1236": {
+      "messageId": "hub.ui.5b7163071efc1236",
+      "format": "plain",
+      "defaultMessage": "Open on another device",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.542799c3970ebc42": {
+      "messageId": "hub.ui.542799c3970ebc42",
+      "format": "plain",
+      "defaultMessage": "Cloning in progress…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8feeb0e7a890e145": {
+      "messageId": "hub.ui.8feeb0e7a890e145",
+      "format": "plain",
+      "defaultMessage": "Killed: removed from the swarm",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0f5bd88ff2c406f6": {
+      "messageId": "hub.ui.0f5bd88ff2c406f6",
+      "format": "plain",
+      "defaultMessage": "Try a different search or member filter.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8739c5611f4f89ec": {
+      "messageId": "hub.ui.8739c5611f4f89ec",
+      "format": "plain",
+      "defaultMessage": "Choose what to clear from the built-in browser. It can't be undone.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c39059141ced2ea7": {
+      "messageId": "hub.ui.c39059141ced2ea7",
+      "format": "plain",
+      "defaultMessage": "In review",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.26210cf48f281729": {
+      "messageId": "hub.ui.26210cf48f281729",
+      "format": "plain",
+      "defaultMessage": "You are subscribed to the best Google AI plan.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b7a7f060859023d1": {
+      "messageId": "hub.ui.b7a7f060859023d1",
+      "format": "plain",
+      "defaultMessage": "Full interface for coding, developer tools, and managing agents",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6b8d475a99708ae5": {
+      "messageId": "hub.ui.6b8d475a99708ae5",
+      "format": "plain",
+      "defaultMessage": "Choose how much detail is shown during a conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6859fe418483a0b7": {
+      "messageId": "hub.ui.6859fe418483a0b7",
+      "format": "plain",
+      "defaultMessage": "Visited URLs and autocomplete suggestions.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.836f66e8ff741f57": {
+      "messageId": "hub.ui.836f66e8ff741f57",
+      "format": "plain",
+      "defaultMessage": "Open in settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e14697c1360b9f71": {
+      "messageId": "hub.ui.e14697c1360b9f71",
+      "format": "plain",
+      "defaultMessage": "Disconnect from WSL",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d3f7409ad75e6d96": {
+      "messageId": "hub.ui.d3f7409ad75e6d96",
+      "format": "plain",
+      "defaultMessage": "Stop All",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cd7f398b1d6528f2": {
+      "messageId": "hub.ui.cd7f398b1d6528f2",
+      "format": "plain",
+      "defaultMessage": "Only this conversation uses this preset.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b69e85808d28a009": {
+      "messageId": "hub.ui.b69e85808d28a009",
+      "format": "plain",
+      "defaultMessage": "Add bundle",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6f23d4aded053b66": {
+      "messageId": "hub.ui.6f23d4aded053b66",
+      "format": "plain",
+      "defaultMessage": "Remove folder from project",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0bb044f8c34d16d6": {
+      "messageId": "hub.ui.0bb044f8c34d16d6",
+      "format": "plain",
+      "defaultMessage": "Jump to start",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f6259b0cb438a5ac": {
+      "messageId": "hub.ui.f6259b0cb438a5ac",
+      "format": "plain",
+      "defaultMessage": "Open coordinator chat",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0095f46dee42e405": {
+      "messageId": "hub.ui.0095f46dee42e405",
+      "format": "plain",
+      "defaultMessage": "The full developer experience",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.08022c83e260caa9": {
+      "messageId": "hub.ui.08022c83e260caa9",
+      "format": "plain",
+      "defaultMessage": "VS Code Default",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.11d915cb27c42da0": {
+      "messageId": "hub.ui.11d915cb27c42da0",
+      "format": "plain",
+      "defaultMessage": "The coordinator is waiting for your reply",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1c944dbe28bc0267": {
+      "messageId": "hub.ui.1c944dbe28bc0267",
+      "format": "plain",
+      "defaultMessage": "Couldn't create the coordinator. Try again.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a8141a7ce1af6ce2": {
+      "messageId": "hub.ui.a8141a7ce1af6ce2",
+      "format": "plain",
+      "defaultMessage": "narrator's page · AI-generated",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fc87062a130bf496": {
+      "messageId": "hub.ui.fc87062a130bf496",
+      "format": "plain",
+      "defaultMessage": "Waiting for subagent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f4ad4438c6066f9c": {
+      "messageId": "hub.ui.f4ad4438c6066f9c",
+      "format": "plain",
+      "defaultMessage": "The narrator is updating the overview",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7898935d79f2f9b2": {
+      "messageId": "hub.ui.7898935d79f2f9b2",
+      "format": "plain",
+      "defaultMessage": "Base branch for new worktree",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c66feb5eb8f217c7": {
+      "messageId": "hub.ui.c66feb5eb8f217c7",
+      "format": "plain",
+      "defaultMessage": "Move up",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fd42f0ca49a7a3cc": {
+      "messageId": "hub.ui.fd42f0ca49a7a3cc",
+      "format": "plain",
+      "defaultMessage": "The narrator's view.json isn't valid JSON yet.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5a88a386243dab24": {
+      "messageId": "hub.ui.5a88a386243dab24",
+      "format": "plain",
+      "defaultMessage": "Project setting",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ee965b4001806213": {
+      "messageId": "hub.ui.ee965b4001806213",
+      "format": "plain",
+      "defaultMessage": "Who @mentions whom",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.451858a31d14c103": {
+      "messageId": "hub.ui.451858a31d14c103",
+      "format": "plain",
+      "defaultMessage": "seen just now",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1ae7acdc50a4bc8c": {
+      "messageId": "hub.ui.1ae7acdc50a4bc8c",
+      "format": "plain",
+      "defaultMessage": "Input device for voice mode and dictation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3392bcc1d1c9f6d0": {
+      "messageId": "hub.ui.3392bcc1d1c9f6d0",
+      "format": "plain",
+      "defaultMessage": "Main branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.76995012dc174269": {
+      "messageId": "hub.ui.76995012dc174269",
+      "format": "plain",
+      "defaultMessage": "Search sites",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.31022ba3ee5fcf3a": {
+      "messageId": "hub.ui.31022ba3ee5fcf3a",
+      "format": "plain",
+      "defaultMessage": "That link isn't allowed here.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1f3202cb49e7679a": {
+      "messageId": "hub.ui.1f3202cb49e7679a",
+      "format": "plain",
+      "defaultMessage": "Hide inactive",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b0077176149e1431": {
+      "messageId": "hub.ui.b0077176149e1431",
+      "format": "plain",
+      "defaultMessage": "Manage Antigravity Insiders app settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d8d648e0074a2a26": {
+      "messageId": "hub.ui.d8d648e0074a2a26",
+      "format": "plain",
+      "defaultMessage": "Selection Actions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e6c6415f27e4dcef": {
+      "messageId": "hub.ui.e6c6415f27e4dcef",
+      "format": "plain",
+      "defaultMessage": "Loading diff...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3122a92a6ad9dec5": {
+      "messageId": "hub.ui.3122a92a6ad9dec5",
+      "format": "plain",
+      "defaultMessage": "One board",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a205cfd78d0ce0c6": {
+      "messageId": "hub.ui.a205cfd78d0ce0c6",
+      "format": "plain",
+      "defaultMessage": "Started from the subagent conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a9702fe1ed12bb8b": {
+      "messageId": "hub.ui.a9702fe1ed12bb8b",
+      "format": "plain",
+      "defaultMessage": "Pause this agent; it keeps its place and streams. Resume to continue.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e14ee2e295b416bd": {
+      "messageId": "hub.ui.e14ee2e295b416bd",
+      "format": "plain",
+      "defaultMessage": "Listening. Ask anything.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c5f3e9c14d36d1f0": {
+      "messageId": "hub.ui.c5f3e9c14d36d1f0",
+      "format": "plain",
+      "defaultMessage": "Delete artifact",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e7be8f386a8ea08a": {
+      "messageId": "hub.ui.e7be8f386a8ea08a",
+      "format": "plain",
+      "defaultMessage": "Explored file",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.532f8e608cd23f4f": {
+      "messageId": "hub.ui.532f8e608cd23f4f",
+      "format": "plain",
+      "defaultMessage": "Data Science & Analytics",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.00edcb7e7c928c3f": {
+      "messageId": "hub.ui.00edcb7e7c928c3f",
+      "format": "plain",
+      "defaultMessage": "Create a new workspace from your first message.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8275703863ba3d42": {
+      "messageId": "hub.ui.8275703863ba3d42",
+      "format": "plain",
+      "defaultMessage": "Search sites...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f6a86fc1937a359a": {
+      "messageId": "hub.ui.f6a86fc1937a359a",
+      "format": "plain",
+      "defaultMessage": "Typeahead menu",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7dce90a4444351f1": {
+      "messageId": "hub.ui.7dce90a4444351f1",
+      "format": "plain",
+      "defaultMessage": "Ask /btw",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b323f4c9f1d1f153": {
+      "messageId": "hub.ui.b323f4c9f1d1f153",
+      "format": "plain",
+      "defaultMessage": "Stop transcription",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.33c9455e4beb248c": {
+      "messageId": "hub.ui.33c9455e4beb248c",
+      "format": "plain",
+      "defaultMessage": "@mention, width = count",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f2620a7746fcc032": {
+      "messageId": "hub.ui.f2620a7746fcc032",
+      "format": "plain",
+      "defaultMessage": "The narrator was killed; the overview no longer updates",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2019e8abe390989e": {
+      "messageId": "hub.ui.2019e8abe390989e",
+      "format": "plain",
+      "defaultMessage": "To anyone",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b0f0cb2af6aa5a59": {
+      "messageId": "hub.ui.b0f0cb2af6aa5a59",
+      "format": "plain",
+      "defaultMessage": "Disabling or removing this bundle doesn't affect it.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c8dae6371b33b8d6": {
+      "messageId": "hub.ui.c8dae6371b33b8d6",
+      "format": "plain",
+      "defaultMessage": "Replay",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5cb5697e76a45813": {
+      "messageId": "hub.ui.5cb5697e76a45813",
+      "format": "plain",
+      "defaultMessage": "Waiting for the first post.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c094e0503c14431b": {
+      "messageId": "hub.ui.c094e0503c14431b",
+      "format": "plain",
+      "defaultMessage": "Saving setup routine",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c62f5c57134b8957": {
+      "messageId": "hub.ui.c62f5c57134b8957",
+      "format": "plain",
+      "defaultMessage": "Deleting setup routine",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6f16f0e0522499e1": {
+      "messageId": "hub.ui.6f16f0e0522499e1",
+      "format": "plain",
+      "defaultMessage": "Open in IDE",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4aff15de2f313404": {
+      "messageId": "hub.ui.4aff15de2f313404",
+      "format": "plain",
+      "defaultMessage": "Ask anything",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1cc3814be75f8f7f": {
+      "messageId": "hub.ui.1cc3814be75f8f7f",
+      "format": "plain",
+      "defaultMessage": "Idle Conversations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ab9152c5fc393972": {
+      "messageId": "hub.ui.ab9152c5fc393972",
+      "format": "plain",
+      "defaultMessage": "Cookies by Site",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bf327cf9bcdd7f4e": {
+      "messageId": "hub.ui.bf327cf9bcdd7f4e",
+      "format": "plain",
+      "defaultMessage": "Started from the main conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8572a21a58c516bd": {
+      "messageId": "hub.ui.8572a21a58c516bd",
+      "format": "plain",
+      "defaultMessage": "Main Workspace",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.132bfcfcfde4f6b1": {
+      "messageId": "hub.ui.132bfcfcfde4f6b1",
+      "format": "plain",
+      "defaultMessage": "Real-time gaps",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7745bcb6f710f75e": {
+      "messageId": "hub.ui.7745bcb6f710f75e",
+      "format": "plain",
+      "defaultMessage": "Filters (active)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e031b98d9176f84a": {
+      "messageId": "hub.ui.e031b98d9176f84a",
+      "format": "plain",
+      "defaultMessage": "Configure the browser subagent. It requires",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e40675c144472dcf": {
+      "messageId": "hub.ui.e40675c144472dcf",
+      "format": "plain",
+      "defaultMessage": "The narrator hasn't published an overview yet.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fff067cf75d62697": {
+      "messageId": "hub.ui.fff067cf75d62697",
+      "format": "plain",
+      "defaultMessage": "Narrator's page",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6f176c42c1449566": {
+      "messageId": "hub.ui.6f176c42c1449566",
+      "format": "plain",
+      "defaultMessage": "General Productivity",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.84da9ed85dcf1b5d": {
+      "messageId": "hub.ui.84da9ed85dcf1b5d",
+      "format": "plain",
+      "defaultMessage": "Toggle Virtual Machine",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0929b4da291d10af": {
+      "messageId": "hub.ui.0929b4da291d10af",
+      "format": "plain",
+      "defaultMessage": "To continue using this model now, enable AI Credit overages.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.88701a9136315238": {
+      "messageId": "hub.ui.88701a9136315238",
+      "format": "plain",
+      "defaultMessage": "Argon that may offload routine steps to Hydrogen. Same Argon-level quality, fewer tokens used.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9b1a065a734a91ec": {
+      "messageId": "hub.ui.9b1a065a734a91ec",
+      "format": "plain",
+      "defaultMessage": "Removing the message from the queue…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f73c4a5a85c3d4e5": {
+      "messageId": "hub.ui.f73c4a5a85c3d4e5",
+      "format": "plain",
+      "defaultMessage": "Nothing blocked",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d41aecde8d271b58": {
+      "messageId": "hub.ui.d41aecde8d271b58",
+      "format": "plain",
+      "defaultMessage": "Product Management",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.59f774d529faaef3": {
+      "messageId": "hub.ui.59f774d529faaef3",
+      "format": "plain",
+      "defaultMessage": "Waiting on @coordinator",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.154c29a6b8b8e289": {
+      "messageId": "hub.ui.154c29a6b8b8e289",
+      "format": "plain",
+      "defaultMessage": "No narrator in this swarm. Ask the coordinator to add one.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c508c7705103d9ca": {
+      "messageId": "hub.ui.c508c7705103d9ca",
+      "format": "plain",
+      "defaultMessage": "Show earlier posts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.db8660ddbb3ad302": {
+      "messageId": "hub.ui.db8660ddbb3ad302",
+      "format": "plain",
+      "defaultMessage": "Voice dictation unavailable",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.57b955600c578410": {
+      "messageId": "hub.ui.57b955600c578410",
+      "format": "plain",
+      "defaultMessage": "Couldn't clear browsing data. Try again.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.606df31b1e0a3657": {
+      "messageId": "hub.ui.606df31b1e0a3657",
+      "format": "plain",
+      "defaultMessage": "Edited files and artifact",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c7dc9da11a038c05": {
+      "messageId": "hub.ui.c7dc9da11a038c05",
+      "format": "plain",
+      "defaultMessage": "Nothing running",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.858a8c6112517768": {
+      "messageId": "hub.ui.858a8c6112517768",
+      "format": "plain",
+      "defaultMessage": "Welcome back. Where should we pick up?",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1d162999e438850a": {
+      "messageId": "hub.ui.1d162999e438850a",
+      "format": "plain",
+      "defaultMessage": "Manage your keybinding scheme and customize shortcuts in VS Code.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c32e15cd136b82a5": {
+      "messageId": "hub.ui.c32e15cd136b82a5",
+      "format": "plain",
+      "defaultMessage": "Click a link in the view to open it.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ba4b81d43a709c90": {
+      "messageId": "hub.ui.ba4b81d43a709c90",
+      "format": "plain",
+      "defaultMessage": "No conversation selected",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f6199870f20b258e": {
+      "messageId": "hub.ui.f6199870f20b258e",
+      "format": "plain",
+      "defaultMessage": "Clear visited URLs and autocomplete suggestions from the built-in browser",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.75682a8299d2eb97": {
+      "messageId": "hub.ui.75682a8299d2eb97",
+      "format": "plain",
+      "defaultMessage": "Resume 1 comment draft",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.46f771858da82361": {
+      "messageId": "hub.ui.46f771858da82361",
+      "format": "plain",
+      "defaultMessage": "Installed separately",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.45b790ac8c7d918c": {
+      "messageId": "hub.ui.45b790ac8c7d918c",
+      "format": "plain",
+      "defaultMessage": "Sites with cookies",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.18be8ade995e7f84": {
+      "messageId": "hub.ui.18be8ade995e7f84",
+      "format": "plain",
+      "defaultMessage": "Retry narrator view",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0e580041e77771f2": {
+      "messageId": "hub.ui.0e580041e77771f2",
+      "format": "plain",
+      "defaultMessage": "view.html is over 64 KB",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6da694f779f448af": {
+      "messageId": "hub.ui.6da694f779f448af",
+      "format": "plain",
+      "defaultMessage": "Clear history, cookies and site data from the built-in browser, or manage cookies for each site.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6d9a9843b73f4e7a": {
+      "messageId": "hub.ui.6d9a9843b73f4e7a",
+      "format": "plain",
+      "defaultMessage": "Failed to unarchive local project",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5775a093a4ef1a85": {
+      "messageId": "hub.ui.5775a093a4ef1a85",
+      "format": "plain",
+      "defaultMessage": "Marketing & Content",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b4a5396200f9185c": {
+      "messageId": "hub.ui.b4a5396200f9185c",
+      "format": "plain",
+      "defaultMessage": "Terminating",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.32ab018fd38a7b42": {
+      "messageId": "hub.ui.32ab018fd38a7b42",
+      "format": "plain",
+      "defaultMessage": "Graph",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.78797afdac993780": {
+      "messageId": "hub.ui.78797afdac993780",
+      "format": "plain",
+      "defaultMessage": "Listed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8c13f73ba145c626": {
+      "messageId": "hub.ui.8c13f73ba145c626",
+      "format": "plain",
+      "defaultMessage": "Swarm",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d5203617aee0cd9b": {
+      "messageId": "hub.ui.d5203617aee0cd9b",
+      "format": "plain",
+      "defaultMessage": "Failed to load transcript",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c98d7fd85705ac6d": {
+      "messageId": "hub.ui.c98d7fd85705ac6d",
+      "format": "plain",
+      "defaultMessage": "Start without a workspace, for general questions.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.17f48909e9ba086a": {
+      "messageId": "hub.ui.17f48909e9ba086a",
+      "format": "plain",
+      "defaultMessage": "Edited artifacts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e7c7bb84611a6275": {
+      "messageId": "hub.ui.e7c7bb84611a6275",
+      "format": "plain",
+      "defaultMessage": "No sites have cookies in the built-in browser.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9a55d464d063262f": {
+      "messageId": "hub.ui.9a55d464d063262f",
+      "format": "plain",
+      "defaultMessage": "This Conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.425fd9623996e1e8": {
+      "messageId": "hub.ui.425fd9623996e1e8",
+      "format": "plain",
+      "defaultMessage": "Remove bundle",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.641d1ef657bdfd9f": {
+      "messageId": "hub.ui.641d1ef657bdfd9f",
+      "format": "plain",
+      "defaultMessage": "Follow",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1ce37f395d7aa7aa": {
+      "messageId": "hub.ui.1ce37f395d7aa7aa",
+      "format": "plain",
+      "defaultMessage": "Select Branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.aafd83fdb0f4d88c": {
+      "messageId": "hub.ui.aafd83fdb0f4d88c",
+      "format": "plain",
+      "defaultMessage": "Configure link opening and built-in browser preferences",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ebfbcc931abea370": {
+      "messageId": "hub.ui.ebfbcc931abea370",
+      "format": "plain",
+      "defaultMessage": "Click to hide from the board",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5d9a85d72cd7f978": {
+      "messageId": "hub.ui.5d9a85d72cd7f978",
+      "format": "plain",
+      "defaultMessage": "Edited files",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.33278c7fd7903628": {
+      "messageId": "hub.ui.33278c7fd7903628",
+      "format": "plain",
+      "defaultMessage": "Show posts that call on one member",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a1f1c821368c0a42": {
+      "messageId": "hub.ui.a1f1c821368c0a42",
+      "format": "plain",
+      "defaultMessage": "Your swarm is starting",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.af932925c88c6df3": {
+      "messageId": "hub.ui.af932925c88c6df3",
+      "format": "plain",
+      "defaultMessage": "Configure workspace-specific permissions, resources, and customizations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7850ecd61123f3f7": {
+      "messageId": "hub.ui.7850ecd61123f3f7",
+      "format": "plain",
+      "defaultMessage": "Play / pause replay (space)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f017cad972f500e5": {
+      "messageId": "hub.ui.f017cad972f500e5",
+      "format": "plain",
+      "defaultMessage": "Unarchive the main conversation to insert",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3f5aadfe15bfc9d6": {
+      "messageId": "hub.ui.3f5aadfe15bfc9d6",
+      "format": "plain",
+      "defaultMessage": "Ask before sensitive operations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a9c0bc84dbcf9456": {
+      "messageId": "hub.ui.a9c0bc84dbcf9456",
+      "format": "plain",
+      "defaultMessage": "Cannot promote while side question is running",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b6f7e5a48677228a": {
+      "messageId": "hub.ui.b6f7e5a48677228a",
+      "format": "plain",
+      "defaultMessage": "Open browser screenshot",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.92d78d88918e2a9e": {
+      "messageId": "hub.ui.92d78d88918e2a9e",
+      "format": "plain",
+      "defaultMessage": "Scrollable table",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.031a8f0f659df890": {
+      "messageId": "hub.ui.031a8f0f659df890",
+      "format": "plain",
+      "defaultMessage": "Failed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d353a99eb4556847": {
+      "messageId": "hub.ui.d353a99eb4556847",
+      "format": "plain",
+      "defaultMessage": "Cancelled",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.79670c9b5d43b33b": {
+      "messageId": "hub.ui.79670c9b5d43b33b",
+      "format": "plain",
+      "defaultMessage": "No tasks completed yet.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.81bc5ae8d5396fd2": {
+      "messageId": "hub.ui.81bc5ae8d5396fd2",
+      "format": "plain",
+      "defaultMessage": "Many workers",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d0027313dd37fa69": {
+      "messageId": "hub.ui.d0027313dd37fa69",
+      "format": "plain",
+      "defaultMessage": "Loading worktrees…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fdc17f3c2d727096": {
+      "messageId": "hub.ui.fdc17f3c2d727096",
+      "format": "plain",
+      "defaultMessage": "Cancel (Cmd+D)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0436231679a0cb2b": {
+      "messageId": "hub.ui.0436231679a0cb2b",
+      "format": "plain",
+      "defaultMessage": "Signing out...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6f056e849aac8015": {
+      "messageId": "hub.ui.6f056e849aac8015",
+      "format": "plain",
+      "defaultMessage": "Filter by recipient",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1b9f384c1436f607": {
+      "messageId": "hub.ui.1b9f384c1436f607",
+      "format": "plain",
+      "defaultMessage": "Unread",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fb25ca9eb9b5fd8a": {
+      "messageId": "hub.ui.fb25ca9eb9b5fd8a",
+      "format": "plain",
+      "defaultMessage": "New WSL Window",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c46791ab7c246438": {
+      "messageId": "hub.ui.c46791ab7c246438",
+      "format": "plain",
+      "defaultMessage": "The main conversation's input isn't available right now.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9eec7960bbcd6a9d": {
+      "messageId": "hub.ui.9eec7960bbcd6a9d",
+      "format": "plain",
+      "defaultMessage": "Start a side question",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3041783c48f11a4c": {
+      "messageId": "hub.ui.3041783c48f11a4c",
+      "format": "plain",
+      "defaultMessage": "Deleted setup routine",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bd1b33591a4a4415": {
+      "messageId": "hub.ui.bd1b33591a4a4415",
+      "format": "plain",
+      "defaultMessage": "Customize Shortcuts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f22b7b511b4f4ae8": {
+      "messageId": "hub.ui.f22b7b511b4f4ae8",
+      "format": "plain",
+      "defaultMessage": "Response actions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9750859eb53a8aca": {
+      "messageId": "hub.ui.9750859eb53a8aca",
+      "format": "plain",
+      "defaultMessage": "Cancel (Ctrl+C)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3a0d81c0bf5fc791": {
+      "messageId": "hub.ui.3a0d81c0bf5fc791",
+      "format": "plain",
+      "defaultMessage": "Started during the main conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e9ce531d30ab7e59": {
+      "messageId": "hub.ui.e9ce531d30ab7e59",
+      "format": "plain",
+      "defaultMessage": "Standing by",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.78f9f70c4b80d633": {
+      "messageId": "hub.ui.78f9f70c4b80d633",
+      "format": "plain",
+      "defaultMessage": "Insert into main conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.40bb50da160cdc21": {
+      "messageId": "hub.ui.40bb50da160cdc21",
+      "format": "plain",
+      "defaultMessage": "Move down",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.afde8770baee81bd": {
+      "messageId": "hub.ui.afde8770baee81bd",
+      "format": "plain",
+      "defaultMessage": "Edited artifact",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.32fd144c1f4b399d": {
+      "messageId": "hub.ui.32fd144c1f4b399d",
+      "format": "plain",
+      "defaultMessage": "Close Window",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.94d2ee3da6dbc6a4": {
+      "messageId": "hub.ui.94d2ee3da6dbc6a4",
+      "format": "plain",
+      "defaultMessage": "Only GitHub repos are included in Remote",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.29867e83bc53ef14": {
+      "messageId": "hub.ui.29867e83bc53ef14",
+      "format": "plain",
+      "defaultMessage": "Timed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0d2685c5f8107a18": {
+      "messageId": "hub.ui.0d2685c5f8107a18",
+      "format": "plain",
+      "defaultMessage": "Choose between non-colliding VS Code defaults or standalone Antigravity chords.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.918d8c3f402c6163": {
+      "messageId": "hub.ui.918d8c3f402c6163",
+      "format": "plain",
+      "defaultMessage": "Explored artifact",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b063c889bc90a1db": {
+      "messageId": "hub.ui.b063c889bc90a1db",
+      "format": "plain",
+      "defaultMessage": "Swarms started in this conversation appear here automatically, with their board, members and @mention graph. Start one with",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.18bc7d05be58400c": {
+      "messageId": "hub.ui.18bc7d05be58400c",
+      "format": "plain",
+      "defaultMessage": "Explored file and artifacts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4f04a5f84f36e0dd": {
+      "messageId": "hub.ui.4f04a5f84f36e0dd",
+      "format": "plain",
+      "defaultMessage": "Cloning locally…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.24db14082e125a84": {
+      "messageId": "hub.ui.24db14082e125a84",
+      "format": "plain",
+      "defaultMessage": "To @all",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.53c4accd5d05336b": {
+      "messageId": "hub.ui.53c4accd5d05336b",
+      "format": "plain",
+      "defaultMessage": "Telemetry will be disabled for this conversation; click to enable.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ae3f6ca3c043f874": {
+      "messageId": "hub.ui.ae3f6ca3c043f874",
+      "format": "plain",
+      "defaultMessage": "Explored file and artifact",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a2a0a3533474bdc3": {
+      "messageId": "hub.ui.a2a0a3533474bdc3",
+      "format": "plain",
+      "defaultMessage": "No swarm in this conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.59fe0b6e8ad0a526": {
+      "messageId": "hub.ui.59fe0b6e8ad0a526",
+      "format": "plain",
+      "defaultMessage": "Reuse your last workspace.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5051902c7b6a368b": {
+      "messageId": "hub.ui.5051902c7b6a368b",
+      "format": "plain",
+      "defaultMessage": "Switch branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4c8906cf76f5740a": {
+      "messageId": "hub.ui.4c8906cf76f5740a",
+      "format": "plain",
+      "defaultMessage": "Channels",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f79b2ae22d4dec0b": {
+      "messageId": "hub.ui.f79b2ae22d4dec0b",
+      "format": "plain",
+      "defaultMessage": "Only applies when grouped by status",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.71bf03ad1f6ba119": {
+      "messageId": "hub.ui.71bf03ad1f6ba119",
+      "format": "plain",
+      "defaultMessage": "Select a branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a0c984e85b278a86": {
+      "messageId": "hub.ui.a0c984e85b278a86",
+      "format": "plain",
+      "defaultMessage": "Opens the New Conversation screen for this project",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.947d67b5d278505c": {
+      "messageId": "hub.ui.947d67b5d278505c",
+      "format": "plain",
+      "defaultMessage": "Filter by channel",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7179ea0035fca783": {
+      "messageId": "hub.ui.7179ea0035fca783",
+      "format": "plain",
+      "defaultMessage": "Clear filters",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.579bfb1ea99b650e": {
+      "messageId": "hub.ui.579bfb1ea99b650e",
+      "format": "plain",
+      "defaultMessage": "Choose the models Orchestrator uses. A larger, smarter orchestrator model with a faster, cheaper executor gives high quality for fewer tokens.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fa5f38f044c49ab3": {
+      "messageId": "hub.ui.fa5f38f044c49ab3",
+      "format": "plain",
+      "defaultMessage": "Manage Antigravity Insiders app settings.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.499a014e50ca0245": {
+      "messageId": "hub.ui.499a014e50ca0245",
+      "format": "plain",
+      "defaultMessage": "All workers",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.23cf109ef68f54a0": {
+      "messageId": "hub.ui.23cf109ef68f54a0",
+      "format": "plain",
+      "defaultMessage": "This side question isn't available in this conversation.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2eee037c67fbe81b": {
+      "messageId": "hub.ui.2eee037c67fbe81b",
+      "format": "plain",
+      "defaultMessage": "Branches",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.72c1b406f0f97b6f": {
+      "messageId": "hub.ui.72c1b406f0f97b6f",
+      "format": "plain",
+      "defaultMessage": "Configure allowed and denied URLs for the browser subagent. It runs in the built-in browser, so no separate browser install is needed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fc7f1aa2054c2283": {
+      "messageId": "hub.ui.fc7f1aa2054c2283",
+      "format": "plain",
+      "defaultMessage": "Listing",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.84f2b4ae34d68e15": {
+      "messageId": "hub.ui.84f2b4ae34d68e15",
+      "format": "plain",
+      "defaultMessage": "Scrub through progress",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6497fc6f84000b29": {
+      "messageId": "hub.ui.6497fc6f84000b29",
+      "format": "plain",
+      "defaultMessage": "Search members",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.01345dbfd6e59bbc": {
+      "messageId": "hub.ui.01345dbfd6e59bbc",
+      "format": "plain",
+      "defaultMessage": "Swarm views",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c26cc71664beb87f": {
+      "messageId": "hub.ui.c26cc71664beb87f",
+      "format": "plain",
+      "defaultMessage": "Nothing waiting",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.587c2564c1c53415": {
+      "messageId": "hub.ui.587c2564c1c53415",
+      "format": "plain",
+      "defaultMessage": "Open on phone",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9c9806d2d6a70337": {
+      "messageId": "hub.ui.9c9806d2d6a70337",
+      "format": "plain",
+      "defaultMessage": "Posts to the swarm board will appear here as members talk.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.40693055fb81c106": {
+      "messageId": "hub.ui.40693055fb81c106",
+      "format": "plain",
+      "defaultMessage": "Replay position",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2ee11474fabca6e8": {
+      "messageId": "hub.ui.2ee11474fabca6e8",
+      "format": "plain",
+      "defaultMessage": "Cleared built-in browser history",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f2bd677095e47a53": {
+      "messageId": "hub.ui.f2bd677095e47a53",
+      "format": "plain",
+      "defaultMessage": "No posts yet",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3c8cff6e2a8e52bd": {
+      "messageId": "hub.ui.3c8cff6e2a8e52bd",
+      "format": "plain",
+      "defaultMessage": "Edited file and artifact",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7c5b2da19293eb98": {
+      "messageId": "hub.ui.7c5b2da19293eb98",
+      "format": "plain",
+      "defaultMessage": "Current branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.81219e5771466627": {
+      "messageId": "hub.ui.81219e5771466627",
+      "format": "plain",
+      "defaultMessage": "Showing the last good view.json; the current file is not valid JSON.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e6ce4eb862b0fecd": {
+      "messageId": "hub.ui.e6ce4eb862b0fecd",
+      "format": "plain",
+      "defaultMessage": "Narrator view (AI-generated)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fce263d326818c62": {
+      "messageId": "hub.ui.fce263d326818c62",
+      "format": "plain",
+      "defaultMessage": "No workspace",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.54994d8eb3c61f6e": {
+      "messageId": "hub.ui.54994d8eb3c61f6e",
+      "format": "plain",
+      "defaultMessage": "This workspace overrides your global permission settings.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0430fbfc3d68bf6f": {
+      "messageId": "hub.ui.0430fbfc3d68bf6f",
+      "format": "plain",
+      "defaultMessage": "Show how full the context window is next to the send button. Click it for a breakdown and to see your model quota",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dd2eda63fc09ebb2": {
+      "messageId": "hub.ui.dd2eda63fc09ebb2",
+      "format": "plain",
+      "defaultMessage": "No posts match",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ac1aa2fbc8cd0737": {
+      "messageId": "hub.ui.ac1aa2fbc8cd0737",
+      "format": "plain",
+      "defaultMessage": "Browsing Data",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.820ccbef36f60b83": {
+      "messageId": "hub.ui.820ccbef36f60b83",
+      "format": "plain",
+      "defaultMessage": "Edited file and artifacts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a5f69d1841cbbd17": {
+      "messageId": "hub.ui.a5f69d1841cbbd17",
+      "format": "plain",
+      "defaultMessage": "Add instruction",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2c8c3c0c4ac4aeec": {
+      "messageId": "hub.ui.2c8c3c0c4ac4aeec",
+      "format": "plain",
+      "defaultMessage": "Opening files needs the app.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a8c8453cc5e255f2": {
+      "messageId": "hub.ui.a8c8453cc5e255f2",
+      "format": "plain",
+      "defaultMessage": "Active: mid-turn (thinking, running a tool, or waiting on the model)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2ddaa716790258bb": {
+      "messageId": "hub.ui.2ddaa716790258bb",
+      "format": "plain",
+      "defaultMessage": "Open in Google Docs",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.87b007261779ec1a": {
+      "messageId": "hub.ui.87b007261779ec1a",
+      "format": "plain",
+      "defaultMessage": "Not on the roster",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.128374b53cc69c01": {
+      "messageId": "hub.ui.128374b53cc69c01",
+      "format": "plain",
+      "defaultMessage": "To no one",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.63ddfca0b46b10a9": {
+      "messageId": "hub.ui.63ddfca0b46b10a9",
+      "format": "plain",
+      "defaultMessage": "Select Branch...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f7f231a086863614": {
+      "messageId": "hub.ui.f7f231a086863614",
+      "format": "plain",
+      "defaultMessage": "Run all commands without restrictions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a8b0918b9f6cbd95": {
+      "messageId": "hub.ui.a8b0918b9f6cbd95",
+      "format": "plain",
+      "defaultMessage": "Resume comment draft",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4816cbfd74aa8297": {
+      "messageId": "hub.ui.4816cbfd74aa8297",
+      "format": "plain",
+      "defaultMessage": "Board",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e08c777302863717": {
+      "messageId": "hub.ui.e08c777302863717",
+      "format": "plain",
+      "defaultMessage": "The coordinator splits it into tasks.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c5746e21a956afd1": {
+      "messageId": "hub.ui.c5746e21a956afd1",
+      "format": "plain",
+      "defaultMessage": "Canceled deletion of setup routine",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b55b2166f1aef053": {
+      "messageId": "hub.ui.b55b2166f1aef053",
+      "format": "plain",
+      "defaultMessage": "Expand @all",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8bb53aacb2ac94a3": {
+      "messageId": "hub.ui.8bb53aacb2ac94a3",
+      "format": "plain",
+      "defaultMessage": "Plans the work, makes design decisions, and reviews the result. Pick a top-tier model. You can also pick one per conversation from the Orchestrator row in the model menu.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.587f856d5431a721": {
+      "messageId": "hub.ui.587f856d5431a721",
+      "format": "plain",
+      "defaultMessage": "Toggle Word Wrap",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a02d10ca8dbfb12f": {
+      "messageId": "hub.ui.a02d10ca8dbfb12f",
+      "format": "plain",
+      "defaultMessage": "Looking for this conversation's swarm…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4354d8358fff218a": {
+      "messageId": "hub.ui.4354d8358fff218a",
+      "format": "plain",
+      "defaultMessage": "Nothing needs you",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3aa96fcc6a8c70f2": {
+      "messageId": "hub.ui.3aa96fcc6a8c70f2",
+      "format": "plain",
+      "defaultMessage": "Keep the newest post in view",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7d68e6842e7a8595": {
+      "messageId": "hub.ui.7d68e6842e7a8595",
+      "format": "plain",
+      "defaultMessage": "Stopped: unloaded, revived when a post names it",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a4b64f5ec3537957": {
+      "messageId": "hub.ui.a4b64f5ec3537957",
+      "format": "plain",
+      "defaultMessage": "Edits the conversation title",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.50d6e49caa8924a3": {
+      "messageId": "hub.ui.50d6e49caa8924a3",
+      "format": "plain",
+      "defaultMessage": "No bundles available.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a8ae773d7501ed8c": {
+      "messageId": "hub.ui.a8ae773d7501ed8c",
+      "format": "plain",
+      "defaultMessage": "Select a branch...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3b0e634a120a78b8": {
+      "messageId": "hub.ui.3b0e634a120a78b8",
+      "format": "plain",
+      "defaultMessage": "Review contents",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8b9dbcf918e6fbdd": {
+      "messageId": "hub.ui.8b9dbcf918e6fbdd",
+      "format": "plain",
+      "defaultMessage": "Appears larger on mobile",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.432890c32353a375": {
+      "messageId": "hub.ui.432890c32353a375",
+      "format": "plain",
+      "defaultMessage": "No browser steps recorded",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5aba452b19a5e234": {
+      "messageId": "hub.ui.5aba452b19a5e234",
+      "format": "plain",
+      "defaultMessage": "System UI",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.233f644f36b81ad0": {
+      "messageId": "hub.ui.233f644f36b81ad0",
+      "format": "plain",
+      "defaultMessage": "Access restricted",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f4838b20ab8c7e22": {
+      "messageId": "hub.ui.f4838b20ab8c7e22",
+      "format": "plain",
+      "defaultMessage": "Bottom Panel",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6a51cc98a237e225": {
+      "messageId": "hub.ui.6a51cc98a237e225",
+      "format": "plain",
+      "defaultMessage": "Worktree branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.772887b6d0252c7e": {
+      "messageId": "hub.ui.772887b6d0252c7e",
+      "format": "plain",
+      "defaultMessage": "You can upgrade to a higher Google AI Ultra plan to receive the highest rate limits.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.44a1eca6ca25c186": {
+      "messageId": "hub.ui.44a1eca6ca25c186",
+      "format": "plain",
+      "defaultMessage": "The narrator is waiting for new board posts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ba69e64b0a570836": {
+      "messageId": "hub.ui.ba69e64b0a570836",
+      "format": "plain",
+      "defaultMessage": "Start/Stop Voice Recording",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0f68a6fd26e95b48": {
+      "messageId": "hub.ui.0f68a6fd26e95b48",
+      "format": "plain",
+      "defaultMessage": "Started during the subagent conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6f77831e5bf57aa5": {
+      "messageId": "hub.ui.6f77831e5bf57aa5",
+      "format": "plain",
+      "defaultMessage": "Cannot promote a subagent's side question",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a34868c7b2cf6596": {
+      "messageId": "hub.ui.a34868c7b2cf6596",
+      "format": "plain",
+      "defaultMessage": "Send a message in the main conversation first to start a side question",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4e427ad73b23a489": {
+      "messageId": "hub.ui.4e427ad73b23a489",
+      "format": "plain",
+      "defaultMessage": "Show everything and follow live",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f102a103cb38fe1d": {
+      "messageId": "hub.ui.f102a103cb38fe1d",
+      "format": "plain",
+      "defaultMessage": "Create branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.000eab90c46120bf": {
+      "messageId": "hub.ui.000eab90c46120bf",
+      "format": "plain",
+      "defaultMessage": "CLI Project",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9baac58ce586ea76": {
+      "messageId": "hub.ui.9baac58ce586ea76",
+      "format": "plain",
+      "defaultMessage": "Executor Model",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5cf5c04954572e98": {
+      "messageId": "hub.ui.5cf5c04954572e98",
+      "format": "plain",
+      "defaultMessage": "Loading bundles...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.79b4368e570c6772": {
+      "messageId": "hub.ui.79b4368e570c6772",
+      "format": "plain",
+      "defaultMessage": "Remove instruction",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.354ff2bd47ea952c": {
+      "messageId": "hub.ui.354ff2bd47ea952c",
+      "format": "plain",
+      "defaultMessage": "Remote branch",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.80905baf3aaec87b": {
+      "messageId": "hub.ui.80905baf3aaec87b",
+      "format": "plain",
+      "defaultMessage": "Ran commands",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3fd256357792ad9f": {
+      "messageId": "hub.ui.3fd256357792ad9f",
+      "format": "plain",
+      "defaultMessage": "Middle Click",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.93a54cd5a417ae5e": {
+      "messageId": "hub.ui.93a54cd5a417ae5e",
+      "format": "plain",
+      "defaultMessage": "Replay pacing",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e39f748785ba64e6": {
+      "messageId": "hub.ui.e39f748785ba64e6",
+      "format": "plain",
+      "defaultMessage": "Check for Updates...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ddd9e8095da873fe": {
+      "messageId": "hub.ui.ddd9e8095da873fe",
+      "format": "plain",
+      "defaultMessage": "Resume this agent where it paused",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d237a0cbaa6dcf37": {
+      "messageId": "hub.ui.d237a0cbaa6dcf37",
+      "format": "plain",
+      "defaultMessage": "Canceled saving setup routine",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ba35f0c47d862763": {
+      "messageId": "hub.ui.ba35f0c47d862763",
+      "format": "plain",
+      "defaultMessage": "Not started",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9e8488c2d204140b": {
+      "messageId": "hub.ui.9e8488c2d204140b",
+      "format": "plain",
+      "defaultMessage": "Want this view different? Tell the coordinator.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c52f575884d08440": {
+      "messageId": "hub.ui.c52f575884d08440",
+      "format": "plain",
+      "defaultMessage": "Monthly limit",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f8fa839eb7db8316": {
+      "messageId": "hub.ui.f8fa839eb7db8316",
+      "format": "plain",
+      "defaultMessage": "Explored files and artifacts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.41e10dbc5f08cd5d": {
+      "messageId": "hub.ui.41e10dbc5f08cd5d",
+      "format": "plain",
+      "defaultMessage": "Cancel (⌘D)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7d52ed5b19430d45": {
+      "messageId": "hub.ui.7d52ed5b19430d45",
+      "format": "plain",
+      "defaultMessage": "Microphone silent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.264c28cbf01ce9fa": {
+      "messageId": "hub.ui.264c28cbf01ce9fa",
+      "format": "plain",
+      "defaultMessage": "Thinking effort",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.50209c56159fa247": {
+      "messageId": "hub.ui.50209c56159fa247",
+      "format": "plain",
+      "defaultMessage": "Note: A change to this setting will only apply to new messages sent to the agent. In-progress responses will use the previous setting value.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bee5d9b4adecbd8c": {
+      "messageId": "hub.ui.bee5d9b4adecbd8c",
+      "format": "plain",
+      "defaultMessage": "loading the narrator view",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.25cb3f2d0e7d36b9": {
+      "messageId": "hub.ui.25cb3f2d0e7d36b9",
+      "format": "plain",
+      "defaultMessage": "Clone to a local folder",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cf30b3333062034a": {
+      "messageId": "hub.ui.cf30b3333062034a",
+      "format": "plain",
+      "defaultMessage": "Failed to load subagents",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d9f2a06e971e7dd5": {
+      "messageId": "hub.ui.d9f2a06e971e7dd5",
+      "format": "plain",
+      "defaultMessage": "Enter a side question after /btw",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b22dc3f2f72bf571": {
+      "messageId": "hub.ui.b22dc3f2f72bf571",
+      "format": "plain",
+      "defaultMessage": "Terminal & Tooling",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1df59a44a7f398b3": {
+      "messageId": "hub.ui.1df59a44a7f398b3",
+      "format": "plain",
+      "defaultMessage": "Next post (→)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4b33d5e03e53e655": {
+      "messageId": "hub.ui.4b33d5e03e53e655",
+      "format": "plain",
+      "defaultMessage": "All channels",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.132d124d6bb3d811": {
+      "messageId": "hub.ui.132d124d6bb3d811",
+      "format": "plain",
+      "defaultMessage": "Interrupted",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.559ced802dfb6ad4": {
+      "messageId": "hub.ui.559ced802dfb6ad4",
+      "format": "plain",
+      "defaultMessage": "Show Automation Conversations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.835918024f55a92c": {
+      "messageId": "hub.ui.835918024f55a92c",
+      "format": "plain",
+      "defaultMessage": "Nothing stuck",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2daa5e6bd2fd2258": {
+      "messageId": "hub.ui.2daa5e6bd2fd2258",
+      "format": "plain",
+      "defaultMessage": "Keybinding Scheme",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.90967f573a5b5c84": {
+      "messageId": "hub.ui.90967f573a5b5c84",
+      "format": "plain",
+      "defaultMessage": "Orchestrator Settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.67b6ffc1ed06f760": {
+      "messageId": "hub.ui.67b6ffc1ed06f760",
+      "format": "plain",
+      "defaultMessage": "Always open",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.661877634527357a": {
+      "messageId": "hub.ui.661877634527357a",
+      "format": "plain",
+      "defaultMessage": "All active Antigravity shortcuts and user keybinding overrides are managed directly by VS Code.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ee695b0426154cf0": {
+      "messageId": "hub.ui.ee695b0426154cf0",
+      "format": "plain",
+      "defaultMessage": "Carbon that may offload routine steps to Hydrogen. Same Carbon-level quality, fewer tokens used.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2f810cde244fb29c": {
+      "messageId": "hub.ui.2f810cde244fb29c",
+      "format": "plain",
+      "defaultMessage": "Search posts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f96054ce6f1f0951": {
+      "messageId": "hub.ui.f96054ce6f1f0951",
+      "format": "plain",
+      "defaultMessage": "Failed to clone project locally",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.674b604c36fefd3c": {
+      "messageId": "hub.ui.674b604c36fefd3c",
+      "format": "plain",
+      "defaultMessage": "Untitled swarm",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.314bbd6a54a7dd7a": {
+      "messageId": "hub.ui.314bbd6a54a7dd7a",
+      "format": "plain",
+      "defaultMessage": "Open this pane from a conversation to see its swarm. Swarms started there appear here automatically; start one with",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.111684f49899846d": {
+      "messageId": "hub.ui.111684f49899846d",
+      "format": "plain",
+      "defaultMessage": "Open full timeline",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dea3a1af785674a0": {
+      "messageId": "hub.ui.dea3a1af785674a0",
+      "format": "plain",
+      "defaultMessage": "Manage Antigravity app settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.822533d4403f83dd": {
+      "messageId": "hub.ui.822533d4403f83dd",
+      "format": "plain",
+      "defaultMessage": "Show posts by one member",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.31f72d3334c676ea": {
+      "messageId": "hub.ui.31f72d3334c676ea",
+      "format": "plain",
+      "defaultMessage": "Compare with now",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.328ece1bff2fae6a": {
+      "messageId": "hub.ui.328ece1bff2fae6a",
+      "format": "plain",
+      "defaultMessage": "Filter by worker",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1efabe1a2b824fd1": {
+      "messageId": "hub.ui.1efabe1a2b824fd1",
+      "format": "plain",
+      "defaultMessage": "Show Plugin Conversations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5f04ae9ed6a865bb": {
+      "messageId": "hub.ui.5f04ae9ed6a865bb",
+      "format": "plain",
+      "defaultMessage": "Connecting...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fc9a05b835a43412": {
+      "messageId": "hub.ui.fc9a05b835a43412",
+      "format": "plain",
+      "defaultMessage": "Updates land here. You step in only when asked.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a08705780ae4124f": {
+      "messageId": "hub.ui.a08705780ae4124f",
+      "format": "plain",
+      "defaultMessage": "overview · from the narrator's notes",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.507e92b772182dbd": {
+      "messageId": "hub.ui.507e92b772182dbd",
+      "format": "plain",
+      "defaultMessage": "Planned next",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dd3c7c60b806c8f3": {
+      "messageId": "hub.ui.dd3c7c60b806c8f3",
+      "format": "plain",
+      "defaultMessage": "Controls permissions for remote conversations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7486904e635f5a52": {
+      "messageId": "hub.ui.7486904e635f5a52",
+      "format": "plain",
+      "defaultMessage": "Next post",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0b25e7dc5e81a7a7": {
+      "messageId": "hub.ui.0b25e7dc5e81a7a7",
+      "format": "plain",
+      "defaultMessage": "Hide compare",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0dbee6abe543258f": {
+      "messageId": "hub.ui.0dbee6abe543258f",
+      "format": "plain",
+      "defaultMessage": "No file diff available",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6a27b943f49b36bc": {
+      "messageId": "hub.ui.6a27b943f49b36bc",
+      "format": "plain",
+      "defaultMessage": "Browser screenshot",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.afb9fcaf7a075949": {
+      "messageId": "hub.ui.afb9fcaf7a075949",
+      "format": "plain",
+      "defaultMessage": "Plain view",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2633673daf17be25": {
+      "messageId": "hub.ui.2633673daf17be25",
+      "format": "plain",
+      "defaultMessage": "VS Code Keyboard Shortcuts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.976d16df278c3b98": {
+      "messageId": "hub.ui.976d16df278c3b98",
+      "format": "plain",
+      "defaultMessage": "Quit Antigravity",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dda839b136174edf": {
+      "messageId": "hub.ui.dda839b136174edf",
+      "format": "plain",
+      "defaultMessage": "Download as zip",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3a80e9b087ac4c4f": {
+      "messageId": "hub.ui.3a80e9b087ac4c4f",
+      "format": "plain",
+      "defaultMessage": "No recordings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2215dbb2237a26b4": {
+      "messageId": "hub.ui.2215dbb2237a26b4",
+      "format": "plain",
+      "defaultMessage": "Cancel (⌃C)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fdc11f0b3af55e46": {
+      "messageId": "hub.ui.fdc11f0b3af55e46",
+      "format": "plain",
+      "defaultMessage": "Blocked: file type not allowed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7fb2fa8e350812bb": {
+      "messageId": "hub.ui.7fb2fa8e350812bb",
+      "format": "plain",
+      "defaultMessage": "Nothing planned",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1baac8b2cd3685c1": {
+      "messageId": "hub.ui.1baac8b2cd3685c1",
+      "format": "plain",
+      "defaultMessage": "No agents running",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.546ebb8eb993ea56": {
+      "messageId": "hub.ui.546ebb8eb993ea56",
+      "format": "plain",
+      "defaultMessage": "Filters",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.74b6abdf59690fdf": {
+      "messageId": "hub.ui.74b6abdf59690fdf",
+      "format": "plain",
+      "defaultMessage": "Needs you",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bcdc99ce8cf9a9c3": {
+      "messageId": "hub.ui.bcdc99ce8cf9a9c3",
+      "format": "plain",
+      "defaultMessage": "Developer-only tools. These settings do not affect other users",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3f167bec714df4ec": {
+      "messageId": "hub.ui.3f167bec714df4ec",
+      "format": "plain",
+      "defaultMessage": "System default app",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e1c99559b56a753f": {
+      "messageId": "hub.ui.e1c99559b56a753f",
+      "format": "plain",
+      "defaultMessage": "Running commands",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d1a8f44ad7dda012": {
+      "messageId": "hub.ui.d1a8f44ad7dda012",
+      "format": "plain",
+      "defaultMessage": "Draw @all as an edge to every member",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8fc63c7a8bff7d2c": {
+      "messageId": "hub.ui.8fc63c7a8bff7d2c",
+      "format": "plain",
+      "defaultMessage": "Creates a local automation that runs on this computer",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ef37f4e061bb04ce": {
+      "messageId": "hub.ui.ef37f4e061bb04ce",
+      "format": "plain",
+      "defaultMessage": "Actual Size",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.eac2679c0452b2af": {
+      "messageId": "hub.ui.eac2679c0452b2af",
+      "format": "plain",
+      "defaultMessage": "no view.html yet",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.62f8f7c6feabd968": {
+      "messageId": "hub.ui.62f8f7c6feabd968",
+      "format": "plain",
+      "defaultMessage": "Edit project name",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.705975faaaf54eb4": {
+      "messageId": "hub.ui.705975faaaf54eb4",
+      "format": "plain",
+      "defaultMessage": "Checking access...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.335dd52922b134d3": {
+      "messageId": "hub.ui.335dd52922b134d3",
+      "format": "plain",
+      "defaultMessage": "Connect to WSL...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c69022b396caebdd": {
+      "messageId": "hub.ui.c69022b396caebdd",
+      "format": "plain",
+      "defaultMessage": "Simplified interface for research, writing, and everyday tasks",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1622448aacd3a75a": {
+      "messageId": "hub.ui.1622448aacd3a75a",
+      "format": "plain",
+      "defaultMessage": "From anyone",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.64f4b4a47f30f6b1": {
+      "messageId": "hub.ui.64f4b4a47f30f6b1",
+      "format": "plain",
+      "defaultMessage": "Hey there, what should we build today?",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8c5831d9fd3efdd1": {
+      "messageId": "hub.ui.8c5831d9fd3efdd1",
+      "format": "plain",
+      "defaultMessage": "Enable Browser Agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fa6fe5441d2eee39": {
+      "messageId": "hub.ui.fa6fe5441d2eee39",
+      "format": "plain",
+      "defaultMessage": "Export GIF",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fd405c7fe3914bba": {
+      "messageId": "hub.ui.fd405c7fe3914bba",
+      "format": "plain",
+      "defaultMessage": "Coordinator · Working",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.aa209354500fe67b": {
+      "messageId": "hub.ui.aa209354500fe67b",
+      "format": "plain",
+      "defaultMessage": "Edited file",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3c4c32df4b2946e6": {
+      "messageId": "hub.ui.3c4c32df4b2946e6",
+      "format": "plain",
+      "defaultMessage": "Updates automatically",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.78ea8af1da894353": {
+      "messageId": "hub.ui.78ea8af1da894353",
+      "format": "plain",
+      "defaultMessage": "Unknown Worktree",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1778c02c07caafed": {
+      "messageId": "hub.ui.1778c02c07caafed",
+      "format": "plain",
+      "defaultMessage": "Answer it in the coordinator chat.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dc32410e394479aa": {
+      "messageId": "hub.ui.dc32410e394479aa",
+      "format": "plain",
+      "defaultMessage": "Explored artifacts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.037f4d22834dd26a": {
+      "messageId": "hub.ui.037f4d22834dd26a",
+      "format": "plain",
+      "defaultMessage": "Lost contact with the swarm sidecar; retrying",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5b50e7a693fee952": {
+      "messageId": "hub.ui.5b50e7a693fee952",
+      "format": "plain",
+      "defaultMessage": "Copy failed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.512bad71f6e6300d": {
+      "messageId": "hub.ui.512bad71f6e6300d",
+      "format": "plain",
+      "defaultMessage": "Swarms started in this conversation appear here automatically, with their board, members and @mention graph.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2bd6828d27089005": {
+      "messageId": "hub.ui.2bd6828d27089005",
+      "format": "plain",
+      "defaultMessage": "Configure allowed and denied URLs for the browser subagent (invoked with /browser). Requires",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a20aff1be6532f5c": {
+      "messageId": "hub.ui.a20aff1be6532f5c",
+      "format": "plain",
+      "defaultMessage": "Replay speed",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b4c52af02cc00bd5": {
+      "messageId": "hub.ui.b4c52af02cc00bd5",
+      "format": "plain",
+      "defaultMessage": "Filter by poster",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b468fd71c13fd4bc": {
+      "messageId": "hub.ui.b468fd71c13fd4bc",
+      "format": "plain",
+      "defaultMessage": "Application Menu",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.99af6606ff9d6cd5": {
+      "messageId": "hub.ui.99af6606ff9d6cd5",
+      "format": "plain",
+      "defaultMessage": "Menu",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2bd873d6c734e63e": {
+      "messageId": "hub.ui.2bd873d6c734e63e",
+      "format": "plain",
+      "defaultMessage": "Breadcrumb",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.73667278486b9c9d": {
+      "messageId": "hub.ui.73667278486b9c9d",
+      "format": "plain",
+      "defaultMessage": "Breadcrumbs",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.7a8a2fd67a09c4f2": {
+      "messageId": "hub.ui.7a8a2fd67a09c4f2",
+      "format": "plain",
+      "defaultMessage": "File Viewer header",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3c48ed51411bb08e": {
+      "messageId": "hub.ui.3c48ed51411bb08e",
+      "format": "plain",
+      "defaultMessage": "Maximize Side Panel",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.99d679f391b50ce2": {
+      "messageId": "hub.ui.99d679f391b50ce2",
+      "format": "plain",
+      "defaultMessage": "Background color picker",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.633dda19171c3122": {
+      "messageId": "hub.ui.633dda19171c3122",
+      "format": "plain",
+      "defaultMessage": "Foreground color picker",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4d95fe82a6689d33": {
+      "messageId": "hub.ui.4d95fe82a6689d33",
+      "format": "plain",
+      "defaultMessage": "Accent color picker",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.07b6641e599000ef": {
+      "messageId": "hub.ui.07b6641e599000ef",
+      "format": "plain",
+      "defaultMessage": "Choose which key sends a message in the chat composer.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.11c3beefc7432c39": {
+      "messageId": "hub.ui.11c3beefc7432c39",
+      "format": "plain",
+      "defaultMessage": "Press Enter to send, Shift+Enter for a new line.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.254a5f4f76406996": {
+      "messageId": "hub.ui.254a5f4f76406996",
+      "format": "plain",
+      "defaultMessage": "Press Ctrl+Enter to send, Enter for a new line.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.590514cf2fc8b187": {
+      "messageId": "hub.ui.590514cf2fc8b187",
+      "format": "plain",
+      "defaultMessage": "Press Cmd+Enter to send, Enter for a new line.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ab1173eed1d477d9": {
+      "messageId": "hub.ui.ab1173eed1d477d9",
+      "format": "plain",
+      "defaultMessage": "Plugin",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.14bde5dd1e3cb3c8": {
+      "messageId": "hub.ui.14bde5dd1e3cb3c8",
+      "format": "plain",
+      "defaultMessage": "Connect to Google Workspace, including Docs, Sheets, Slides, Drive, Calendar, and Gmail.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d66f8d268f3962f2": {
+      "messageId": "hub.ui.d66f8d268f3962f2",
+      "format": "plain",
+      "defaultMessage": "Agent skills, databases, and interactive viewers for scientific research.",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.filesChangedCount": {
+      "messageId": "web.dynamic.filesChangedCount",
+      "format": "icu",
+      "defaultMessage": "{0} files changed",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.fileChangedCount": {
+      "messageId": "web.dynamic.fileChangedCount",
+      "format": "icu",
+      "defaultMessage": "{0} file changed",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.toolsExcludedCount": {
+      "messageId": "web.dynamic.toolsExcludedCount",
+      "format": "icu",
+      "defaultMessage": "{0} tools excluded",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.toolExcludedCount": {
+      "messageId": "web.dynamic.toolExcludedCount",
+      "format": "icu",
+      "defaultMessage": "{0} tool excluded",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.updatesCount": {
+      "messageId": "web.dynamic.updatesCount",
+      "format": "icu",
+      "defaultMessage": "{0} updates",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.updateCount": {
+      "messageId": "web.dynamic.updateCount",
+      "format": "icu",
+      "defaultMessage": "{0} update",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.hideBreakdowns": {
+      "messageId": "web.dynamic.hideBreakdowns",
+      "format": "icu",
+      "defaultMessage": "Hide {0} breakdown{1}",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.stepsSlashProgress": {
+      "messageId": "web.dynamic.stepsSlashProgress",
+      "format": "icu",
+      "defaultMessage": "{0}/{1} steps",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.limitResetsIn": {
+      "messageId": "web.dynamic.limitResetsIn",
+      "format": "icu",
+      "defaultMessage": "{0} limit, resets in {1}",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.modelPeriodLimit": {
+      "messageId": "web.dynamic.modelPeriodLimit",
+      "format": "icu",
+      "defaultMessage": "{0} {1} limit",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.startedFromQuoted": {
+      "messageId": "web.dynamic.startedFromQuoted",
+      "format": "icu",
+      "defaultMessage": "Started from \"{0}\"",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.startedDuringQuoted": {
+      "messageId": "web.dynamic.startedDuringQuoted",
+      "format": "icu",
+      "defaultMessage": "Started during \"{0}\"",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.sendFeedbackAs": {
+      "messageId": "web.dynamic.sendFeedbackAs",
+      "format": "icu",
+      "defaultMessage": "Send feedback as {0}",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.selectModelCurrent": {
+      "messageId": "web.dynamic.selectModelCurrent",
+      "format": "icu",
+      "defaultMessage": "Select model, current: {0}",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.modelLockedRunning": {
+      "messageId": "web.dynamic.modelLockedRunning",
+      "format": "icu",
+      "defaultMessage": "Model: {0}, Model cannot be changed while the agent is running",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.permLockedRunning": {
+      "messageId": "web.dynamic.permLockedRunning",
+      "format": "icu",
+      "defaultMessage": "Agent permissions preset: {0}, Permissions cannot be changed while the agent is running",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.thoughtForDuration": {
+      "messageId": "web.dynamic.thoughtForDuration",
+      "format": "icu",
+      "defaultMessage": "Thought for {0}",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.thinkingForDuration": {
+      "messageId": "web.dynamic.thinkingForDuration",
+      "format": "icu",
+      "defaultMessage": "Thinking for {0}",
+      "surface": "hub.reviewed"
+    },
+    "web.dynamic.exitedWithCodeInline": {
+      "messageId": "web.dynamic.exitedWithCodeInline",
+      "format": "icu",
+      "defaultMessage": "{0} · Exited with code {1}",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0fcfb12dfad07ba0": {
+      "messageId": "hub.ui.0fcfb12dfad07ba0",
+      "format": "plain",
+      "defaultMessage": "Authentication required",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.016cf78cca62bd53": {
+      "messageId": "hub.ui.016cf78cca62bd53",
+      "format": "plain",
+      "defaultMessage": "Automatic check for updates",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ff81f1d41dfd7f18": {
+      "messageId": "hub.ui.ff81f1d41dfd7f18",
+      "format": "plain",
+      "defaultMessage": "Browser JavaScript execution policy",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3967283c635218cf": {
+      "messageId": "hub.ui.3967283c635218cf",
+      "format": "plain",
+      "defaultMessage": "Browser actuation rules",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6a6571b243b67aa0": {
+      "messageId": "hub.ui.6a6571b243b67aa0",
+      "format": "plain",
+      "defaultMessage": "Browsing data",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ad438ef1a7674f26": {
+      "messageId": "hub.ui.ad438ef1a7674f26",
+      "format": "plain",
+      "defaultMessage": "Browsing history",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.291e2a11434cfd2b": {
+      "messageId": "hub.ui.291e2a11434cfd2b",
+      "format": "plain",
+      "defaultMessage": "Build With Google plugins",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3c20ca49e345461a": {
+      "messageId": "hub.ui.3c20ca49e345461a",
+      "format": "plain",
+      "defaultMessage": "CitC workspace type",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.06445eb2e676b81e": {
+      "messageId": "hub.ui.06445eb2e676b81e",
+      "format": "plain",
+      "defaultMessage": "Command setup script",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.230515513f6092a8": {
+      "messageId": "hub.ui.230515513f6092a8",
+      "format": "plain",
+      "defaultMessage": "Commands outside sandbox",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a173dde0775e6c90": {
+      "messageId": "hub.ui.a173dde0775e6c90",
+      "format": "plain",
+      "defaultMessage": "Context and quota indicator",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a44d4f0162516f40": {
+      "messageId": "hub.ui.a44d4f0162516f40",
+      "format": "plain",
+      "defaultMessage": "Conversation steps",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dfeb364deafde7a3": {
+      "messageId": "hub.ui.dfeb364deafde7a3",
+      "format": "plain",
+      "defaultMessage": "Conversation width",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3cb27ae0fbca8ae3": {
+      "messageId": "hub.ui.3cb27ae0fbca8ae3",
+      "format": "plain",
+      "defaultMessage": "Copy image",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dbf362d4f210c780": {
+      "messageId": "hub.ui.dbf362d4f210c780",
+      "format": "plain",
+      "defaultMessage": "Copy link",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.38e1786909ac3783": {
+      "messageId": "hub.ui.38e1786909ac3783",
+      "format": "plain",
+      "defaultMessage": "Custom context menus",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9df8cadeb2f8fbad": {
+      "messageId": "hub.ui.9df8cadeb2f8fbad",
+      "format": "plain",
+      "defaultMessage": "Default Cog branch / ref",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e585a6abc3d15b3b": {
+      "messageId": "hub.ui.e585a6abc3d15b3b",
+      "format": "plain",
+      "defaultMessage": "Default Cog repository",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cdb50c4eb4d2585f": {
+      "messageId": "hub.ui.cdb50c4eb4d2585f",
+      "format": "plain",
+      "defaultMessage": "Default workspace VCS",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9f4173a91945f285": {
+      "messageId": "hub.ui.9f4173a91945f285",
+      "format": "plain",
+      "defaultMessage": "Delete all Remote Agents data",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.155106be1173d757": {
+      "messageId": "hub.ui.155106be1173d757",
+      "format": "plain",
+      "defaultMessage": "Device name",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c58e8815a57346ff": {
+      "messageId": "hub.ui.c58e8815a57346ff",
+      "format": "plain",
+      "defaultMessage": "Download location",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.223541cde6b049db": {
+      "messageId": "hub.ui.223541cde6b049db",
+      "format": "plain",
+      "defaultMessage": "Enable AI credit overages",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.938e28640f6e2c01": {
+      "messageId": "hub.ui.938e28640f6e2c01",
+      "format": "plain",
+      "defaultMessage": "Enable browser agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.494bac6b39b86701": {
+      "messageId": "hub.ui.494bac6b39b86701",
+      "format": "plain",
+      "defaultMessage": "Enable notifications for agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.64e9a353ec4fdecd": {
+      "messageId": "hub.ui.64e9a353ec4fdecd",
+      "format": "plain",
+      "defaultMessage": "Enable sandbox mode",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.72f537a5a00af678": {
+      "messageId": "hub.ui.72f537a5a00af678",
+      "format": "plain",
+      "defaultMessage": "Enable sounds for agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.115cf3dddfdbad7b": {
+      "messageId": "hub.ui.115cf3dddfdbad7b",
+      "format": "plain",
+      "defaultMessage": "Enable telemetry",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fc4e8890fc9e2fc3": {
+      "messageId": "hub.ui.fc4e8890fc9e2fc3",
+      "format": "plain",
+      "defaultMessage": "Enable terminal sandbox",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.03c539e810e07010": {
+      "messageId": "hub.ui.03c539e810e07010",
+      "format": "plain",
+      "defaultMessage": "Enter to send",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2befb23f7053dc26": {
+      "messageId": "hub.ui.2befb23f7053dc26",
+      "format": "plain",
+      "defaultMessage": "File access rules",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f79e34f8f5af8f6e": {
+      "messageId": "hub.ui.f79e34f8f5af8f6e",
+      "format": "plain",
+      "defaultMessage": "File reads",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a45c787e9ac5e0a1": {
+      "messageId": "hub.ui.a45c787e9ac5e0a1",
+      "format": "plain",
+      "defaultMessage": "File writes",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6d784d95c63833e6": {
+      "messageId": "hub.ui.6d784d95c63833e6",
+      "format": "plain",
+      "defaultMessage": "Font size",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ffff4354ccdf844e": {
+      "messageId": "hub.ui.ffff4354ccdf844e",
+      "format": "plain",
+      "defaultMessage": "Google One referral",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.52af1dbc2b1c0c52": {
+      "messageId": "hub.ui.52af1dbc2b1c0c52",
+      "format": "plain",
+      "defaultMessage": "Host environment",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.433616d904123cf9": {
+      "messageId": "hub.ui.433616d904123cf9",
+      "format": "plain",
+      "defaultMessage": "Include Jetski default customizations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cc55a21bff081e86": {
+      "messageId": "hub.ui.cc55a21bff081e86",
+      "format": "plain",
+      "defaultMessage": "Keep in menu bar",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b89124c79d1cf237": {
+      "messageId": "hub.ui.b89124c79d1cf237",
+      "format": "plain",
+      "defaultMessage": "Loading Hosts…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.92a37087b73b3538": {
+      "messageId": "hub.ui.92a37087b73b3538",
+      "format": "plain",
+      "defaultMessage": "Manage hooks",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2630ba4d3bbf1847": {
+      "messageId": "hub.ui.2630ba4d3bbf1847",
+      "format": "plain",
+      "defaultMessage": "Manage permissions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d0f678009d973cd7": {
+      "messageId": "hub.ui.d0f678009d973cd7",
+      "format": "plain",
+      "defaultMessage": "Markdown artifact width",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5a3e33bcdf2616ed": {
+      "messageId": "hub.ui.5a3e33bcdf2616ed",
+      "format": "plain",
+      "defaultMessage": "Marketing emails",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b58330ac25057a44": {
+      "messageId": "hub.ui.b58330ac25057a44",
+      "format": "plain",
+      "defaultMessage": "Move Down",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1359626e7b696434": {
+      "messageId": "hub.ui.1359626e7b696434",
+      "format": "plain",
+      "defaultMessage": "Move Up",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0815d664aa819b07": {
+      "messageId": "hub.ui.0815d664aa819b07",
+      "format": "plain",
+      "defaultMessage": "Network access rules",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9bf624ac6138cba7": {
+      "messageId": "hub.ui.9bf624ac6138cba7",
+      "format": "plain",
+      "defaultMessage": "New conversation button",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.855d682f94819266": {
+      "messageId": "hub.ui.855d682f94819266",
+      "format": "plain",
+      "defaultMessage": "No plugins available",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.491fc91cd76e5157": {
+      "messageId": "hub.ui.491fc91cd76e5157",
+      "format": "plain",
+      "defaultMessage": "Not signed in",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.63568f0582af1e88": {
+      "messageId": "hub.ui.63568f0582af1e88",
+      "format": "plain",
+      "defaultMessage": "Notification settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a65291255d71c726": {
+      "messageId": "hub.ui.a65291255d71c726",
+      "format": "plain",
+      "defaultMessage": "Open links in",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0fcabfe6e097cd40": {
+      "messageId": "hub.ui.0fcabfe6e097cd40",
+      "format": "plain",
+      "defaultMessage": "Operating system",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.44269ea744639d68": {
+      "messageId": "hub.ui.44269ea744639d68",
+      "format": "plain",
+      "defaultMessage": "Permission preset",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.38d492d7e7982ed9": {
+      "messageId": "hub.ui.38d492d7e7982ed9",
+      "format": "plain",
+      "defaultMessage": "Prevent sleep",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1a3b23c70d280f4b": {
+      "messageId": "hub.ui.1a3b23c70d280f4b",
+      "format": "plain",
+      "defaultMessage": "Pull Requests",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3464cd5908e5fa72": {
+      "messageId": "hub.ui.3464cd5908e5fa72",
+      "format": "plain",
+      "defaultMessage": "Screen reader mode",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e7ade7489317b0cf": {
+      "messageId": "hub.ui.e7ade7489317b0cf",
+      "format": "plain",
+      "defaultMessage": "Security preset",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d989893356eeff0f": {
+      "messageId": "hub.ui.d989893356eeff0f",
+      "format": "plain",
+      "defaultMessage": "See plans",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0fe0571facd9435c": {
+      "messageId": "hub.ui.0fe0571facd9435c",
+      "format": "plain",
+      "defaultMessage": "Send Message",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.af363a0fa1974e86": {
+      "messageId": "hub.ui.af363a0fa1974e86",
+      "format": "plain",
+      "defaultMessage": "Setup script",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0264d7b0ccb8d48b": {
+      "messageId": "hub.ui.0264d7b0ccb8d48b",
+      "format": "plain",
+      "defaultMessage": "Show Less",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2150d8df37e48957": {
+      "messageId": "hub.ui.2150d8df37e48957",
+      "format": "plain",
+      "defaultMessage": "Show all",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f10fd614835924d0": {
+      "messageId": "hub.ui.f10fd614835924d0",
+      "format": "plain",
+      "defaultMessage": "Signing Out...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3d591e826d545919": {
+      "messageId": "hub.ui.3d591e826d545919",
+      "format": "plain",
+      "defaultMessage": "Stop recording",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.954a7ace4e929466": {
+      "messageId": "hub.ui.954a7ace4e929466",
+      "format": "plain",
+      "defaultMessage": "Sync JJ worktrees to head",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a7016ea3c777fa3e": {
+      "messageId": "hub.ui.a7016ea3c777fa3e",
+      "format": "plain",
+      "defaultMessage": "Terminal command auto execution",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.142fa9db5f3c9aff": {
+      "messageId": "hub.ui.142fa9db5f3c9aff",
+      "format": "plain",
+      "defaultMessage": "Terminal commands",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bb42027e6c798677": {
+      "messageId": "hub.ui.bb42027e6c798677",
+      "format": "plain",
+      "defaultMessage": "Terminal placement",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a7b0060623380e53": {
+      "messageId": "hub.ui.a7b0060623380e53",
+      "format": "plain",
+      "defaultMessage": "Tool permissions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.f9eccf1bd6db5c6f": {
+      "messageId": "hub.ui.f9eccf1bd6db5c6f",
+      "format": "plain",
+      "defaultMessage": "User type",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.348c701c62ec6f92": {
+      "messageId": "hub.ui.348c701c62ec6f92",
+      "format": "plain",
+      "defaultMessage": "VS Code keyboard shortcuts",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d9ab76c650a66141": {
+      "messageId": "hub.ui.d9ab76c650a66141",
+      "format": "plain",
+      "defaultMessage": "Your plan",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4b0fd84a7499960f": {
+      "messageId": "hub.ui.4b0fd84a7499960f",
+      "format": "plain",
+      "defaultMessage": "Your plan: ",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.12ea12eace7d655f": {
+      "messageId": "hub.ui.12ea12eace7d655f",
+      "format": "plain",
+      "defaultMessage": "change",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d0b4ba2311b3e849": {
+      "messageId": "hub.ui.d0b4ba2311b3e849",
+      "format": "plain",
+      "defaultMessage": "changes",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e6bb5689beec52c4": {
+      "messageId": "hub.ui.e6bb5689beec52c4",
+      "format": "plain",
+      "defaultMessage": "dark",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.034a0062488256f1": {
+      "messageId": "hub.ui.034a0062488256f1",
+      "format": "plain",
+      "defaultMessage": "folder",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5e689e2b01672bf3": {
+      "messageId": "hub.ui.5e689e2b01672bf3",
+      "format": "plain",
+      "defaultMessage": "plugin",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.92cd10e6b8b068a9": {
+      "messageId": "hub.ui.92cd10e6b8b068a9",
+      "format": "plain",
+      "defaultMessage": "plugins",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.cde0fb0dec1400c5": {
+      "messageId": "hub.ui.cde0fb0dec1400c5",
+      "format": "plain",
+      "defaultMessage": "settings",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.34a04005bcaf206e": {
+      "messageId": "hub.ui.34a04005bcaf206e",
+      "format": "plain",
+      "defaultMessage": "target",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4e686af7bdcc5ae0": {
+      "messageId": "hub.ui.4e686af7bdcc5ae0",
+      "format": "plain",
+      "defaultMessage": "terminal",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b23a6a8439c0dde5": {
+      "messageId": "hub.ui.b23a6a8439c0dde5",
+      "format": "plain",
+      "defaultMessage": "unknown",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.360719440e92c924": {
+      "messageId": "hub.ui.360719440e92c924",
+      "format": "plain",
+      "defaultMessage": "3 days",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.92340695899bd2d8": {
+      "messageId": "hub.ui.92340695899bd2d8",
+      "format": "plain",
+      "defaultMessage": "Active",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a658498e45232aad": {
+      "messageId": "hub.ui.a658498e45232aad",
+      "format": "plain",
+      "defaultMessage": "Add target",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b64d6717b6fb60da": {
+      "messageId": "hub.ui.b64d6717b6fb60da",
+      "format": "plain",
+      "defaultMessage": "Agent goal",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1cfb21871a035769": {
+      "messageId": "hub.ui.1cfb21871a035769",
+      "format": "plain",
+      "defaultMessage": "Agent name",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.947c413740b60175": {
+      "messageId": "hub.ui.947c413740b60175",
+      "format": "plain",
+      "defaultMessage": "Allowed by you",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0c79a9c222840ed0": {
+      "messageId": "hub.ui.0c79a9c222840ed0",
+      "format": "plain",
+      "defaultMessage": "Applied",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.e5203b2e3b16b98c": {
+      "messageId": "hub.ui.e5203b2e3b16b98c",
+      "format": "plain",
+      "defaultMessage": "Auto-Resolve",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a0043bdd1a823a86": {
+      "messageId": "hub.ui.a0043bdd1a823a86",
+      "format": "plain",
+      "defaultMessage": "Auto-detect (browser defaults)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a0ef17612924548d": {
+      "messageId": "hub.ui.a0ef17612924548d",
+      "format": "plain",
+      "defaultMessage": "Automatically pin conversations when you send a message. Unpin as needed to keep your Pinned list focused.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.d58a6527f624317f": {
+      "messageId": "hub.ui.d58a6527f624317f",
+      "format": "plain",
+      "defaultMessage": "Available dictation languages",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5ef24ba91771824c": {
+      "messageId": "hub.ui.5ef24ba91771824c",
+      "format": "plain",
+      "defaultMessage": "Changes plugins can make without asking.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c6da331eadbee0e2": {
+      "messageId": "hub.ui.c6da331eadbee0e2",
+      "format": "plain",
+      "defaultMessage": "Chosen",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0890638dc39b634b": {
+      "messageId": "hub.ui.0890638dc39b634b",
+      "format": "plain",
+      "defaultMessage": "Click items to multi-select · Drag or ‹/› pills to reorder",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5aface4325015b89": {
+      "messageId": "hub.ui.5aface4325015b89",
+      "format": "plain",
+      "defaultMessage": "Clone from Remote",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.86bcb96c6ffc2039": {
+      "messageId": "hub.ui.86bcb96c6ffc2039",
+      "format": "plain",
+      "defaultMessage": "Clone from This Computer",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.aab1d35d32e3be24": {
+      "messageId": "hub.ui.aab1d35d32e3be24",
+      "format": "plain",
+      "defaultMessage": "Cloud Conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.439ff656ae62d179": {
+      "messageId": "hub.ui.439ff656ae62d179",
+      "format": "plain",
+      "defaultMessage": "Cloud conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.57a58225257d2d68": {
+      "messageId": "hub.ui.57a58225257d2d68",
+      "format": "plain",
+      "defaultMessage": "Constrain voice dictation to selected languages in priority order. Leave empty to auto-detect.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ae1e7e1fec8d9bc9": {
+      "messageId": "hub.ui.ae1e7e1fec8d9bc9",
+      "format": "plain",
+      "defaultMessage": "Continue as a new conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.05db0d5bfdb65f39": {
+      "messageId": "hub.ui.05db0d5bfdb65f39",
+      "format": "plain",
+      "defaultMessage": "Cookies the built-in browser stores for each site. Deleting a site's cookies usually signs you out of it. Other site data (local storage, IndexedDB, cache) is cleared only by Browsing data → Clear.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.dc9a3bc19b6af643": {
+      "messageId": "hub.ui.dc9a3bc19b6af643",
+      "format": "plain",
+      "defaultMessage": "Coordinators Options",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5a614e73e098159b": {
+      "messageId": "hub.ui.5a614e73e098159b",
+      "format": "plain",
+      "defaultMessage": "Create Agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.44ebb03bb18fa786": {
+      "messageId": "hub.ui.44ebb03bb18fa786",
+      "format": "plain",
+      "defaultMessage": "Default (Gemini Pro)",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.61f9adfcec68fb19": {
+      "messageId": "hub.ui.61f9adfcec68fb19",
+      "format": "plain",
+      "defaultMessage": "Default uses server-managed routing and Orchestrator quota. Custom pins specific models for orchestration and execution.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.eb6bb48625737637": {
+      "messageId": "hub.ui.eb6bb48625737637",
+      "format": "plain",
+      "defaultMessage": "Dictation language options",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.85ab04aa89e3b764": {
+      "messageId": "hub.ui.85ab04aa89e3b764",
+      "format": "plain",
+      "defaultMessage": "Dictation languages",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.ce3b6bfbc8f88d82": {
+      "messageId": "hub.ui.ce3b6bfbc8f88d82",
+      "format": "plain",
+      "defaultMessage": "For Me",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.256d89e543910e20": {
+      "messageId": "hub.ui.256d89e543910e20",
+      "format": "plain",
+      "defaultMessage": "For My Team",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1a9688e35e0fdb51": {
+      "messageId": "hub.ui.1a9688e35e0fdb51",
+      "format": "plain",
+      "defaultMessage": "Git-on-Borg repository used when creating a new Cog workspace from your initial prompt (e.g., chromium/chromium/src or android/platform/superproject).",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.94835ea2fcf775cd": {
+      "messageId": "hub.ui.94835ea2fcf775cd",
+      "format": "plain",
+      "defaultMessage": "Inbox",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4e8302555c909327": {
+      "messageId": "hub.ui.4e8302555c909327",
+      "format": "plain",
+      "defaultMessage": "Inbox Mode",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.47bab32fd916ab52": {
+      "messageId": "hub.ui.47bab32fd916ab52",
+      "format": "plain",
+      "defaultMessage": "Included with plugin",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2106e6308e0b3aa7": {
+      "messageId": "hub.ui.2106e6308e0b3aa7",
+      "format": "plain",
+      "defaultMessage": "Keep running conversations in a separate Working section instead of in the Inbox.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2d51e620ab468d3e": {
+      "messageId": "hub.ui.2d51e620ab468d3e",
+      "format": "plain",
+      "defaultMessage": "License required",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.3a496d425b0f4530": {
+      "messageId": "hub.ui.3a496d425b0f4530",
+      "format": "plain",
+      "defaultMessage": "Loading messages…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.168a9b854c6a874b": {
+      "messageId": "hub.ui.168a9b854c6a874b",
+      "format": "plain",
+      "defaultMessage": "Loading newer messages…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5f8d56ee81924cbe": {
+      "messageId": "hub.ui.5f8d56ee81924cbe",
+      "format": "plain",
+      "defaultMessage": "Locked while grouped by Status",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b21fe2228fc0d717": {
+      "messageId": "hub.ui.b21fe2228fc0d717",
+      "format": "plain",
+      "defaultMessage": "Matches this automation's active identity.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.bedc71237cfb741d": {
+      "messageId": "hub.ui.bedc71237cfb741d",
+      "format": "plain",
+      "defaultMessage": "Model selection",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6ecc3df6bffdd06c": {
+      "messageId": "hub.ui.6ecc3df6bffdd06c",
+      "format": "plain",
+      "defaultMessage": "Move",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.96035e9a1eea2076": {
+      "messageId": "hub.ui.96035e9a1eea2076",
+      "format": "plain",
+      "defaultMessage": "Move Conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c7e8ea9bfef01143": {
+      "messageId": "hub.ui.c7e8ea9bfef01143",
+      "format": "plain",
+      "defaultMessage": "Move idle Inbox conversations to Resolved automatically after the selected time.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c76c65bbcf329771": {
+      "messageId": "hub.ui.c76c65bbcf329771",
+      "format": "plain",
+      "defaultMessage": "Name unavailable",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6300ef800bb88429": {
+      "messageId": "hub.ui.6300ef800bb88429",
+      "format": "plain",
+      "defaultMessage": "Never",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c548aab130f7e7dd": {
+      "messageId": "hub.ui.c548aab130f7e7dd",
+      "format": "plain",
+      "defaultMessage": "New Agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.98a23e6db3431d16": {
+      "messageId": "hub.ui.98a23e6db3431d16",
+      "format": "plain",
+      "defaultMessage": "New agent",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.4c47f095edec7512": {
+      "messageId": "hub.ui.4c47f095edec7512",
+      "format": "plain",
+      "defaultMessage": "No agents",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b3839e7c0b517bcd": {
+      "messageId": "hub.ui.b3839e7c0b517bcd",
+      "format": "plain",
+      "defaultMessage": "No longer active",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.415446384c71044d": {
+      "messageId": "hub.ui.415446384c71044d",
+      "format": "plain",
+      "defaultMessage": "Nothing is always allowed. You'll be asked before this plugin makes changes.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9ef5bb4bd8f2a7f3": {
+      "messageId": "hub.ui.9ef5bb4bd8f2a7f3",
+      "format": "plain",
+      "defaultMessage": "Orchestrator model selection",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.229efc8f526335f1": {
+      "messageId": "hub.ui.229efc8f526335f1",
+      "format": "plain",
+      "defaultMessage": "Permission",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.39ff0591d35ae888": {
+      "messageId": "hub.ui.39ff0591d35ae888",
+      "format": "plain",
+      "defaultMessage": "Personal agent running as you",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.45b8612da93f60d7": {
+      "messageId": "hub.ui.45b8612da93f60d7",
+      "format": "plain",
+      "defaultMessage": "Plugin permissions",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.1c2226d4a5c66ac1": {
+      "messageId": "hub.ui.1c2226d4a5c66ac1",
+      "format": "plain",
+      "defaultMessage": "Project required",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c2b1b8e2e03928e2": {
+      "messageId": "hub.ui.c2b1b8e2e03928e2",
+      "format": "plain",
+      "defaultMessage": "Provisioning",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.6ff92452330e76c8": {
+      "messageId": "hub.ui.6ff92452330e76c8",
+      "format": "plain",
+      "defaultMessage": "Reset to auto",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c8f193b315c86f3a": {
+      "messageId": "hub.ui.c8f193b315c86f3a",
+      "format": "plain",
+      "defaultMessage": "Resolve",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.51138020a0e510d3": {
+      "messageId": "hub.ui.51138020a0e510d3",
+      "format": "plain",
+      "defaultMessage": "Resolve conversation",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5be3c2c8354e1eb9": {
+      "messageId": "hub.ui.5be3c2c8354e1eb9",
+      "format": "plain",
+      "defaultMessage": "Resolved",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.41f1736f8ba771eb": {
+      "messageId": "hub.ui.41f1736f8ba771eb",
+      "format": "plain",
+      "defaultMessage": "Return to Inbox",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.c6847a4b8d9995c4": {
+      "messageId": "hub.ui.c6847a4b8d9995c4",
+      "format": "plain",
+      "defaultMessage": "Revoke all",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.a7c4e215d2d3dcfd": {
+      "messageId": "hub.ui.a7c4e215d2d3dcfd",
+      "format": "plain",
+      "defaultMessage": "Search Repositories…",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.82bb9d99f6f685ea": {
+      "messageId": "hub.ui.82bb9d99f6f685ea",
+      "format": "plain",
+      "defaultMessage": "Search by name or username",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.9da7435c6b6ce648": {
+      "messageId": "hub.ui.9da7435c6b6ce648",
+      "format": "plain",
+      "defaultMessage": "Search identities",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.8838cea2f697382f": {
+      "messageId": "hub.ui.8838cea2f697382f",
+      "format": "plain",
+      "defaultMessage": "Search languages to add (e.g. English, Spanish, 中文, yue)...",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.331c4309f3f889ee": {
+      "messageId": "hub.ui.331c4309f3f889ee",
+      "format": "plain",
+      "defaultMessage": "Selected dictation languages",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.85bc0f95858d7572": {
+      "messageId": "hub.ui.85bc0f95858d7572",
+      "format": "plain",
+      "defaultMessage": "Self",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b5fbe59c68b31599": {
+      "messageId": "hub.ui.b5fbe59c68b31599",
+      "format": "plain",
+      "defaultMessage": "Self-watch target presets",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.164729bdb1eda4b4": {
+      "messageId": "hub.ui.164729bdb1eda4b4",
+      "format": "plain",
+      "defaultMessage": "Shared agent for your team",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.fa70650bebc3d864": {
+      "messageId": "hub.ui.fa70650bebc3d864",
+      "format": "plain",
+      "defaultMessage": "Show Automations",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.61ce40fe56f5642a": {
+      "messageId": "hub.ui.61ce40fe56f5642a",
+      "format": "plain",
+      "defaultMessage": "Show Plugins",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.2b8cbe0b6084ddeb": {
+      "messageId": "hub.ui.2b8cbe0b6084ddeb",
+      "format": "plain",
+      "defaultMessage": "Stalled",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.383cd6c0b871980d": {
+      "messageId": "hub.ui.383cd6c0b871980d",
+      "format": "plain",
+      "defaultMessage": "Subtitle",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.b4bbc6ce8da87847": {
+      "messageId": "hub.ui.b4bbc6ce8da87847",
+      "format": "plain",
+      "defaultMessage": "These come with the plugin and can't be revoked.",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.5d65bf1144a6eeb8": {
+      "messageId": "hub.ui.5d65bf1144a6eeb8",
+      "format": "plain",
+      "defaultMessage": "Toggle language list",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.55919e2f60c16e21": {
+      "messageId": "hub.ui.55919e2f60c16e21",
+      "format": "plain",
+      "defaultMessage": "Type your own answer",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0b5260e1b4054f46": {
+      "messageId": "hub.ui.0b5260e1b4054f46",
+      "format": "plain",
+      "defaultMessage": "Updating",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.28c52244f908d578": {
+      "messageId": "hub.ui.28c52244f908d578",
+      "format": "plain",
+      "defaultMessage": "What should this agent accomplish?",
+      "surface": "hub.reviewed"
+    },
+    "hub.ui.0ebb434f3189ef53": {
+      "messageId": "hub.ui.0ebb434f3189ef53",
+      "format": "plain",
+      "defaultMessage": "Working Section",
+      "surface": "hub.reviewed"
     }
   }
 }

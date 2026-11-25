@@ -112,6 +112,22 @@
       "verified_at": "2026-11-21",
       "notes": "Installed Hub 2.34.0 win-x64 original inspected at file offset 25398336; 352-byte summary ABI differs from 2.33.0 only in the three-byte morestack call displacement. Static exact-byte and offline candidate qualification only; no live model-limit behavior has been verified.",
       "arch": "x86-64"
+    },
+    {
+      "id": "hub-2.35.1-win-x64",
+      "app_version": "2.35.1",
+      "channel": "antigravity",
+      "platform": "win32",
+      "binary_name": "language_server.exe",
+      "binary_size": 208390656,
+      "binary_sha256": "73ce9a2405b455a93d1f13db2ae555da50406110217a349b6dd85c377fbdb9d1",
+      "func": "utils.ClampCheckpointConfigForModelInfo",
+      "func_size": 352,
+      "orig_body_hex": "493b66100f86fc000000554889e54883ec20488944243048895c24380f1f40004885c90f84db0000004885ff0f84d200000083790c00751f486357140f1f40004881fa409c00007f0431d2eb074881c2c063ffff89510c8b571485d27e164189d029f24439c6440f42c24439410c76044489410c837940037424488b415066904885c0747d80380074788b477085c07e718b511039c20f47d0895110eb6448894c2440e8b8fdffff4885db75554885c07450837814007e318b487085c9ba000000000f4fd13950147e18488b4c24408b590c8b701429d639f30f47de89590c90eb0c488b4c2440eb05488b4c2440837870007e0e8b51108b407039d00f42d0895110c9c3c9c3488944240848895c241048894c241848897c2420897424286690e83bd985fe488b442408488b5c2410488b4c2418488b7c24208b7424280f1f00e9bbfeffffcccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "orig_body_sha256": "a7740a32e033d70d44f01a0216f84ff39a27554b5a22bd68ddd0eeb23175f25d",
+      "verified_at": "2026-11-25",
+      "notes": "Extracted Hub 2.35.1 win-x64 original inspected at file offset 25395264 (pclntab entryoff 25393728); 352-byte summary ABI differs from 2.34.0 only in one byte of the morestack call displacement (0x122: cd -> d9). Static exact-byte and offline candidate qualification only; no live model-limit behavior has been verified.",
+      "arch": "x86-64"
     }
   ]
 }

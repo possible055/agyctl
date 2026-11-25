@@ -33,11 +33,77 @@ const TEMPLATE_IDS = new Set([
   "ssh.web.showingHost",
   "ssh.web.configGroup",
   "ssh.web.hiddenHostCount",
-  "ssh.web.onHost",
-  "ssh.web.connectedTo",
-  "ssh.web.hostWindowNotice",
-  "ssh.web.signInSubtitle",
+  'ssh.web.onHost',
+  'ssh.web.connectedTo',
+  'ssh.web.hostWindowNotice',
+  'ssh.web.signInSubtitle',
+  'web.dynamic.3e0af7ebbce06f3e',
+  'web.dynamic.8aa53228ab11d3f0',
+  'web.dynamic.8734eddd2ca8c27d',
+  'web.dynamic.ba223c98fb2a2df4',
+  'web.dynamic.454e7f1d1f5ac914',
+  'web.dynamic.60ca1e49c9e0741c',
+  'web.dynamic.0c2524dc63f259c7',
+  'web.dynamic.412e4dffb2629996',
+  'web.dynamic.98c571b8dabd90f8',
+  'web.dynamic.thoughtForDuration',
+  'web.dynamic.thinkingForDuration',
+  'web.dynamic.cec884ab8e4a91e3',
+  'web.dynamic.33c32d871d6a3338',
+  'web.dynamic.b56e8fb1ef219475',
+  'web.dynamic.dada0d17867d6cd2',
+  'web.dynamic.5cf5dffb295b2a76',
+  'web.dynamic.b691ab40657f48cc',
+  'web.dynamic.ebe8e231a3b47480',
+  'web.dynamic.f7ed596d477f4c10',
+  'web.dynamic.b121f988c5dba58c',
+  'web.dynamic.e5385f3f9c927a62',
+  'web.dynamic.cd65363d21edaa69',
+  'web.dynamic.322dbf89fb4ed2cb',
+  'web.dynamic.7fbd2e44fd6ff285',
+  'web.dynamic.136d8f4a07450f42',
+  'web.dynamic.filesChangedCount',
+  'web.dynamic.fileChangedCount',
+  'web.dynamic.toolsExcludedCount',
+  'web.dynamic.toolExcludedCount',
+  'web.dynamic.updatesCount',
+  'web.dynamic.updateCount',
+  'web.dynamic.startedFromQuoted',
+  'web.dynamic.startedDuringQuoted',
+  'web.dynamic.sendFeedbackAs',
+  'web.dynamic.selectModelCurrent',
+  'web.dynamic.modelLockedRunning',
+  'web.dynamic.permLockedRunning',
+  'web.dynamic.c1c5a52bbd551943',
+  'web.dynamic.234d862d95a0df20',
+  'web.dynamic.59546c79643cfca3',
+  'web.dynamic.1435a465b758be54',
+  'web.dynamic.1ae122608b6e3638',
 ]);
+
+const DYNAMIC_MESSAGE_IDS = [
+  'web.dynamic.05e1f0e4bc9129e2',
+  'web.dynamic.hideBreakdowns',
+  'web.dynamic.49c77955a54c72b6',
+  'web.dynamic.stepsSlashProgress',
+  'web.dynamic.8d43bc7326e0c594',
+  'web.dynamic.47c68a66813f7161',
+  'web.dynamic.5bffcb911400c11d',
+  'web.dynamic.20730fded4133690',
+  'web.dynamic.da284c85a3c61046',
+  'web.dynamic.e9851978b2aab6b3',
+  'web.dynamic.fe24c3e67564c3db',
+  'web.dynamic.f651b8d78c0f9325',
+  'web.dynamic.limitResetsIn',
+  'web.dynamic.modelPeriodLimit',
+  'web.dynamic.exitedWithCodeInline',
+  'web.dynamic.02a460e7eb6e2e1a',
+  'web.dynamic.38a186bb32684c56',
+  'web.dynamic.1a4c159163baf984',
+  'web.dynamic.d32b723dcecb6c25',
+  'web.dynamic.4d706d1527f0ac13',
+  'web.dynamic.2afcbbd6483dc1a6',
+] as const;
 
 export interface DomExactEntry {
   messageId: string;
@@ -57,6 +123,7 @@ export interface DomIndex {
   locale: string;
   exact: Record<string, DomExactEntry>;
   templates: DomTemplateEntry[];
+  dynamic?: Record<string, string>;
 }
 
 export interface DomIndexConflict {
@@ -181,12 +248,25 @@ export function buildDomIndex(
     });
   }
 
+  templates.sort(
+    (left, right) =>
+      right.prefix.length + right.suffix.length - (left.prefix.length + left.suffix.length) ||
+      left.messageId.localeCompare(right.messageId),
+  );
+
+  const dynamic: Record<string, string> = Object.create(null);
+  for (const messageId of DYNAMIC_MESSAGE_IDS) {
+    const translation = translations.messages[messageId]?.value;
+    if (typeof translation === 'string' && translation) dynamic[messageId] = translation;
+  }
+
   return {
     index: {
       schemaVersion: 1,
       locale: translations.locale,
       exact,
       templates,
+      ...(Object.keys(dynamic).length > 0 ? { dynamic } : {}),
     },
     conflicts,
   };

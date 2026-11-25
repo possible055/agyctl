@@ -13,21 +13,30 @@ import (
 const summaryFuncSize = 352
 const summaryOriginalSHA = "6c3e3ab006baf9105efd7d5a8545bddc8fdaef102f578d3bee9aad6967ebae25"
 const summaryOriginalSHA2340 = "74838fc0fceb71fd74a2fd8311840498b82baa1afe6ae638ffe284a82dcc122f"
+const summaryOriginalSHA2351 = "a7740a32e033d70d44f01a0216f84ff39a27554b5a22bd68ddd0eeb23175f25d"
 const summaryEncoding = "linked-v3-summary"
 const summaryOriginalHex = "493b66100f86fc000000554889e54883ec20488944243048895c24380f1f40004885c90f84db0000004885ff0f84d200000083790c00751f486357140f1f40004881fa409c00007f0431d2eb074881c2c063ffff89510c8b571485d27e164189d029f24439c6440f42c24439410c76044489410c837940037424488b415066904885c0747d80380074788b477085c07e718b511039c20f47d0895110eb6448894c2440e8b8fdffff4885db75554885c07450837814007e318b487085c9ba000000000f4fd13950147e18488b4c24408b590c8b701429d639f30f47de89590c90eb0c488b4c2440eb05488b4c2440837870007e0e8b51108b407039d00f42d0895110c9c3c9c3488944240848895c241048894c241848897c2420897424286690e85b5087fe488b442408488b5c2410488b4c2418488b7c24208b7424280f1f00e9bbfeffffcccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 
-func summaryOriginal2340() []byte {
+func summaryOriginalWithMorestack(disp0, disp1, disp2 byte) []byte {
 	original, _ := hex.DecodeString(summaryOriginalHex)
-	original[289], original[290], original[291] = 0x3b, 0xcd, 0x85
+	original[289], original[290], original[291] = disp0, disp1, disp2
 	return original
+}
+
+func summaryOriginals() [][]byte {
+	old, _ := hex.DecodeString(summaryOriginalHex)
+	return [][]byte{
+		old,
+		summaryOriginalWithMorestack(0x3b, 0xcd, 0x85),
+		summaryOriginalWithMorestack(0x3b, 0xd9, 0x85),
+	}
 }
 
 func summaryOriginalForBody(body []byte) ([]byte, bool) {
 	if len(body) != summaryFuncSize {
 		return nil, false
 	}
-	old, _ := hex.DecodeString(summaryOriginalHex)
-	for _, original := range [][]byte{old, summaryOriginal2340()} {
+	for _, original := range summaryOriginals() {
 		if bytes.Equal(body, original) || bytes.Equal(body[0x102:], original[0x102:]) {
 			return original, true
 		}
@@ -46,7 +55,7 @@ func supportedOriginal(arch string, body []byte) bool {
 		return false
 	}
 	sha := fsx.SHA256(body)
-	return sha == summaryOriginalSHA || sha == summaryOriginalSHA2340
+	return sha == summaryOriginalSHA || sha == summaryOriginalSHA2340 || sha == summaryOriginalSHA2351
 }
 
 // assembleSummaryLimits retains the original stack split, frame, call PCs and

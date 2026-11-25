@@ -207,6 +207,93 @@ test('reviewed catalogs prepare all three locales and keep aliases off the indep
   }
 });
 
+test('expanded dynamic patterns and new Hub UI terms translate accurately across all three locales', () => {
+  const source = JSON.parse(
+    fs.readFileSync(
+      path.join(process.cwd(), 'src', 'localization', 'catalogs', 'source.json'),
+      'utf8',
+    ),
+  );
+  const cases = {
+    'zh-Hant-TW': [
+      ['85% left', '剩餘 85%'],
+      ['Resets in 2h 15m', '將於 2 小時 15 分鐘 後重設'],
+      ['5h limit, resets in <1m', '5 小時 上限，將於 小於 1 分鐘 後重設'],
+      ['Weekly limit, resets in 4d 12h', '每週 上限，將於 4 天 12 小時 後重設'],
+      ['Gemini 4 Carbon Weekly limit', 'Gemini 4 Carbon 每週上限'],
+      ['3/7 steps', '3/7 步驟'],
+      ['Show 4 breakdowns', '顯示 4 項明細'],
+      ['Hide 4 breakdowns', '隱藏 4 項明細'],
+      ['Show 2 more subagents', '再顯示 2 個子代理程式'],
+      ['5 files changed', '5 個檔案已變更'],
+      ['3 tools excluded', '已排除 3 個工具'],
+      ['Rules: 1,234 tokens', '規則：1,234 個token'],
+      ['12,345 / 200,000 tokens (6%)', '12,345 / 200,000 個 token（6%）'],
+      ['Load older messages, showing 10 of 42', '載入較舊訊息，目前顯示 42 則中的 10 則'],
+      ['Turn 3 of 8', '第 3 回合，共 8 回合'],
+      [
+        'Explored 3 files, edited 1 artifact, ran 2 commands',
+        '已探索 3 個檔案，已編輯 1 個產物，已執行 2 條指令',
+      ],
+      ['Worked for 1m 20s · 3 updates', '作業時間：1 分鐘 20 秒 · 3 項更新'],
+      ['Thought for 45s', '思考了 45 秒'],
+      ['Thought for 1m 10s', '思考了 1 分鐘 10 秒'],
+      ['build · Exited with code 0', 'build · 已結束，結束碼 0'],
+      ['Started during “Review”', '在「Review」期間發起'],
+      ['Select model, current: Gemini 4', '選取模型，目前：Gemini 4'],
+      ['Agent permissions preset selector, current: Ask', '代理程式權限預設集選擇器，目前：詢問'],
+      ['Swarm', '協作群'],
+      ['Default Light', '預設淺色'],
+    ],
+    'zh-Hans-CN': [
+      ['85% left', '剩余 85%'],
+      ['5h limit, resets in <1m', '5 小时 限额，将在 少于 1 分钟 后重置'],
+      [
+        'Explored 3 files, edited 1 artifact, ran 2 commands',
+        '已探索 3 个文件，已编辑 1 个产物，已运行 2 条命令',
+      ],
+      ['Worked for 1m 20s · 3 updates', '工作时间：1 分钟 20 秒 · 3 次更新'],
+      ['Rules: 1,234 tokens', '规则：1,234 个token'],
+      ['Swarm', '协作群'],
+    ],
+    'ja-JP': [
+      ['85% left', '残り 85%'],
+      ['5h limit, resets in <1m', '5 時間 の上限、1 分未満 後にリセット'],
+      [
+        'Explored 3 files, edited 1 artifact, ran 2 commands',
+        '3 件のファイルを探索、1 件のアーティファクトを編集、2 件のコマンドを実行',
+      ],
+      ['Worked for 1m 20s · 3 updates', '作業時間：1 分 20 秒 · 3 件の更新'],
+      ['Rules: 1,234 tokens', 'ルール：1,234 トークン'],
+      ['Swarm', 'スウォーム'],
+    ],
+  };
+  for (const localeName of ['zh-Hant-TW', 'zh-Hans-CN', 'ja-JP']) {
+    const locale = JSON.parse(
+      fs.readFileSync(
+        path.join(process.cwd(), 'src', 'localization', 'catalogs', `${localeName}.json`),
+        'utf8',
+      ),
+    );
+    const { index } = buildDomArtifact({
+      profileId: 'catalog-contract',
+      adapterVersion: '1',
+      toolchainSha256: '0'.repeat(64),
+      locale: localeName,
+      formatLocale: locale.formatLocale,
+      catalog: source,
+      translations: locale,
+      engineSource: 'catalog-contract',
+    });
+    for (const [input, expected] of cases[localeName]) {
+      assert.equal(matchDisplayText(index, input)?.translated, expected, `${localeName}: ${input}`);
+    }
+    for (const nonNumeric of ['foo% left', 'See all (abc)', 'abc files changed', 'unknown% left']) {
+      assert.equal(matchDisplayText(index, nonNumeric), null, `${localeName}: ${nonNumeric}`);
+    }
+  }
+});
+
 test('formal DOM artifacts reject omitted translations and invalid capture templates without making partial developer catalogs complete', () => {
   const source = catalog({
     'nav.openSettings': message('nav.openSettings', 'Open Settings'),

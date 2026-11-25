@@ -192,7 +192,10 @@ export function isAllowedMatchContext(node: Node, messageId: string): boolean {
   const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
   if (element?.matches(AUTOMATION_EMPTY_SELECTOR)) return messageId === 'hub.ui.6104e79e98469b28';
   if (messageId === 'hub.ui.6104e79e98469b28') return false;
-  if (messageId === 'settings.appearance.defaultDark')
+  if (
+    messageId === 'settings.appearance.defaultDark' ||
+    messageId === 'settings.appearance.defaultLight'
+  )
     return !!element?.closest('[role="dialog"], .settings-modal-backdrop [role="listbox"]');
   if (messageId.startsWith('settings.appearance.') || messageId === 'settings.account.signOut' ||
       ['web.dynamic.71ad58dead35d173', 'web.dynamic.a830029ab6b18a96', 'web.dynamic.b3cf67f59a4576f3', 'web.dynamic.e281e0f3072a9d41'].includes(messageId))

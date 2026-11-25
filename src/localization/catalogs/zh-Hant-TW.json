@@ -16285,6 +16285,3326 @@
     "microphone.web.captureEnded": {
       "value": "麥克風擷取意外結束。",
       "reviewed": true
+    },
+    "hub.ui.b81aa3299dae3647": {
+      "value": "專案以外對話的代理設定與權限。",
+      "reviewed": true
+    },
+    "hub.ui.5016e54430e66d62": {
+      "value": "沿用全域設定",
+      "reviewed": true
+    },
+    "hub.ui.9dd1810322529357": {
+      "value": "管理專案資料夾、代理設定與權限。",
+      "reviewed": true
+    },
+    "hub.ui.86c5d8967ce412d3": {
+      "value": "若要修改編輯器設定，請在編輯器視窗中開啟設定。",
+      "reviewed": true
+    },
+    "hub.ui.63b717f7649733fa": {
+      "value": "對話設定",
+      "reviewed": true
+    },
+    "hub.ui.269cc00340008ef5": {
+      "value": "封鎖所有瀏覽器 JavaScript 執行。",
+      "reviewed": true
+    },
+    "hub.ui.fea49cd464cbfd2d": {
+      "value": "手動自訂個別設定。",
+      "reviewed": true
+    },
+    "hub.ui.4b873161f7a23f7e": {
+      "value": "終端機指令封鎖清單",
+      "reviewed": true
+    },
+    "hub.ui.c4d6bb200f4c058a": {
+      "value": "資料夾",
+      "reviewed": true
+    },
+    "hub.ui.a3e1386bbabf13ff": {
+      "value": "功能建議",
+      "reviewed": true
+    },
+    "hub.ui.9a70d0007209f453": {
+      "value": "停用所有安全防護，以獲得最高迭代速度。",
+      "reviewed": true
+    },
+    "hub.ui.c1ab9f877b8d6c16": {
+      "value": "錯誤回報",
+      "reviewed": true
+    },
+    "hub.ui.a4d5a599ce8510a5": {
+      "value": "顯示選取動作",
+      "reviewed": true
+    },
+    "hub.ui.53b42090b267e68c": {
+      "value": "完整電腦存取",
+      "reviewed": true
+    },
+    "hub.ui.83fdca3fffdc303b": {
+      "value": "所有終端機指令都需要審閱。代理可以讀寫這台電腦上的任何檔案。",
+      "reviewed": true
+    },
+    "hub.ui.6dad5052383d5030": {
+      "value": "切換開發人員工具",
+      "reviewed": true
+    },
+    "hub.ui.4997b635e053fc1d": {
+      "value": "Chrome/Chromium 執行檔路徑；留空則自動偵測。",
+      "reviewed": true
+    },
+    "hub.ui.6bf180c1b0f744d4": {
+      "value": "瀏覽器使用者設定檔路徑",
+      "reviewed": true
+    },
+    "hub.ui.92ca9c9d123c42d7": {
+      "value": "下一個窗格分頁",
+      "reviewed": true
+    },
+    "hub.ui.95215b435d5a56ca": {
+      "value": "上一個窗格分頁",
+      "reviewed": true
+    },
+    "hub.ui.629337dc2b9c9a12": {
+      "value": "在編輯器中選取文字時，顯示「編輯」與「聊天」按鈕。",
+      "reviewed": true
+    },
+    "hub.ui.3ac14c5b5c7f9b8c": {
+      "value": "驗證與帳單",
+      "reviewed": true
+    },
+    "hub.ui.9003e1b7e7c2912b": {
+      "value": "永久刪除",
+      "reviewed": true
+    },
+    "hub.ui.a13b6ae655c929ed": {
+      "value": "思考過程",
+      "reviewed": true
+    },
+    "hub.ui.f1da1790c30522ed": {
+      "value": "開啟編輯器設定",
+      "reviewed": true
+    },
+    "hub.ui.dcdcde120ec79563": {
+      "value": "所有終端機指令與工作資料夾以外的檔案存取皆需手動審閱。",
+      "reviewed": true
+    },
+    "hub.ui.1d2f1b7b7cea4125": {
+      "value": "遠端控制問題",
+      "reviewed": true
+    },
+    "hub.ui.23a06914f4610215": {
+      "value": "一般意見回饋",
+      "reviewed": true
+    },
+    "settings.appearance.defaultLight": {
+      "value": "預設淺色",
+      "reviewed": true
+    },
+    "hub.ui.a234d1aa1451b651": {
+      "value": "可在對話輸入框輸入 /browser 來呼叫瀏覽器子代理。",
+      "reviewed": true
+    },
+    "hub.ui.c1af8370c5f68986": {
+      "value": "搜尋任務…",
+      "reviewed": true
+    },
+    "hub.ui.6123645767d50771": {
+      "value": "市集目錄網址",
+      "reviewed": true
+    },
+    "hub.ui.b94ab56aaca86273": {
+      "value": "Chrome 執行檔路徑",
+      "reviewed": true
+    },
+    "hub.ui.7fb90de3a33cab49": {
+      "value": "執行瀏覽器指令碼前詢問核准。",
+      "reviewed": true
+    },
+    "hub.ui.b8c209cdead61a09": {
+      "value": "詢問",
+      "reviewed": true
+    },
+    "hub.ui.079d1d54f3c6269b": {
+      "value": "嚴格模式",
+      "reviewed": true
+    },
+    "hub.ui.68324d2dc5b5ceff": {
+      "value": "允許直接執行完整瀏覽器指令碼而不提示。",
+      "reviewed": true
+    },
+    "hub.ui.cea1a4d5477bdc50": {
+      "value": "瀏覽器 CDP 連接埠",
+      "reviewed": true
+    },
+    "hub.ui.728cb3db7cc78a96": {
+      "value": "切換輔助窗格",
+      "reviewed": true
+    },
+    "hub.ui.54421810157a0868": {
+      "value": "Chrome DevTools Protocol 遠端偵錯連接埠號；留空則使用預設值（9222）。",
+      "reviewed": true
+    },
+    "hub.ui.7923d4b84c2a1cc8": {
+      "value": "編輯器設定",
+      "reviewed": true
+    },
+    "hub.ui.dcb3e1c00e79236d": {
+      "value": "知識庫",
+      "reviewed": true
+    },
+    "hub.ui.275326389234f6ab": {
+      "value": "極速模式",
+      "reviewed": true
+    },
+    "hub.ui.25286f1757c4993e": {
+      "value": "市集項目網址",
+      "reviewed": true
+    },
+    "hub.ui.6733cfdb6d49dd93": {
+      "value": "需要審閱",
+      "reviewed": true
+    },
+    "hub.ui.6c582b62e0e5aa05": {
+      "value": "快速",
+      "reviewed": true
+    },
+    "hub.ui.6ec427879b4bf05a": {
+      "value": "終端機指令允許清單",
+      "reviewed": true
+    },
+    "hub.ui.e1a74102e0b60d9a": {
+      "value": "自訂瀏覽器使用者設定檔目錄路徑；留空則使用預設路徑（~/.gemini/antigravity-browser-profile）。",
+      "reviewed": true
+    },
+    "hub.ui.dbcd5e7bb7a0f538": {
+      "value": "淺色",
+      "reviewed": true
+    },
+    "hub.ui.60acc53f13a5d1bf": {
+      "value": "深色",
+      "reviewed": true
+    },
+    "hub.ui.6725e7bbcd28f3a8": {
+      "value": "系統",
+      "reviewed": true
+    },
+    "hub.ui.f7ca95a868431b32": {
+      "value": "與 GitHub 互動的指引，以及當指令因代理環境限制失敗時向使用者請求權限。",
+      "reviewed": true
+    },
+    "hub.ui.1ac1468563107940": {
+      "value": "搜尋或輸入網址",
+      "reviewed": true
+    },
+    "hub.ui.3c71e0e8a88fc860": {
+      "value": "已執行指令",
+      "reviewed": true
+    },
+    "hub.ui.31d7dceb897d35cd": {
+      "value": "專為常見工作流程與角色精選的外掛套件。",
+      "reviewed": true
+    },
+    "hub.ui.b0f8a3973cf69f50": {
+      "value": "規則 token 預算已超出，大型規則已降級為路徑參照。",
+      "reviewed": true
+    },
+    "hub.ui.515bf8644de9ceb0": {
+      "value": "你的本機設定",
+      "reviewed": true
+    },
+    "hub.ui.ea61bc15688d1e48": {
+      "value": "已複製！",
+      "reviewed": true
+    },
+    "hub.ui.55d23266c29b948f": {
+      "value": "未選取模型",
+      "reviewed": true
+    },
+    "hub.ui.3ea9f6a0c2f684b2": {
+      "value": "隨意提問，用 @ 提及，用 / 執行動作",
+      "reviewed": true
+    },
+    "hub.ui.1c8ac867f052ea4a": {
+      "value": "造訪",
+      "reviewed": true
+    },
+    "hub.ui.d6b8b1dd14bb372d": {
+      "value": "代理語音播放的音量大小。",
+      "reviewed": true
+    },
+    "hub.ui.0c153843dfe32656": {
+      "value": "此對話的遙測已關閉。",
+      "reviewed": true
+    },
+    "hub.ui.bca82adc9f9b3bc7": {
+      "value": "已分析",
+      "reviewed": true
+    },
+    "hub.ui.bc1ebaff8e758e06": {
+      "value": "呼叫後（Post Invocation）",
+      "reviewed": true
+    },
+    "hub.ui.033efc9dfbbace40": {
+      "value": "變更…",
+      "reviewed": true
+    },
+    "hub.ui.b9e07681e1f99f81": {
+      "value": "尚未新增任何資源。",
+      "reviewed": true
+    },
+    "hub.ui.558be6c04c73108a": {
+      "value": "複製登入連結",
+      "reviewed": true
+    },
+    "hub.ui.e4e0bdae470984c7": {
+      "value": "工作樹為 Git 功能，此資料夾將保持原樣共用。",
+      "reviewed": true
+    },
+    "hub.ui.fb7e81225d4f45ed": {
+      "value": "搜尋過去的工作樹…",
+      "reviewed": true
+    },
+    "hub.ui.348daf908778b4ce": {
+      "value": "瀏覽市集",
+      "reviewed": true
+    },
+    "hub.ui.a2a9753211e5c0db": {
+      "value": "管理專案資料夾與設定。",
+      "reviewed": true
+    },
+    "hub.ui.060603f5304eac8b": {
+      "value": "工具呼叫後（Post Tool Use）",
+      "reviewed": true
+    },
+    "hub.ui.c4191aa89479b4e5": {
+      "value": "建構於 Google 開發者平台，包含 Android、Chrome、Gemini 與 Google Cloud。",
+      "reviewed": true
+    },
+    "hub.ui.dd10e856b9b9a033": {
+      "value": "內嵌動作",
+      "reviewed": true
+    },
+    "hub.ui.463816d07097e1a7": {
+      "value": "正在讀取",
+      "reviewed": true
+    },
+    "hub.ui.43d2d4466a96a5c0": {
+      "value": "隱藏明細",
+      "reviewed": true
+    },
+    "hub.ui.ef97432a7589a59c": {
+      "value": "設定 Tab 自動補全、建議與瀏覽行為。",
+      "reviewed": true
+    },
+    "hub.ui.cc849385646ba0d6": {
+      "value": "在 Finder 中顯示",
+      "reviewed": true
+    },
+    "hub.ui.e23f3cc44a50a5e3": {
+      "value": "已釘選動作",
+      "reviewed": true
+    },
+    "hub.ui.76f68a75f01ed76f": {
+      "value": "商業與營運",
+      "reviewed": true
+    },
+    "hub.ui.d97cf74f8deeb850": {
+      "value": "規劃工作、追蹤問題、簽署文件並管理筆記與檔案。",
+      "reviewed": true
+    },
+    "hub.ui.47a8a543f5081899": {
+      "value": "排序工作區",
+      "reviewed": true
+    },
+    "hub.ui.7616b5ee647397d4": {
+      "value": "你在此模型的配額即將用盡。",
+      "reviewed": true
+    },
+    "hub.ui.0c2504c9358e60f9": {
+      "value": "其他自訂設定",
+      "reviewed": true
+    },
+    "hub.ui.980b4edd7eeb1b2e": {
+      "value": "設定連結開啟方式與內建瀏覽器偏好設定。",
+      "reviewed": true
+    },
+    "hub.ui.386fffa765c6794a": {
+      "value": "強制啟用防止代理自主執行針對性漏洞利用的設定，並要求所有代理動作皆須經人工審閱。詳情請造訪 antigravity.google/docs/strict-mode。",
+      "reviewed": true
+    },
+    "hub.ui.85c1562cd9ce8d74": {
+      "value": "開發人員工具",
+      "reviewed": true
+    },
+    "hub.ui.36655f7c71e4013d": {
+      "value": "正在檢查本機複本",
+      "reviewed": true
+    },
+    "hub.ui.96392f91a0b70a07": {
+      "value": "已複製版本詳細資訊",
+      "reviewed": true
+    },
+    "hub.ui.d37078fe6a1faa15": {
+      "value": "已複製到剪貼簿",
+      "reviewed": true
+    },
+    "hub.ui.ef1382fd87c0a51c": {
+      "value": "錄製語音備忘錄",
+      "reviewed": true
+    },
+    "hub.ui.cf924a0ffe4b617d": {
+      "value": "表格選項",
+      "reviewed": true
+    },
+    "hub.ui.84fd2c260db5c3a4": {
+      "value": "自動化認證憑證已過期",
+      "reviewed": true
+    },
+    "hub.ui.58c3de40566b874e": {
+      "value": "你的遠端設定",
+      "reviewed": true
+    },
+    "hub.ui.f85d082224b7a307": {
+      "value": "旁支問題已回答。",
+      "reviewed": true
+    },
+    "hub.ui.2afb17673ff90662": {
+      "value": "正在執行指令",
+      "reviewed": true
+    },
+    "hub.ui.7f9d4ae9238f4593": {
+      "value": "可在側邊欄的「顯示選項」選單中檢視已封存項目。",
+      "reviewed": true
+    },
+    "hub.ui.f8fe0f2b0d52aaf4": {
+      "value": "在沙箱中繼續",
+      "reviewed": true
+    },
+    "hub.ui.97bd37991bf15a1e": {
+      "value": "未複製到本機",
+      "reviewed": true
+    },
+    "hub.ui.00a9bf84a0a13922": {
+      "value": "自動化已儲存",
+      "reviewed": true
+    },
+    "hub.ui.93483c938871b25a": {
+      "value": "每週上限",
+      "reviewed": true
+    },
+    "hub.ui.49a0053f3b0d5045": {
+      "value": "複製程式碼",
+      "reviewed": true
+    },
+    "hub.ui.408801cff5d42adb": {
+      "value": "側邊面板",
+      "reviewed": true
+    },
+    "hub.ui.f19611c61ca5f369": {
+      "value": "完整存取權限",
+      "reviewed": true
+    },
+    "hub.ui.af7a94b91a7493fa": {
+      "value": "等待你的核准",
+      "reviewed": true
+    },
+    "hub.ui.207207acea5b0f4d": {
+      "value": "排序專案",
+      "reviewed": true
+    },
+    "hub.ui.53e63ed06152028c": {
+      "value": "切換全螢幕",
+      "reviewed": true
+    },
+    "hub.ui.4cc78da18efee791": {
+      "value": "呼叫前（Pre Invocation）",
+      "reviewed": true
+    },
+    "hub.ui.2e1a4c07ce94cb0c": {
+      "value": "嚴格",
+      "reviewed": true
+    },
+    "hub.ui.582971124d69444b": {
+      "value": "搜尋過去的工作區…",
+      "reviewed": true
+    },
+    "hub.ui.9705d4a8953c30ec": {
+      "value": "沒有已釘選的對話",
+      "reviewed": true
+    },
+    "hub.ui.09c6f7bf8cdf5ee5": {
+      "value": "Project 4K",
+      "reviewed": true
+    },
+    "hub.ui.f395ae5e32b4cc24": {
+      "value": "在編輯器中開啟",
+      "reviewed": true
+    },
+    "hub.ui.2cd57109145ab1cb": {
+      "value": "詳細",
+      "reviewed": true
+    },
+    "hub.ui.8e25832407ee8bec": {
+      "value": "工作區設定",
+      "reviewed": true
+    },
+    "hub.ui.4e35d30cb97d27b7": {
+      "value": "僅倒回對話內容，此資料夾中的檔案會保持目前狀態。",
+      "reviewed": true
+    },
+    "hub.ui.280d70385991efbf": {
+      "value": "提交留言",
+      "reviewed": true
+    },
+    "hub.ui.02d543906827f91b": {
+      "value": "自訂設定 token 預算已超出，大型自訂設定已從上下文中排除。",
+      "reviewed": true
+    },
+    "hub.ui.cfcf8cc115650a14": {
+      "value": "沒有更舊的訊息",
+      "reviewed": true
+    },
+    "hub.ui.7636275303de3a4a": {
+      "value": "此專案無法使用工作樹",
+      "reviewed": true
+    },
+    "hub.ui.106c3af60039fb12": {
+      "value": "自主模式",
+      "reviewed": true
+    },
+    "hub.ui.5ca9b7ef41d27b22": {
+      "value": "工作樹分支",
+      "reviewed": true
+    },
+    "hub.ui.994554867c4456e5": {
+      "value": "標為已讀",
+      "reviewed": true
+    },
+    "hub.ui.41d70bb0060eec16": {
+      "value": "捲動至底部",
+      "reviewed": true
+    },
+    "hub.ui.ccd136641c56c741": {
+      "value": "雲端託管與部署",
+      "reviewed": true
+    },
+    "hub.ui.b749e205302cc219": {
+      "value": "複製到剪貼簿",
+      "reviewed": true
+    },
+    "hub.ui.d70b9e24bca26b40": {
+      "value": "已建立",
+      "reviewed": true
+    },
+    "hub.ui.2454b121ba74a55c": {
+      "value": "選取分支",
+      "reviewed": true
+    },
+    "hub.ui.2e9b4b7b2f1a986b": {
+      "value": "隱藏明細",
+      "reviewed": true
+    },
+    "hub.ui.03b44986f928aece": {
+      "value": "未知環境",
+      "reviewed": true
+    },
+    "hub.ui.e568522d25967dcd": {
+      "value": "Git 儲存庫可使用工作樹",
+      "reviewed": true
+    },
+    "hub.ui.7cff9649e26cce59": {
+      "value": "代理始終會請求審閱。",
+      "reviewed": true
+    },
+    "hub.ui.b090562f538c288d": {
+      "value": "刪除外掛程式",
+      "reviewed": true
+    },
+    "hub.ui.f565318d124534cf": {
+      "value": "取消封存",
+      "reviewed": true
+    },
+    "hub.ui.65659145569b894b": {
+      "value": "通知",
+      "reviewed": true
+    },
+    "hub.ui.417c4041593abe91": {
+      "value": "5 小時上限",
+      "reviewed": true
+    },
+    "hub.ui.a1e3ce6dfde9d3dc": {
+      "value": "你的 AI 點數餘額不足，無法繼續。",
+      "reviewed": true
+    },
+    "hub.ui.7dc3eb8bf3386f32": {
+      "value": "設定分支",
+      "reviewed": true
+    },
+    "hub.ui.b6a7c95e785f14dd": {
+      "value": "已執行",
+      "reviewed": true
+    },
+    "hub.ui.b64ac05f17e64d03": {
+      "value": "即時",
+      "reviewed": true
+    },
+    "hub.ui.ee3c716130546a45": {
+      "value": "取消釘選",
+      "reviewed": true
+    },
+    "hub.ui.e6f7e0a0c966f815": {
+      "value": "取消 (Ctrl+D)",
+      "reviewed": true
+    },
+    "hub.ui.cc1878584858a31e": {
+      "value": "右鍵選單",
+      "reviewed": true
+    },
+    "hub.ui.827c420d6a254e1d": {
+      "value": "尚未新增資料夾。",
+      "reviewed": true
+    },
+    "hub.ui.0061577bc222d862": {
+      "value": "隱藏工具",
+      "reviewed": true
+    },
+    "hub.ui.2f5e378b09e33110": {
+      "value": "在輸入框下方的模式下拉選單新增「自主模式」開關。開啟後送出的回合會以非互動方式執行：代理不會提問或要求新權限。",
+      "reviewed": true
+    },
+    "hub.ui.74bed7b49a5d8b99": {
+      "value": "選取資料夾",
+      "reviewed": true
+    },
+    "hub.ui.7c785df990653861": {
+      "value": "在此專案中工作時繼承你的全域權限。",
+      "reviewed": true
+    },
+    "hub.ui.39c32394761c042b": {
+      "value": "正在探索",
+      "reviewed": true
+    },
+    "hub.ui.906a7a8ae8264f28": {
+      "value": "最大化寬度",
+      "reviewed": true
+    },
+    "hub.ui.c840ba4da80e9014": {
+      "value": "側邊面板預覽",
+      "reviewed": true
+    },
+    "hub.ui.5e656a1621785289": {
+      "value": "設計、創意與多媒體工具。",
+      "reviewed": true
+    },
+    "hub.ui.0098030c2a671521": {
+      "value": "工具呼叫前（Pre Tool Use）",
+      "reviewed": true
+    },
+    "hub.ui.3bc27f3aa8aed4f0": {
+      "value": "搜尋分頁、檔案與更多項目",
+      "reviewed": true
+    },
+    "hub.ui.ea5ba511ca19b3d2": {
+      "value": "連線至 WSL",
+      "reviewed": true
+    },
+    "hub.ui.87568475f506dde7": {
+      "value": "已繼續執行",
+      "reviewed": true
+    },
+    "hub.ui.298ff31c3b73af59": {
+      "value": "切換最大化輔助窗格",
+      "reviewed": true
+    },
+    "hub.ui.e12154eb4ca97411": {
+      "value": "Google Workspace",
+      "reviewed": true
+    },
+    "hub.ui.211684e1513468b5": {
+      "value": "詳細代理對話輸出",
+      "reviewed": true
+    },
+    "hub.ui.adfb42a3c90b287c": {
+      "value": "已探索",
+      "reviewed": true
+    },
+    "hub.ui.6f6817d96e83edf2": {
+      "value": "檔案檢視器",
+      "reviewed": true
+    },
+    "hub.ui.0692c6b24634b2ce": {
+      "value": "已在設定中關閉遙測",
+      "reviewed": true
+    },
+    "hub.ui.13fb26ccfd97853a": {
+      "value": "未命名對話",
+      "reviewed": true
+    },
+    "hub.ui.fab4539d26e078ca": {
+      "value": "正在編輯",
+      "reviewed": true
+    },
+    "hub.ui.86fc6393188e136d": {
+      "value": "遠端權限",
+      "reviewed": true
+    },
+    "hub.ui.74273989b0966e23": {
+      "value": "重做",
+      "reviewed": true
+    },
+    "hub.ui.a4948f756e38153b": {
+      "value": "自動化認證憑證即將過期",
+      "reviewed": true
+    },
+    "hub.ui.701986f254d7ef57": {
+      "value": "複製錯誤訊息",
+      "reviewed": true
+    },
+    "hub.ui.8829b3ac6b144654": {
+      "value": "修改檔案與終端機工具的權限。",
+      "reviewed": true
+    },
+    "hub.ui.d276044dad968742": {
+      "value": "在檔案管理員中顯示",
+      "reviewed": true
+    },
+    "hub.ui.ec0788b50818dd5d": {
+      "value": "所有對話的遙測皆已關閉。",
+      "reviewed": true
+    },
+    "hub.ui.bb28e6a970682e29": {
+      "value": "設計、創意與媒體",
+      "reviewed": true
+    },
+    "hub.ui.f34df942bf09868f": {
+      "value": "正在重新整理憑證…",
+      "reviewed": true
+    },
+    "hub.ui.55f92dca00f59521": {
+      "value": "部署並託管你的應用程式、網站及其後端服務。",
+      "reviewed": true
+    },
+    "hub.ui.08661dab88fd1708": {
+      "value": "用於建置、測試、保護與執行應用程式的 API、服務與工具。",
+      "reviewed": true
+    },
+    "hub.ui.4348f529fdcbcaa2": {
+      "value": "複製版本詳細資訊",
+      "reviewed": true
+    },
+    "hub.ui.7117f0807129493f": {
+      "value": "已編輯",
+      "reviewed": true
+    },
+    "hub.ui.f81280bf42a80c31": {
+      "value": "生產力與專案管理",
+      "reviewed": true
+    },
+    "hub.ui.7bc9dc25dd46db5d": {
+      "value": "規則與自訂設定 token 預算已超出，大型規則已降級為路徑參照，大型自訂設定已從上下文中排除。",
+      "reviewed": true
+    },
+    "hub.ui.e9ade4d71613789a": {
+      "value": "開啟語音模式",
+      "reviewed": true
+    },
+    "hub.ui.cafd4f1ace3f2d94": {
+      "value": "代理說話時使用的語音。",
+      "reviewed": true
+    },
+    "hub.ui.8cb1eb7714ff54de": {
+      "value": "設定指令碼",
+      "reviewed": true
+    },
+    "hub.ui.80028baf013c0dc2": {
+      "value": "驗證逾時。",
+      "reviewed": true
+    },
+    "hub.ui.0cef8306c956e80f": {
+      "value": "+ 新增資料夾",
+      "reviewed": true
+    },
+    "hub.ui.22a970d2e5b1cc23": {
+      "value": "已完成",
+      "reviewed": true
+    },
+    "hub.ui.c7c13c5a73428638": {
+      "value": "顯示並保留中間思考步驟。",
+      "reviewed": true
+    },
+    "hub.ui.2e4112bc7e968734": {
+      "value": "工作區檔案總管",
+      "reviewed": true
+    },
+    "hub.ui.125c7a44e8f5808c": {
+      "value": "無法還原至為節省空間而清除的訊息",
+      "reviewed": true
+    },
+    "hub.ui.13ca2ee2499310d9": {
+      "value": "已取消",
+      "reviewed": true
+    },
+    "hub.ui.bab37d62472990c0": {
+      "value": "查看更多",
+      "reviewed": true
+    },
+    "hub.ui.94ea9b1d33a02975": {
+      "value": "顯示較少",
+      "reviewed": true
+    },
+    "hub.ui.a92f0449a9f7235b": {
+      "value": "執行中",
+      "reviewed": true
+    },
+    "hub.ui.c4939c3f7df96847": {
+      "value": "所有檔案",
+      "reviewed": true
+    },
+    "hub.ui.8c17ab4415e05f3e": {
+      "value": "無法還原在代理執行期間傳送的訊息",
+      "reviewed": true
+    },
+    "hub.ui.440af5f903368e9d": {
+      "value": "金流、CRM、會計、資料、身分識別、客戶支援、行銷與工作流程自動化。",
+      "reviewed": true
+    },
+    "hub.ui.f17671d83db0da48": {
+      "value": "載入較舊訊息",
+      "reviewed": true
+    },
+    "hub.ui.ac628ed29ae79f0d": {
+      "value": "主代理",
+      "reviewed": true
+    },
+    "hub.ui.5ec6578c52984f37": {
+      "value": "允許的網域",
+      "reviewed": true
+    },
+    "hub.ui.1aaa0800292194e0": {
+      "value": "多模型優選（Best of N）",
+      "reviewed": true
+    },
+    "hub.ui.58e663dc8898e9f4": {
+      "value": "取消釘選對話",
+      "reviewed": true
+    },
+    "hub.ui.965673916b978246": {
+      "value": "無法還原此訊息",
+      "reviewed": true
+    },
+    "hub.ui.db82efcc4eb76eda": {
+      "value": "已降級",
+      "reviewed": true
+    },
+    "hub.ui.1e1270a58101c25e": {
+      "value": "中斷代理並立即傳送",
+      "reviewed": true
+    },
+    "hub.ui.003517e17cf1b6fe": {
+      "value": "已由組織原則停用",
+      "reviewed": true
+    },
+    "hub.ui.5c5d7f06c38c7f55": {
+      "value": "已透過企業閘道驗證",
+      "reviewed": true
+    },
+    "hub.ui.9b84a51f099a2d80": {
+      "value": "在這些對話中工作時繼承你的全域權限。",
+      "reviewed": true
+    },
+    "hub.ui.acbdf18882d79a9f": {
+      "value": "此專案會覆寫你的全域權限設定。",
+      "reviewed": true
+    },
+    "hub.ui.2ee4eba29d32dd4c": {
+      "value": "設定編輯器專屬行為與快速鍵。",
+      "reviewed": true
+    },
+    "hub.ui.1e4ce9cd955f07b1": {
+      "value": "每日上限",
+      "reviewed": true
+    },
+    "hub.ui.aeffb9182e3d7f3d": {
+      "value": "已觸發",
+      "reviewed": true
+    },
+    "hub.ui.d70604e843046137": {
+      "value": "建議",
+      "reviewed": true
+    },
+    "hub.ui.c23ef99fa27a249d": {
+      "value": "最小化寬度",
+      "reviewed": true
+    },
+    "hub.ui.b2e91e9ba07e98bc": {
+      "value": "連線至 Google Workspace，包含 Docs、Sheets、Slides、Drive 與 Calendar。",
+      "reviewed": true
+    },
+    "hub.ui.51add8fabbd9c568": {
+      "value": "復原至此處",
+      "reviewed": true
+    },
+    "hub.ui.37511d821be14cdd": {
+      "value": "排隊至目前回合結束後執行",
+      "reviewed": true
+    },
+    "hub.ui.bdaeec33ca6d1e39": {
+      "value": "你的方案",
+      "reviewed": true
+    },
+    "hub.ui.602cc4da981d5dad": {
+      "value": "刪除代理",
+      "reviewed": true
+    },
+    "hub.ui.04342fbd5d112bac": {
+      "value": "最大化窗格",
+      "reviewed": true
+    },
+    "hub.ui.bed2cb4c0a5d3481": {
+      "value": "遠端控制連結",
+      "reviewed": true
+    },
+    "hub.ui.e4eef78c75e37d58": {
+      "value": "描述你遇到的錯誤…",
+      "reviewed": true
+    },
+    "hub.ui.d9f05495672f9049": {
+      "value": "終止任務失敗",
+      "reviewed": true
+    },
+    "hub.ui.fcfae2d191747fa0": {
+      "value": "目前檔案超過 64 KB，顯示上一版有效的 view.json。",
+      "reviewed": true
+    },
+    "hub.ui.9fc7f11668697dc6": {
+      "value": "已搜尋",
+      "reviewed": true
+    },
+    "hub.ui.6dcafdb1cd3e8ed9": {
+      "value": "重試解說員頁面",
+      "reviewed": true
+    },
+    "hub.ui.cfed3e4fe486006b": {
+      "value": "正在檢查可用性…",
+      "reviewed": true
+    },
+    "hub.ui.1b8bfb0ebb5a0e65": {
+      "value": "無法載入 Cookie。",
+      "reviewed": true
+    },
+    "hub.ui.3a798489a35c1a5b": {
+      "value": "中斷代理",
+      "reviewed": true
+    },
+    "hub.ui.8e321eeec3364748": {
+      "value": "此對話將啟用遙測；點擊可停用。",
+      "reviewed": true
+    },
+    "hub.ui.4820fb31c3757a49": {
+      "value": "分支，目前：選取分支",
+      "reviewed": true
+    },
+    "hub.ui.7f39bc1169c62474": {
+      "value": "正在等待協作群",
+      "reviewed": true
+    },
+    "hub.ui.1da2219d1620c74a": {
+      "value": "對戰模式期間無法升級，請先結束對戰",
+      "reviewed": true
+    },
+    "hub.ui.e6db5f3cc2f975b9": {
+      "value": "設定內建瀏覽器、連結開啟方式與瀏覽器子代理偏好設定",
+      "reviewed": true
+    },
+    "hub.ui.e6b5af21d69528a6": {
+      "value": "Cookie 與其他網站資料",
+      "reviewed": true
+    },
+    "hub.ui.0c07dbf15254ae90": {
+      "value": "已探索檔案與產物",
+      "reviewed": true
+    },
+    "hub.ui.a0a266427c81e32c": {
+      "value": "迄今最先進的模型。",
+      "reviewed": true
+    },
+    "hub.ui.3291f7627e7279f9": {
+      "value": "等速播放",
+      "reviewed": true
+    },
+    "hub.ui.711930ab05487872": {
+      "value": "暫停重播",
+      "reviewed": true
+    },
+    "hub.ui.9954909af1d5f27b": {
+      "value": "對話工作區",
+      "reviewed": true
+    },
+    "hub.ui.6312b4b9baf12770": {
+      "value": "雲端硬碟",
+      "reviewed": true
+    },
+    "hub.ui.05b1481f666050d1": {
+      "value": "內建瀏覽器下載檔案的儲存資料夾",
+      "reviewed": true
+    },
+    "hub.ui.ec4900b2df233ab5": {
+      "value": "等待首次更新",
+      "reviewed": true
+    },
+    "hub.ui.d6dae66b2a4bb3a0": {
+      "value": "此環境不支援終端機沙箱",
+      "reviewed": true
+    },
+    "hub.ui.4bcab793306aca46": {
+      "value": "上一個工作區",
+      "reviewed": true
+    },
+    "hub.ui.db5d332e8da1c25d": {
+      "value": "在手機或任何瀏覽器接續此遠端對話。掃描 QR code 或開啟下方連結。",
+      "reviewed": true
+    },
+    "hub.ui.7f98b07841ce7b81": {
+      "value": "很高興見到你，接下來要做什麼？",
+      "reviewed": true
+    },
+    "hub.ui.4a4703d804b0df4b": {
+      "value": "終止任務",
+      "reviewed": true
+    },
+    "hub.ui.eda81d2d8b458754": {
+      "value": "Antigravity（AGY）風格",
+      "reviewed": true
+    },
+    "hub.ui.073ffa9558f46084": {
+      "value": "麥克風問題",
+      "reviewed": true
+    },
+    "hub.ui.b3d390ffe923a8bb": {
+      "value": "比較前後變化",
+      "reviewed": true
+    },
+    "hub.ui.c05668bd926aafbf": {
+      "value": "向左分割",
+      "reviewed": true
+    },
+    "hub.ui.56c92521cdc682e1": {
+      "value": "顯示或隱藏各成員的貼文",
+      "reviewed": true
+    },
+    "hub.ui.dd66507d03f47a4e": {
+      "value": "已從看板隱藏；點擊即可顯示",
+      "reviewed": true
+    },
+    "hub.ui.6f675373d52bed1e": {
+      "value": "單一目標",
+      "reviewed": true
+    },
+    "hub.ui.edbc30549728d91e": {
+      "value": "設定代理在本機與遠端對話中可執行的操作",
+      "reviewed": true
+    },
+    "hub.ui.d9291fcc9b28b0f8": {
+      "value": "已儲存設定常式",
+      "reviewed": true
+    },
+    "hub.ui.6a1da8454fa179f5": {
+      "value": "不含開發人員工具的 Project 4K 介面",
+      "reviewed": true
+    },
+    "hub.ui.4d87504d72bd3b43": {
+      "value": "授權碼遭到拒絕，請貼上新的授權碼後再試一次。",
+      "reviewed": true
+    },
+    "hub.ui.250e25c05efc495b": {
+      "value": "代理執行中",
+      "reviewed": true
+    },
+    "hub.ui.b3eb37acb66ba4bb": {
+      "value": "結束",
+      "reviewed": true
+    },
+    "hub.ui.a591fc35d74e39e8": {
+      "value": "按鍵盤 Enter 鍵傳送訊息，而非換行",
+      "reviewed": true
+    },
+    "hub.ui.d3051b2c6314ac54": {
+      "value": "新增前先檢視套件組合",
+      "reviewed": true
+    },
+    "hub.ui.038805d33ddaaa5d": {
+      "value": "解說員的 view.json 超過 64 KB，因此未顯示。",
+      "reviewed": true
+    },
+    "hub.ui.e572d4e5551a4c41": {
+      "value": "拖曳瀏覽看板貼文",
+      "reviewed": true
+    },
+    "hub.ui.cf959c2dbbf16bfa": {
+      "value": "命令選擇區…",
+      "reviewed": true
+    },
+    "hub.ui.caed3072fd76a4b6": {
+      "value": "限時",
+      "reviewed": true
+    },
+    "hub.ui.556ec949035d8d21": {
+      "value": "在圖表中隱藏已終止與非使用中成員",
+      "reviewed": true
+    },
+    "hub.ui.7a1896edb46dc9f6": {
+      "value": "工作區設定",
+      "reviewed": true
+    },
+    "hub.ui.e0839b7377716d94": {
+      "value": "透過 @all",
+      "reviewed": true
+    },
+    "hub.ui.eb6906c0c0694f63": {
+      "value": "代理表示",
+      "reviewed": true
+    },
+    "hub.ui.f05fefe200f27914": {
+      "value": "等待輸出…",
+      "reviewed": true
+    },
+    "hub.ui.e7409e100d5cf6dd": {
+      "value": "負責執行計畫：搜尋、編輯、建置與測試。建議選取更快、成本更低的模型。",
+      "reviewed": true
+    },
+    "hub.ui.a15deca13ddc0290": {
+      "value": "針對螢幕閱讀器最佳化介面與終端機輸出",
+      "reviewed": true
+    },
+    "hub.ui.a7d8725f044617b5": {
+      "value": "語音模式所使用的聲音，由 Gemini Live 提供支援",
+      "reviewed": true
+    },
+    "hub.ui.e1262e1ea1207316": {
+      "value": "在 WSL 中重新開啟資料夾",
+      "reviewed": true
+    },
+    "hub.ui.daa85534fa9b1400": {
+      "value": "協調器模型",
+      "reviewed": true
+    },
+    "hub.ui.64278e81eb37aa53": {
+      "value": "上一則貼文（←）",
+      "reviewed": true
+    },
+    "hub.ui.8d977231d6a77cb2": {
+      "value": "停止此代理",
+      "reviewed": true
+    },
+    "hub.ui.afb118fcb16c3727": {
+      "value": "正在重新連線",
+      "reviewed": true
+    },
+    "hub.ui.e5342b07fb755d3d": {
+      "value": "所有頻道的貼文",
+      "reviewed": true
+    },
+    "hub.ui.4b135377375c438f": {
+      "value": "「預設」與「自動」模式需要終端機沙箱，但此主機不支援。",
+      "reviewed": true
+    },
+    "hub.ui.97aec9f94bee6814": {
+      "value": "正在載入子代理紀錄…",
+      "reviewed": true
+    },
+    "hub.ui.cb7daa53627cb62f": {
+      "value": "每條指令皆須核准",
+      "reviewed": true
+    },
+    "hub.ui.07189207790a7aa3": {
+      "value": "顯示已終止項目",
+      "reviewed": true
+    },
+    "hub.ui.2623454e20f8f6a3": {
+      "value": "已清除內建瀏覽器資料",
+      "reviewed": true
+    },
+    "hub.ui.1d36da8581e01919": {
+      "value": "完整存取",
+      "reviewed": true
+    },
+    "hub.ui.a3894d9516e2500f": {
+      "value": "播放重播",
+      "reviewed": true
+    },
+    "hub.ui.fd8a2d6ab7495e08": {
+      "value": "Antigravity 語音的音量大小",
+      "reviewed": true
+    },
+    "hub.ui.4a8123475e0fea9f": {
+      "value": "捨棄留言草稿",
+      "reviewed": true
+    },
+    "hub.ui.34963f22f31f3e6b": {
+      "value": "「預設」模式需要終端機沙箱，但此主機不支援。",
+      "reviewed": true
+    },
+    "hub.ui.012a283b46ca4f34": {
+      "value": "團隊成員",
+      "reviewed": true
+    },
+    "hub.ui.cdc517667d9ab31a": {
+      "value": "各自領取一項任務並平行執行。",
+      "reviewed": true
+    },
+    "hub.ui.d434e617211f4c89": {
+      "value": "輸入框",
+      "reviewed": true
+    },
+    "hub.ui.086e97efcffff894": {
+      "value": "發佈且未提及對象",
+      "reviewed": true
+    },
+    "hub.ui.1edf0870cbf8fd40": {
+      "value": "自動決定是否執行指令",
+      "reviewed": true
+    },
+    "hub.ui.36233f1f1232ab55": {
+      "value": "main：整個協作群皆可讀取",
+      "reviewed": true
+    },
+    "hub.ui.db114adc75c87150": {
+      "value": "無分支",
+      "reviewed": true
+    },
+    "hub.ui.a02f1cea3c1d6c6e": {
+      "value": "正在思考…",
+      "reviewed": true
+    },
+    "hub.ui.8730d3c2022abf1f": {
+      "value": "最新",
+      "reviewed": true
+    },
+    "hub.ui.2ced179124da0d23": {
+      "value": "已探索檔案",
+      "reviewed": true
+    },
+    "hub.ui.15007ce23e9a075b": {
+      "value": "選擇終端機工作階段的顯示位置",
+      "reviewed": true
+    },
+    "hub.ui.6f086cd4dddc6fd6": {
+      "value": "系統警示",
+      "reviewed": true
+    },
+    "hub.ui.1fe61a24aa487fc1": {
+      "value": "二進位檔案 — 無法顯示差異",
+      "reviewed": true
+    },
+    "hub.ui.e4280da225fbc414": {
+      "value": "向上分割",
+      "reviewed": true
+    },
+    "hub.ui.689c05994987626f": {
+      "value": "@all 貼文（由展開 @all 繪製）",
+      "reviewed": true
+    },
+    "hub.ui.f8ee93b32b90c16b": {
+      "value": "帳號連線未完成。",
+      "reviewed": true
+    },
+    "hub.ui.28e4c2eede7b680d": {
+      "value": "已編輯檔案與產物",
+      "reviewed": true
+    },
+    "hub.ui.c11430e8ff9deea0": {
+      "value": "等待中：回合已結束，在看板休眠直到貼文喚醒",
+      "reviewed": true
+    },
+    "hub.ui.3d5aa057ac428944": {
+      "value": "顯示單一頻道的貼文",
+      "reviewed": true
+    },
+    "hub.ui.e20faafe8ba216d3": {
+      "value": "選取分支…",
+      "reviewed": true
+    },
+    "hub.ui.bd35427cd5861c65": {
+      "value": "隨意提問，用 @ 引用上下文，用 / 執行指令",
+      "reviewed": true
+    },
+    "hub.ui.ba17ee9e6b1c0ed1": {
+      "value": "正在聊天中等待你的回覆",
+      "reviewed": true
+    },
+    "hub.ui.4693afe8a90f7fd4": {
+      "value": "由應用程式選單管理",
+      "reviewed": true
+    },
+    "hub.ui.03da0c9d4a8cbbb5": {
+      "value": "上一則貼文",
+      "reviewed": true
+    },
+    "hub.ui.d0652ad307845171": {
+      "value": "仍然新增",
+      "reviewed": true
+    },
+    "hub.ui.aa335ed5df95b08a": {
+      "value": "無法儲存變更",
+      "reviewed": true
+    },
+    "hub.ui.5b7163071efc1236": {
+      "value": "在其他裝置上開啟",
+      "reviewed": true
+    },
+    "hub.ui.542799c3970ebc42": {
+      "value": "正在複製…",
+      "reviewed": true
+    },
+    "hub.ui.8feeb0e7a890e145": {
+      "value": "已終止：已從協作群移除",
+      "reviewed": true
+    },
+    "hub.ui.0f5bd88ff2c406f6": {
+      "value": "請嘗試其他搜尋條件或成員篩選。",
+      "reviewed": true
+    },
+    "hub.ui.8739c5611f4f89ec": {
+      "value": "選擇要從內建瀏覽器清除的項目。此操作無法復原。",
+      "reviewed": true
+    },
+    "hub.ui.c39059141ced2ea7": {
+      "value": "審閱中",
+      "reviewed": true
+    },
+    "hub.ui.26210cf48f281729": {
+      "value": "你已訂閱最高等級的 Google AI 方案。",
+      "reviewed": true
+    },
+    "hub.ui.b7a7f060859023d1": {
+      "value": "包含編寫程式碼、開發人員工具與管理代理的完整介面",
+      "reviewed": true
+    },
+    "hub.ui.6b8d475a99708ae5": {
+      "value": "選擇對話期間顯示的詳細程度",
+      "reviewed": true
+    },
+    "hub.ui.6859fe418483a0b7": {
+      "value": "造訪過的網址與自動完成建議。",
+      "reviewed": true
+    },
+    "hub.ui.836f66e8ff741f57": {
+      "value": "在設定中開啟",
+      "reviewed": true
+    },
+    "hub.ui.e14697c1360b9f71": {
+      "value": "中斷與 WSL 的連線",
+      "reviewed": true
+    },
+    "hub.ui.d3f7409ad75e6d96": {
+      "value": "全部停止",
+      "reviewed": true
+    },
+    "hub.ui.cd7f398b1d6528f2": {
+      "value": "僅此對話使用此預設集。",
+      "reviewed": true
+    },
+    "hub.ui.b69e85808d28a009": {
+      "value": "新增套件組合",
+      "reviewed": true
+    },
+    "hub.ui.6f23d4aded053b66": {
+      "value": "從專案中移除資料夾",
+      "reviewed": true
+    },
+    "hub.ui.0bb044f8c34d16d6": {
+      "value": "跳至開頭",
+      "reviewed": true
+    },
+    "hub.ui.f6259b0cb438a5ac": {
+      "value": "開啟協調器對話",
+      "reviewed": true
+    },
+    "hub.ui.0095f46dee42e405": {
+      "value": "完整開發人員體驗",
+      "reviewed": true
+    },
+    "hub.ui.08022c83e260caa9": {
+      "value": "VS Code 預設",
+      "reviewed": true
+    },
+    "hub.ui.11d915cb27c42da0": {
+      "value": "協調器正在等待你的回覆",
+      "reviewed": true
+    },
+    "hub.ui.1c944dbe28bc0267": {
+      "value": "無法建立協調器，請再試一次。",
+      "reviewed": true
+    },
+    "hub.ui.a8141a7ce1af6ce2": {
+      "value": "解說員頁面 · AI 生成",
+      "reviewed": true
+    },
+    "hub.ui.fc87062a130bf496": {
+      "value": "正在等待子代理",
+      "reviewed": true
+    },
+    "hub.ui.f4ad4438c6066f9c": {
+      "value": "解說員正在更新總覽",
+      "reviewed": true
+    },
+    "hub.ui.7898935d79f2f9b2": {
+      "value": "新工作樹的基底分支",
+      "reviewed": true
+    },
+    "hub.ui.c66feb5eb8f217c7": {
+      "value": "上移",
+      "reviewed": true
+    },
+    "hub.ui.fd42f0ca49a7a3cc": {
+      "value": "解說員的 view.json 尚未成為有效的 JSON。",
+      "reviewed": true
+    },
+    "hub.ui.5a88a386243dab24": {
+      "value": "專案設定",
+      "reviewed": true
+    },
+    "hub.ui.ee965b4001806213": {
+      "value": "誰 @提及了誰",
+      "reviewed": true
+    },
+    "hub.ui.451858a31d14c103": {
+      "value": "剛剛看過",
+      "reviewed": true
+    },
+    "hub.ui.1ae7acdc50a4bc8c": {
+      "value": "語音模式與聽寫的輸入裝置",
+      "reviewed": true
+    },
+    "hub.ui.3392bcc1d1c9f6d0": {
+      "value": "主分支",
+      "reviewed": true
+    },
+    "hub.ui.76995012dc174269": {
+      "value": "搜尋網站",
+      "reviewed": true
+    },
+    "hub.ui.31022ba3ee5fcf3a": {
+      "value": "此處不允許開啟該連結。",
+      "reviewed": true
+    },
+    "hub.ui.1f3202cb49e7679a": {
+      "value": "隱藏非使用中",
+      "reviewed": true
+    },
+    "hub.ui.b0077176149e1431": {
+      "value": "管理 Antigravity Insiders 應用程式設定",
+      "reviewed": true
+    },
+    "hub.ui.d8d648e0074a2a26": {
+      "value": "選取動作",
+      "reviewed": true
+    },
+    "hub.ui.e6c6415f27e4dcef": {
+      "value": "正在載入差異…",
+      "reviewed": true
+    },
+    "hub.ui.3122a92a6ad9dec5": {
+      "value": "單一看板",
+      "reviewed": true
+    },
+    "hub.ui.a205cfd78d0ce0c6": {
+      "value": "從子代理對話發起",
+      "reviewed": true
+    },
+    "hub.ui.a9702fe1ed12bb8b": {
+      "value": "暫停此代理，保留目前位置與串流狀態；繼續即可恢復。",
+      "reviewed": true
+    },
+    "hub.ui.e14ee2e295b416bd": {
+      "value": "正在聆聽，請隨意提問。",
+      "reviewed": true
+    },
+    "hub.ui.c5f3e9c14d36d1f0": {
+      "value": "刪除產物",
+      "reviewed": true
+    },
+    "hub.ui.e7be8f386a8ea08a": {
+      "value": "已探索檔案",
+      "reviewed": true
+    },
+    "hub.ui.532f8e608cd23f4f": {
+      "value": "資料科學與分析",
+      "reviewed": true
+    },
+    "hub.ui.00edcb7e7c928c3f": {
+      "value": "從你的第一則訊息建立新工作區。",
+      "reviewed": true
+    },
+    "hub.ui.8275703863ba3d42": {
+      "value": "搜尋網站…",
+      "reviewed": true
+    },
+    "hub.ui.f6a86fc1937a359a": {
+      "value": "自動補全選單",
+      "reviewed": true
+    },
+    "hub.ui.7dce90a4444351f1": {
+      "value": "詢問 /btw",
+      "reviewed": true
+    },
+    "hub.ui.b323f4c9f1d1f153": {
+      "value": "停止轉錄",
+      "reviewed": true
+    },
+    "hub.ui.33c9455e4beb248c": {
+      "value": "@提及，寬度 = 次數",
+      "reviewed": true
+    },
+    "hub.ui.f2620a7746fcc032": {
+      "value": "解說員已終止；總覽不再更新",
+      "reviewed": true
+    },
+    "hub.ui.2019e8abe390989e": {
+      "value": "傳給任何人",
+      "reviewed": true
+    },
+    "hub.ui.b0f0cb2af6aa5a59": {
+      "value": "停用或移除此套件組合不會影響它。",
+      "reviewed": true
+    },
+    "hub.ui.c8dae6371b33b8d6": {
+      "value": "重播",
+      "reviewed": true
+    },
+    "hub.ui.5cb5697e76a45813": {
+      "value": "等待第一則貼文。",
+      "reviewed": true
+    },
+    "hub.ui.c094e0503c14431b": {
+      "value": "正在儲存設定常式",
+      "reviewed": true
+    },
+    "hub.ui.c62f5c57134b8957": {
+      "value": "正在刪除設定常式",
+      "reviewed": true
+    },
+    "hub.ui.6f16f0e0522499e1": {
+      "value": "在 IDE 中開啟",
+      "reviewed": true
+    },
+    "hub.ui.4aff15de2f313404": {
+      "value": "隨意提問",
+      "reviewed": true
+    },
+    "hub.ui.1cc3814be75f8f7f": {
+      "value": "閒置對話",
+      "reviewed": true
+    },
+    "hub.ui.ab9152c5fc393972": {
+      "value": "依網站檢視 Cookie",
+      "reviewed": true
+    },
+    "hub.ui.bf327cf9bcdd7f4e": {
+      "value": "從主對話發起",
+      "reviewed": true
+    },
+    "hub.ui.8572a21a58c516bd": {
+      "value": "主工作區",
+      "reviewed": true
+    },
+    "hub.ui.132bfcfcfde4f6b1": {
+      "value": "即時空白間隔",
+      "reviewed": true
+    },
+    "hub.ui.7745bcb6f710f75e": {
+      "value": "篩選器（使用中）",
+      "reviewed": true
+    },
+    "hub.ui.e031b98d9176f84a": {
+      "value": "設定瀏覽器子代理。它需要",
+      "reviewed": true
+    },
+    "hub.ui.e40675c144472dcf": {
+      "value": "解說員尚未發佈總覽。",
+      "reviewed": true
+    },
+    "hub.ui.fff067cf75d62697": {
+      "value": "解說員頁面",
+      "reviewed": true
+    },
+    "hub.ui.6f176c42c1449566": {
+      "value": "一般生產力",
+      "reviewed": true
+    },
+    "hub.ui.84da9ed85dcf1b5d": {
+      "value": "切換虛擬機器",
+      "reviewed": true
+    },
+    "hub.ui.0929b4da291d10af": {
+      "value": "若要立即繼續使用此模型，請啟用 AI 點數超額用量。",
+      "reviewed": true
+    },
+    "hub.ui.88701a9136315238": {
+      "value": "可將例行步驟分流至 Hydrogen 的 Argon 模型。維持 Argon 級品質，消耗更少 token。",
+      "reviewed": true
+    },
+    "hub.ui.9b1a065a734a91ec": {
+      "value": "正在從佇列中移除訊息…",
+      "reviewed": true
+    },
+    "hub.ui.f73c4a5a85c3d4e5": {
+      "value": "無受阻項目",
+      "reviewed": true
+    },
+    "hub.ui.d41aecde8d271b58": {
+      "value": "產品管理",
+      "reviewed": true
+    },
+    "hub.ui.59f774d529faaef3": {
+      "value": "等待 @coordinator 回應",
+      "reviewed": true
+    },
+    "hub.ui.154c29a6b8b8e289": {
+      "value": "此協作群沒有解說員。請協調器新增一位。",
+      "reviewed": true
+    },
+    "hub.ui.c508c7705103d9ca": {
+      "value": "顯示較早貼文",
+      "reviewed": true
+    },
+    "hub.ui.db8660ddbb3ad302": {
+      "value": "語音聽寫無法使用",
+      "reviewed": true
+    },
+    "hub.ui.57b955600c578410": {
+      "value": "無法清除瀏覽資料，請再試一次。",
+      "reviewed": true
+    },
+    "hub.ui.606df31b1e0a3657": {
+      "value": "已編輯檔案與產物",
+      "reviewed": true
+    },
+    "hub.ui.c7dc9da11a038c05": {
+      "value": "無執行中項目",
+      "reviewed": true
+    },
+    "hub.ui.858a8c6112517768": {
+      "value": "歡迎回來。我們要從哪裡繼續？",
+      "reviewed": true
+    },
+    "hub.ui.1d162999e438850a": {
+      "value": "管理按鍵組合方案並在 VS Code 中自訂快速鍵。",
+      "reviewed": true
+    },
+    "hub.ui.c32e15cd136b82a5": {
+      "value": "點擊檢視中的連結即可開啟。",
+      "reviewed": true
+    },
+    "hub.ui.ba4b81d43a709c90": {
+      "value": "未選取對話",
+      "reviewed": true
+    },
+    "hub.ui.f6199870f20b258e": {
+      "value": "清除內建瀏覽器中造訪過的網址與自動完成建議",
+      "reviewed": true
+    },
+    "hub.ui.75682a8299d2eb97": {
+      "value": "繼續編輯 1 則留言草稿",
+      "reviewed": true
+    },
+    "hub.ui.46f771858da82361": {
+      "value": "單獨安裝",
+      "reviewed": true
+    },
+    "hub.ui.45b790ac8c7d918c": {
+      "value": "含 Cookie 的網站",
+      "reviewed": true
+    },
+    "hub.ui.18be8ade995e7f84": {
+      "value": "重試解說員檢視",
+      "reviewed": true
+    },
+    "hub.ui.0e580041e77771f2": {
+      "value": "view.html 超過 64 KB",
+      "reviewed": true
+    },
+    "hub.ui.6da694f779f448af": {
+      "value": "清除內建瀏覽器的瀏覽紀錄、Cookie 與網站資料，或管理各網站的 Cookie。",
+      "reviewed": true
+    },
+    "hub.ui.6d9a9843b73f4e7a": {
+      "value": "取消封存本機專案失敗",
+      "reviewed": true
+    },
+    "hub.ui.5775a093a4ef1a85": {
+      "value": "行銷與內容",
+      "reviewed": true
+    },
+    "hub.ui.b4a5396200f9185c": {
+      "value": "正在終止",
+      "reviewed": true
+    },
+    "hub.ui.32ab018fd38a7b42": {
+      "value": "圖表",
+      "reviewed": true
+    },
+    "hub.ui.78797afdac993780": {
+      "value": "已列出",
+      "reviewed": true
+    },
+    "hub.ui.8c13f73ba145c626": {
+      "value": "協作群",
+      "reviewed": true
+    },
+    "hub.ui.d5203617aee0cd9b": {
+      "value": "載入對話紀錄失敗",
+      "reviewed": true
+    },
+    "hub.ui.c98d7fd85705ac6d": {
+      "value": "不搭配工作區直接開始，適合一般提問。",
+      "reviewed": true
+    },
+    "hub.ui.17f48909e9ba086a": {
+      "value": "已編輯產物",
+      "reviewed": true
+    },
+    "hub.ui.e7c7bb84611a6275": {
+      "value": "內建瀏覽器中沒有網站儲存 Cookie。",
+      "reviewed": true
+    },
+    "hub.ui.9a55d464d063262f": {
+      "value": "目前對話",
+      "reviewed": true
+    },
+    "hub.ui.425fd9623996e1e8": {
+      "value": "移除套件組合",
+      "reviewed": true
+    },
+    "hub.ui.641d1ef657bdfd9f": {
+      "value": "跟隨",
+      "reviewed": true
+    },
+    "hub.ui.1ce37f395d7aa7aa": {
+      "value": "選取分支",
+      "reviewed": true
+    },
+    "hub.ui.aafd83fdb0f4d88c": {
+      "value": "設定連結開啟方式與內建瀏覽器偏好設定",
+      "reviewed": true
+    },
+    "hub.ui.ebfbcc931abea370": {
+      "value": "點擊即可從看板隱藏",
+      "reviewed": true
+    },
+    "hub.ui.5d9a85d72cd7f978": {
+      "value": "已編輯檔案",
+      "reviewed": true
+    },
+    "hub.ui.33278c7fd7903628": {
+      "value": "顯示點名特定成員的貼文",
+      "reviewed": true
+    },
+    "hub.ui.a1f1c821368c0a42": {
+      "value": "協作群正在啟動",
+      "reviewed": true
+    },
+    "hub.ui.af932925c88c6df3": {
+      "value": "設定工作區專屬的權限、資源與自訂設定",
+      "reviewed": true
+    },
+    "hub.ui.7850ecd61123f3f7": {
+      "value": "播放／暫停重播（空白鍵）",
+      "reviewed": true
+    },
+    "hub.ui.f017cad972f500e5": {
+      "value": "請先取消封存主對話才能插入",
+      "reviewed": true
+    },
+    "hub.ui.3f5aadfe15bfc9d6": {
+      "value": "敏感操作前先詢問",
+      "reviewed": true
+    },
+    "hub.ui.a9c0bc84dbcf9456": {
+      "value": "旁支問題執行期間無法升級",
+      "reviewed": true
+    },
+    "hub.ui.b6f7e5a48677228a": {
+      "value": "開啟瀏覽器螢幕截圖",
+      "reviewed": true
+    },
+    "hub.ui.92d78d88918e2a9e": {
+      "value": "可捲動表格",
+      "reviewed": true
+    },
+    "hub.ui.031a8f0f659df890": {
+      "value": "失敗",
+      "reviewed": true
+    },
+    "hub.ui.d353a99eb4556847": {
+      "value": "已取消",
+      "reviewed": true
+    },
+    "hub.ui.79670c9b5d43b33b": {
+      "value": "尚未完成任何任務。",
+      "reviewed": true
+    },
+    "hub.ui.81bc5ae8d5396fd2": {
+      "value": "多個工作代理",
+      "reviewed": true
+    },
+    "hub.ui.d0027313dd37fa69": {
+      "value": "正在載入工作樹…",
+      "reviewed": true
+    },
+    "hub.ui.fdc17f3c2d727096": {
+      "value": "取消 (Cmd+D)",
+      "reviewed": true
+    },
+    "hub.ui.0436231679a0cb2b": {
+      "value": "正在登出…",
+      "reviewed": true
+    },
+    "hub.ui.6f056e849aac8015": {
+      "value": "依收件者篩選",
+      "reviewed": true
+    },
+    "hub.ui.1b9f384c1436f607": {
+      "value": "未讀",
+      "reviewed": true
+    },
+    "hub.ui.fb25ca9eb9b5fd8a": {
+      "value": "新增 WSL 視窗",
+      "reviewed": true
+    },
+    "hub.ui.c46791ab7c246438": {
+      "value": "主對話的輸入框目前無法使用。",
+      "reviewed": true
+    },
+    "hub.ui.9eec7960bbcd6a9d": {
+      "value": "開始旁支問題",
+      "reviewed": true
+    },
+    "hub.ui.3041783c48f11a4c": {
+      "value": "已刪除設定常式",
+      "reviewed": true
+    },
+    "hub.ui.bd1b33591a4a4415": {
+      "value": "自訂快速鍵",
+      "reviewed": true
+    },
+    "hub.ui.f22b7b511b4f4ae8": {
+      "value": "回應動作",
+      "reviewed": true
+    },
+    "hub.ui.9750859eb53a8aca": {
+      "value": "取消 (Ctrl+C)",
+      "reviewed": true
+    },
+    "hub.ui.3a0d81c0bf5fc791": {
+      "value": "在主對話期間發起",
+      "reviewed": true
+    },
+    "hub.ui.e9ce531d30ab7e59": {
+      "value": "待命中",
+      "reviewed": true
+    },
+    "hub.ui.78f9f70c4b80d633": {
+      "value": "插入至主對話",
+      "reviewed": true
+    },
+    "hub.ui.40bb50da160cdc21": {
+      "value": "下移",
+      "reviewed": true
+    },
+    "hub.ui.afde8770baee81bd": {
+      "value": "已編輯產物",
+      "reviewed": true
+    },
+    "hub.ui.32fd144c1f4b399d": {
+      "value": "關閉視窗",
+      "reviewed": true
+    },
+    "hub.ui.94d2ee3da6dbc6a4": {
+      "value": "遠端模式僅包含 GitHub 儲存庫",
+      "reviewed": true
+    },
+    "hub.ui.29867e83bc53ef14": {
+      "value": "計時",
+      "reviewed": true
+    },
+    "hub.ui.0d2685c5f8107a18": {
+      "value": "在無衝突的 VS Code 預設組合或獨立的 Antigravity 組合鍵之間選擇。",
+      "reviewed": true
+    },
+    "hub.ui.918d8c3f402c6163": {
+      "value": "已探索產物",
+      "reviewed": true
+    },
+    "hub.ui.b063c889bc90a1db": {
+      "value": "在此對話中啟動的協作群會自動顯示於此，包含看板、成員與 @提及關係圖。啟動指令：",
+      "reviewed": true
+    },
+    "hub.ui.18bc7d05be58400c": {
+      "value": "已探索檔案與產物",
+      "reviewed": true
+    },
+    "hub.ui.4f04a5f84f36e0dd": {
+      "value": "正在複製至本機…",
+      "reviewed": true
+    },
+    "hub.ui.24db14082e125a84": {
+      "value": "給 @all",
+      "reviewed": true
+    },
+    "hub.ui.53c4accd5d05336b": {
+      "value": "此對話將停用遙測；點擊可啟用。",
+      "reviewed": true
+    },
+    "hub.ui.ae3f6ca3c043f874": {
+      "value": "已探索檔案與產物",
+      "reviewed": true
+    },
+    "hub.ui.a2a0a3533474bdc3": {
+      "value": "此對話沒有協作群",
+      "reviewed": true
+    },
+    "hub.ui.59fe0b6e8ad0a526": {
+      "value": "沿用你上一個工作區。",
+      "reviewed": true
+    },
+    "hub.ui.5051902c7b6a368b": {
+      "value": "切換分支",
+      "reviewed": true
+    },
+    "hub.ui.4c8906cf76f5740a": {
+      "value": "頻道",
+      "reviewed": true
+    },
+    "hub.ui.f79b2ae22d4dec0b": {
+      "value": "僅於依狀態分組時套用",
+      "reviewed": true
+    },
+    "hub.ui.71bf03ad1f6ba119": {
+      "value": "選取分支",
+      "reviewed": true
+    },
+    "hub.ui.a0c984e85b278a86": {
+      "value": "開啟此專案的「新增對話」畫面",
+      "reviewed": true
+    },
+    "hub.ui.947d67b5d278505c": {
+      "value": "依頻道篩選",
+      "reviewed": true
+    },
+    "hub.ui.7179ea0035fca783": {
+      "value": "清除篩選器",
+      "reviewed": true
+    },
+    "hub.ui.579bfb1ea99b650e": {
+      "value": "選擇協調器使用的模型。以更強大的協調模型搭配更快、成本更低的執行模型，能以更少 token 獲得高品質結果。",
+      "reviewed": true
+    },
+    "hub.ui.fa5f38f044c49ab3": {
+      "value": "管理 Antigravity Insiders 應用程式設定。",
+      "reviewed": true
+    },
+    "hub.ui.499a014e50ca0245": {
+      "value": "所有工作代理",
+      "reviewed": true
+    },
+    "hub.ui.23cf109ef68f54a0": {
+      "value": "此對話不支援使用此旁支問題。",
+      "reviewed": true
+    },
+    "hub.ui.2eee037c67fbe81b": {
+      "value": "分支",
+      "reviewed": true
+    },
+    "hub.ui.72c1b406f0f97b6f": {
+      "value": "設定瀏覽器子代理允許或拒絕存取的網址。它在內建瀏覽器中執行，無需額外安裝瀏覽器",
+      "reviewed": true
+    },
+    "hub.ui.fc7f1aa2054c2283": {
+      "value": "正在列出",
+      "reviewed": true
+    },
+    "hub.ui.84f2b4ae34d68e15": {
+      "value": "拖曳檢視進度",
+      "reviewed": true
+    },
+    "hub.ui.6497fc6f84000b29": {
+      "value": "搜尋成員",
+      "reviewed": true
+    },
+    "hub.ui.01345dbfd6e59bbc": {
+      "value": "協作群檢視",
+      "reviewed": true
+    },
+    "hub.ui.c26cc71664beb87f": {
+      "value": "無等待中項目",
+      "reviewed": true
+    },
+    "hub.ui.587c2564c1c53415": {
+      "value": "在手機上開啟",
+      "reviewed": true
+    },
+    "hub.ui.9c9806d2d6a70337": {
+      "value": "成員討論時，發佈至協作群看板的貼文會顯示於此。",
+      "reviewed": true
+    },
+    "hub.ui.40693055fb81c106": {
+      "value": "重播位置",
+      "reviewed": true
+    },
+    "hub.ui.2ee11474fabca6e8": {
+      "value": "已清除內建瀏覽器瀏覽紀錄",
+      "reviewed": true
+    },
+    "hub.ui.f2bd677095e47a53": {
+      "value": "尚無貼文",
+      "reviewed": true
+    },
+    "hub.ui.3c8cff6e2a8e52bd": {
+      "value": "已編輯檔案與產物",
+      "reviewed": true
+    },
+    "hub.ui.7c5b2da19293eb98": {
+      "value": "目前分支",
+      "reviewed": true
+    },
+    "hub.ui.81219e5771466627": {
+      "value": "目前檔案不是有效的 JSON，顯示上一版有效的 view.json。",
+      "reviewed": true
+    },
+    "hub.ui.e6ce4eb862b0fecd": {
+      "value": "解說員檢視（AI 生成）",
+      "reviewed": true
+    },
+    "hub.ui.fce263d326818c62": {
+      "value": "無工作區",
+      "reviewed": true
+    },
+    "hub.ui.54994d8eb3c61f6e": {
+      "value": "此工作區會覆寫你的全域權限設定。",
+      "reviewed": true
+    },
+    "hub.ui.0430fbfc3d68bf6f": {
+      "value": "在傳送按鈕旁顯示上下文視窗使用量。點擊可查看明細與模型配額",
+      "reviewed": true
+    },
+    "hub.ui.dd2eda63fc09ebb2": {
+      "value": "沒有符合的貼文",
+      "reviewed": true
+    },
+    "hub.ui.ac1aa2fbc8cd0737": {
+      "value": "瀏覽資料",
+      "reviewed": true
+    },
+    "hub.ui.820ccbef36f60b83": {
+      "value": "已編輯檔案與產物",
+      "reviewed": true
+    },
+    "hub.ui.a5f69d1841cbbd17": {
+      "value": "新增指示",
+      "reviewed": true
+    },
+    "hub.ui.2c8c3c0c4ac4aeec": {
+      "value": "開啟檔案需要應用程式支援。",
+      "reviewed": true
+    },
+    "hub.ui.a8c8453cc5e255f2": {
+      "value": "執行中：回合進行中（思考、執行工具或等待模型回應）",
+      "reviewed": true
+    },
+    "hub.ui.2ddaa716790258bb": {
+      "value": "在 Google 文件中開啟",
+      "reviewed": true
+    },
+    "hub.ui.87b007261779ec1a": {
+      "value": "不在名冊中",
+      "reviewed": true
+    },
+    "hub.ui.128374b53cc69c01": {
+      "value": "不指定收件者",
+      "reviewed": true
+    },
+    "hub.ui.63ddfca0b46b10a9": {
+      "value": "選取分支…",
+      "reviewed": true
+    },
+    "hub.ui.f7f231a086863614": {
+      "value": "無限制執行所有指令",
+      "reviewed": true
+    },
+    "hub.ui.a8b0918b9f6cbd95": {
+      "value": "繼續編輯留言草稿",
+      "reviewed": true
+    },
+    "hub.ui.4816cbfd74aa8297": {
+      "value": "看板",
+      "reviewed": true
+    },
+    "hub.ui.e08c777302863717": {
+      "value": "協調器會將其拆分為多個任務。",
+      "reviewed": true
+    },
+    "hub.ui.c5746e21a956afd1": {
+      "value": "已取消刪除設定常式",
+      "reviewed": true
+    },
+    "hub.ui.b55b2166f1aef053": {
+      "value": "展開 @all",
+      "reviewed": true
+    },
+    "hub.ui.8bb53aacb2ac94a3": {
+      "value": "規劃工作、做出設計決策並審閱成果。請選取頂級模型，也可在模型選單的「協調器」列為每個對話單獨指定。",
+      "reviewed": true
+    },
+    "hub.ui.587f856d5431a721": {
+      "value": "切換自動換行",
+      "reviewed": true
+    },
+    "hub.ui.a02d10ca8dbfb12f": {
+      "value": "正在尋找此對話的協作群…",
+      "reviewed": true
+    },
+    "hub.ui.4354d8358fff218a": {
+      "value": "目前無須處理",
+      "reviewed": true
+    },
+    "hub.ui.3aa96fcc6a8c70f2": {
+      "value": "保持最新貼文在視野內",
+      "reviewed": true
+    },
+    "hub.ui.7d68e6842e7a8595": {
+      "value": "已停止：未載入，當貼文提及時會自動喚醒",
+      "reviewed": true
+    },
+    "hub.ui.a4b64f5ec3537957": {
+      "value": "編輯對話標題",
+      "reviewed": true
+    },
+    "hub.ui.50d6e49caa8924a3": {
+      "value": "沒有可用的套件組合。",
+      "reviewed": true
+    },
+    "hub.ui.a8ae773d7501ed8c": {
+      "value": "選取分支…",
+      "reviewed": true
+    },
+    "hub.ui.3b0e634a120a78b8": {
+      "value": "檢視內容",
+      "reviewed": true
+    },
+    "hub.ui.8b9dbcf918e6fbdd": {
+      "value": "在行動裝置上會顯示較大",
+      "reviewed": true
+    },
+    "hub.ui.432890c32353a375": {
+      "value": "未記錄任何瀏覽器步驟",
+      "reviewed": true
+    },
+    "hub.ui.5aba452b19a5e234": {
+      "value": "系統介面",
+      "reviewed": true
+    },
+    "hub.ui.233f644f36b81ad0": {
+      "value": "存取受限",
+      "reviewed": true
+    },
+    "hub.ui.f4838b20ab8c7e22": {
+      "value": "底部面板",
+      "reviewed": true
+    },
+    "hub.ui.6a51cc98a237e225": {
+      "value": "工作樹分支",
+      "reviewed": true
+    },
+    "hub.ui.772887b6d0252c7e": {
+      "value": "你可以升級至更高等級的 Google AI Ultra 方案以獲得最高速率上限。",
+      "reviewed": true
+    },
+    "hub.ui.44a1eca6ca25c186": {
+      "value": "解說員正在等待新的看板貼文",
+      "reviewed": true
+    },
+    "hub.ui.ba69e64b0a570836": {
+      "value": "開始／停止語音錄製",
+      "reviewed": true
+    },
+    "hub.ui.0f68a6fd26e95b48": {
+      "value": "在子代理對話期間發起",
+      "reviewed": true
+    },
+    "hub.ui.6f77831e5bf57aa5": {
+      "value": "無法升級子代理的旁支問題",
+      "reviewed": true
+    },
+    "hub.ui.a34868c7b2cf6596": {
+      "value": "請先在主對話傳送訊息以開始旁支問題",
+      "reviewed": true
+    },
+    "hub.ui.4e427ad73b23a489": {
+      "value": "顯示全部並即時跟隨",
+      "reviewed": true
+    },
+    "hub.ui.f102a103cb38fe1d": {
+      "value": "建立分支",
+      "reviewed": true
+    },
+    "hub.ui.000eab90c46120bf": {
+      "value": "CLI 專案",
+      "reviewed": true
+    },
+    "hub.ui.9baac58ce586ea76": {
+      "value": "執行器模型",
+      "reviewed": true
+    },
+    "hub.ui.5cf5c04954572e98": {
+      "value": "正在載入套件組合…",
+      "reviewed": true
+    },
+    "hub.ui.79b4368e570c6772": {
+      "value": "移除指示",
+      "reviewed": true
+    },
+    "hub.ui.354ff2bd47ea952c": {
+      "value": "遠端分支",
+      "reviewed": true
+    },
+    "hub.ui.80905baf3aaec87b": {
+      "value": "已執行指令",
+      "reviewed": true
+    },
+    "hub.ui.3fd256357792ad9f": {
+      "value": "中鍵點擊",
+      "reviewed": true
+    },
+    "hub.ui.93a54cd5a417ae5e": {
+      "value": "重播節奏",
+      "reviewed": true
+    },
+    "hub.ui.e39f748785ba64e6": {
+      "value": "檢查更新…",
+      "reviewed": true
+    },
+    "hub.ui.ddd9e8095da873fe": {
+      "value": "從暫停處繼續此代理",
+      "reviewed": true
+    },
+    "hub.ui.d237a0cbaa6dcf37": {
+      "value": "已取消儲存設定常式",
+      "reviewed": true
+    },
+    "hub.ui.ba35f0c47d862763": {
+      "value": "尚未開始",
+      "reviewed": true
+    },
+    "hub.ui.9e8488c2d204140b": {
+      "value": "想要調整此檢視嗎？告訴協調器即可。",
+      "reviewed": true
+    },
+    "hub.ui.c52f575884d08440": {
+      "value": "每月上限",
+      "reviewed": true
+    },
+    "hub.ui.f8fa839eb7db8316": {
+      "value": "已探索檔案與產物",
+      "reviewed": true
+    },
+    "hub.ui.41e10dbc5f08cd5d": {
+      "value": "取消 (⌘D)",
+      "reviewed": true
+    },
+    "hub.ui.7d52ed5b19430d45": {
+      "value": "麥克風無訊號",
+      "reviewed": true
+    },
+    "hub.ui.264c28cbf01ce9fa": {
+      "value": "思考深度",
+      "reviewed": true
+    },
+    "hub.ui.50209c56159fa247": {
+      "value": "注意：變更此設定只會套用至傳送給代理的新訊息，進行中的回應仍會使用先前的設定值。",
+      "reviewed": true
+    },
+    "hub.ui.bee5d9b4adecbd8c": {
+      "value": "正在載入解說員檢視",
+      "reviewed": true
+    },
+    "hub.ui.25cb3f2d0e7d36b9": {
+      "value": "複製到本機資料夾",
+      "reviewed": true
+    },
+    "hub.ui.cf30b3333062034a": {
+      "value": "載入子代理失敗",
+      "reviewed": true
+    },
+    "hub.ui.d9f2a06e971e7dd5": {
+      "value": "請在 /btw 後輸入旁支問題",
+      "reviewed": true
+    },
+    "hub.ui.b22dc3f2f72bf571": {
+      "value": "終端機與工具列",
+      "reviewed": true
+    },
+    "hub.ui.1df59a44a7f398b3": {
+      "value": "下一則貼文（→）",
+      "reviewed": true
+    },
+    "hub.ui.4b33d5e03e53e655": {
+      "value": "所有頻道",
+      "reviewed": true
+    },
+    "hub.ui.132d124d6bb3d811": {
+      "value": "已中斷",
+      "reviewed": true
+    },
+    "hub.ui.559ced802dfb6ad4": {
+      "value": "顯示自動化對話",
+      "reviewed": true
+    },
+    "hub.ui.835918024f55a92c": {
+      "value": "沒有卡住的項目",
+      "reviewed": true
+    },
+    "hub.ui.2daa5e6bd2fd2258": {
+      "value": "按鍵組合方案",
+      "reviewed": true
+    },
+    "hub.ui.90967f573a5b5c84": {
+      "value": "協調器設定",
+      "reviewed": true
+    },
+    "hub.ui.67b6ffc1ed06f760": {
+      "value": "一律開啟",
+      "reviewed": true
+    },
+    "hub.ui.661877634527357a": {
+      "value": "所有使用中的 Antigravity 快速鍵與使用者覆寫設定皆直接由 VS Code 管理。",
+      "reviewed": true
+    },
+    "hub.ui.ee695b0426154cf0": {
+      "value": "可將例行步驟分流至 Hydrogen 的 Carbon 模型。維持 Carbon 級品質，消耗更少 token。",
+      "reviewed": true
+    },
+    "hub.ui.2f810cde244fb29c": {
+      "value": "搜尋貼文",
+      "reviewed": true
+    },
+    "hub.ui.f96054ce6f1f0951": {
+      "value": "本機複製專案失敗",
+      "reviewed": true
+    },
+    "hub.ui.674b604c36fefd3c": {
+      "value": "未命名協作群",
+      "reviewed": true
+    },
+    "hub.ui.314bbd6a54a7dd7a": {
+      "value": "請從對話中開啟此窗格以檢視協作群。在對話中啟動的協作群會自動顯示於此；啟動指令：",
+      "reviewed": true
+    },
+    "hub.ui.111684f49899846d": {
+      "value": "開啟完整時間軸",
+      "reviewed": true
+    },
+    "hub.ui.dea3a1af785674a0": {
+      "value": "管理 Antigravity 應用程式設定",
+      "reviewed": true
+    },
+    "hub.ui.822533d4403f83dd": {
+      "value": "顯示單一成員的貼文",
+      "reviewed": true
+    },
+    "hub.ui.31f72d3334c676ea": {
+      "value": "與目前比較",
+      "reviewed": true
+    },
+    "hub.ui.328ece1bff2fae6a": {
+      "value": "依工作代理篩選",
+      "reviewed": true
+    },
+    "hub.ui.1efabe1a2b824fd1": {
+      "value": "顯示外掛對話",
+      "reviewed": true
+    },
+    "hub.ui.5f04ae9ed6a865bb": {
+      "value": "正在連線…",
+      "reviewed": true
+    },
+    "hub.ui.fc9a05b835a43412": {
+      "value": "進度更新會顯示於此，僅在需要時才由你介入。",
+      "reviewed": true
+    },
+    "hub.ui.a08705780ae4124f": {
+      "value": "總覽 · 來自解說員筆記",
+      "reviewed": true
+    },
+    "hub.ui.507e92b772182dbd": {
+      "value": "後續計畫",
+      "reviewed": true
+    },
+    "hub.ui.dd3c7c60b806c8f3": {
+      "value": "控制遠端對話的權限",
+      "reviewed": true
+    },
+    "hub.ui.7486904e635f5a52": {
+      "value": "下一則貼文",
+      "reviewed": true
+    },
+    "hub.ui.0b25e7dc5e81a7a7": {
+      "value": "隱藏比較",
+      "reviewed": true
+    },
+    "hub.ui.0dbee6abe543258f": {
+      "value": "沒有可用的檔案差異",
+      "reviewed": true
+    },
+    "hub.ui.6a27b943f49b36bc": {
+      "value": "瀏覽器螢幕截圖",
+      "reviewed": true
+    },
+    "hub.ui.afb9fcaf7a075949": {
+      "value": "純文字檢視",
+      "reviewed": true
+    },
+    "hub.ui.2633673daf17be25": {
+      "value": "VS Code 鍵盤快速鍵",
+      "reviewed": true
+    },
+    "hub.ui.976d16df278c3b98": {
+      "value": "結束 Antigravity",
+      "reviewed": true
+    },
+    "hub.ui.dda839b136174edf": {
+      "value": "下載為 zip",
+      "reviewed": true
+    },
+    "hub.ui.3a80e9b087ac4c4f": {
+      "value": "沒有錄音",
+      "reviewed": true
+    },
+    "hub.ui.2215dbb2237a26b4": {
+      "value": "取消 (⌃C)",
+      "reviewed": true
+    },
+    "hub.ui.fdc11f0b3af55e46": {
+      "value": "已封鎖：不允許的檔案類型",
+      "reviewed": true
+    },
+    "hub.ui.7fb2fa8e350812bb": {
+      "value": "尚無計畫",
+      "reviewed": true
+    },
+    "hub.ui.1baac8b2cd3685c1": {
+      "value": "沒有執行中的代理",
+      "reviewed": true
+    },
+    "hub.ui.546ebb8eb993ea56": {
+      "value": "篩選器",
+      "reviewed": true
+    },
+    "hub.ui.74b6abdf59690fdf": {
+      "value": "需要你處理",
+      "reviewed": true
+    },
+    "hub.ui.bcdc99ce8cf9a9c3": {
+      "value": "僅供開發人員使用的工具，這些設定不會影響其他使用者",
+      "reviewed": true
+    },
+    "hub.ui.3f167bec714df4ec": {
+      "value": "系統預設應用程式",
+      "reviewed": true
+    },
+    "hub.ui.e1c99559b56a753f": {
+      "value": "正在執行指令",
+      "reviewed": true
+    },
+    "hub.ui.d1a8f44ad7dda012": {
+      "value": "將 @all 繪製為指向每位成員的連線",
+      "reviewed": true
+    },
+    "hub.ui.8fc63c7a8bff7d2c": {
+      "value": "建立在此電腦上執行的本機自動化",
+      "reviewed": true
+    },
+    "hub.ui.ef37f4e061bb04ce": {
+      "value": "實際大小",
+      "reviewed": true
+    },
+    "hub.ui.eac2679c0452b2af": {
+      "value": "尚無 view.html",
+      "reviewed": true
+    },
+    "hub.ui.62f8f7c6feabd968": {
+      "value": "編輯專案名稱",
+      "reviewed": true
+    },
+    "hub.ui.705975faaaf54eb4": {
+      "value": "正在檢查存取權…",
+      "reviewed": true
+    },
+    "hub.ui.335dd52922b134d3": {
+      "value": "連線至 WSL…",
+      "reviewed": true
+    },
+    "hub.ui.c69022b396caebdd": {
+      "value": "適合研究、寫作與日常任務的精簡介面",
+      "reviewed": true
+    },
+    "hub.ui.1622448aacd3a75a": {
+      "value": "來自任何人",
+      "reviewed": true
+    },
+    "hub.ui.64f4b4a47f30f6b1": {
+      "value": "嗨，今天要打造什麼？",
+      "reviewed": true
+    },
+    "hub.ui.8c5831d9fd3efdd1": {
+      "value": "啟用瀏覽器代理",
+      "reviewed": true
+    },
+    "hub.ui.fa6fe5441d2eee39": {
+      "value": "匯出 GIF",
+      "reviewed": true
+    },
+    "hub.ui.fd405c7fe3914bba": {
+      "value": "協調器 · 執行中",
+      "reviewed": true
+    },
+    "hub.ui.aa209354500fe67b": {
+      "value": "已編輯檔案",
+      "reviewed": true
+    },
+    "hub.ui.3c4c32df4b2946e6": {
+      "value": "自動更新",
+      "reviewed": true
+    },
+    "hub.ui.78ea8af1da894353": {
+      "value": "未知工作樹",
+      "reviewed": true
+    },
+    "hub.ui.1778c02c07caafed": {
+      "value": "請在協調器對話中回答。",
+      "reviewed": true
+    },
+    "hub.ui.dc32410e394479aa": {
+      "value": "已探索產物",
+      "reviewed": true
+    },
+    "hub.ui.037f4d22834dd26a": {
+      "value": "與協作群 sidecar 失去連線；正在重試",
+      "reviewed": true
+    },
+    "hub.ui.5b50e7a693fee952": {
+      "value": "複製失敗",
+      "reviewed": true
+    },
+    "hub.ui.512bad71f6e6300d": {
+      "value": "在此對話中啟動的協作群會自動顯示於此，包含看板、成員與 @提及關係圖。",
+      "reviewed": true
+    },
+    "hub.ui.2bd6828d27089005": {
+      "value": "設定瀏覽器子代理（使用 /browser 呼叫）允許與拒絕的網址。需要",
+      "reviewed": true
+    },
+    "hub.ui.a20aff1be6532f5c": {
+      "value": "重播速度",
+      "reviewed": true
+    },
+    "hub.ui.b4c52af02cc00bd5": {
+      "value": "依發佈者篩選",
+      "reviewed": true
+    },
+    "hub.ui.b468fd71c13fd4bc": {
+      "value": "應用程式選單",
+      "reviewed": true
+    },
+    "hub.ui.99af6606ff9d6cd5": {
+      "value": "選單",
+      "reviewed": true
+    },
+    "hub.ui.2bd873d6c734e63e": {
+      "value": "導覽路徑",
+      "reviewed": true
+    },
+    "hub.ui.73667278486b9c9d": {
+      "value": "導覽路徑",
+      "reviewed": true
+    },
+    "hub.ui.7a8a2fd67a09c4f2": {
+      "value": "檔案檢視器標頭",
+      "reviewed": true
+    },
+    "hub.ui.3c48ed51411bb08e": {
+      "value": "最大化側邊面板",
+      "reviewed": true
+    },
+    "hub.ui.99d679f391b50ce2": {
+      "value": "背景色彩選擇器",
+      "reviewed": true
+    },
+    "hub.ui.633dda19171c3122": {
+      "value": "前景色彩選擇器",
+      "reviewed": true
+    },
+    "hub.ui.4d95fe82a6689d33": {
+      "value": "強調色彩選擇器",
+      "reviewed": true
+    },
+    "hub.ui.07b6641e599000ef": {
+      "value": "選擇在對話輸入區中用來傳送訊息的按鍵。",
+      "reviewed": true
+    },
+    "hub.ui.11c3beefc7432c39": {
+      "value": "按 Enter 傳送，Shift+Enter 換行。",
+      "reviewed": true
+    },
+    "hub.ui.254a5f4f76406996": {
+      "value": "按 Ctrl+Enter 傳送，Enter 換行。",
+      "reviewed": true
+    },
+    "hub.ui.590514cf2fc8b187": {
+      "value": "按 Cmd+Enter 傳送，Enter 換行。",
+      "reviewed": true
+    },
+    "hub.ui.ab1173eed1d477d9": {
+      "value": "外掛程式",
+      "reviewed": true
+    },
+    "hub.ui.14bde5dd1e3cb3c8": {
+      "value": "連線至 Google Workspace，包含 Docs、Sheets、Slides、Drive、Calendar 與 Gmail。",
+      "reviewed": true
+    },
+    "hub.ui.d66f8d268f3962f2": {
+      "value": "用於科學研究的代理技能、資料庫與互動式檢視器。",
+      "reviewed": true
+    },
+    "web.dynamic.filesChangedCount": {
+      "value": "{0} 個檔案已變更",
+      "reviewed": true
+    },
+    "web.dynamic.fileChangedCount": {
+      "value": "{0} 個檔案已變更",
+      "reviewed": true
+    },
+    "web.dynamic.toolsExcludedCount": {
+      "value": "已排除 {0} 個工具",
+      "reviewed": true
+    },
+    "web.dynamic.toolExcludedCount": {
+      "value": "已排除 {0} 個工具",
+      "reviewed": true
+    },
+    "web.dynamic.updatesCount": {
+      "value": "{0} 項更新",
+      "reviewed": true
+    },
+    "web.dynamic.updateCount": {
+      "value": "{0} 項更新",
+      "reviewed": true
+    },
+    "web.dynamic.hideBreakdowns": {
+      "value": "隱藏 {0} 項明細{1, select, s {} other {}}",
+      "reviewed": true
+    },
+    "web.dynamic.stepsSlashProgress": {
+      "value": "{0}/{1} 步驟",
+      "reviewed": true
+    },
+    "web.dynamic.limitResetsIn": {
+      "value": "{0} 上限，將於 {1} 後重設",
+      "reviewed": true
+    },
+    "web.dynamic.modelPeriodLimit": {
+      "value": "{0} {1}上限",
+      "reviewed": true
+    },
+    "web.dynamic.startedFromQuoted": {
+      "value": "從「{0}」發起",
+      "reviewed": true
+    },
+    "web.dynamic.startedDuringQuoted": {
+      "value": "在「{0}」期間發起",
+      "reviewed": true
+    },
+    "web.dynamic.sendFeedbackAs": {
+      "value": "以 {0} 身分傳送意見回饋",
+      "reviewed": true
+    },
+    "web.dynamic.selectModelCurrent": {
+      "value": "選取模型，目前：{0}",
+      "reviewed": true
+    },
+    "web.dynamic.modelLockedRunning": {
+      "value": "模型：{0}，代理執行期間無法變更模型",
+      "reviewed": true
+    },
+    "web.dynamic.permLockedRunning": {
+      "value": "代理程式權限預設集：{0}，代理執行期間無法變更權限",
+      "reviewed": true
+    },
+    "web.dynamic.thoughtForDuration": {
+      "value": "思考了 {0}",
+      "reviewed": true
+    },
+    "web.dynamic.thinkingForDuration": {
+      "value": "已思考 {0}",
+      "reviewed": true
+    },
+    "web.dynamic.exitedWithCodeInline": {
+      "value": "{0} · 已結束，結束碼 {1}",
+      "reviewed": true
+    },
+    "hub.ui.0fcfb12dfad07ba0": {
+      "value": "需要驗證身分",
+      "reviewed": true
+    },
+    "hub.ui.016cf78cca62bd53": {
+      "value": "自動檢查更新",
+      "reviewed": true
+    },
+    "hub.ui.ff81f1d41dfd7f18": {
+      "value": "瀏覽器 JavaScript 執行原則",
+      "reviewed": true
+    },
+    "hub.ui.3967283c635218cf": {
+      "value": "瀏覽器操作規則",
+      "reviewed": true
+    },
+    "hub.ui.6a6571b243b67aa0": {
+      "value": "瀏覽資料",
+      "reviewed": true
+    },
+    "hub.ui.ad438ef1a7674f26": {
+      "value": "瀏覽紀錄",
+      "reviewed": true
+    },
+    "hub.ui.291e2a11434cfd2b": {
+      "value": "Build With Google 外掛",
+      "reviewed": true
+    },
+    "hub.ui.3c20ca49e345461a": {
+      "value": "CitC 工作區類型",
+      "reviewed": true
+    },
+    "hub.ui.06445eb2e676b81e": {
+      "value": "指令設定指令碼",
+      "reviewed": true
+    },
+    "hub.ui.230515513f6092a8": {
+      "value": "沙箱外執行指令",
+      "reviewed": true
+    },
+    "hub.ui.a173dde0775e6c90": {
+      "value": "上下文與配額指示器",
+      "reviewed": true
+    },
+    "hub.ui.a44d4f0162516f40": {
+      "value": "對話步驟",
+      "reviewed": true
+    },
+    "hub.ui.dfeb364deafde7a3": {
+      "value": "對話寬度",
+      "reviewed": true
+    },
+    "hub.ui.3cb27ae0fbca8ae3": {
+      "value": "複製圖片",
+      "reviewed": true
+    },
+    "hub.ui.dbf362d4f210c780": {
+      "value": "複製連結",
+      "reviewed": true
+    },
+    "hub.ui.38e1786909ac3783": {
+      "value": "自訂快顯選單",
+      "reviewed": true
+    },
+    "hub.ui.9df8cadeb2f8fbad": {
+      "value": "預設 Cog 分支 / 引用",
+      "reviewed": true
+    },
+    "hub.ui.e585a6abc3d15b3b": {
+      "value": "預設 Cog 儲存庫",
+      "reviewed": true
+    },
+    "hub.ui.cdb50c4eb4d2585f": {
+      "value": "預設工作區版本控制 (VCS)",
+      "reviewed": true
+    },
+    "hub.ui.9f4173a91945f285": {
+      "value": "刪除所有遠端代理資料",
+      "reviewed": true
+    },
+    "hub.ui.155106be1173d757": {
+      "value": "裝置名稱",
+      "reviewed": true
+    },
+    "hub.ui.c58e8815a57346ff": {
+      "value": "下載位置",
+      "reviewed": true
+    },
+    "hub.ui.223541cde6b049db": {
+      "value": "啟用 AI 點數超額使用",
+      "reviewed": true
+    },
+    "hub.ui.938e28640f6e2c01": {
+      "value": "啟用瀏覽器代理",
+      "reviewed": true
+    },
+    "hub.ui.494bac6b39b86701": {
+      "value": "啟用代理通知",
+      "reviewed": true
+    },
+    "hub.ui.64e9a353ec4fdecd": {
+      "value": "啟用沙箱模式",
+      "reviewed": true
+    },
+    "hub.ui.72f537a5a00af678": {
+      "value": "啟用代理通知音",
+      "reviewed": true
+    },
+    "hub.ui.115cf3dddfdbad7b": {
+      "value": "啟用遙測",
+      "reviewed": true
+    },
+    "hub.ui.fc4e8890fc9e2fc3": {
+      "value": "啟用終端機沙箱",
+      "reviewed": true
+    },
+    "hub.ui.03c539e810e07010": {
+      "value": "按 Enter 傳送",
+      "reviewed": true
+    },
+    "hub.ui.2befb23f7053dc26": {
+      "value": "檔案存取規則",
+      "reviewed": true
+    },
+    "hub.ui.f79e34f8f5af8f6e": {
+      "value": "檔案讀取",
+      "reviewed": true
+    },
+    "hub.ui.a45c787e9ac5e0a1": {
+      "value": "檔案寫入",
+      "reviewed": true
+    },
+    "hub.ui.6d784d95c63833e6": {
+      "value": "字型大小",
+      "reviewed": true
+    },
+    "hub.ui.ffff4354ccdf844e": {
+      "value": "Google One 推薦計畫",
+      "reviewed": true
+    },
+    "hub.ui.52af1dbc2b1c0c52": {
+      "value": "主應用程式環境",
+      "reviewed": true
+    },
+    "hub.ui.433616d904123cf9": {
+      "value": "包含 Jetski 預設自訂項目",
+      "reviewed": true
+    },
+    "hub.ui.cc55a21bff081e86": {
+      "value": "保留在選單列",
+      "reviewed": true
+    },
+    "hub.ui.b89124c79d1cf237": {
+      "value": "正在載入主機…",
+      "reviewed": true
+    },
+    "hub.ui.92a37087b73b3538": {
+      "value": "管理掛鉤",
+      "reviewed": true
+    },
+    "hub.ui.2630ba4d3bbf1847": {
+      "value": "管理權限",
+      "reviewed": true
+    },
+    "hub.ui.d0f678009d973cd7": {
+      "value": "Markdown 產物寬度",
+      "reviewed": true
+    },
+    "hub.ui.5a3e33bcdf2616ed": {
+      "value": "行銷電子郵件",
+      "reviewed": true
+    },
+    "hub.ui.b58330ac25057a44": {
+      "value": "下移",
+      "reviewed": true
+    },
+    "hub.ui.1359626e7b696434": {
+      "value": "上移",
+      "reviewed": true
+    },
+    "hub.ui.0815d664aa819b07": {
+      "value": "網路存取規則",
+      "reviewed": true
+    },
+    "hub.ui.9bf624ac6138cba7": {
+      "value": "新增對話按鈕",
+      "reviewed": true
+    },
+    "hub.ui.855d682f94819266": {
+      "value": "沒有可用的外掛程式",
+      "reviewed": true
+    },
+    "hub.ui.491fc91cd76e5157": {
+      "value": "尚未登入",
+      "reviewed": true
+    },
+    "hub.ui.63568f0582af1e88": {
+      "value": "通知設定",
+      "reviewed": true
+    },
+    "hub.ui.a65291255d71c726": {
+      "value": "連結開啟位置",
+      "reviewed": true
+    },
+    "hub.ui.0fcabfe6e097cd40": {
+      "value": "作業系統",
+      "reviewed": true
+    },
+    "hub.ui.44269ea744639d68": {
+      "value": "權限預設組合",
+      "reviewed": true
+    },
+    "hub.ui.38d492d7e7982ed9": {
+      "value": "防止休眠",
+      "reviewed": true
+    },
+    "hub.ui.1a3b23c70d280f4b": {
+      "value": "拉取請求 (PR)",
+      "reviewed": true
+    },
+    "hub.ui.3464cd5908e5fa72": {
+      "value": "螢幕閱讀器模式",
+      "reviewed": true
+    },
+    "hub.ui.e7ade7489317b0cf": {
+      "value": "安全性預設",
+      "reviewed": true
+    },
+    "hub.ui.d989893356eeff0f": {
+      "value": "查看方案",
+      "reviewed": true
+    },
+    "hub.ui.0fe0571facd9435c": {
+      "value": "傳送訊息",
+      "reviewed": true
+    },
+    "hub.ui.af363a0fa1974e86": {
+      "value": "設定指令碼",
+      "reviewed": true
+    },
+    "hub.ui.0264d7b0ccb8d48b": {
+      "value": "顯示較少",
+      "reviewed": true
+    },
+    "hub.ui.2150d8df37e48957": {
+      "value": "顯示全部",
+      "reviewed": true
+    },
+    "hub.ui.f10fd614835924d0": {
+      "value": "正在登出…",
+      "reviewed": true
+    },
+    "hub.ui.3d591e826d545919": {
+      "value": "停止錄音",
+      "reviewed": true
+    },
+    "hub.ui.954a7ace4e929466": {
+      "value": "將 JJ 工作樹同步至 Head",
+      "reviewed": true
+    },
+    "hub.ui.a7016ea3c777fa3e": {
+      "value": "終端機指令自動執行",
+      "reviewed": true
+    },
+    "hub.ui.142fa9db5f3c9aff": {
+      "value": "終端機指令",
+      "reviewed": true
+    },
+    "hub.ui.bb42027e6c798677": {
+      "value": "終端機位置",
+      "reviewed": true
+    },
+    "hub.ui.a7b0060623380e53": {
+      "value": "工具權限",
+      "reviewed": true
+    },
+    "hub.ui.f9eccf1bd6db5c6f": {
+      "value": "使用者類型",
+      "reviewed": true
+    },
+    "hub.ui.348c701c62ec6f92": {
+      "value": "VS Code 鍵盤快速鍵",
+      "reviewed": true
+    },
+    "hub.ui.d9ab76c650a66141": {
+      "value": "你的方案",
+      "reviewed": true
+    },
+    "hub.ui.4b0fd84a7499960f": {
+      "value": "您的方案： ",
+      "reviewed": true
+    },
+    "hub.ui.12ea12eace7d655f": {
+      "value": "變更",
+      "reviewed": true
+    },
+    "hub.ui.d0b4ba2311b3e849": {
+      "value": "變更",
+      "reviewed": true
+    },
+    "hub.ui.e6bb5689beec52c4": {
+      "value": "深色",
+      "reviewed": true
+    },
+    "hub.ui.034a0062488256f1": {
+      "value": "資料夾",
+      "reviewed": true
+    },
+    "hub.ui.5e689e2b01672bf3": {
+      "value": "外掛程式",
+      "reviewed": true
+    },
+    "hub.ui.92cd10e6b8b068a9": {
+      "value": "外掛程式",
+      "reviewed": true
+    },
+    "hub.ui.cde0fb0dec1400c5": {
+      "value": "設定",
+      "reviewed": true
+    },
+    "hub.ui.34a04005bcaf206e": {
+      "value": "目標",
+      "reviewed": true
+    },
+    "hub.ui.4e686af7bdcc5ae0": {
+      "value": "終端機",
+      "reviewed": true
+    },
+    "hub.ui.b23a6a8439c0dde5": {
+      "value": "未知",
+      "reviewed": true
+    },
+    "hub.ui.360719440e92c924": {
+      "value": "3 天",
+      "reviewed": true
+    },
+    "hub.ui.92340695899bd2d8": {
+      "value": "使用中",
+      "reviewed": true
+    },
+    "hub.ui.a658498e45232aad": {
+      "value": "新增目標",
+      "reviewed": true
+    },
+    "hub.ui.b64d6717b6fb60da": {
+      "value": "代理目標",
+      "reviewed": true
+    },
+    "hub.ui.1cfb21871a035769": {
+      "value": "代理名稱",
+      "reviewed": true
+    },
+    "hub.ui.947c413740b60175": {
+      "value": "由你允許",
+      "reviewed": true
+    },
+    "hub.ui.0c79a9c222840ed0": {
+      "value": "已套用",
+      "reviewed": true
+    },
+    "hub.ui.e5203b2e3b16b98c": {
+      "value": "自動解決",
+      "reviewed": true
+    },
+    "hub.ui.a0043bdd1a823a86": {
+      "value": "自動偵測（瀏覽器預設）",
+      "reviewed": true
+    },
+    "hub.ui.a0ef17612924548d": {
+      "value": "傳送訊息時自動釘選對話。可依需求取消釘選以維持釘選清單精簡。",
+      "reviewed": true
+    },
+    "hub.ui.d58a6527f624317f": {
+      "value": "可用的語音聽寫語言",
+      "reviewed": true
+    },
+    "hub.ui.5ef24ba91771824c": {
+      "value": "外掛程式無需詢問即可進行的變更。",
+      "reviewed": true
+    },
+    "hub.ui.c6da331eadbee0e2": {
+      "value": "已選擇",
+      "reviewed": true
+    },
+    "hub.ui.0890638dc39b634b": {
+      "value": "點擊項目以多選 · 拖曳或使用 ‹/› 標籤重新排序",
+      "reviewed": true
+    },
+    "hub.ui.5aface4325015b89": {
+      "value": "從遠端複製",
+      "reviewed": true
+    },
+    "hub.ui.86bcb96c6ffc2039": {
+      "value": "從這部電腦複製",
+      "reviewed": true
+    },
+    "hub.ui.aab1d35d32e3be24": {
+      "value": "雲端對話",
+      "reviewed": true
+    },
+    "hub.ui.439ff656ae62d179": {
+      "value": "雲端對話",
+      "reviewed": true
+    },
+    "hub.ui.57a58225257d2d68": {
+      "value": "依優先順序將語音聽寫限制為所選語言。留空則自動偵測。",
+      "reviewed": true
+    },
+    "hub.ui.ae1e7e1fec8d9bc9": {
+      "value": "作為新對話繼續",
+      "reviewed": true
+    },
+    "hub.ui.05db0d5bfdb65f39": {
+      "value": "內建瀏覽器為各網站儲存的 Cookie。刪除網站的 Cookie 通常會使你登出該網站。其他網站資料（本機儲存空間、IndexedDB、快取）僅會透過「瀏覽資料 → 清除」一併清除。",
+      "reviewed": true
+    },
+    "hub.ui.dc9a3bc19b6af643": {
+      "value": "協調器選項",
+      "reviewed": true
+    },
+    "hub.ui.5a614e73e098159b": {
+      "value": "建立代理",
+      "reviewed": true
+    },
+    "hub.ui.44ebb03bb18fa786": {
+      "value": "預設 (Gemini Pro)",
+      "reviewed": true
+    },
+    "hub.ui.61f9adfcec68fb19": {
+      "value": "「預設」會使用伺服器管理的路由與協調器配額；「自訂」可為協調與執行階段固定指定模型。",
+      "reviewed": true
+    },
+    "hub.ui.eb6bb48625737637": {
+      "value": "語音聽寫語言選項",
+      "reviewed": true
+    },
+    "hub.ui.85ab04aa89e3b764": {
+      "value": "語音聽寫語言",
+      "reviewed": true
+    },
+    "hub.ui.ce3b6bfbc8f88d82": {
+      "value": "個人使用",
+      "reviewed": true
+    },
+    "hub.ui.256d89e543910e20": {
+      "value": "團隊使用",
+      "reviewed": true
+    },
+    "hub.ui.1a9688e35e0fdb51": {
+      "value": "從初始提示建立新 Cog 工作區時使用的 Git-on-Borg 存放庫（例如 chromium/chromium/src 或 android/platform/superproject）。",
+      "reviewed": true
+    },
+    "hub.ui.94835ea2fcf775cd": {
+      "value": "收件匣",
+      "reviewed": true
+    },
+    "hub.ui.4e8302555c909327": {
+      "value": "收件匣模式",
+      "reviewed": true
+    },
+    "hub.ui.47bab32fd916ab52": {
+      "value": "隨附於外掛程式",
+      "reviewed": true
+    },
+    "hub.ui.2106e6308e0b3aa7": {
+      "value": "將執行中的對話保留在獨立的「進行中」區塊，而非留在收件匣。",
+      "reviewed": true
+    },
+    "hub.ui.2d51e620ab468d3e": {
+      "value": "需要授權",
+      "reviewed": true
+    },
+    "hub.ui.3a496d425b0f4530": {
+      "value": "正在載入訊息…",
+      "reviewed": true
+    },
+    "hub.ui.168a9b854c6a874b": {
+      "value": "正在載入較新的訊息…",
+      "reviewed": true
+    },
+    "hub.ui.5f8d56ee81924cbe": {
+      "value": "依狀態分組時已鎖定",
+      "reviewed": true
+    },
+    "hub.ui.b21fe2228fc0d717": {
+      "value": "符合此自動化的作用中身分。",
+      "reviewed": true
+    },
+    "hub.ui.bedc71237cfb741d": {
+      "value": "模型選擇",
+      "reviewed": true
+    },
+    "hub.ui.6ecc3df6bffdd06c": {
+      "value": "移動",
+      "reviewed": true
+    },
+    "hub.ui.96035e9a1eea2076": {
+      "value": "移動對話",
+      "reviewed": true
+    },
+    "hub.ui.c7e8ea9bfef01143": {
+      "value": "在選定的時間後，自動將閒置的收件匣對話移至「已解決」。",
+      "reviewed": true
+    },
+    "hub.ui.c76c65bbcf329771": {
+      "value": "名稱無法使用",
+      "reviewed": true
+    },
+    "hub.ui.6300ef800bb88429": {
+      "value": "永不",
+      "reviewed": true
+    },
+    "hub.ui.c548aab130f7e7dd": {
+      "value": "新增代理",
+      "reviewed": true
+    },
+    "hub.ui.98a23e6db3431d16": {
+      "value": "新增代理",
+      "reviewed": true
+    },
+    "hub.ui.4c47f095edec7512": {
+      "value": "沒有代理",
+      "reviewed": true
+    },
+    "hub.ui.b3839e7c0b517bcd": {
+      "value": "已不再使用",
+      "reviewed": true
+    },
+    "hub.ui.415446384c71044d": {
+      "value": "未設為一律允許。外掛程式進行變更前都會先詢問你。",
+      "reviewed": true
+    },
+    "hub.ui.9ef5bb4bd8f2a7f3": {
+      "value": "協調器模型選擇",
+      "reviewed": true
+    },
+    "hub.ui.229efc8f526335f1": {
+      "value": "權限",
+      "reviewed": true
+    },
+    "hub.ui.39ff0591d35ae888": {
+      "value": "以你的身分執行的個人代理",
+      "reviewed": true
+    },
+    "hub.ui.45b8612da93f60d7": {
+      "value": "外掛程式權限",
+      "reviewed": true
+    },
+    "hub.ui.1c2226d4a5c66ac1": {
+      "value": "需要專案",
+      "reviewed": true
+    },
+    "hub.ui.c2b1b8e2e03928e2": {
+      "value": "佈建中",
+      "reviewed": true
+    },
+    "hub.ui.6ff92452330e76c8": {
+      "value": "重設為自動",
+      "reviewed": true
+    },
+    "hub.ui.c8f193b315c86f3a": {
+      "value": "解決",
+      "reviewed": true
+    },
+    "hub.ui.51138020a0e510d3": {
+      "value": "解決對話",
+      "reviewed": true
+    },
+    "hub.ui.5be3c2c8354e1eb9": {
+      "value": "已解決",
+      "reviewed": true
+    },
+    "hub.ui.41f1736f8ba771eb": {
+      "value": "移回收件匣",
+      "reviewed": true
+    },
+    "hub.ui.c6847a4b8d9995c4": {
+      "value": "全部撤銷",
+      "reviewed": true
+    },
+    "hub.ui.a7c4e215d2d3dcfd": {
+      "value": "搜尋存放庫…",
+      "reviewed": true
+    },
+    "hub.ui.82bb9d99f6f685ea": {
+      "value": "依名稱或使用者名稱搜尋",
+      "reviewed": true
+    },
+    "hub.ui.9da7435c6b6ce648": {
+      "value": "搜尋身分",
+      "reviewed": true
+    },
+    "hub.ui.8838cea2f697382f": {
+      "value": "搜尋要新增的語言（例如 English、Spanish、中文、yue）...",
+      "reviewed": true
+    },
+    "hub.ui.331c4309f3f889ee": {
+      "value": "已選的語音聽寫語言",
+      "reviewed": true
+    },
+    "hub.ui.85bc0f95858d7572": {
+      "value": "自己",
+      "reviewed": true
+    },
+    "hub.ui.b5fbe59c68b31599": {
+      "value": "自我監看目標預設",
+      "reviewed": true
+    },
+    "hub.ui.164729bdb1eda4b4": {
+      "value": "團隊共用的共享代理",
+      "reviewed": true
+    },
+    "hub.ui.fa70650bebc3d864": {
+      "value": "顯示自動化",
+      "reviewed": true
+    },
+    "hub.ui.61ce40fe56f5642a": {
+      "value": "顯示外掛程式",
+      "reviewed": true
+    },
+    "hub.ui.2b8cbe0b6084ddeb": {
+      "value": "已停滯",
+      "reviewed": true
+    },
+    "hub.ui.383cd6c0b871980d": {
+      "value": "副標題",
+      "reviewed": true
+    },
+    "hub.ui.b4bbc6ce8da87847": {
+      "value": "這些權限隨外掛程式附帶，無法撤銷。",
+      "reviewed": true
+    },
+    "hub.ui.5d65bf1144a6eeb8": {
+      "value": "切換語言清單",
+      "reviewed": true
+    },
+    "hub.ui.55919e2f60c16e21": {
+      "value": "輸入你自己的回答",
+      "reviewed": true
+    },
+    "hub.ui.0b5260e1b4054f46": {
+      "value": "更新中",
+      "reviewed": true
+    },
+    "hub.ui.28c52244f908d578": {
+      "value": "這個代理應該完成什麼任務？",
+      "reviewed": true
+    },
+    "hub.ui.0ebb434f3189ef53": {
+      "value": "進行中區塊",
+      "reviewed": true
     }
   }
 }

@@ -1,5 +1,6 @@
 export const BOOTSTRAP_CHANNEL = 'agyctl:localization:bootstrap';
 export const BOOTSTRAP_RESULT_CHANNEL = 'agyctl:localization:bootstrap-result';
+export const SYNC_CHANNEL = 'agyctl:localization:sync';
 
 // Reviewed document routes and the 2.34.0 single-use UI bootstrap fragment.
 const HUB_DOCUMENT_PATHS = new Set([

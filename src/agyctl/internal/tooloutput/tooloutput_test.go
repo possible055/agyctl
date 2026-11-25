@@ -218,6 +218,9 @@ func TestRealRegistryLoadsAndSelfChecks(t *testing.T) {
 		"win-amd64-antigravity-2.34.0": {"2.34.0", 4, map[string]inputContract{
 			"original": {"cc94d648c39a67c293d0fdc8befc51e953d1a8f55617bf49fff69885ba475db9", "498f5dd9fbd27438a6f83a6ff388c2411aed4ae954a95893c851e2979400695b", "0b470304ce861bb66e51d3570147f6bf7dce86a98ec6d91a7be0f508d1caa339"},
 		}},
+		"win-amd64-antigravity-2.35.1": {"2.35.1", 4, map[string]inputContract{
+			"original": {"73ce9a2405b455a93d1f13db2ae555da50406110217a349b6dd85c377fbdb9d1", "9f8b85be26a94603cee43651a6b8947b8b9c7ddc57ddfc8874efd72a51d59569", "5708899ed73150f97080834ac99fb0cffbc63b1ebf29d9812b8b8d1f7638b8a8"},
+		}},
 	}
 	if len(reg.Targets) != len(contracts) {
 		t.Fatalf("registered build contracts changed: got %d targets, want %d", len(reg.Targets), len(contracts))

@@ -39,6 +39,16 @@ func isLinkedPatchBody(body []byte) bool {
 	if len(body) == 352 {
 		template, _ = hex.DecodeString(summaryPatchHex)
 		displacement = 0x30
+		for _, morestack := range [][3]byte{{0x5b, 0x50, 0x87}, {0x3b, 0xcd, 0x85}, {0x3b, 0xd9, 0x85}} {
+			candidate := bytes.Clone(template)
+			copy(candidate[289:292], morestack[:])
+			normal := bytes.Clone(body)
+			copy(normal[displacement:displacement+4], candidate[displacement:displacement+4])
+			if bytes.Equal(normal, candidate) {
+				return true
+			}
+		}
+		return false
 	}
 	normal := bytes.Clone(body)
 	copy(normal[displacement:displacement+4], template[displacement:displacement+4])

@@ -9,6 +9,7 @@ import { readArtifactDelivery } from '../artifact.js';
 import {
   BOOTSTRAP_CHANNEL,
   BOOTSTRAP_RESULT_CHANNEL,
+  SYNC_CHANNEL,
   authorizeBootstrapSender,
   bootstrapHealthState,
   decodeBootstrapResult,
@@ -20,6 +21,7 @@ import {
   readRuntimeConfig,
   resolveStartupSnapshot,
   StartupError,
+  type RuntimeConfig,
   type StartupSnapshot,
 } from './startup.js';
 
@@ -44,7 +46,7 @@ export {
 } from './startup.js';
 export type { RuntimeStatusSnapshot, StartupSnapshot } from './startup.js';
 
-export { BOOTSTRAP_CHANNEL, BOOTSTRAP_RESULT_CHANNEL } from './hub.js';
+export { BOOTSTRAP_CHANNEL, BOOTSTRAP_RESULT_CHANNEL, SYNC_CHANNEL } from './hub.js';
 
 export type HostErrorCode = 'ARTIFACT_INVALID' | 'HOST_CONFLICT' | 'SOURCE_MISMATCH';
 
@@ -59,9 +61,18 @@ export class HostError extends Error {
   }
 }
 
+interface BootstrapDelivery {
+  ok: boolean;
+  code?: string;
+  locale?: string;
+  engine?: string;
+  index?: unknown;
+}
+
 const hubWindows = new Map<
   number,
   {
+    webContents: Electron.WebContents;
     origin: string;
     snapshot: StartupSnapshot;
     bootstrapFrame: Electron.WebFrameMain | null;
@@ -70,10 +81,42 @@ const hubWindows = new Map<
 >();
 let bootstrapHandlerInstalled = false;
 let startupAttempted = false;
+let startupConfig: RuntimeConfig | null = null;
 let startupSnapshot: StartupSnapshot | null = null;
+let activeSnapshot: StartupSnapshot | null = null;
 let startupFailure: unknown;
 let runtimePersistence: RuntimePersistence | null = null;
+let selectionWatcher: fs.FSWatcher | null = null;
+let selectionWatchTimer: ReturnType<typeof setTimeout> | null = null;
 let runtimeClosed = false;
+
+function currentSnapshot(): StartupSnapshot | null {
+  return activeSnapshot ?? startupSnapshot;
+}
+
+function buildBootstrapDelivery(snapshot: StartupSnapshot): BootstrapDelivery {
+  if (snapshot.locale === 'en') return { ok: false, code: 'DISABLED' };
+  if (snapshot.format !== 'dom') return { ok: false, code: 'AST_DELIVERY' };
+  if (!snapshot.engineSha256 || !snapshot.indexSha256)
+    return { ok: false, code: 'ARTIFACT_INVALID' };
+  try {
+    const delivery = readArtifactDelivery(
+      path.join(snapshot.stateRoot, 'artifacts', snapshot.artifactId),
+      { artifactId: snapshot.artifactId, locale: snapshot.locale },
+    );
+    const engine = fs.readFileSync(path.join(__dirname, 'dom-engine.js'));
+    if (createHash('sha256').update(engine).digest('hex') !== snapshot.engineSha256)
+      return { ok: false, code: 'ARTIFACT_INVALID' };
+    return {
+      ok: true,
+      locale: snapshot.locale,
+      engine: engine.toString('utf8'),
+      index: delivery.index,
+    };
+  } catch {
+    return { ok: false, code: 'ARTIFACT_INVALID' };
+  }
+}
 
 function hubSenderView(event: Electron.IpcMainInvokeEvent) {
   const frame = event.senderFrame;
@@ -89,43 +132,21 @@ function hubSenderView(event: Electron.IpcMainInvokeEvent) {
   };
 }
 
-function handleHubBootstrap(event: Electron.IpcMainInvokeEvent): {
-  ok: boolean;
-  code?: string;
-  locale?: string;
-  engine?: string;
-  index?: unknown;
-} {
-  if (!startupSnapshot || startupSnapshot.locale === 'en') return { ok: false, code: 'DISABLED' };
-  if (startupSnapshot.format !== 'dom') return { ok: false, code: 'AST_DELIVERY' };
+function handleHubBootstrap(event: Electron.IpcMainInvokeEvent): BootstrapDelivery {
+  const snapshot = currentSnapshot();
+  if (!snapshot || snapshot.locale === 'en') return { ok: false, code: 'DISABLED' };
+  if (snapshot.format !== 'dom') return { ok: false, code: 'AST_DELIVERY' };
   const registered = hubWindows.get(event.sender.id);
   if (!registered) return { ok: false, code: 'UNAUTHORIZED' };
   const authorized = authorizeBootstrapSender(hubSenderView(event), {
     webContentsId: event.sender.id,
     origin: registered.origin,
-    locale: registered.snapshot.locale,
+    locale: snapshot.locale,
   });
   if (!authorized.ok) return authorized;
+  registered.snapshot = snapshot;
   registered.bootstrapFrame = event.senderFrame;
-  if (!registered.snapshot.engineSha256 || !registered.snapshot.indexSha256)
-    return { ok: false, code: 'ARTIFACT_INVALID' };
-  try {
-    const delivery = readArtifactDelivery(
-      path.join(registered.snapshot.stateRoot, 'artifacts', registered.snapshot.artifactId),
-      { artifactId: registered.snapshot.artifactId, locale: registered.snapshot.locale },
-    );
-    const engine = fs.readFileSync(path.join(__dirname, 'dom-engine.js'));
-    if (createHash('sha256').update(engine).digest('hex') !== registered.snapshot.engineSha256)
-      return { ok: false, code: 'ARTIFACT_INVALID' };
-    return {
-      ok: true,
-      locale: registered.snapshot.locale,
-      engine: engine.toString('utf8'),
-      index: delivery.index,
-    };
-  } catch {
-    return { ok: false, code: 'ARTIFACT_INVALID' };
-  }
+  return buildBootstrapDelivery(snapshot);
 }
 
 function handleHubBootstrapResult(
@@ -137,10 +158,11 @@ function handleHubBootstrapResult(
 } {
   const registered = hubWindows.get(event.sender.id);
   if (!registered) return { ok: false, code: 'UNAUTHORIZED' };
+  const snapshot = currentSnapshot() ?? registered.snapshot;
   const authorized = authorizeBootstrapSender(hubSenderView(event), {
     webContentsId: event.sender.id,
     origin: registered.origin,
-    locale: registered.snapshot.locale,
+    locale: snapshot.locale,
   });
   if (!authorized.ok) return { ok: false, code: authorized.code };
   if (registered.bootstrapFrame !== event.senderFrame) return { ok: false, code: 'UNAUTHORIZED' };
@@ -150,16 +172,16 @@ function handleHubBootstrapResult(
     stage: 'runtime.bootstrap',
     event: result.ok ? 'started' : 'failed',
     result: result.ok ? 'ok' : 'failed',
-    artifactId: registered.snapshot.artifactId,
-    locale: registered.snapshot.locale,
+    artifactId: snapshot.artifactId,
+    locale: snapshot.locale,
     ...(!result.ok && result.code ? { code: result.code } : {}),
     ...(result.stats?.translated !== undefined
       ? { counts: { translated: result.stats.translated } }
       : {}),
   });
   runtimePersistence?.recordStatus({
-    artifactId: registered.snapshot.artifactId,
-    locale: registered.snapshot.locale,
+    artifactId: snapshot.artifactId,
+    locale: snapshot.locale,
     healthState: bootstrapHealthState(result),
     ...(!result.ok
       ? { terminal: { code: result.code ?? 'BOOTSTRAP_FAILED', message: 'DOM engine did not start' } }
@@ -186,17 +208,19 @@ function registerHubWindow(
   if (previous) {
     if (previous.origin !== origin)
       throw new HostError('SOURCE_MISMATCH', 'The registered Hub origin cannot change');
+    previous.snapshot = snapshot;
     return;
   }
   installBootstrapHandler();
   const onNavigation = (details: Electron.Event<Electron.WebContentsDidStartNavigationEventParams>) => {
     if (runtimeClosed || !details.isMainFrame || details.isSameDocument) return;
     registered.bootstrapFrame = null;
+    const active = currentSnapshot() ?? registered.snapshot;
     const matched = matchHubNavigation(details.url);
     const allowed = matched.ok && matched.origin === registered.origin;
     runtimePersistence?.recordStatus({
-      artifactId: snapshot.artifactId,
-      locale: snapshot.locale,
+      artifactId: active.artifactId,
+      locale: active.locale,
       healthState: allowed ? 'ready' : 'degraded',
       ...(!allowed
         ? {
@@ -213,6 +237,7 @@ function registerHubWindow(
     hubWindows.delete(webContents.id);
   };
   const registered = {
+    webContents,
     origin,
     snapshot,
     bootstrapFrame: null as Electron.WebFrameMain | null,
@@ -227,6 +252,7 @@ function registerHubWindow(
 }
 
 function recordRuntimeFailure(error: unknown, stage = 'runtime.startup'): void {
+  const active = currentSnapshot();
   const code =
     error instanceof StartupError || error instanceof HostError
       ? error.code
@@ -238,24 +264,142 @@ function recordRuntimeFailure(error: unknown, stage = 'runtime.startup'): void {
     event: 'failed',
     result: 'failed',
     code,
-    artifactId: startupSnapshot?.artifactId,
-    locale: startupSnapshot?.locale,
+    artifactId: active?.artifactId,
+    locale: active?.locale,
     detail: message,
   });
   runtimePersistence?.recordStatus({
-    artifactId: startupSnapshot?.artifactId ?? null,
-    locale: startupSnapshot?.locale ?? null,
+    artifactId: active?.artifactId ?? null,
+    locale: active?.locale ?? null,
     healthState: 'degraded',
     terminal: { code, message },
   });
 }
 
-/** Resolves one process-fixed Web/native binding before native display code runs. */
+function pushLiveLocaleUpdate(snapshot: StartupSnapshot, delivery: BootstrapDelivery): void {
+  for (const registered of hubWindows.values()) {
+    const wc = registered.webContents;
+    if (wc.isDestroyed() || wc.getType() === 'webview') continue;
+    const frame = wc.mainFrame;
+    if (!frame || frame.parent !== null) continue;
+    const matched = matchHubNavigation(frame.url);
+    if (!matched.ok || matched.origin !== registered.origin) continue;
+    registered.snapshot = snapshot;
+    registered.bootstrapFrame = frame;
+    try {
+      wc.send(SYNC_CHANNEL, delivery);
+    } catch {}
+  }
+}
+
+function installSelectionWatcher(config: RuntimeConfig): void {
+  if (selectionWatcher || runtimeClosed) return;
+  const selectionDir = path.join(config.stateRoot, 'installations', config.installationId);
+  try {
+    selectionWatcher = fs.watch(selectionDir, (_eventType, filename) => {
+      if (runtimeClosed) return;
+      if (filename && String(filename) !== 'selection.json') return;
+      if (selectionWatchTimer) clearTimeout(selectionWatchTimer);
+      selectionWatchTimer = setTimeout(() => {
+        selectionWatchTimer = null;
+        refreshHostLocalization();
+      }, 40);
+      selectionWatchTimer.unref?.();
+    });
+    selectionWatcher.on('error', () => {});
+    selectionWatcher.unref?.();
+  } catch {}
+}
+
+/**
+ * Re-reads selection.json and switches active Hub windows live without restart.
+ * Missing or invalid updates keep the current active snapshot intact so
+ * process-fixed guarantees still hold if selection.json is removed.
+ */
+export function refreshHostLocalization(): {
+  changed: boolean;
+  locale: string | null;
+  artifactId?: string;
+  code?: string;
+} {
+  const current = currentSnapshot();
+  if (runtimeClosed || !startupConfig || !current) {
+    return { changed: false, locale: current?.locale ?? null };
+  }
+  let next: StartupSnapshot;
+  try {
+    next = Object.freeze(resolveStartupSnapshot(__dirname, { config: startupConfig }));
+  } catch (error) {
+    const code = error instanceof StartupError ? error.code : 'SELECTION_INVALID';
+    if (code !== 'SELECTION_MISSING') {
+      runtimePersistence?.sink({
+        level: 'warn',
+        stage: 'runtime.switch',
+        event: 'rejected',
+        result: 'rejected',
+        code,
+        artifactId: current.artifactId,
+        locale: current.locale,
+        detail: error instanceof Error ? error.message : String(error),
+      });
+    }
+    return { changed: false, locale: current.locale, code };
+  }
+  if (next.artifactId === current.artifactId && next.locale === current.locale) {
+    return { changed: false, locale: current.locale, artifactId: current.artifactId };
+  }
+  const delivery = buildBootstrapDelivery(next);
+  if (next.locale !== 'en' && next.format === 'dom' && !delivery.ok) {
+    runtimePersistence?.sink({
+      level: 'error',
+      stage: 'runtime.switch',
+      event: 'rejected',
+      result: 'failed',
+      code: delivery.code ?? 'ARTIFACT_INVALID',
+      artifactId: next.artifactId,
+      locale: next.locale,
+    });
+    return { changed: false, locale: current.locale, code: delivery.code ?? 'ARTIFACT_INVALID' };
+  }
+  activeSnapshot = next;
+  if (next.locale === 'en') {
+    resetNativeMessages();
+  } else {
+    const native = initNativeMessages(next);
+    runtimePersistence?.sink({
+      level: native.ok ? 'info' : 'error',
+      stage: 'runtime.native',
+      event: native.ok ? 'loaded' : 'failed',
+      result: native.ok ? 'ok' : 'failed',
+      artifactId: next.artifactId,
+      locale: next.locale,
+      ...(!native.ok ? { code: native.code, detail: native.message } : {}),
+    });
+  }
+  runtimePersistence?.sink({
+    level: 'info',
+    stage: 'runtime.switch',
+    event: 'resolved',
+    result: 'ok',
+    artifactId: next.artifactId,
+    locale: next.locale,
+  });
+  runtimePersistence?.recordStatus({
+    artifactId: next.artifactId,
+    locale: next.locale,
+    healthState: next.locale === 'en' ? 'armed' : 'ready',
+  });
+  pushLiveLocaleUpdate(next, delivery);
+  return { changed: true, locale: next.locale, artifactId: next.artifactId };
+}
+
+/** Resolves one process-fixed initial Web/native binding and arms live selection updates. */
 export function initializeHostRuntime(): StartupSnapshot | null {
   if (startupAttempted || runtimeClosed) return startupSnapshot;
   startupAttempted = true;
   try {
     const config = readRuntimeConfig(__dirname);
+    startupConfig = config;
     runtimePersistence = new RuntimePersistence({
       stateRoot: config.stateRoot,
       installationId: config.installationId,
@@ -269,6 +413,7 @@ export function initializeHostRuntime(): StartupSnapshot | null {
     });
     app?.once('will-quit', closeRuntimePersistence);
     startupSnapshot = Object.freeze(resolveStartupSnapshot(__dirname, { config }));
+    activeSnapshot = startupSnapshot;
     if (startupSnapshot.locale === 'en') {
       resetNativeMessages();
     } else {
@@ -283,6 +428,7 @@ export function initializeHostRuntime(): StartupSnapshot | null {
         ...(!native.ok ? { code: native.code, detail: native.message } : {}),
       });
     }
+    installSelectionWatcher(config);
     runtimePersistence.sink({
       level: 'info',
       stage: 'runtime.startup',
@@ -305,10 +451,20 @@ export function initializeHostRuntime(): StartupSnapshot | null {
   }
 }
 
-/** Releases every runtime log segment; used on teardown and by test harnesses. */
+/** Releases every runtime log segment and watcher; used on teardown and by test harnesses. */
 export function closeRuntimePersistence(): void {
   if (runtimeClosed) return;
   runtimeClosed = true;
+  if (selectionWatchTimer) {
+    clearTimeout(selectionWatchTimer);
+    selectionWatchTimer = null;
+  }
+  if (selectionWatcher) {
+    try {
+      selectionWatcher.close();
+    } catch {}
+    selectionWatcher = null;
+  }
   for (const registered of hubWindows.values()) registered.dispose();
   hubWindows.clear();
   if (bootstrapHandlerInstalled) {
@@ -328,12 +484,15 @@ export async function prepareNavigation(
 ): Promise<void> {
   try {
     if (runtimeClosed) throw new HostError('HOST_CONFLICT', 'Localization runtime is closed');
-    const snapshot = initializeHostRuntime();
-    if (!snapshot) throw startupFailure;
-    if (snapshot.locale === 'en' || snapshot.format !== 'dom') return;
+    const initial = initializeHostRuntime();
+    if (!initial) throw startupFailure;
+    const snapshot = currentSnapshot() ?? initial;
     const matched = matchHubNavigation(targetUrl);
-    if (!matched.ok)
+    if (!matched.ok) {
+      if (snapshot.locale === 'en' || snapshot.format !== 'dom') return;
       throw new HostError('SOURCE_MISMATCH', 'Unreviewed Hub navigation target');
+    }
+    if (snapshot.format !== 'dom' && snapshot.locale !== 'en') return;
     registerHubWindow(webContents, matched.origin, snapshot);
   } catch (error) {
     if (startupSnapshot) recordRuntimeFailure(error, 'runtime.prepare');

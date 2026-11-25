@@ -982,6 +982,54 @@ app
     );
     const redrawn = JSON.parse(await snapshot(wc));
     check('react-rewrite-retranslates', redrawn.create === EXPECTED.create, redrawn.create);
+    const dynamicScoped = await wc.executeJavaScript(`(async () => {
+      const box = document.createElement('div');
+      box.innerHTML =
+        '<button id="dyn-steps">Explored 3 files, edited 1 artifact, ran 2 commands</button>' +
+        '<button id="dyn-limit">5h limit, resets in &lt;1m</button>' +
+        '<div role="dialog"><span id="dyn-tokens">Rules: 1,234 tokens</span></div>' +
+        '<div data-testid="planner-response-text"><button id="dyn-protected">Explored 3 files, edited 1 artifact, ran 2 commands</button></div>';
+      document.body.appendChild(box);
+      const deadline = Date.now() + 2000;
+      while (Date.now() < deadline) {
+        if (
+          document.getElementById('dyn-steps').textContent !== 'Explored 3 files, edited 1 artifact, ran 2 commands' &&
+          window.__engine.stats().queued === 0
+        ) break;
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+      return {
+        steps: document.getElementById('dyn-steps').textContent,
+        limit: document.getElementById('dyn-limit').textContent,
+        tokens: document.getElementById('dyn-tokens').textContent,
+        protectedText: document.getElementById('dyn-protected').textContent,
+      };
+    })()`);
+    const expectedDynamic = {
+      'zh-Hant-TW': {
+        steps: '已探索 3 個檔案，已編輯 1 個產物，已執行 2 條指令',
+        limit: '5 小時 上限，將於 小於 1 分鐘 後重設',
+        tokens: '規則：1,234 個token',
+      },
+      'zh-Hans-CN': {
+        steps: '已探索 3 个文件，已编辑 1 个产物，已运行 2 条命令',
+        limit: '5 小时 限额，将在 少于 1 分钟 后重置',
+        tokens: '规则：1,234 个token',
+      },
+      'ja-JP': {
+        steps: '3 件のファイルを探索、1 件のアーティファクトを編集、2 件のコマンドを実行',
+        limit: '5 時間 の上限、1 分未満 後にリセット',
+        tokens: 'ルール：1,234 トークン',
+      },
+    }[manifest.locale];
+    check(
+      'dynamic-patterns-respect-scopes',
+      dynamicScoped.steps === expectedDynamic.steps &&
+        dynamicScoped.limit === expectedDynamic.limit &&
+        dynamicScoped.tokens === expectedDynamic.tokens &&
+        dynamicScoped.protectedText === 'Explored 3 files, edited 1 artifact, ran 2 commands',
+      JSON.stringify(dynamicScoped),
+    );
     await wc.executeJavaScript(`
       document.getElementById('project-name').appendChild(document.getElementById('archive'));
       document.querySelector('[data-testid="conversation-list"]')

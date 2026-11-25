@@ -16285,6 +16285,3326 @@
     "microphone.web.captureEnded": {
       "value": "マイクからの録音が予期せず終了しました。",
       "reviewed": true
+    },
+    "hub.ui.b81aa3299dae3647": {
+      "value": "プロジェクト外の会話に対するエージェント設定と権限。",
+      "reviewed": true
+    },
+    "hub.ui.5016e54430e66d62": {
+      "value": "グローバル設定を継承",
+      "reviewed": true
+    },
+    "hub.ui.9dd1810322529357": {
+      "value": "プロジェクトフォルダー、エージェント設定、権限を管理します。",
+      "reviewed": true
+    },
+    "hub.ui.86c5d8967ce412d3": {
+      "value": "エディター設定を変更するには、エディターウィンドウ内で設定を開いてください。",
+      "reviewed": true
+    },
+    "hub.ui.63b717f7649733fa": {
+      "value": "チャット設定",
+      "reviewed": true
+    },
+    "hub.ui.269cc00340008ef5": {
+      "value": "すべてのブラウザー JavaScript 実行をブロックします。",
+      "reviewed": true
+    },
+    "hub.ui.fea49cd464cbfd2d": {
+      "value": "個々の設定を手動でカスタマイズします。",
+      "reviewed": true
+    },
+    "hub.ui.4b873161f7a23f7e": {
+      "value": "ターミナルコマンドの拒否リスト",
+      "reviewed": true
+    },
+    "hub.ui.c4d6bb200f4c058a": {
+      "value": "フォルダー",
+      "reviewed": true
+    },
+    "hub.ui.a3e1386bbabf13ff": {
+      "value": "機能リクエスト",
+      "reviewed": true
+    },
+    "hub.ui.9a70d0007209f453": {
+      "value": "反復を最大限に高速化するため、すべての安全ガードを無効にします。",
+      "reviewed": true
+    },
+    "hub.ui.c1ab9f877b8d6c16": {
+      "value": "バグ報告",
+      "reviewed": true
+    },
+    "hub.ui.a4d5a599ce8510a5": {
+      "value": "選択時アクションを表示",
+      "reviewed": true
+    },
+    "hub.ui.53b42090b267e68c": {
+      "value": "マシン全体",
+      "reviewed": true
+    },
+    "hub.ui.83fdca3fffdc303b": {
+      "value": "すべてのターミナルコマンドにレビューが必要です。エージェントはこのマシン上の任意のファイルを読み書きできます。",
+      "reviewed": true
+    },
+    "hub.ui.6dad5052383d5030": {
+      "value": "デベロッパーツールの切り替え",
+      "reviewed": true
+    },
+    "hub.ui.4997b635e053fc1d": {
+      "value": "Chrome/Chromium 実行可能ファイルのパス。自動検出する場合は空のままにしてください。",
+      "reviewed": true
+    },
+    "hub.ui.6bf180c1b0f744d4": {
+      "value": "ブラウザーユーザープロファイルのパス",
+      "reviewed": true
+    },
+    "hub.ui.92ca9c9d123c42d7": {
+      "value": "次のペインタブ",
+      "reviewed": true
+    },
+    "hub.ui.95215b435d5a56ca": {
+      "value": "前のペインタブ",
+      "reviewed": true
+    },
+    "hub.ui.629337dc2b9c9a12": {
+      "value": "エディターでテキストを選択したときに「編集」および「チャット」ボタンを表示します。",
+      "reviewed": true
+    },
+    "hub.ui.3ac14c5b5c7f9b8c": {
+      "value": "認証と請求",
+      "reviewed": true
+    },
+    "hub.ui.9003e1b7e7c2912b": {
+      "value": "完全に削除",
+      "reviewed": true
+    },
+    "hub.ui.a13b6ae655c929ed": {
+      "value": "思考プロセス",
+      "reviewed": true
+    },
+    "hub.ui.f1da1790c30522ed": {
+      "value": "エディター設定を開く",
+      "reviewed": true
+    },
+    "hub.ui.dcdcde120ec79563": {
+      "value": "すべてのターミナルコマンドと作業フォルダー外のファイルアクセスで手動レビューが必要です。",
+      "reviewed": true
+    },
+    "hub.ui.1d2f1b7b7cea4125": {
+      "value": "リモートコントロールの問題",
+      "reviewed": true
+    },
+    "hub.ui.23a06914f4610215": {
+      "value": "一般的なフィードバック",
+      "reviewed": true
+    },
+    "settings.appearance.defaultLight": {
+      "value": "既定のライト",
+      "reviewed": true
+    },
+    "hub.ui.a234d1aa1451b651": {
+      "value": "会話の入力欄で /browser と入力すると、ブラウザーサブエージェントを呼び出せます。",
+      "reviewed": true
+    },
+    "hub.ui.c1af8370c5f68986": {
+      "value": "タスクを検索…",
+      "reviewed": true
+    },
+    "hub.ui.6123645767d50771": {
+      "value": "マーケットプレイスギャラリーの URL",
+      "reviewed": true
+    },
+    "hub.ui.b94ab56aaca86273": {
+      "value": "Chrome バイナリパス",
+      "reviewed": true
+    },
+    "hub.ui.7fb90de3a33cab49": {
+      "value": "ブラウザースクリプトを実行する前に承認を求めます。",
+      "reviewed": true
+    },
+    "hub.ui.b8c209cdead61a09": {
+      "value": "確認",
+      "reviewed": true
+    },
+    "hub.ui.079d1d54f3c6269b": {
+      "value": "厳格モード",
+      "reviewed": true
+    },
+    "hub.ui.68324d2dc5b5ceff": {
+      "value": "確認なしでブラウザースクリプトの完全な実行を許可します。",
+      "reviewed": true
+    },
+    "hub.ui.cea1a4d5477bdc50": {
+      "value": "ブラウザー CDP ポート",
+      "reviewed": true
+    },
+    "hub.ui.728cb3db7cc78a96": {
+      "value": "補助ペインの切り替え",
+      "reviewed": true
+    },
+    "hub.ui.54421810157a0868": {
+      "value": "Chrome DevTools プロトコルリモートデバッグのポート番号。既定値（9222）を使用する場合は空のままにしてください。",
+      "reviewed": true
+    },
+    "hub.ui.7923d4b84c2a1cc8": {
+      "value": "エディター設定",
+      "reviewed": true
+    },
+    "hub.ui.dcb3e1c00e79236d": {
+      "value": "ナレッジ",
+      "reviewed": true
+    },
+    "hub.ui.275326389234f6ab": {
+      "value": "Turbo モード",
+      "reviewed": true
+    },
+    "hub.ui.25286f1757c4993e": {
+      "value": "マーケットプレイス項目の URL",
+      "reviewed": true
+    },
+    "hub.ui.6733cfdb6d49dd93": {
+      "value": "レビューを要求",
+      "reviewed": true
+    },
+    "hub.ui.6c582b62e0e5aa05": {
+      "value": "速い",
+      "reviewed": true
+    },
+    "hub.ui.6ec427879b4bf05a": {
+      "value": "ターミナルコマンドの許可リスト",
+      "reviewed": true
+    },
+    "hub.ui.e1a74102e0b60d9a": {
+      "value": "ブラウザーのユーザープロファイルディレクトリのカスタムパス。既定値（~/.gemini/antigravity-browser-profile）を使用する場合は空のままにしてください。",
+      "reviewed": true
+    },
+    "hub.ui.dbcd5e7bb7a0f538": {
+      "value": "ライト",
+      "reviewed": true
+    },
+    "hub.ui.60acc53f13a5d1bf": {
+      "value": "ダーク",
+      "reviewed": true
+    },
+    "hub.ui.6725e7bbcd28f3a8": {
+      "value": "システム",
+      "reviewed": true
+    },
+    "hub.ui.f7ca95a868431b32": {
+      "value": "GitHub と連携するためのガイドラインと、エージェント環境の制限によってコマンドが失敗したときにユーザーへ権限を要求する方法を示します。",
+      "reviewed": true
+    },
+    "hub.ui.1ac1468563107940": {
+      "value": "検索または URL を入力",
+      "reviewed": true
+    },
+    "hub.ui.3c71e0e8a88fc860": {
+      "value": "コマンドを実行しました",
+      "reviewed": true
+    },
+    "hub.ui.31d7dceb897d35cd": {
+      "value": "一般的なワークフローや役割向けに厳選されたプラグインセット。",
+      "reviewed": true
+    },
+    "hub.ui.b0f8a3973cf69f50": {
+      "value": "ルールのトークン予算を超えました。大きなルールはパス参照に格下げされます。",
+      "reviewed": true
+    },
+    "hub.ui.515bf8644de9ceb0": {
+      "value": "このコンピューターの設定",
+      "reviewed": true
+    },
+    "hub.ui.ea61bc15688d1e48": {
+      "value": "コピーしました！",
+      "reviewed": true
+    },
+    "hub.ui.55d23266c29b948f": {
+      "value": "モデル未選択",
+      "reviewed": true
+    },
+    "hub.ui.3ea9f6a0c2f684b2": {
+      "value": "何でも質問、@ でメンション、/ でアクション",
+      "reviewed": true
+    },
+    "hub.ui.1c8ac867f052ea4a": {
+      "value": "開く",
+      "reviewed": true
+    },
+    "hub.ui.d6b8b1dd14bb372d": {
+      "value": "エージェントの音声の音量。",
+      "reviewed": true
+    },
+    "hub.ui.0c153843dfe32656": {
+      "value": "この会話のテレメトリーはオフです。",
+      "reviewed": true
+    },
+    "hub.ui.bca82adc9f9b3bc7": {
+      "value": "分析済み",
+      "reviewed": true
+    },
+    "hub.ui.bc1ebaff8e758e06": {
+      "value": "呼び出し後（Post Invocation）",
+      "reviewed": true
+    },
+    "hub.ui.033efc9dfbbace40": {
+      "value": "変更…",
+      "reviewed": true
+    },
+    "hub.ui.b9e07681e1f99f81": {
+      "value": "リソースはまだ追加されていません。",
+      "reviewed": true
+    },
+    "hub.ui.558be6c04c73108a": {
+      "value": "サインインリンクをコピー",
+      "reviewed": true
+    },
+    "hub.ui.e4e0bdae470984c7": {
+      "value": "ワークツリーは Git の機能です。このフォルダーはそのまま共有されます。",
+      "reviewed": true
+    },
+    "hub.ui.fb7e81225d4f45ed": {
+      "value": "過去のワークツリーを検索…",
+      "reviewed": true
+    },
+    "hub.ui.348daf908778b4ce": {
+      "value": "マーケットプレイスを閲覧",
+      "reviewed": true
+    },
+    "hub.ui.a2a9753211e5c0db": {
+      "value": "プロジェクトフォルダーと設定を管理します。",
+      "reviewed": true
+    },
+    "hub.ui.060603f5304eac8b": {
+      "value": "ツール使用後（Post Tool Use）",
+      "reviewed": true
+    },
+    "hub.ui.c4191aa89479b4e5": {
+      "value": "Android、Chrome、Gemini、Google Cloud などの Google 開発者プラットフォーム向けの開発。",
+      "reviewed": true
+    },
+    "hub.ui.dd10e856b9b9a033": {
+      "value": "インラインアクション",
+      "reviewed": true
+    },
+    "hub.ui.463816d07097e1a7": {
+      "value": "読み込み中",
+      "reviewed": true
+    },
+    "hub.ui.43d2d4466a96a5c0": {
+      "value": "内訳を非表示",
+      "reviewed": true
+    },
+    "hub.ui.ef97432a7589a59c": {
+      "value": "Tab 補完、提案、ナビゲーションの動作を設定します。",
+      "reviewed": true
+    },
+    "hub.ui.cc849385646ba0d6": {
+      "value": "Finder で表示",
+      "reviewed": true
+    },
+    "hub.ui.e23f3cc44a50a5e3": {
+      "value": "ピン留めしたアクション",
+      "reviewed": true
+    },
+    "hub.ui.76f68a75f01ed76f": {
+      "value": "ビジネス",
+      "reviewed": true
+    },
+    "hub.ui.d97cf74f8deeb850": {
+      "value": "作業の計画、課題の追跡、文書への署名、メモやファイルの管理を行います。",
+      "reviewed": true
+    },
+    "hub.ui.47a8a543f5081899": {
+      "value": "ワークスペースを並べ替え",
+      "reviewed": true
+    },
+    "hub.ui.7616b5ee647397d4": {
+      "value": "このモデルのクォータが残り少なくなっています。",
+      "reviewed": true
+    },
+    "hub.ui.0c2504c9358e60f9": {
+      "value": "その他のカスタマイズ",
+      "reviewed": true
+    },
+    "hub.ui.980b4edd7eeb1b2e": {
+      "value": "リンクの開き方と内蔵ブラウザーの設定を構成します。",
+      "reviewed": true
+    },
+    "hub.ui.386fffa765c6794a": {
+      "value": "エージェントが標的型の脆弱性攻撃を自律的に実行するのを防ぎ、すべての操作に人間のレビューを必須とする設定を強制します。詳細は antigravity.google/docs/strict-mode をご覧ください。",
+      "reviewed": true
+    },
+    "hub.ui.85c1562cd9ce8d74": {
+      "value": "開発者ツール",
+      "reviewed": true
+    },
+    "hub.ui.36655f7c71e4013d": {
+      "value": "ローカルクローンを確認中",
+      "reviewed": true
+    },
+    "hub.ui.96392f91a0b70a07": {
+      "value": "バージョン詳細をコピーしました",
+      "reviewed": true
+    },
+    "hub.ui.d37078fe6a1faa15": {
+      "value": "クリップボードにコピーしました",
+      "reviewed": true
+    },
+    "hub.ui.ef1382fd87c0a51c": {
+      "value": "ボイスメモを録音",
+      "reviewed": true
+    },
+    "hub.ui.cf924a0ffe4b617d": {
+      "value": "テーブルオプション",
+      "reviewed": true
+    },
+    "hub.ui.84fd2c260db5c3a4": {
+      "value": "自動化の認証情報が期限切れです",
+      "reviewed": true
+    },
+    "hub.ui.58c3de40566b874e": {
+      "value": "リモート設定",
+      "reviewed": true
+    },
+    "hub.ui.f85d082224b7a307": {
+      "value": "サイドクエスチョンに回答しました。",
+      "reviewed": true
+    },
+    "hub.ui.2afb17673ff90662": {
+      "value": "コマンドを実行中",
+      "reviewed": true
+    },
+    "hub.ui.7f9d4ae9238f4593": {
+      "value": "アーカイブ済み項目はサイドバー（表示オプションメニュー）で確認できます。",
+      "reviewed": true
+    },
+    "hub.ui.f8fe0f2b0d52aaf4": {
+      "value": "サンドボックスで続行",
+      "reviewed": true
+    },
+    "hub.ui.97bd37991bf15a1e": {
+      "value": "ローカルにクローンされていません",
+      "reviewed": true
+    },
+    "hub.ui.00a9bf84a0a13922": {
+      "value": "自動化を保存しました",
+      "reviewed": true
+    },
+    "hub.ui.93483c938871b25a": {
+      "value": "週間上限",
+      "reviewed": true
+    },
+    "hub.ui.49a0053f3b0d5045": {
+      "value": "コードをコピー",
+      "reviewed": true
+    },
+    "hub.ui.408801cff5d42adb": {
+      "value": "サイドパネル",
+      "reviewed": true
+    },
+    "hub.ui.f19611c61ca5f369": {
+      "value": "フルアクセス",
+      "reviewed": true
+    },
+    "hub.ui.af7a94b91a7493fa": {
+      "value": "承認待ち",
+      "reviewed": true
+    },
+    "hub.ui.207207acea5b0f4d": {
+      "value": "プロジェクトを並べ替え",
+      "reviewed": true
+    },
+    "hub.ui.53e63ed06152028c": {
+      "value": "全画面表示の切り替え",
+      "reviewed": true
+    },
+    "hub.ui.4cc78da18efee791": {
+      "value": "呼び出し前（Pre Invocation）",
+      "reviewed": true
+    },
+    "hub.ui.2e1a4c07ce94cb0c": {
+      "value": "厳格",
+      "reviewed": true
+    },
+    "hub.ui.582971124d69444b": {
+      "value": "過去のワークスペースを検索…",
+      "reviewed": true
+    },
+    "hub.ui.9705d4a8953c30ec": {
+      "value": "ピン留めされた会話はありません",
+      "reviewed": true
+    },
+    "hub.ui.09c6f7bf8cdf5ee5": {
+      "value": "Project 4K",
+      "reviewed": true
+    },
+    "hub.ui.f395ae5e32b4cc24": {
+      "value": "エディターで開く",
+      "reviewed": true
+    },
+    "hub.ui.2cd57109145ab1cb": {
+      "value": "詳細",
+      "reviewed": true
+    },
+    "hub.ui.8e25832407ee8bec": {
+      "value": "ワークスペース設定",
+      "reviewed": true
+    },
+    "hub.ui.4e35d30cb97d27b7": {
+      "value": "会話のみを巻き戻します。このフォルダー内のファイルは現在のまま保持されます。",
+      "reviewed": true
+    },
+    "hub.ui.280d70385991efbf": {
+      "value": "コメントを送信",
+      "reviewed": true
+    },
+    "hub.ui.02d543906827f91b": {
+      "value": "カスタマイズのトークン予算を超えました。大きなカスタマイズはコンテキストから除外されます。",
+      "reviewed": true
+    },
+    "hub.ui.cfcf8cc115650a14": {
+      "value": "これ以上古いメッセージはありません",
+      "reviewed": true
+    },
+    "hub.ui.7636275303de3a4a": {
+      "value": "このプロジェクトではワークツリーを使用できません",
+      "reviewed": true
+    },
+    "hub.ui.106c3af60039fb12": {
+      "value": "自律モード",
+      "reviewed": true
+    },
+    "hub.ui.5ca9b7ef41d27b22": {
+      "value": "ワークツリーブランチ",
+      "reviewed": true
+    },
+    "hub.ui.994554867c4456e5": {
+      "value": "既読にする",
+      "reviewed": true
+    },
+    "hub.ui.41d70bb0060eec16": {
+      "value": "一番下へスクロール",
+      "reviewed": true
+    },
+    "hub.ui.ccd136641c56c741": {
+      "value": "クラウドホスティング＆デプロイ",
+      "reviewed": true
+    },
+    "hub.ui.b749e205302cc219": {
+      "value": "クリップボードにコピー",
+      "reviewed": true
+    },
+    "hub.ui.d70b9e24bca26b40": {
+      "value": "作成済み",
+      "reviewed": true
+    },
+    "hub.ui.2454b121ba74a55c": {
+      "value": "ブランチを選択",
+      "reviewed": true
+    },
+    "hub.ui.2e9b4b7b2f1a986b": {
+      "value": "内訳を非表示",
+      "reviewed": true
+    },
+    "hub.ui.03b44986f928aece": {
+      "value": "不明な環境",
+      "reviewed": true
+    },
+    "hub.ui.e568522d25967dcd": {
+      "value": "ワークツリーは Git リポジトリで利用できます",
+      "reviewed": true
+    },
+    "hub.ui.7cff9649e26cce59": {
+      "value": "エージェントは常にレビューを求めます。",
+      "reviewed": true
+    },
+    "hub.ui.b090562f538c288d": {
+      "value": "プラグインを削除",
+      "reviewed": true
+    },
+    "hub.ui.f565318d124534cf": {
+      "value": "アーカイブ解除",
+      "reviewed": true
+    },
+    "hub.ui.65659145569b894b": {
+      "value": "お知らせ",
+      "reviewed": true
+    },
+    "hub.ui.417c4041593abe91": {
+      "value": "5 時間上限",
+      "reviewed": true
+    },
+    "hub.ui.a1e3ce6dfde9d3dc": {
+      "value": "AI クレジット残高が不足しているため続行できません。",
+      "reviewed": true
+    },
+    "hub.ui.7dc3eb8bf3386f32": {
+      "value": "ブランチを設定",
+      "reviewed": true
+    },
+    "hub.ui.b6a7c95e785f14dd": {
+      "value": "実行済み",
+      "reviewed": true
+    },
+    "hub.ui.b64ac05f17e64d03": {
+      "value": "ライブ",
+      "reviewed": true
+    },
+    "hub.ui.ee3c716130546a45": {
+      "value": "ピン留め解除",
+      "reviewed": true
+    },
+    "hub.ui.e6f7e0a0c966f815": {
+      "value": "キャンセル (Ctrl+D)",
+      "reviewed": true
+    },
+    "hub.ui.cc1878584858a31e": {
+      "value": "コンテキストメニュー",
+      "reviewed": true
+    },
+    "hub.ui.827c420d6a254e1d": {
+      "value": "フォルダーはまだ追加されていません。",
+      "reviewed": true
+    },
+    "hub.ui.0061577bc222d862": {
+      "value": "ツールを非表示",
+      "reviewed": true
+    },
+    "hub.ui.2f5e378b09e33110": {
+      "value": "入力欄の下のモードドロップダウンに「自律モード」スイッチを追加します。オンにして送信したターンは非対話で実行され、エージェントは質問や新しい権限の要求を行いません。",
+      "reviewed": true
+    },
+    "hub.ui.74bed7b49a5d8b99": {
+      "value": "フォルダーを選択",
+      "reviewed": true
+    },
+    "hub.ui.7c785df990653861": {
+      "value": "このプロジェクトで作業する際、グローバル権限を継承します。",
+      "reviewed": true
+    },
+    "hub.ui.39c32394761c042b": {
+      "value": "探索中",
+      "reviewed": true
+    },
+    "hub.ui.906a7a8ae8264f28": {
+      "value": "幅を最大化",
+      "reviewed": true
+    },
+    "hub.ui.c840ba4da80e9014": {
+      "value": "サイドパネルプレビュー",
+      "reviewed": true
+    },
+    "hub.ui.5e656a1621785289": {
+      "value": "デザイン、クリエイティブ、メディア向けツール。",
+      "reviewed": true
+    },
+    "hub.ui.0098030c2a671521": {
+      "value": "ツール使用前（Pre Tool Use）",
+      "reviewed": true
+    },
+    "hub.ui.3bc27f3aa8aed4f0": {
+      "value": "タブやファイルなどを検索",
+      "reviewed": true
+    },
+    "hub.ui.ea5ba511ca19b3d2": {
+      "value": "WSL に接続",
+      "reviewed": true
+    },
+    "hub.ui.87568475f506dde7": {
+      "value": "続行しました",
+      "reviewed": true
+    },
+    "hub.ui.298ff31c3b73af59": {
+      "value": "補助ペインの最大化を切り替え",
+      "reviewed": true
+    },
+    "hub.ui.e12154eb4ca97411": {
+      "value": "Google Workspace",
+      "reviewed": true
+    },
+    "hub.ui.211684e1513468b5": {
+      "value": "詳細なエージェントチャット",
+      "reviewed": true
+    },
+    "hub.ui.adfb42a3c90b287c": {
+      "value": "探索済み",
+      "reviewed": true
+    },
+    "hub.ui.6f6817d96e83edf2": {
+      "value": "ファイルビューアー",
+      "reviewed": true
+    },
+    "hub.ui.0692c6b24634b2ce": {
+      "value": "設定でテレメトリーがオフになっています",
+      "reviewed": true
+    },
+    "hub.ui.13fb26ccfd97853a": {
+      "value": "無題の会話",
+      "reviewed": true
+    },
+    "hub.ui.fab4539d26e078ca": {
+      "value": "編集中",
+      "reviewed": true
+    },
+    "hub.ui.86fc6393188e136d": {
+      "value": "リモート権限",
+      "reviewed": true
+    },
+    "hub.ui.74273989b0966e23": {
+      "value": "やり直す",
+      "reviewed": true
+    },
+    "hub.ui.a4948f756e38153b": {
+      "value": "自動化の認証情報の有効期限が近づいています",
+      "reviewed": true
+    },
+    "hub.ui.701986f254d7ef57": {
+      "value": "エラーメッセージをコピー",
+      "reviewed": true
+    },
+    "hub.ui.8829b3ac6b144654": {
+      "value": "ファイルおよびターミナルツールの権限を変更します。",
+      "reviewed": true
+    },
+    "hub.ui.d276044dad968742": {
+      "value": "ファイルマネージャーで表示",
+      "reviewed": true
+    },
+    "hub.ui.ec0788b50818dd5d": {
+      "value": "すべての会話でテレメトリーはオフです。",
+      "reviewed": true
+    },
+    "hub.ui.bb28e6a970682e29": {
+      "value": "デザイン・クリエイティブ・メディア",
+      "reviewed": true
+    },
+    "hub.ui.f34df942bf09868f": {
+      "value": "認証情報を更新中…",
+      "reviewed": true
+    },
+    "hub.ui.55f92dca00f59521": {
+      "value": "アプリ、サイト、およびバックエンドをデプロイ・ホストします。",
+      "reviewed": true
+    },
+    "hub.ui.08661dab88fd1708": {
+      "value": "アプリの構築、テスト、保護、実行のための API・サービス・ツール。",
+      "reviewed": true
+    },
+    "hub.ui.4348f529fdcbcaa2": {
+      "value": "バージョン詳細をコピー",
+      "reviewed": true
+    },
+    "hub.ui.7117f0807129493f": {
+      "value": "編集済み",
+      "reviewed": true
+    },
+    "hub.ui.f81280bf42a80c31": {
+      "value": "生産性・プロジェクト管理",
+      "reviewed": true
+    },
+    "hub.ui.7bc9dc25dd46db5d": {
+      "value": "ルールとカスタマイズのトークン予算を超えました。大きなルールはパス参照に格下げされ、大きなカスタマイズはコンテキストから除外されます。",
+      "reviewed": true
+    },
+    "hub.ui.e9ade4d71613789a": {
+      "value": "音声モードを開始",
+      "reviewed": true
+    },
+    "hub.ui.cafd4f1ace3f2d94": {
+      "value": "エージェントが話すときの音声。",
+      "reviewed": true
+    },
+    "hub.ui.8cb1eb7714ff54de": {
+      "value": "セットアップスクリプト",
+      "reviewed": true
+    },
+    "hub.ui.80028baf013c0dc2": {
+      "value": "検証がタイムアウトしました。",
+      "reviewed": true
+    },
+    "hub.ui.0cef8306c956e80f": {
+      "value": "+ フォルダーを追加",
+      "reviewed": true
+    },
+    "hub.ui.22a970d2e5b1cc23": {
+      "value": "完了",
+      "reviewed": true
+    },
+    "hub.ui.c7c13c5a73428638": {
+      "value": "途中の思考ステップを表示して保持します。",
+      "reviewed": true
+    },
+    "hub.ui.2e4112bc7e968734": {
+      "value": "ワークスペースファイルエクスプローラー",
+      "reviewed": true
+    },
+    "hub.ui.125c7a44e8f5808c": {
+      "value": "容量節約のため削除されたメッセージには戻せません",
+      "reviewed": true
+    },
+    "hub.ui.13ca2ee2499310d9": {
+      "value": "キャンセル済み",
+      "reviewed": true
+    },
+    "hub.ui.bab37d62472990c0": {
+      "value": "もっと見る",
+      "reviewed": true
+    },
+    "hub.ui.94ea9b1d33a02975": {
+      "value": "折りたたむ",
+      "reviewed": true
+    },
+    "hub.ui.a92f0449a9f7235b": {
+      "value": "作業中",
+      "reviewed": true
+    },
+    "hub.ui.c4939c3f7df96847": {
+      "value": "すべてのファイル",
+      "reviewed": true
+    },
+    "hub.ui.8c17ab4415e05f3e": {
+      "value": "エージェント実行中に送信されたメッセージは元に戻せません",
+      "reviewed": true
+    },
+    "hub.ui.440af5f903368e9d": {
+      "value": "決済、CRM、会計、データ、ID、カスタマーサポート、マーケティング、ワークフロー自動化。",
+      "reviewed": true
+    },
+    "hub.ui.f17671d83db0da48": {
+      "value": "以前のメッセージを読み込む",
+      "reviewed": true
+    },
+    "hub.ui.ac628ed29ae79f0d": {
+      "value": "メインエージェント",
+      "reviewed": true
+    },
+    "hub.ui.5ec6578c52984f37": {
+      "value": "許可されたドメイン",
+      "reviewed": true
+    },
+    "hub.ui.1aaa0800292194e0": {
+      "value": "Best of N モデル",
+      "reviewed": true
+    },
+    "hub.ui.58e663dc8898e9f4": {
+      "value": "会話のピン留めを解除",
+      "reviewed": true
+    },
+    "hub.ui.965673916b978246": {
+      "value": "このメッセージは元に戻せません",
+      "reviewed": true
+    },
+    "hub.ui.db82efcc4eb76eda": {
+      "value": "格下げ済み",
+      "reviewed": true
+    },
+    "hub.ui.1e1270a58101c25e": {
+      "value": "エージェントを中断して今すぐ送信",
+      "reviewed": true
+    },
+    "hub.ui.003517e17cf1b6fe": {
+      "value": "組織のポリシーにより無効化されています",
+      "reviewed": true
+    },
+    "hub.ui.5c5d7f06c38c7f55": {
+      "value": "エンタープライズゲートウェイ経由で認証済み",
+      "reviewed": true
+    },
+    "hub.ui.9b84a51f099a2d80": {
+      "value": "これらの会話で作業する際、グローバル権限を継承します。",
+      "reviewed": true
+    },
+    "hub.ui.acbdf18882d79a9f": {
+      "value": "このプロジェクトはグローバル権限設定を上書きします。",
+      "reviewed": true
+    },
+    "hub.ui.2ee4eba29d32dd4c": {
+      "value": "エディター固有の動作とショートカットを設定します。",
+      "reviewed": true
+    },
+    "hub.ui.1e4ce9cd955f07b1": {
+      "value": "1日の上限",
+      "reviewed": true
+    },
+    "hub.ui.aeffb9182e3d7f3d": {
+      "value": "トリガー済み",
+      "reviewed": true
+    },
+    "hub.ui.d70604e843046137": {
+      "value": "推奨",
+      "reviewed": true
+    },
+    "hub.ui.c23ef99fa27a249d": {
+      "value": "幅を最小化",
+      "reviewed": true
+    },
+    "hub.ui.b2e91e9ba07e98bc": {
+      "value": "Docs、Sheets、Slides、Drive、Calendar などの Google Workspace に接続します。",
+      "reviewed": true
+    },
+    "hub.ui.51add8fabbd9c568": {
+      "value": "ここまで元に戻す",
+      "reviewed": true
+    },
+    "hub.ui.37511d821be14cdd": {
+      "value": "現在のターン終了後までキューに入れる",
+      "reviewed": true
+    },
+    "hub.ui.bdaeec33ca6d1e39": {
+      "value": "ご利用のプラン",
+      "reviewed": true
+    },
+    "hub.ui.602cc4da981d5dad": {
+      "value": "エージェントを削除",
+      "reviewed": true
+    },
+    "hub.ui.04342fbd5d112bac": {
+      "value": "ペインを最大化",
+      "reviewed": true
+    },
+    "hub.ui.bed2cb4c0a5d3481": {
+      "value": "リモートコントロールリンク",
+      "reviewed": true
+    },
+    "hub.ui.e4eef78c75e37d58": {
+      "value": "発生したバグの内容を入力…",
+      "reviewed": true
+    },
+    "hub.ui.d9f05495672f9049": {
+      "value": "タスクの終了に失敗しました",
+      "reviewed": true
+    },
+    "hub.ui.fcfae2d191747fa0": {
+      "value": "現在のファイルが 64 KB を超えているため、最後に正常だった view.json を表示しています。",
+      "reviewed": true
+    },
+    "hub.ui.9fc7f11668697dc6": {
+      "value": "検索済み",
+      "reviewed": true
+    },
+    "hub.ui.6dcafdb1cd3e8ed9": {
+      "value": "ナレーターページを再試行",
+      "reviewed": true
+    },
+    "hub.ui.cfed3e4fe486006b": {
+      "value": "利用可能か確認中…",
+      "reviewed": true
+    },
+    "hub.ui.1b8bfb0ebb5a0e65": {
+      "value": "Cookie を読み込めませんでした。",
+      "reviewed": true
+    },
+    "hub.ui.3a798489a35c1a5b": {
+      "value": "エージェントを中断",
+      "reviewed": true
+    },
+    "hub.ui.8e321eeec3364748": {
+      "value": "この会話ではテレメトリーが有効になります。クリックして無効にします。",
+      "reviewed": true
+    },
+    "hub.ui.4820fb31c3757a49": {
+      "value": "ブランチ、現在：ブランチを選択",
+      "reviewed": true
+    },
+    "hub.ui.7f39bc1169c62474": {
+      "value": "スウォームを待機中",
+      "reviewed": true
+    },
+    "hub.ui.1da2219d1620c74a": {
+      "value": "バトルモード中は昇格できません。先にバトルを終了してください",
+      "reviewed": true
+    },
+    "hub.ui.e6db5f3cc2f975b9": {
+      "value": "内蔵ブラウザー、リンクの開き方、ブラウザーサブエージェントの設定を構成します",
+      "reviewed": true
+    },
+    "hub.ui.e6b5af21d69528a6": {
+      "value": "Cookie とその他のサイトデータ",
+      "reviewed": true
+    },
+    "hub.ui.0c07dbf15254ae90": {
+      "value": "ファイルとアーティファクトを探索しました",
+      "reviewed": true
+    },
+    "hub.ui.a0a266427c81e32c": {
+      "value": "これまでで最も高度なモデル。",
+      "reviewed": true
+    },
+    "hub.ui.3291f7627e7279f9": {
+      "value": "均等ペース",
+      "reviewed": true
+    },
+    "hub.ui.711930ab05487872": {
+      "value": "リプレイを一時停止",
+      "reviewed": true
+    },
+    "hub.ui.9954909af1d5f27b": {
+      "value": "会話ワークスペース",
+      "reviewed": true
+    },
+    "hub.ui.6312b4b9baf12770": {
+      "value": "ドライブ",
+      "reviewed": true
+    },
+    "hub.ui.05b1481f666050d1": {
+      "value": "内蔵ブラウザーでダウンロードしたファイルの保存先フォルダー",
+      "reviewed": true
+    },
+    "hub.ui.ec4900b2df233ab5": {
+      "value": "最初の更新を待機中",
+      "reviewed": true
+    },
+    "hub.ui.d6dae66b2a4bb3a0": {
+      "value": "この環境ではターミナルサンドボックスがサポートされていません",
+      "reviewed": true
+    },
+    "hub.ui.4bcab793306aca46": {
+      "value": "前回のワークスペース",
+      "reviewed": true
+    },
+    "hub.ui.db5d332e8da1c25d": {
+      "value": "スマートフォンや任意のブラウザーでこのリモート会話を続行できます。QR コードをスキャンするか、下のリンクを開いてください。",
+      "reviewed": true
+    },
+    "hub.ui.7f98b07841ce7b81": {
+      "value": "お会いできて嬉しいです。次は何をしますか？",
+      "reviewed": true
+    },
+    "hub.ui.4a4703d804b0df4b": {
+      "value": "タスクを終了",
+      "reviewed": true
+    },
+    "hub.ui.eda81d2d8b458754": {
+      "value": "Antigravity（AGY）スタイル",
+      "reviewed": true
+    },
+    "hub.ui.073ffa9558f46084": {
+      "value": "マイクの問題",
+      "reviewed": true
+    },
+    "hub.ui.b3d390ffe923a8bb": {
+      "value": "以前と現在を比較",
+      "reviewed": true
+    },
+    "hub.ui.c05668bd926aafbf": {
+      "value": "左に分割",
+      "reviewed": true
+    },
+    "hub.ui.56c92521cdc682e1": {
+      "value": "各メンバーの投稿を表示または非表示",
+      "reviewed": true
+    },
+    "hub.ui.dd66507d03f47a4e": {
+      "value": "ボードから非表示中。クリックして表示",
+      "reviewed": true
+    },
+    "hub.ui.6f675373d52bed1e": {
+      "value": "ひとつの目標",
+      "reviewed": true
+    },
+    "hub.ui.edbc30549728d91e": {
+      "value": "ローカルおよびリモートの会話でエージェントが実行できる操作を設定します",
+      "reviewed": true
+    },
+    "hub.ui.d9291fcc9b28b0f8": {
+      "value": "セットアップルーチンを保存しました",
+      "reviewed": true
+    },
+    "hub.ui.6a1da8454fa179f5": {
+      "value": "開発者ツールなしの Project 4K インターフェース",
+      "reviewed": true
+    },
+    "hub.ui.4d87504d72bd3b43": {
+      "value": "認証コードが拒否されました。新しいコードを貼り付けてもう一度お試しください。",
+      "reviewed": true
+    },
+    "hub.ui.250e25c05efc495b": {
+      "value": "エージェント稼働中",
+      "reviewed": true
+    },
+    "hub.ui.b3eb37acb66ba4bb": {
+      "value": "終了",
+      "reviewed": true
+    },
+    "hub.ui.a591fc35d74e39e8": {
+      "value": "改行ではなくキーボードの Enter キーでメッセージを送信します",
+      "reviewed": true
+    },
+    "hub.ui.d3051b2c6314ac54": {
+      "value": "追加前にバンドルを確認",
+      "reviewed": true
+    },
+    "hub.ui.038805d33ddaaa5d": {
+      "value": "ナレーターの view.json は 64 KB を超えているため表示されません。",
+      "reviewed": true
+    },
+    "hub.ui.e572d4e5551a4c41": {
+      "value": "ボード投稿をスクラブ",
+      "reviewed": true
+    },
+    "hub.ui.cf959c2dbbf16bfa": {
+      "value": "コマンドパレット…",
+      "reviewed": true
+    },
+    "hub.ui.caed3072fd76a4b6": {
+      "value": "期間限定",
+      "reviewed": true
+    },
+    "hub.ui.556ec949035d8d21": {
+      "value": "終了済みおよび非アクティブなメンバーをグラフから非表示",
+      "reviewed": true
+    },
+    "hub.ui.7a1896edb46dc9f6": {
+      "value": "ワークスペース設定",
+      "reviewed": true
+    },
+    "hub.ui.e0839b7377716d94": {
+      "value": "@all 経由",
+      "reviewed": true
+    },
+    "hub.ui.eb6906c0c0694f63": {
+      "value": "エージェントの発言",
+      "reviewed": true
+    },
+    "hub.ui.f05fefe200f27914": {
+      "value": "出力を待機中…",
+      "reviewed": true
+    },
+    "hub.ui.e7409e100d5cf6dd": {
+      "value": "計画を実行（検索、編集、ビルド、テスト）します。より高速で低コストなモデルを選んでください。",
+      "reviewed": true
+    },
+    "hub.ui.a15deca13ddc0290": {
+      "value": "スクリーンリーダー向けにインターフェースとターミナル出力を最適化します",
+      "reviewed": true
+    },
+    "hub.ui.a7d8725f044617b5": {
+      "value": "音声モードで使用する音声（Gemini Live 提供）",
+      "reviewed": true
+    },
+    "hub.ui.e1262e1ea1207316": {
+      "value": "WSL でフォルダーを再度開く",
+      "reviewed": true
+    },
+    "hub.ui.daa85534fa9b1400": {
+      "value": "オーケストレーターモデル",
+      "reviewed": true
+    },
+    "hub.ui.64278e81eb37aa53": {
+      "value": "前の投稿（←）",
+      "reviewed": true
+    },
+    "hub.ui.8d977231d6a77cb2": {
+      "value": "このエージェントを停止",
+      "reviewed": true
+    },
+    "hub.ui.afb118fcb16c3727": {
+      "value": "再接続中",
+      "reviewed": true
+    },
+    "hub.ui.e5342b07fb755d3d": {
+      "value": "すべてのチャンネルの投稿",
+      "reviewed": true
+    },
+    "hub.ui.4b135377375c438f": {
+      "value": "「既定」と「自動」にはターミナルサンドボックスが必要ですが、このホストでは利用できません。",
+      "reviewed": true
+    },
+    "hub.ui.97aec9f94bee6814": {
+      "value": "サブエージェントの履歴を読み込み中…",
+      "reviewed": true
+    },
+    "hub.ui.cb7daa53627cb62f": {
+      "value": "すべてのコマンドに承認が必要です",
+      "reviewed": true
+    },
+    "hub.ui.07189207790a7aa3": {
+      "value": "終了済みを表示",
+      "reviewed": true
+    },
+    "hub.ui.2623454e20f8f6a3": {
+      "value": "内蔵ブラウザーのデータを消去しました",
+      "reviewed": true
+    },
+    "hub.ui.1d36da8581e01919": {
+      "value": "フルアクセス",
+      "reviewed": true
+    },
+    "hub.ui.a3894d9516e2500f": {
+      "value": "リプレイを再生",
+      "reviewed": true
+    },
+    "hub.ui.fd8a2d6ab7495e08": {
+      "value": "Antigravity の音声の音量",
+      "reviewed": true
+    },
+    "hub.ui.4a8123475e0fea9f": {
+      "value": "コメントの下書きを破棄",
+      "reviewed": true
+    },
+    "hub.ui.34963f22f31f3e6b": {
+      "value": "「既定」にはターミナルサンドボックスが必要ですが、このホストでは利用できません。",
+      "reviewed": true
+    },
+    "hub.ui.012a283b46ca4f34": {
+      "value": "チーム",
+      "reviewed": true
+    },
+    "hub.ui.cdc517667d9ab31a": {
+      "value": "それぞれがタスクを受け持ち、並列で実行します。",
+      "reviewed": true
+    },
+    "hub.ui.d434e617211f4c89": {
+      "value": "入力ボックス",
+      "reviewed": true
+    },
+    "hub.ui.086e97efcffff894": {
+      "value": "メンションなしで投稿",
+      "reviewed": true
+    },
+    "hub.ui.1edf0870cbf8fd40": {
+      "value": "コマンドを実行するかどうかを自動的に判断します",
+      "reviewed": true
+    },
+    "hub.ui.36233f1f1232ab55": {
+      "value": "main：スウォーム全体が閲覧可能",
+      "reviewed": true
+    },
+    "hub.ui.db114adc75c87150": {
+      "value": "ブランチなし",
+      "reviewed": true
+    },
+    "hub.ui.a02f1cea3c1d6c6e": {
+      "value": "思考中…",
+      "reviewed": true
+    },
+    "hub.ui.8730d3c2022abf1f": {
+      "value": "最新",
+      "reviewed": true
+    },
+    "hub.ui.2ced179124da0d23": {
+      "value": "ファイルを探索しました",
+      "reviewed": true
+    },
+    "hub.ui.15007ce23e9a075b": {
+      "value": "ターミナルセッションの表示場所を選択します",
+      "reviewed": true
+    },
+    "hub.ui.6f086cd4dddc6fd6": {
+      "value": "システムアラート",
+      "reviewed": true
+    },
+    "hub.ui.1fe61a24aa487fc1": {
+      "value": "バイナリファイル — 差分を表示できません",
+      "reviewed": true
+    },
+    "hub.ui.e4280da225fbc414": {
+      "value": "上に分割",
+      "reviewed": true
+    },
+    "hub.ui.689c05994987626f": {
+      "value": "@all 投稿（@all を展開で描画）",
+      "reviewed": true
+    },
+    "hub.ui.f8ee93b32b90c16b": {
+      "value": "アカウント接続が完了しませんでした。",
+      "reviewed": true
+    },
+    "hub.ui.28e4c2eede7b680d": {
+      "value": "ファイルとアーティファクトを編集しました",
+      "reviewed": true
+    },
+    "hub.ui.c11430e8ff9deea0": {
+      "value": "待機中：ターン終了、投稿で呼び起こされるまでボードで休止中",
+      "reviewed": true
+    },
+    "hub.ui.3d5aa057ac428944": {
+      "value": "1 つのチャンネルの投稿を表示",
+      "reviewed": true
+    },
+    "hub.ui.e20faafe8ba216d3": {
+      "value": "ブランチを選択…",
+      "reviewed": true
+    },
+    "hub.ui.bd35427cd5861c65": {
+      "value": "何でも質問、@ でコンテキスト、/ でコマンド",
+      "reviewed": true
+    },
+    "hub.ui.ba17ee9e6b1c0ed1": {
+      "value": "チャットでの返信を待機中",
+      "reviewed": true
+    },
+    "hub.ui.4693afe8a90f7fd4": {
+      "value": "アプリケーションメニューで管理",
+      "reviewed": true
+    },
+    "hub.ui.03da0c9d4a8cbbb5": {
+      "value": "前の投稿",
+      "reviewed": true
+    },
+    "hub.ui.d0652ad307845171": {
+      "value": "このまま追加",
+      "reviewed": true
+    },
+    "hub.ui.aa335ed5df95b08a": {
+      "value": "変更を保存できませんでした",
+      "reviewed": true
+    },
+    "hub.ui.5b7163071efc1236": {
+      "value": "別のデバイスで開く",
+      "reviewed": true
+    },
+    "hub.ui.542799c3970ebc42": {
+      "value": "クローン中…",
+      "reviewed": true
+    },
+    "hub.ui.8feeb0e7a890e145": {
+      "value": "終了：スウォームから削除されました",
+      "reviewed": true
+    },
+    "hub.ui.0f5bd88ff2c406f6": {
+      "value": "別の検索条件やメンバーフィルターをお試しください。",
+      "reviewed": true
+    },
+    "hub.ui.8739c5611f4f89ec": {
+      "value": "内蔵ブラウザーから消去する項目を選択してください。この操作は元に戻せません。",
+      "reviewed": true
+    },
+    "hub.ui.c39059141ced2ea7": {
+      "value": "レビュー中",
+      "reviewed": true
+    },
+    "hub.ui.26210cf48f281729": {
+      "value": "最上位の Google AI プランにご登録中です。",
+      "reviewed": true
+    },
+    "hub.ui.b7a7f060859023d1": {
+      "value": "コーディング、開発者ツール、エージェント管理を備えたフルインターフェース",
+      "reviewed": true
+    },
+    "hub.ui.6b8d475a99708ae5": {
+      "value": "会話中に表示する詳細度を選択します",
+      "reviewed": true
+    },
+    "hub.ui.6859fe418483a0b7": {
+      "value": "閲覧した URL とオートコンプリート候補。",
+      "reviewed": true
+    },
+    "hub.ui.836f66e8ff741f57": {
+      "value": "設定で開く",
+      "reviewed": true
+    },
+    "hub.ui.e14697c1360b9f71": {
+      "value": "WSL から切断",
+      "reviewed": true
+    },
+    "hub.ui.d3f7409ad75e6d96": {
+      "value": "すべて停止",
+      "reviewed": true
+    },
+    "hub.ui.cd7f398b1d6528f2": {
+      "value": "この会話のみがこのプリセットを使用します。",
+      "reviewed": true
+    },
+    "hub.ui.b69e85808d28a009": {
+      "value": "バンドルを追加",
+      "reviewed": true
+    },
+    "hub.ui.6f23d4aded053b66": {
+      "value": "プロジェクトからフォルダーを削除",
+      "reviewed": true
+    },
+    "hub.ui.0bb044f8c34d16d6": {
+      "value": "先頭へ移動",
+      "reviewed": true
+    },
+    "hub.ui.f6259b0cb438a5ac": {
+      "value": "コーディネーターチャットを開く",
+      "reviewed": true
+    },
+    "hub.ui.0095f46dee42e405": {
+      "value": "完全な開発者体験",
+      "reviewed": true
+    },
+    "hub.ui.08022c83e260caa9": {
+      "value": "VS Code 既定",
+      "reviewed": true
+    },
+    "hub.ui.11d915cb27c42da0": {
+      "value": "コーディネーターがあなたの返信を待っています",
+      "reviewed": true
+    },
+    "hub.ui.1c944dbe28bc0267": {
+      "value": "コーディネーターを作成できませんでした。もう一度お試しください。",
+      "reviewed": true
+    },
+    "hub.ui.a8141a7ce1af6ce2": {
+      "value": "ナレーターページ · AI 生成",
+      "reviewed": true
+    },
+    "hub.ui.fc87062a130bf496": {
+      "value": "サブエージェントを待機中",
+      "reviewed": true
+    },
+    "hub.ui.f4ad4438c6066f9c": {
+      "value": "ナレーターが概要を更新中",
+      "reviewed": true
+    },
+    "hub.ui.7898935d79f2f9b2": {
+      "value": "新しいワークツリーのベースブランチ",
+      "reviewed": true
+    },
+    "hub.ui.c66feb5eb8f217c7": {
+      "value": "上へ移動",
+      "reviewed": true
+    },
+    "hub.ui.fd42f0ca49a7a3cc": {
+      "value": "ナレーターの view.json はまだ有効な JSON ではありません。",
+      "reviewed": true
+    },
+    "hub.ui.5a88a386243dab24": {
+      "value": "プロジェクト設定",
+      "reviewed": true
+    },
+    "hub.ui.ee965b4001806213": {
+      "value": "@メンションの関係図",
+      "reviewed": true
+    },
+    "hub.ui.451858a31d14c103": {
+      "value": "たった今閲覧",
+      "reviewed": true
+    },
+    "hub.ui.1ae7acdc50a4bc8c": {
+      "value": "音声モードと音声入力用の入力デバイス",
+      "reviewed": true
+    },
+    "hub.ui.3392bcc1d1c9f6d0": {
+      "value": "メインブランチ",
+      "reviewed": true
+    },
+    "hub.ui.76995012dc174269": {
+      "value": "サイトを検索",
+      "reviewed": true
+    },
+    "hub.ui.31022ba3ee5fcf3a": {
+      "value": "このリンクはここでは許可されていません。",
+      "reviewed": true
+    },
+    "hub.ui.1f3202cb49e7679a": {
+      "value": "非アクティブを非表示",
+      "reviewed": true
+    },
+    "hub.ui.b0077176149e1431": {
+      "value": "Antigravity Insiders アプリ設定を管理",
+      "reviewed": true
+    },
+    "hub.ui.d8d648e0074a2a26": {
+      "value": "選択アクション",
+      "reviewed": true
+    },
+    "hub.ui.e6c6415f27e4dcef": {
+      "value": "差分を読み込み中…",
+      "reviewed": true
+    },
+    "hub.ui.3122a92a6ad9dec5": {
+      "value": "ひとつのボード",
+      "reviewed": true
+    },
+    "hub.ui.a205cfd78d0ce0c6": {
+      "value": "サブエージェントの会話から開始",
+      "reviewed": true
+    },
+    "hub.ui.a9702fe1ed12bb8b": {
+      "value": "このエージェントを一時停止し、現在の位置とストリームを保持します。再開で続行します。",
+      "reviewed": true
+    },
+    "hub.ui.e14ee2e295b416bd": {
+      "value": "聞き取り中。何でも話しかけてください。",
+      "reviewed": true
+    },
+    "hub.ui.c5f3e9c14d36d1f0": {
+      "value": "アーティファクトを削除",
+      "reviewed": true
+    },
+    "hub.ui.e7be8f386a8ea08a": {
+      "value": "ファイルを探索しました",
+      "reviewed": true
+    },
+    "hub.ui.532f8e608cd23f4f": {
+      "value": "データサイエンス＆分析",
+      "reviewed": true
+    },
+    "hub.ui.00edcb7e7c928c3f": {
+      "value": "最初のメッセージから新しいワークスペースを作成します。",
+      "reviewed": true
+    },
+    "hub.ui.8275703863ba3d42": {
+      "value": "サイトを検索…",
+      "reviewed": true
+    },
+    "hub.ui.f6a86fc1937a359a": {
+      "value": "先行入力メニュー",
+      "reviewed": true
+    },
+    "hub.ui.7dce90a4444351f1": {
+      "value": "/btw で質問",
+      "reviewed": true
+    },
+    "hub.ui.b323f4c9f1d1f153": {
+      "value": "文字起こしを停止",
+      "reviewed": true
+    },
+    "hub.ui.33c9455e4beb248c": {
+      "value": "@メンション、太さ = 回数",
+      "reviewed": true
+    },
+    "hub.ui.f2620a7746fcc032": {
+      "value": "ナレーターは終了したため、概要は更新されません",
+      "reviewed": true
+    },
+    "hub.ui.2019e8abe390989e": {
+      "value": "誰にでも",
+      "reviewed": true
+    },
+    "hub.ui.b0f0cb2af6aa5a59": {
+      "value": "このバンドルを無効化または削除しても影響しません。",
+      "reviewed": true
+    },
+    "hub.ui.c8dae6371b33b8d6": {
+      "value": "リプレイ",
+      "reviewed": true
+    },
+    "hub.ui.5cb5697e76a45813": {
+      "value": "最初の投稿を待機中です。",
+      "reviewed": true
+    },
+    "hub.ui.c094e0503c14431b": {
+      "value": "セットアップルーチンを保存中",
+      "reviewed": true
+    },
+    "hub.ui.c62f5c57134b8957": {
+      "value": "セットアップルーチンを削除中",
+      "reviewed": true
+    },
+    "hub.ui.6f16f0e0522499e1": {
+      "value": "IDE で開く",
+      "reviewed": true
+    },
+    "hub.ui.4aff15de2f313404": {
+      "value": "何でも質問",
+      "reviewed": true
+    },
+    "hub.ui.1cc3814be75f8f7f": {
+      "value": "待機中の会話",
+      "reviewed": true
+    },
+    "hub.ui.ab9152c5fc393972": {
+      "value": "サイト別 Cookie",
+      "reviewed": true
+    },
+    "hub.ui.bf327cf9bcdd7f4e": {
+      "value": "メインの会話から開始",
+      "reviewed": true
+    },
+    "hub.ui.8572a21a58c516bd": {
+      "value": "メインワークスペース",
+      "reviewed": true
+    },
+    "hub.ui.132bfcfcfde4f6b1": {
+      "value": "リアルタイム間隔",
+      "reviewed": true
+    },
+    "hub.ui.7745bcb6f710f75e": {
+      "value": "フィルター（有効）",
+      "reviewed": true
+    },
+    "hub.ui.e031b98d9176f84a": {
+      "value": "ブラウザーサブエージェントを設定します。これには次が必要です：",
+      "reviewed": true
+    },
+    "hub.ui.e40675c144472dcf": {
+      "value": "ナレーターはまだ概要を公開していません。",
+      "reviewed": true
+    },
+    "hub.ui.fff067cf75d62697": {
+      "value": "ナレーターページ",
+      "reviewed": true
+    },
+    "hub.ui.6f176c42c1449566": {
+      "value": "一般的な生産性",
+      "reviewed": true
+    },
+    "hub.ui.84da9ed85dcf1b5d": {
+      "value": "仮想マシンの切り替え",
+      "reviewed": true
+    },
+    "hub.ui.0929b4da291d10af": {
+      "value": "今すぐこのモデルを使い続けるには、AI クレジットの超過利用を有効にしてください。",
+      "reviewed": true
+    },
+    "hub.ui.88701a9136315238": {
+      "value": "定型ステップを Hydrogen にオフロードできる Argon。Argon 同等の品質でトークン消費を抑えます。",
+      "reviewed": true
+    },
+    "hub.ui.9b1a065a734a91ec": {
+      "value": "キューからメッセージを削除中…",
+      "reviewed": true
+    },
+    "hub.ui.f73c4a5a85c3d4e5": {
+      "value": "ブロック中なし",
+      "reviewed": true
+    },
+    "hub.ui.d41aecde8d271b58": {
+      "value": "プロダクト管理",
+      "reviewed": true
+    },
+    "hub.ui.59f774d529faaef3": {
+      "value": "@coordinator を待機中",
+      "reviewed": true
+    },
+    "hub.ui.154c29a6b8b8e289": {
+      "value": "このスウォームにはナレーターがいません。コーディネーターに追加を依頼してください。",
+      "reviewed": true
+    },
+    "hub.ui.c508c7705103d9ca": {
+      "value": "以前の投稿を表示",
+      "reviewed": true
+    },
+    "hub.ui.db8660ddbb3ad302": {
+      "value": "音声入力を利用できません",
+      "reviewed": true
+    },
+    "hub.ui.57b955600c578410": {
+      "value": "閲覧データを消去できませんでした。もう一度お試しください。",
+      "reviewed": true
+    },
+    "hub.ui.606df31b1e0a3657": {
+      "value": "ファイルとアーティファクトを編集しました",
+      "reviewed": true
+    },
+    "hub.ui.c7dc9da11a038c05": {
+      "value": "実行中なし",
+      "reviewed": true
+    },
+    "hub.ui.858a8c6112517768": {
+      "value": "おかえりなさい。どこから再開しましょうか？",
+      "reviewed": true
+    },
+    "hub.ui.1d162999e438850a": {
+      "value": "キーバインドスキームの管理と VS Code でのショートカットのカスタマイズを行います。",
+      "reviewed": true
+    },
+    "hub.ui.c32e15cd136b82a5": {
+      "value": "ビュー内のリンクをクリックして開きます。",
+      "reviewed": true
+    },
+    "hub.ui.ba4b81d43a709c90": {
+      "value": "会話が選択されていません",
+      "reviewed": true
+    },
+    "hub.ui.f6199870f20b258e": {
+      "value": "内蔵ブラウザーの閲覧済み URL とオートコンプリート候補を消去します",
+      "reviewed": true
+    },
+    "hub.ui.75682a8299d2eb97": {
+      "value": "1 件のコメント下書きを再開",
+      "reviewed": true
+    },
+    "hub.ui.46f771858da82361": {
+      "value": "個別にインストール済み",
+      "reviewed": true
+    },
+    "hub.ui.45b790ac8c7d918c": {
+      "value": "Cookie を保存しているサイト",
+      "reviewed": true
+    },
+    "hub.ui.18be8ade995e7f84": {
+      "value": "ナレータービューを再試行",
+      "reviewed": true
+    },
+    "hub.ui.0e580041e77771f2": {
+      "value": "view.html が 64 KB を超えています",
+      "reviewed": true
+    },
+    "hub.ui.6da694f779f448af": {
+      "value": "内蔵ブラウザーの履歴、Cookie、サイトデータを消去するか、サイトごとの Cookie を管理します。",
+      "reviewed": true
+    },
+    "hub.ui.6d9a9843b73f4e7a": {
+      "value": "ローカルプロジェクトのアーカイブ解除に失敗しました",
+      "reviewed": true
+    },
+    "hub.ui.5775a093a4ef1a85": {
+      "value": "マーケティング＆コンテンツ",
+      "reviewed": true
+    },
+    "hub.ui.b4a5396200f9185c": {
+      "value": "終了中",
+      "reviewed": true
+    },
+    "hub.ui.32ab018fd38a7b42": {
+      "value": "グラフ",
+      "reviewed": true
+    },
+    "hub.ui.78797afdac993780": {
+      "value": "一覧表示済み",
+      "reviewed": true
+    },
+    "hub.ui.8c13f73ba145c626": {
+      "value": "スウォーム",
+      "reviewed": true
+    },
+    "hub.ui.d5203617aee0cd9b": {
+      "value": "会話履歴の読み込みに失敗しました",
+      "reviewed": true
+    },
+    "hub.ui.c98d7fd85705ac6d": {
+      "value": "ワークスペースなしで開始（一般的な質問向け）。",
+      "reviewed": true
+    },
+    "hub.ui.17f48909e9ba086a": {
+      "value": "アーティファクトを編集しました",
+      "reviewed": true
+    },
+    "hub.ui.e7c7bb84611a6275": {
+      "value": "内蔵ブラウザーに Cookie を保存しているサイトはありません。",
+      "reviewed": true
+    },
+    "hub.ui.9a55d464d063262f": {
+      "value": "この会話",
+      "reviewed": true
+    },
+    "hub.ui.425fd9623996e1e8": {
+      "value": "バンドルを削除",
+      "reviewed": true
+    },
+    "hub.ui.641d1ef657bdfd9f": {
+      "value": "フォロー",
+      "reviewed": true
+    },
+    "hub.ui.1ce37f395d7aa7aa": {
+      "value": "ブランチを選択",
+      "reviewed": true
+    },
+    "hub.ui.aafd83fdb0f4d88c": {
+      "value": "リンクの開き方と内蔵ブラウザーの設定を構成",
+      "reviewed": true
+    },
+    "hub.ui.ebfbcc931abea370": {
+      "value": "クリックしてボードから非表示",
+      "reviewed": true
+    },
+    "hub.ui.5d9a85d72cd7f978": {
+      "value": "ファイルを編集しました",
+      "reviewed": true
+    },
+    "hub.ui.33278c7fd7903628": {
+      "value": "特定のメンバーを呼び出す投稿を表示",
+      "reviewed": true
+    },
+    "hub.ui.a1f1c821368c0a42": {
+      "value": "スウォームを起動中",
+      "reviewed": true
+    },
+    "hub.ui.af932925c88c6df3": {
+      "value": "ワークスペース固有の権限、リソース、カスタマイズを設定",
+      "reviewed": true
+    },
+    "hub.ui.7850ecd61123f3f7": {
+      "value": "リプレイを再生／一時停止（Space）",
+      "reviewed": true
+    },
+    "hub.ui.f017cad972f500e5": {
+      "value": "挿入するにはメインの会話のアーカイブを解除してください",
+      "reviewed": true
+    },
+    "hub.ui.3f5aadfe15bfc9d6": {
+      "value": "機密性の高い操作の前に確認",
+      "reviewed": true
+    },
+    "hub.ui.a9c0bc84dbcf9456": {
+      "value": "サイドクエスチョンの実行中は昇格できません",
+      "reviewed": true
+    },
+    "hub.ui.b6f7e5a48677228a": {
+      "value": "ブラウザーのスクリーンショットを開く",
+      "reviewed": true
+    },
+    "hub.ui.92d78d88918e2a9e": {
+      "value": "スクロール可能なテーブル",
+      "reviewed": true
+    },
+    "hub.ui.031a8f0f659df890": {
+      "value": "失敗",
+      "reviewed": true
+    },
+    "hub.ui.d353a99eb4556847": {
+      "value": "キャンセル済み",
+      "reviewed": true
+    },
+    "hub.ui.79670c9b5d43b33b": {
+      "value": "完了したタスクはまだありません。",
+      "reviewed": true
+    },
+    "hub.ui.81bc5ae8d5396fd2": {
+      "value": "複数のワーカー",
+      "reviewed": true
+    },
+    "hub.ui.d0027313dd37fa69": {
+      "value": "ワークツリーを読み込み中…",
+      "reviewed": true
+    },
+    "hub.ui.fdc17f3c2d727096": {
+      "value": "キャンセル (Cmd+D)",
+      "reviewed": true
+    },
+    "hub.ui.0436231679a0cb2b": {
+      "value": "サインアウト中…",
+      "reviewed": true
+    },
+    "hub.ui.6f056e849aac8015": {
+      "value": "宛先でフィルター",
+      "reviewed": true
+    },
+    "hub.ui.1b9f384c1436f607": {
+      "value": "未読",
+      "reviewed": true
+    },
+    "hub.ui.fb25ca9eb9b5fd8a": {
+      "value": "新しい WSL ウィンドウ",
+      "reviewed": true
+    },
+    "hub.ui.c46791ab7c246438": {
+      "value": "メインの会話の入力欄は現在利用できません。",
+      "reviewed": true
+    },
+    "hub.ui.9eec7960bbcd6a9d": {
+      "value": "サイドクエスチョンを開始",
+      "reviewed": true
+    },
+    "hub.ui.3041783c48f11a4c": {
+      "value": "セットアップルーチンを削除しました",
+      "reviewed": true
+    },
+    "hub.ui.bd1b33591a4a4415": {
+      "value": "ショートカットをカスタマイズ",
+      "reviewed": true
+    },
+    "hub.ui.f22b7b511b4f4ae8": {
+      "value": "応答アクション",
+      "reviewed": true
+    },
+    "hub.ui.9750859eb53a8aca": {
+      "value": "キャンセル (Ctrl+C)",
+      "reviewed": true
+    },
+    "hub.ui.3a0d81c0bf5fc791": {
+      "value": "メインの会話の実行中に開始",
+      "reviewed": true
+    },
+    "hub.ui.e9ce531d30ab7e59": {
+      "value": "待機中",
+      "reviewed": true
+    },
+    "hub.ui.78f9f70c4b80d633": {
+      "value": "メインの会話に挿入",
+      "reviewed": true
+    },
+    "hub.ui.40bb50da160cdc21": {
+      "value": "下へ移動",
+      "reviewed": true
+    },
+    "hub.ui.afde8770baee81bd": {
+      "value": "アーティファクトを編集しました",
+      "reviewed": true
+    },
+    "hub.ui.32fd144c1f4b399d": {
+      "value": "ウィンドウを閉じる",
+      "reviewed": true
+    },
+    "hub.ui.94d2ee3da6dbc6a4": {
+      "value": "リモートには GitHub リポジトリのみが含まれます",
+      "reviewed": true
+    },
+    "hub.ui.29867e83bc53ef14": {
+      "value": "時間指定",
+      "reviewed": true
+    },
+    "hub.ui.0d2685c5f8107a18": {
+      "value": "競合しない VS Code 既定設定またはスタンドアロン Antigravity コードのいずれかを選択します。",
+      "reviewed": true
+    },
+    "hub.ui.918d8c3f402c6163": {
+      "value": "アーティファクトを探索しました",
+      "reviewed": true
+    },
+    "hub.ui.b063c889bc90a1db": {
+      "value": "この会話で開始したスウォームはボード・メンバー・@メンション図とともにここに自動表示されます。開始コマンド：",
+      "reviewed": true
+    },
+    "hub.ui.18bc7d05be58400c": {
+      "value": "ファイルとアーティファクトを探索しました",
+      "reviewed": true
+    },
+    "hub.ui.4f04a5f84f36e0dd": {
+      "value": "ローカルにクローン中…",
+      "reviewed": true
+    },
+    "hub.ui.24db14082e125a84": {
+      "value": "@all 宛て",
+      "reviewed": true
+    },
+    "hub.ui.53c4accd5d05336b": {
+      "value": "この会話ではテレメトリーが無効になります。クリックして有効にします。",
+      "reviewed": true
+    },
+    "hub.ui.ae3f6ca3c043f874": {
+      "value": "ファイルとアーティファクトを探索しました",
+      "reviewed": true
+    },
+    "hub.ui.a2a0a3533474bdc3": {
+      "value": "この会話にスウォームはありません",
+      "reviewed": true
+    },
+    "hub.ui.59fe0b6e8ad0a526": {
+      "value": "前回のワークスペースを再利用します。",
+      "reviewed": true
+    },
+    "hub.ui.5051902c7b6a368b": {
+      "value": "ブランチを切り替え",
+      "reviewed": true
+    },
+    "hub.ui.4c8906cf76f5740a": {
+      "value": "チャンネル",
+      "reviewed": true
+    },
+    "hub.ui.f79b2ae22d4dec0b": {
+      "value": "ステータスでグループ化した場合のみ適用",
+      "reviewed": true
+    },
+    "hub.ui.71bf03ad1f6ba119": {
+      "value": "ブランチを選択",
+      "reviewed": true
+    },
+    "hub.ui.a0c984e85b278a86": {
+      "value": "このプロジェクトの「新しい会話」画面を開きます",
+      "reviewed": true
+    },
+    "hub.ui.947d67b5d278505c": {
+      "value": "チャンネルでフィルター",
+      "reviewed": true
+    },
+    "hub.ui.7179ea0035fca783": {
+      "value": "フィルターをクリア",
+      "reviewed": true
+    },
+    "hub.ui.579bfb1ea99b650e": {
+      "value": "オーケストレーターが使用するモデルを選択します。高性能なオーケストレーターと高速で低コストなエグゼキューターを組み合わせると、少ないトークンで高品質な結果を得られます。",
+      "reviewed": true
+    },
+    "hub.ui.fa5f38f044c49ab3": {
+      "value": "Antigravity Insiders アプリ設定を管理します。",
+      "reviewed": true
+    },
+    "hub.ui.499a014e50ca0245": {
+      "value": "すべてのワーカー",
+      "reviewed": true
+    },
+    "hub.ui.23cf109ef68f54a0": {
+      "value": "この会話ではこのサイドクエスチョンを使用できません。",
+      "reviewed": true
+    },
+    "hub.ui.2eee037c67fbe81b": {
+      "value": "ブランチ",
+      "reviewed": true
+    },
+    "hub.ui.72c1b406f0f97b6f": {
+      "value": "ブラウザーサブエージェントの許可・拒否 URL を設定します。内蔵ブラウザーで動作するため、別のブラウザーは不要です",
+      "reviewed": true
+    },
+    "hub.ui.fc7f1aa2054c2283": {
+      "value": "一覧取得中",
+      "reviewed": true
+    },
+    "hub.ui.84f2b4ae34d68e15": {
+      "value": "進捗をスクラブ",
+      "reviewed": true
+    },
+    "hub.ui.6497fc6f84000b29": {
+      "value": "メンバーを検索",
+      "reviewed": true
+    },
+    "hub.ui.01345dbfd6e59bbc": {
+      "value": "スウォームビュー",
+      "reviewed": true
+    },
+    "hub.ui.c26cc71664beb87f": {
+      "value": "待機中なし",
+      "reviewed": true
+    },
+    "hub.ui.587c2564c1c53415": {
+      "value": "スマートフォンで開く",
+      "reviewed": true
+    },
+    "hub.ui.9c9806d2d6a70337": {
+      "value": "メンバーがやり取りすると、スウォームボードへの投稿がここに表示されます。",
+      "reviewed": true
+    },
+    "hub.ui.40693055fb81c106": {
+      "value": "リプレイ位置",
+      "reviewed": true
+    },
+    "hub.ui.2ee11474fabca6e8": {
+      "value": "内蔵ブラウザーの履歴を消去しました",
+      "reviewed": true
+    },
+    "hub.ui.f2bd677095e47a53": {
+      "value": "投稿はまだありません",
+      "reviewed": true
+    },
+    "hub.ui.3c8cff6e2a8e52bd": {
+      "value": "ファイルとアーティファクトを編集しました",
+      "reviewed": true
+    },
+    "hub.ui.7c5b2da19293eb98": {
+      "value": "現在のブランチ",
+      "reviewed": true
+    },
+    "hub.ui.81219e5771466627": {
+      "value": "現在のファイルが有効な JSON ではないため、最後に正常だった view.json を表示しています。",
+      "reviewed": true
+    },
+    "hub.ui.e6ce4eb862b0fecd": {
+      "value": "ナレータービュー（AI 生成）",
+      "reviewed": true
+    },
+    "hub.ui.fce263d326818c62": {
+      "value": "ワークスペースなし",
+      "reviewed": true
+    },
+    "hub.ui.54994d8eb3c61f6e": {
+      "value": "このワークスペースはグローバル権限設定を上書きします。",
+      "reviewed": true
+    },
+    "hub.ui.0430fbfc3d68bf6f": {
+      "value": "送信ボタンの横にコンテキストウィンドウの使用率を表示します。クリックすると内訳とモデルクォータを確認できます",
+      "reviewed": true
+    },
+    "hub.ui.dd2eda63fc09ebb2": {
+      "value": "一致する投稿はありません",
+      "reviewed": true
+    },
+    "hub.ui.ac1aa2fbc8cd0737": {
+      "value": "閲覧データ",
+      "reviewed": true
+    },
+    "hub.ui.820ccbef36f60b83": {
+      "value": "ファイルとアーティファクトを編集しました",
+      "reviewed": true
+    },
+    "hub.ui.a5f69d1841cbbd17": {
+      "value": "指示を追加",
+      "reviewed": true
+    },
+    "hub.ui.2c8c3c0c4ac4aeec": {
+      "value": "ファイルを開くにはアプリが必要です。",
+      "reviewed": true
+    },
+    "hub.ui.a8c8453cc5e255f2": {
+      "value": "稼働中：ターン実行中（思考・ツール実行・モデル応答待ち）",
+      "reviewed": true
+    },
+    "hub.ui.2ddaa716790258bb": {
+      "value": "Google ドキュメントで開く",
+      "reviewed": true
+    },
+    "hub.ui.87b007261779ec1a": {
+      "value": "メンバー一覧にありません",
+      "reviewed": true
+    },
+    "hub.ui.128374b53cc69c01": {
+      "value": "宛先なし",
+      "reviewed": true
+    },
+    "hub.ui.63ddfca0b46b10a9": {
+      "value": "ブランチを選択…",
+      "reviewed": true
+    },
+    "hub.ui.f7f231a086863614": {
+      "value": "すべてのコマンドを制限なしで実行",
+      "reviewed": true
+    },
+    "hub.ui.a8b0918b9f6cbd95": {
+      "value": "コメントの下書きを再開",
+      "reviewed": true
+    },
+    "hub.ui.4816cbfd74aa8297": {
+      "value": "ボード",
+      "reviewed": true
+    },
+    "hub.ui.e08c777302863717": {
+      "value": "コーディネーターがタスクに分割します。",
+      "reviewed": true
+    },
+    "hub.ui.c5746e21a956afd1": {
+      "value": "セットアップルーチンの削除をキャンセルしました",
+      "reviewed": true
+    },
+    "hub.ui.b55b2166f1aef053": {
+      "value": "@all を展開",
+      "reviewed": true
+    },
+    "hub.ui.8bb53aacb2ac94a3": {
+      "value": "作業計画、設計判断、結果のレビューを行います。最上位モデルを選択してください。モデルメニューのオーケストレーター行から会話ごとに選択することもできます。",
+      "reviewed": true
+    },
+    "hub.ui.587f856d5431a721": {
+      "value": "右端での折り返しを切り替え",
+      "reviewed": true
+    },
+    "hub.ui.a02d10ca8dbfb12f": {
+      "value": "この会話のスウォームを検索中…",
+      "reviewed": true
+    },
+    "hub.ui.4354d8358fff218a": {
+      "value": "対応が必要な項目はありません",
+      "reviewed": true
+    },
+    "hub.ui.3aa96fcc6a8c70f2": {
+      "value": "最新の投稿を表示範囲に維持",
+      "reviewed": true
+    },
+    "hub.ui.7d68e6842e7a8595": {
+      "value": "停止済み：アンロード中（投稿で言及されると再開します）",
+      "reviewed": true
+    },
+    "hub.ui.a4b64f5ec3537957": {
+      "value": "会話タイトルを編集",
+      "reviewed": true
+    },
+    "hub.ui.50d6e49caa8924a3": {
+      "value": "利用可能なバンドルはありません。",
+      "reviewed": true
+    },
+    "hub.ui.a8ae773d7501ed8c": {
+      "value": "ブランチを選択…",
+      "reviewed": true
+    },
+    "hub.ui.3b0e634a120a78b8": {
+      "value": "内容を確認",
+      "reviewed": true
+    },
+    "hub.ui.8b9dbcf918e6fbdd": {
+      "value": "モバイルでは大きく表示されます",
+      "reviewed": true
+    },
+    "hub.ui.432890c32353a375": {
+      "value": "記録されたブラウザー操作はありません",
+      "reviewed": true
+    },
+    "hub.ui.5aba452b19a5e234": {
+      "value": "システム UI",
+      "reviewed": true
+    },
+    "hub.ui.233f644f36b81ad0": {
+      "value": "アクセス制限あり",
+      "reviewed": true
+    },
+    "hub.ui.f4838b20ab8c7e22": {
+      "value": "下部パネル",
+      "reviewed": true
+    },
+    "hub.ui.6a51cc98a237e225": {
+      "value": "ワークツリーブランチ",
+      "reviewed": true
+    },
+    "hub.ui.772887b6d0252c7e": {
+      "value": "より上位の Google AI Ultra プランにアップグレードすると、最高のレート制限を利用できます。",
+      "reviewed": true
+    },
+    "hub.ui.44a1eca6ca25c186": {
+      "value": "ナレーターは新しいボード投稿を待機しています",
+      "reviewed": true
+    },
+    "hub.ui.ba69e64b0a570836": {
+      "value": "音声録音を開始／停止",
+      "reviewed": true
+    },
+    "hub.ui.0f68a6fd26e95b48": {
+      "value": "サブエージェントの会話中に開始",
+      "reviewed": true
+    },
+    "hub.ui.6f77831e5bf57aa5": {
+      "value": "サブエージェントのサイドクエスチョンは昇格できません",
+      "reviewed": true
+    },
+    "hub.ui.a34868c7b2cf6596": {
+      "value": "サイドクエスチョンを開始するには、先にメインの会話でメッセージを送信してください",
+      "reviewed": true
+    },
+    "hub.ui.4e427ad73b23a489": {
+      "value": "すべて表示してライブ追従",
+      "reviewed": true
+    },
+    "hub.ui.f102a103cb38fe1d": {
+      "value": "ブランチを作成",
+      "reviewed": true
+    },
+    "hub.ui.000eab90c46120bf": {
+      "value": "CLI プロジェクト",
+      "reviewed": true
+    },
+    "hub.ui.9baac58ce586ea76": {
+      "value": "エグゼキューターモデル",
+      "reviewed": true
+    },
+    "hub.ui.5cf5c04954572e98": {
+      "value": "バンドルを読み込み中…",
+      "reviewed": true
+    },
+    "hub.ui.79b4368e570c6772": {
+      "value": "指示を削除",
+      "reviewed": true
+    },
+    "hub.ui.354ff2bd47ea952c": {
+      "value": "リモートブランチ",
+      "reviewed": true
+    },
+    "hub.ui.80905baf3aaec87b": {
+      "value": "コマンドを実行しました",
+      "reviewed": true
+    },
+    "hub.ui.3fd256357792ad9f": {
+      "value": "中クリック",
+      "reviewed": true
+    },
+    "hub.ui.93a54cd5a417ae5e": {
+      "value": "リプレイ速度",
+      "reviewed": true
+    },
+    "hub.ui.e39f748785ba64e6": {
+      "value": "アップデートを確認…",
+      "reviewed": true
+    },
+    "hub.ui.ddd9e8095da873fe": {
+      "value": "一時停止した箇所からこのエージェントを再開",
+      "reviewed": true
+    },
+    "hub.ui.d237a0cbaa6dcf37": {
+      "value": "セットアップルーチンの保存をキャンセルしました",
+      "reviewed": true
+    },
+    "hub.ui.ba35f0c47d862763": {
+      "value": "未開始",
+      "reviewed": true
+    },
+    "hub.ui.9e8488c2d204140b": {
+      "value": "このビューを変更したい場合は、コーディネーターにお伝えください。",
+      "reviewed": true
+    },
+    "hub.ui.c52f575884d08440": {
+      "value": "月間上限",
+      "reviewed": true
+    },
+    "hub.ui.f8fa839eb7db8316": {
+      "value": "ファイルとアーティファクトを探索しました",
+      "reviewed": true
+    },
+    "hub.ui.41e10dbc5f08cd5d": {
+      "value": "キャンセル (⌘D)",
+      "reviewed": true
+    },
+    "hub.ui.7d52ed5b19430d45": {
+      "value": "マイク無音",
+      "reviewed": true
+    },
+    "hub.ui.264c28cbf01ce9fa": {
+      "value": "思考の深さ",
+      "reviewed": true
+    },
+    "hub.ui.50209c56159fa247": {
+      "value": "注：この設定の変更は、エージェントに送信する新しいメッセージにのみ適用されます。進行中の応答には以前の設定値が使用されます。",
+      "reviewed": true
+    },
+    "hub.ui.bee5d9b4adecbd8c": {
+      "value": "ナレータービューを読み込み中",
+      "reviewed": true
+    },
+    "hub.ui.25cb3f2d0e7d36b9": {
+      "value": "ローカルフォルダーにクローン",
+      "reviewed": true
+    },
+    "hub.ui.cf30b3333062034a": {
+      "value": "サブエージェントの読み込みに失敗しました",
+      "reviewed": true
+    },
+    "hub.ui.d9f2a06e971e7dd5": {
+      "value": "/btw の後にサイドクエスチョンを入力してください",
+      "reviewed": true
+    },
+    "hub.ui.b22dc3f2f72bf571": {
+      "value": "ターミナル＆ツール",
+      "reviewed": true
+    },
+    "hub.ui.1df59a44a7f398b3": {
+      "value": "次の投稿（→）",
+      "reviewed": true
+    },
+    "hub.ui.4b33d5e03e53e655": {
+      "value": "すべてのチャンネル",
+      "reviewed": true
+    },
+    "hub.ui.132d124d6bb3d811": {
+      "value": "中断済み",
+      "reviewed": true
+    },
+    "hub.ui.559ced802dfb6ad4": {
+      "value": "自動化の会話を表示",
+      "reviewed": true
+    },
+    "hub.ui.835918024f55a92c": {
+      "value": "停止・停滞なし",
+      "reviewed": true
+    },
+    "hub.ui.2daa5e6bd2fd2258": {
+      "value": "キーバインドスキーム",
+      "reviewed": true
+    },
+    "hub.ui.90967f573a5b5c84": {
+      "value": "オーケストレーター設定",
+      "reviewed": true
+    },
+    "hub.ui.67b6ffc1ed06f760": {
+      "value": "常に開く",
+      "reviewed": true
+    },
+    "hub.ui.661877634527357a": {
+      "value": "有効な Antigravity ショートカットとユーザー定義のキーバインド上書きはすべて VS Code が直接管理します。",
+      "reviewed": true
+    },
+    "hub.ui.ee695b0426154cf0": {
+      "value": "定型ステップを Hydrogen にオフロードできる Carbon。Carbon 同等の品質でトークン消費を抑えます。",
+      "reviewed": true
+    },
+    "hub.ui.2f810cde244fb29c": {
+      "value": "投稿を検索",
+      "reviewed": true
+    },
+    "hub.ui.f96054ce6f1f0951": {
+      "value": "ローカルへのプロジェクトのクローンに失敗しました",
+      "reviewed": true
+    },
+    "hub.ui.674b604c36fefd3c": {
+      "value": "無題のスウォーム",
+      "reviewed": true
+    },
+    "hub.ui.314bbd6a54a7dd7a": {
+      "value": "会話からこのペインを開くとスウォームを確認できます。会話で開始したスウォームはここに自動表示されます。開始コマンド：",
+      "reviewed": true
+    },
+    "hub.ui.111684f49899846d": {
+      "value": "完全なタイムラインを開く",
+      "reviewed": true
+    },
+    "hub.ui.dea3a1af785674a0": {
+      "value": "Antigravity アプリ設定を管理",
+      "reviewed": true
+    },
+    "hub.ui.822533d4403f83dd": {
+      "value": "1 人のメンバーの投稿を表示",
+      "reviewed": true
+    },
+    "hub.ui.31f72d3334c676ea": {
+      "value": "現在と比較",
+      "reviewed": true
+    },
+    "hub.ui.328ece1bff2fae6a": {
+      "value": "ワーカーでフィルター",
+      "reviewed": true
+    },
+    "hub.ui.1efabe1a2b824fd1": {
+      "value": "プラグインの会話を表示",
+      "reviewed": true
+    },
+    "hub.ui.5f04ae9ed6a865bb": {
+      "value": "接続中…",
+      "reviewed": true
+    },
+    "hub.ui.fc9a05b835a43412": {
+      "value": "更新はここに届きます。求められたときのみ介入します。",
+      "reviewed": true
+    },
+    "hub.ui.a08705780ae4124f": {
+      "value": "概要 · ナレーターのメモより",
+      "reviewed": true
+    },
+    "hub.ui.507e92b772182dbd": {
+      "value": "次の予定",
+      "reviewed": true
+    },
+    "hub.ui.dd3c7c60b806c8f3": {
+      "value": "リモートの会話の権限を制御",
+      "reviewed": true
+    },
+    "hub.ui.7486904e635f5a52": {
+      "value": "次の投稿",
+      "reviewed": true
+    },
+    "hub.ui.0b25e7dc5e81a7a7": {
+      "value": "比較を非表示",
+      "reviewed": true
+    },
+    "hub.ui.0dbee6abe543258f": {
+      "value": "ファイルの差分はありません",
+      "reviewed": true
+    },
+    "hub.ui.6a27b943f49b36bc": {
+      "value": "ブラウザーのスクリーンショット",
+      "reviewed": true
+    },
+    "hub.ui.afb9fcaf7a075949": {
+      "value": "プレーンビュー",
+      "reviewed": true
+    },
+    "hub.ui.2633673daf17be25": {
+      "value": "VS Code キーボードショートカット",
+      "reviewed": true
+    },
+    "hub.ui.976d16df278c3b98": {
+      "value": "Antigravity を終了",
+      "reviewed": true
+    },
+    "hub.ui.dda839b136174edf": {
+      "value": "zip としてダウンロード",
+      "reviewed": true
+    },
+    "hub.ui.3a80e9b087ac4c4f": {
+      "value": "録音はありません",
+      "reviewed": true
+    },
+    "hub.ui.2215dbb2237a26b4": {
+      "value": "キャンセル (⌃C)",
+      "reviewed": true
+    },
+    "hub.ui.fdc11f0b3af55e46": {
+      "value": "ブロック：許可されていないファイル形式です",
+      "reviewed": true
+    },
+    "hub.ui.7fb2fa8e350812bb": {
+      "value": "予定なし",
+      "reviewed": true
+    },
+    "hub.ui.1baac8b2cd3685c1": {
+      "value": "実行中のエージェントはありません",
+      "reviewed": true
+    },
+    "hub.ui.546ebb8eb993ea56": {
+      "value": "フィルター",
+      "reviewed": true
+    },
+    "hub.ui.74b6abdf59690fdf": {
+      "value": "対応が必要",
+      "reviewed": true
+    },
+    "hub.ui.bcdc99ce8cf9a9c3": {
+      "value": "開発者専用ツール。これらの設定は他のユーザーに影響しません",
+      "reviewed": true
+    },
+    "hub.ui.3f167bec714df4ec": {
+      "value": "システムの既定アプリ",
+      "reviewed": true
+    },
+    "hub.ui.e1c99559b56a753f": {
+      "value": "コマンドを実行中",
+      "reviewed": true
+    },
+    "hub.ui.d1a8f44ad7dda012": {
+      "value": "@all を各メンバーへのエッジとして描画",
+      "reviewed": true
+    },
+    "hub.ui.8fc63c7a8bff7d2c": {
+      "value": "このコンピューターで実行されるローカル自動化を作成します",
+      "reviewed": true
+    },
+    "hub.ui.ef37f4e061bb04ce": {
+      "value": "実際のサイズ",
+      "reviewed": true
+    },
+    "hub.ui.eac2679c0452b2af": {
+      "value": "view.html はまだありません",
+      "reviewed": true
+    },
+    "hub.ui.62f8f7c6feabd968": {
+      "value": "プロジェクト名を編集",
+      "reviewed": true
+    },
+    "hub.ui.705975faaaf54eb4": {
+      "value": "アクセスを確認中…",
+      "reviewed": true
+    },
+    "hub.ui.335dd52922b134d3": {
+      "value": "WSL に接続…",
+      "reviewed": true
+    },
+    "hub.ui.c69022b396caebdd": {
+      "value": "リサーチ、執筆、日常タスク向けのシンプルインターフェース",
+      "reviewed": true
+    },
+    "hub.ui.1622448aacd3a75a": {
+      "value": "誰からでも",
+      "reviewed": true
+    },
+    "hub.ui.64f4b4a47f30f6b1": {
+      "value": "こんにちは、今日は何を作りましょうか？",
+      "reviewed": true
+    },
+    "hub.ui.8c5831d9fd3efdd1": {
+      "value": "ブラウザーエージェントを有効にする",
+      "reviewed": true
+    },
+    "hub.ui.fa6fe5441d2eee39": {
+      "value": "GIF をエクスポート",
+      "reviewed": true
+    },
+    "hub.ui.fd405c7fe3914bba": {
+      "value": "コーディネーター · 稼働中",
+      "reviewed": true
+    },
+    "hub.ui.aa209354500fe67b": {
+      "value": "ファイルを編集しました",
+      "reviewed": true
+    },
+    "hub.ui.3c4c32df4b2946e6": {
+      "value": "自動更新",
+      "reviewed": true
+    },
+    "hub.ui.78ea8af1da894353": {
+      "value": "不明なワークツリー",
+      "reviewed": true
+    },
+    "hub.ui.1778c02c07caafed": {
+      "value": "コーディネーターチャットで回答してください。",
+      "reviewed": true
+    },
+    "hub.ui.dc32410e394479aa": {
+      "value": "アーティファクトを探索しました",
+      "reviewed": true
+    },
+    "hub.ui.037f4d22834dd26a": {
+      "value": "スウォームのサイドカーとの接続が切れました。再試行中",
+      "reviewed": true
+    },
+    "hub.ui.5b50e7a693fee952": {
+      "value": "コピーに失敗しました",
+      "reviewed": true
+    },
+    "hub.ui.512bad71f6e6300d": {
+      "value": "この会話で開始したスウォームはボード・メンバー・@メンション図とともにここに自動表示されます。",
+      "reviewed": true
+    },
+    "hub.ui.2bd6828d27089005": {
+      "value": "ブラウザーサブエージェント（/browser で呼び出し）の許可・拒否 URL を設定します。要件：",
+      "reviewed": true
+    },
+    "hub.ui.a20aff1be6532f5c": {
+      "value": "リプレイ速度",
+      "reviewed": true
+    },
+    "hub.ui.b4c52af02cc00bd5": {
+      "value": "投稿者でフィルター",
+      "reviewed": true
+    },
+    "hub.ui.b468fd71c13fd4bc": {
+      "value": "アプリケーションメニュー",
+      "reviewed": true
+    },
+    "hub.ui.99af6606ff9d6cd5": {
+      "value": "メニュー",
+      "reviewed": true
+    },
+    "hub.ui.2bd873d6c734e63e": {
+      "value": "パンくずリスト",
+      "reviewed": true
+    },
+    "hub.ui.73667278486b9c9d": {
+      "value": "パンくずリスト",
+      "reviewed": true
+    },
+    "hub.ui.7a8a2fd67a09c4f2": {
+      "value": "ファイルビューアーヘッダー",
+      "reviewed": true
+    },
+    "hub.ui.3c48ed51411bb08e": {
+      "value": "サイドパネルを最大化",
+      "reviewed": true
+    },
+    "hub.ui.99d679f391b50ce2": {
+      "value": "背景色ピッカー",
+      "reviewed": true
+    },
+    "hub.ui.633dda19171c3122": {
+      "value": "前景色ピッカー",
+      "reviewed": true
+    },
+    "hub.ui.4d95fe82a6689d33": {
+      "value": "アクセントカラーピッカー",
+      "reviewed": true
+    },
+    "hub.ui.07b6641e599000ef": {
+      "value": "チャット入力欄でメッセージを送信するキーを選択します。",
+      "reviewed": true
+    },
+    "hub.ui.11c3beefc7432c39": {
+      "value": "Enter で送信、Shift+Enter で改行。",
+      "reviewed": true
+    },
+    "hub.ui.254a5f4f76406996": {
+      "value": "Ctrl+Enter で送信、Enter で改行。",
+      "reviewed": true
+    },
+    "hub.ui.590514cf2fc8b187": {
+      "value": "Cmd+Enter で送信、Enter で改行。",
+      "reviewed": true
+    },
+    "hub.ui.ab1173eed1d477d9": {
+      "value": "プラグイン",
+      "reviewed": true
+    },
+    "hub.ui.14bde5dd1e3cb3c8": {
+      "value": "Docs、Sheets、Slides、Drive、Calendar、Gmail などの Google Workspace に接続します。",
+      "reviewed": true
+    },
+    "hub.ui.d66f8d268f3962f2": {
+      "value": "科学研究向けのエージェントスキル、データベース、対話型ビューアー。",
+      "reviewed": true
+    },
+    "web.dynamic.filesChangedCount": {
+      "value": "{0} 件のファイルが変更されました",
+      "reviewed": true
+    },
+    "web.dynamic.fileChangedCount": {
+      "value": "{0} 件のファイルが変更されました",
+      "reviewed": true
+    },
+    "web.dynamic.toolsExcludedCount": {
+      "value": "{0} 件のツールを除外",
+      "reviewed": true
+    },
+    "web.dynamic.toolExcludedCount": {
+      "value": "{0} 件のツールを除外",
+      "reviewed": true
+    },
+    "web.dynamic.updatesCount": {
+      "value": "{0} 件の更新",
+      "reviewed": true
+    },
+    "web.dynamic.updateCount": {
+      "value": "{0} 件の更新",
+      "reviewed": true
+    },
+    "web.dynamic.hideBreakdowns": {
+      "value": "{0} 件の内訳を非表示{1, select, s {} other {}}",
+      "reviewed": true
+    },
+    "web.dynamic.stepsSlashProgress": {
+      "value": "{0}/{1} ステップ",
+      "reviewed": true
+    },
+    "web.dynamic.limitResetsIn": {
+      "value": "{0} の上限、{1} 後にリセット",
+      "reviewed": true
+    },
+    "web.dynamic.modelPeriodLimit": {
+      "value": "{0} {1}の上限",
+      "reviewed": true
+    },
+    "web.dynamic.startedFromQuoted": {
+      "value": "「{0}」から開始",
+      "reviewed": true
+    },
+    "web.dynamic.startedDuringQuoted": {
+      "value": "「{0}」の実行中に開始",
+      "reviewed": true
+    },
+    "web.dynamic.sendFeedbackAs": {
+      "value": "{0} としてフィードバックを送信",
+      "reviewed": true
+    },
+    "web.dynamic.selectModelCurrent": {
+      "value": "モデルを選択、現在：{0}",
+      "reviewed": true
+    },
+    "web.dynamic.modelLockedRunning": {
+      "value": "モデル：{0}、エージェント実行中はモデルを変更できません",
+      "reviewed": true
+    },
+    "web.dynamic.permLockedRunning": {
+      "value": "エージェント権限プリセット：{0}、実行中は権限を変更できません",
+      "reviewed": true
+    },
+    "web.dynamic.thoughtForDuration": {
+      "value": "{0} 思考しました",
+      "reviewed": true
+    },
+    "web.dynamic.thinkingForDuration": {
+      "value": "{0} 思考中",
+      "reviewed": true
+    },
+    "web.dynamic.exitedWithCodeInline": {
+      "value": "{0} · 終了コード {1}",
+      "reviewed": true
+    },
+    "hub.ui.0fcfb12dfad07ba0": {
+      "value": "認証が必要です",
+      "reviewed": true
+    },
+    "hub.ui.016cf78cca62bd53": {
+      "value": "更新を自動的に確認",
+      "reviewed": true
+    },
+    "hub.ui.ff81f1d41dfd7f18": {
+      "value": "ブラウザの JavaScript 実行ポリシー",
+      "reviewed": true
+    },
+    "hub.ui.3967283c635218cf": {
+      "value": "ブラウザー操作ルール",
+      "reviewed": true
+    },
+    "hub.ui.6a6571b243b67aa0": {
+      "value": "閲覧データ",
+      "reviewed": true
+    },
+    "hub.ui.ad438ef1a7674f26": {
+      "value": "閲覧履歴",
+      "reviewed": true
+    },
+    "hub.ui.291e2a11434cfd2b": {
+      "value": "Build With Google プラグイン",
+      "reviewed": true
+    },
+    "hub.ui.3c20ca49e345461a": {
+      "value": "CitC ワークスペースの種類",
+      "reviewed": true
+    },
+    "hub.ui.06445eb2e676b81e": {
+      "value": "コマンド準備スクリプト",
+      "reviewed": true
+    },
+    "hub.ui.230515513f6092a8": {
+      "value": "サンドボックス外でのコマンド",
+      "reviewed": true
+    },
+    "hub.ui.a173dde0775e6c90": {
+      "value": "コンテキストと割り当てのインジケーター",
+      "reviewed": true
+    },
+    "hub.ui.a44d4f0162516f40": {
+      "value": "会話のステップ",
+      "reviewed": true
+    },
+    "hub.ui.dfeb364deafde7a3": {
+      "value": "会話の幅",
+      "reviewed": true
+    },
+    "hub.ui.3cb27ae0fbca8ae3": {
+      "value": "画像をコピー",
+      "reviewed": true
+    },
+    "hub.ui.dbf362d4f210c780": {
+      "value": "リンクをコピー",
+      "reviewed": true
+    },
+    "hub.ui.38e1786909ac3783": {
+      "value": "カスタムコンテキストメニュー",
+      "reviewed": true
+    },
+    "hub.ui.9df8cadeb2f8fbad": {
+      "value": "デフォルトの Cog ブランチ／参照",
+      "reviewed": true
+    },
+    "hub.ui.e585a6abc3d15b3b": {
+      "value": "既定の Cog リポジトリ",
+      "reviewed": true
+    },
+    "hub.ui.cdb50c4eb4d2585f": {
+      "value": "デフォルトのワークスペース VCS",
+      "reviewed": true
+    },
+    "hub.ui.9f4173a91945f285": {
+      "value": "リモートエージェントの全データを削除",
+      "reviewed": true
+    },
+    "hub.ui.155106be1173d757": {
+      "value": "デバイス名",
+      "reviewed": true
+    },
+    "hub.ui.c58e8815a57346ff": {
+      "value": "ダウンロード先",
+      "reviewed": true
+    },
+    "hub.ui.223541cde6b049db": {
+      "value": "AI クレジットの超過利用を有効にする",
+      "reviewed": true
+    },
+    "hub.ui.938e28640f6e2c01": {
+      "value": "ブラウザーエージェントを有効にする",
+      "reviewed": true
+    },
+    "hub.ui.494bac6b39b86701": {
+      "value": "エージェントの通知を有効にする",
+      "reviewed": true
+    },
+    "hub.ui.64e9a353ec4fdecd": {
+      "value": "サンドボックスモードを有効にする",
+      "reviewed": true
+    },
+    "hub.ui.72f537a5a00af678": {
+      "value": "エージェントの通知音を有効にする",
+      "reviewed": true
+    },
+    "hub.ui.115cf3dddfdbad7b": {
+      "value": "テレメトリを有効にする",
+      "reviewed": true
+    },
+    "hub.ui.fc4e8890fc9e2fc3": {
+      "value": "ターミナルのサンドボックスを有効にする",
+      "reviewed": true
+    },
+    "hub.ui.03c539e810e07010": {
+      "value": "Enter で送信",
+      "reviewed": true
+    },
+    "hub.ui.2befb23f7053dc26": {
+      "value": "ファイルアクセスルール",
+      "reviewed": true
+    },
+    "hub.ui.f79e34f8f5af8f6e": {
+      "value": "ファイルの読み取り",
+      "reviewed": true
+    },
+    "hub.ui.a45c787e9ac5e0a1": {
+      "value": "ファイルへの書き込み",
+      "reviewed": true
+    },
+    "hub.ui.6d784d95c63833e6": {
+      "value": "フォントサイズ",
+      "reviewed": true
+    },
+    "hub.ui.ffff4354ccdf844e": {
+      "value": "Google One の紹介プログラム",
+      "reviewed": true
+    },
+    "hub.ui.52af1dbc2b1c0c52": {
+      "value": "ホスト環境",
+      "reviewed": true
+    },
+    "hub.ui.433616d904123cf9": {
+      "value": "Jetski のデフォルトのカスタマイズを含める",
+      "reviewed": true
+    },
+    "hub.ui.cc55a21bff081e86": {
+      "value": "メニューバーに常駐",
+      "reviewed": true
+    },
+    "hub.ui.b89124c79d1cf237": {
+      "value": "ホストを読み込み中…",
+      "reviewed": true
+    },
+    "hub.ui.92a37087b73b3538": {
+      "value": "フックを管理",
+      "reviewed": true
+    },
+    "hub.ui.2630ba4d3bbf1847": {
+      "value": "権限を管理",
+      "reviewed": true
+    },
+    "hub.ui.d0f678009d973cd7": {
+      "value": "Markdown 成果物の幅",
+      "reviewed": true
+    },
+    "hub.ui.5a3e33bcdf2616ed": {
+      "value": "マーケティングメール",
+      "reviewed": true
+    },
+    "hub.ui.b58330ac25057a44": {
+      "value": "下へ移動",
+      "reviewed": true
+    },
+    "hub.ui.1359626e7b696434": {
+      "value": "上へ移動",
+      "reviewed": true
+    },
+    "hub.ui.0815d664aa819b07": {
+      "value": "ネットワークアクセスのルール",
+      "reviewed": true
+    },
+    "hub.ui.9bf624ac6138cba7": {
+      "value": "新しい会話ボタン",
+      "reviewed": true
+    },
+    "hub.ui.855d682f94819266": {
+      "value": "利用可能なプラグインはありません",
+      "reviewed": true
+    },
+    "hub.ui.491fc91cd76e5157": {
+      "value": "ログインしていません",
+      "reviewed": true
+    },
+    "hub.ui.63568f0582af1e88": {
+      "value": "通知設定",
+      "reviewed": true
+    },
+    "hub.ui.a65291255d71c726": {
+      "value": "リンクの表示先",
+      "reviewed": true
+    },
+    "hub.ui.0fcabfe6e097cd40": {
+      "value": "オペレーティングシステム",
+      "reviewed": true
+    },
+    "hub.ui.44269ea744639d68": {
+      "value": "権限プリセット",
+      "reviewed": true
+    },
+    "hub.ui.38d492d7e7982ed9": {
+      "value": "スリープを防止",
+      "reviewed": true
+    },
+    "hub.ui.1a3b23c70d280f4b": {
+      "value": "プルリクエスト",
+      "reviewed": true
+    },
+    "hub.ui.3464cd5908e5fa72": {
+      "value": "スクリーンリーダーモード",
+      "reviewed": true
+    },
+    "hub.ui.e7ade7489317b0cf": {
+      "value": "セキュリティプリセット",
+      "reviewed": true
+    },
+    "hub.ui.d989893356eeff0f": {
+      "value": "料金プランを見る",
+      "reviewed": true
+    },
+    "hub.ui.0fe0571facd9435c": {
+      "value": "メッセージを送信",
+      "reviewed": true
+    },
+    "hub.ui.af363a0fa1974e86": {
+      "value": "セットアップスクリプト",
+      "reviewed": true
+    },
+    "hub.ui.0264d7b0ccb8d48b": {
+      "value": "折りたたむ",
+      "reviewed": true
+    },
+    "hub.ui.2150d8df37e48957": {
+      "value": "すべて表示",
+      "reviewed": true
+    },
+    "hub.ui.f10fd614835924d0": {
+      "value": "サインアウト中…",
+      "reviewed": true
+    },
+    "hub.ui.3d591e826d545919": {
+      "value": "録音を停止",
+      "reviewed": true
+    },
+    "hub.ui.954a7ace4e929466": {
+      "value": "JJ ワークツリーを Head に同期",
+      "reviewed": true
+    },
+    "hub.ui.a7016ea3c777fa3e": {
+      "value": "ターミナルコマンドの自動実行",
+      "reviewed": true
+    },
+    "hub.ui.142fa9db5f3c9aff": {
+      "value": "ターミナルコマンド",
+      "reviewed": true
+    },
+    "hub.ui.bb42027e6c798677": {
+      "value": "ターミナルの配置",
+      "reviewed": true
+    },
+    "hub.ui.a7b0060623380e53": {
+      "value": "ツール権限",
+      "reviewed": true
+    },
+    "hub.ui.f9eccf1bd6db5c6f": {
+      "value": "ユーザーの種類",
+      "reviewed": true
+    },
+    "hub.ui.348c701c62ec6f92": {
+      "value": "VS Code キーボードショートカット",
+      "reviewed": true
+    },
+    "hub.ui.d9ab76c650a66141": {
+      "value": "ご利用のプラン",
+      "reviewed": true
+    },
+    "hub.ui.4b0fd84a7499960f": {
+      "value": "ご利用のプラン： ",
+      "reviewed": true
+    },
+    "hub.ui.12ea12eace7d655f": {
+      "value": "変更",
+      "reviewed": true
+    },
+    "hub.ui.d0b4ba2311b3e849": {
+      "value": "変更",
+      "reviewed": true
+    },
+    "hub.ui.e6bb5689beec52c4": {
+      "value": "ダーク",
+      "reviewed": true
+    },
+    "hub.ui.034a0062488256f1": {
+      "value": "フォルダー",
+      "reviewed": true
+    },
+    "hub.ui.5e689e2b01672bf3": {
+      "value": "プラグイン",
+      "reviewed": true
+    },
+    "hub.ui.92cd10e6b8b068a9": {
+      "value": "プラグイン",
+      "reviewed": true
+    },
+    "hub.ui.cde0fb0dec1400c5": {
+      "value": "設定",
+      "reviewed": true
+    },
+    "hub.ui.34a04005bcaf206e": {
+      "value": "対象",
+      "reviewed": true
+    },
+    "hub.ui.4e686af7bdcc5ae0": {
+      "value": "ターミナル",
+      "reviewed": true
+    },
+    "hub.ui.b23a6a8439c0dde5": {
+      "value": "不明",
+      "reviewed": true
+    },
+    "hub.ui.360719440e92c924": {
+      "value": "3日間",
+      "reviewed": true
+    },
+    "hub.ui.92340695899bd2d8": {
+      "value": "アクティブ",
+      "reviewed": true
+    },
+    "hub.ui.a658498e45232aad": {
+      "value": "ターゲットを追加",
+      "reviewed": true
+    },
+    "hub.ui.b64d6717b6fb60da": {
+      "value": "エージェントの目標",
+      "reviewed": true
+    },
+    "hub.ui.1cfb21871a035769": {
+      "value": "エージェント名",
+      "reviewed": true
+    },
+    "hub.ui.947c413740b60175": {
+      "value": "あなたによる許可",
+      "reviewed": true
+    },
+    "hub.ui.0c79a9c222840ed0": {
+      "value": "適用済み",
+      "reviewed": true
+    },
+    "hub.ui.e5203b2e3b16b98c": {
+      "value": "自動解決",
+      "reviewed": true
+    },
+    "hub.ui.a0043bdd1a823a86": {
+      "value": "自動検出（ブラウザ既定）",
+      "reviewed": true
+    },
+    "hub.ui.a0ef17612924548d": {
+      "value": "メッセージ送信時に会話を自動ピン留めします。ピン留め一覧を整理するため、必要に応じてピン留めを解除してください。",
+      "reviewed": true
+    },
+    "hub.ui.d58a6527f624317f": {
+      "value": "利用可能な音声入力言語",
+      "reviewed": true
+    },
+    "hub.ui.5ef24ba91771824c": {
+      "value": "プラグインが確認なしで行える変更。",
+      "reviewed": true
+    },
+    "hub.ui.c6da331eadbee0e2": {
+      "value": "選択済み",
+      "reviewed": true
+    },
+    "hub.ui.0890638dc39b634b": {
+      "value": "クリックで複数選択 · ドラッグまたは ‹/› ピルで並べ替え",
+      "reviewed": true
+    },
+    "hub.ui.5aface4325015b89": {
+      "value": "リモートからクローン",
+      "reviewed": true
+    },
+    "hub.ui.86bcb96c6ffc2039": {
+      "value": "このコンピューターからクローン",
+      "reviewed": true
+    },
+    "hub.ui.aab1d35d32e3be24": {
+      "value": "クラウド会話",
+      "reviewed": true
+    },
+    "hub.ui.439ff656ae62d179": {
+      "value": "クラウド会話",
+      "reviewed": true
+    },
+    "hub.ui.57a58225257d2d68": {
+      "value": "音声入力を選択した言語の優先順位に制限します。空にすると自動検出します。",
+      "reviewed": true
+    },
+    "hub.ui.ae1e7e1fec8d9bc9": {
+      "value": "新しい会話として続行",
+      "reviewed": true
+    },
+    "hub.ui.05db0d5bfdb65f39": {
+      "value": "組み込みブラウザがサイトごとに保存する Cookie です。サイトの Cookie を削除すると、通常はそのサイトからサインアウトされます。その他のサイトデータ（ローカルストレージ、IndexedDB、キャッシュ）は「閲覧データ → クリア」でのみ消去されます。",
+      "reviewed": true
+    },
+    "hub.ui.dc9a3bc19b6af643": {
+      "value": "コーディネーターのオプション",
+      "reviewed": true
+    },
+    "hub.ui.5a614e73e098159b": {
+      "value": "エージェントを作成",
+      "reviewed": true
+    },
+    "hub.ui.44ebb03bb18fa786": {
+      "value": "既定 (Gemini Pro)",
+      "reviewed": true
+    },
+    "hub.ui.61f9adfcec68fb19": {
+      "value": "「既定」はサーバー管理のルーティングとオーケストレーター割り当てを使用します。「カスタム」はオーケストレーションと実行に特定のモデルを固定します。",
+      "reviewed": true
+    },
+    "hub.ui.eb6bb48625737637": {
+      "value": "音声入力言語オプション",
+      "reviewed": true
+    },
+    "hub.ui.85ab04aa89e3b764": {
+      "value": "音声入力言語",
+      "reviewed": true
+    },
+    "hub.ui.ce3b6bfbc8f88d82": {
+      "value": "自分用",
+      "reviewed": true
+    },
+    "hub.ui.256d89e543910e20": {
+      "value": "チーム用",
+      "reviewed": true
+    },
+    "hub.ui.1a9688e35e0fdb51": {
+      "value": "最初のプロンプトから新しい Cog ワークスペースを作成する際に使用する Git-on-Borg リポジトリ（例: chromium/chromium/src や android/platform/superproject）。",
+      "reviewed": true
+    },
+    "hub.ui.94835ea2fcf775cd": {
+      "value": "受信トレイ",
+      "reviewed": true
+    },
+    "hub.ui.4e8302555c909327": {
+      "value": "受信トレイモード",
+      "reviewed": true
+    },
+    "hub.ui.47bab32fd916ab52": {
+      "value": "プラグインに同梱",
+      "reviewed": true
+    },
+    "hub.ui.2106e6308e0b3aa7": {
+      "value": "実行中の会話を受信トレイではなく独立した「作業中」セクションに保持します。",
+      "reviewed": true
+    },
+    "hub.ui.2d51e620ab468d3e": {
+      "value": "ライセンスが必要です",
+      "reviewed": true
+    },
+    "hub.ui.3a496d425b0f4530": {
+      "value": "メッセージを読み込み中…",
+      "reviewed": true
+    },
+    "hub.ui.168a9b854c6a874b": {
+      "value": "新しいメッセージを読み込み中…",
+      "reviewed": true
+    },
+    "hub.ui.5f8d56ee81924cbe": {
+      "value": "ステータス別グループ化中はロック",
+      "reviewed": true
+    },
+    "hub.ui.b21fe2228fc0d717": {
+      "value": "この自動化のアクティブな ID と一致します。",
+      "reviewed": true
+    },
+    "hub.ui.bedc71237cfb741d": {
+      "value": "モデル選択",
+      "reviewed": true
+    },
+    "hub.ui.6ecc3df6bffdd06c": {
+      "value": "移動",
+      "reviewed": true
+    },
+    "hub.ui.96035e9a1eea2076": {
+      "value": "会話を移動",
+      "reviewed": true
+    },
+    "hub.ui.c7e8ea9bfef01143": {
+      "value": "選択した時間の経過後、アイドル状態の受信トレイの会話を自動的に「解決済み」へ移動します。",
+      "reviewed": true
+    },
+    "hub.ui.c76c65bbcf329771": {
+      "value": "名前を使用できません",
+      "reviewed": true
+    },
+    "hub.ui.6300ef800bb88429": {
+      "value": "しない",
+      "reviewed": true
+    },
+    "hub.ui.c548aab130f7e7dd": {
+      "value": "新しいエージェント",
+      "reviewed": true
+    },
+    "hub.ui.98a23e6db3431d16": {
+      "value": "新しいエージェント",
+      "reviewed": true
+    },
+    "hub.ui.4c47f095edec7512": {
+      "value": "エージェントがありません",
+      "reviewed": true
+    },
+    "hub.ui.b3839e7c0b517bcd": {
+      "value": "現在は無効です",
+      "reviewed": true
+    },
+    "hub.ui.415446384c71044d": {
+      "value": "常に許可されている操作はありません。このプラグインが変更を行う前に確認を求めます。",
+      "reviewed": true
+    },
+    "hub.ui.9ef5bb4bd8f2a7f3": {
+      "value": "オーケストレーターモデルの選択",
+      "reviewed": true
+    },
+    "hub.ui.229efc8f526335f1": {
+      "value": "権限",
+      "reviewed": true
+    },
+    "hub.ui.39ff0591d35ae888": {
+      "value": "あなたとして実行される個人エージェント",
+      "reviewed": true
+    },
+    "hub.ui.45b8612da93f60d7": {
+      "value": "プラグイン権限",
+      "reviewed": true
+    },
+    "hub.ui.1c2226d4a5c66ac1": {
+      "value": "プロジェクトが必要です",
+      "reviewed": true
+    },
+    "hub.ui.c2b1b8e2e03928e2": {
+      "value": "プロビジョニング中",
+      "reviewed": true
+    },
+    "hub.ui.6ff92452330e76c8": {
+      "value": "自動にリセット",
+      "reviewed": true
+    },
+    "hub.ui.c8f193b315c86f3a": {
+      "value": "解決",
+      "reviewed": true
+    },
+    "hub.ui.51138020a0e510d3": {
+      "value": "会話を解決",
+      "reviewed": true
+    },
+    "hub.ui.5be3c2c8354e1eb9": {
+      "value": "解決済み",
+      "reviewed": true
+    },
+    "hub.ui.41f1736f8ba771eb": {
+      "value": "受信トレイに戻す",
+      "reviewed": true
+    },
+    "hub.ui.c6847a4b8d9995c4": {
+      "value": "すべて取り消す",
+      "reviewed": true
+    },
+    "hub.ui.a7c4e215d2d3dcfd": {
+      "value": "リポジトリを検索…",
+      "reviewed": true
+    },
+    "hub.ui.82bb9d99f6f685ea": {
+      "value": "名前またはユーザー名で検索",
+      "reviewed": true
+    },
+    "hub.ui.9da7435c6b6ce648": {
+      "value": "ID を検索",
+      "reviewed": true
+    },
+    "hub.ui.8838cea2f697382f": {
+      "value": "追加する言語を検索（例: English、Spanish、中文、yue）...",
+      "reviewed": true
+    },
+    "hub.ui.331c4309f3f889ee": {
+      "value": "選択済みの音声入力言語",
+      "reviewed": true
+    },
+    "hub.ui.85bc0f95858d7572": {
+      "value": "自分",
+      "reviewed": true
+    },
+    "hub.ui.b5fbe59c68b31599": {
+      "value": "セルフウォッチ対象のプリセット",
+      "reviewed": true
+    },
+    "hub.ui.164729bdb1eda4b4": {
+      "value": "チーム用の共有エージェント",
+      "reviewed": true
+    },
+    "hub.ui.fa70650bebc3d864": {
+      "value": "自動化を表示",
+      "reviewed": true
+    },
+    "hub.ui.61ce40fe56f5642a": {
+      "value": "プラグインを表示",
+      "reviewed": true
+    },
+    "hub.ui.2b8cbe0b6084ddeb": {
+      "value": "停止中",
+      "reviewed": true
+    },
+    "hub.ui.383cd6c0b871980d": {
+      "value": "サブタイトル",
+      "reviewed": true
+    },
+    "hub.ui.b4bbc6ce8da87847": {
+      "value": "これらはプラグインに付属しており、取り消すことはできません。",
+      "reviewed": true
+    },
+    "hub.ui.5d65bf1144a6eeb8": {
+      "value": "言語リストを切り替え",
+      "reviewed": true
+    },
+    "hub.ui.55919e2f60c16e21": {
+      "value": "独自の回答を入力",
+      "reviewed": true
+    },
+    "hub.ui.0b5260e1b4054f46": {
+      "value": "更新中",
+      "reviewed": true
+    },
+    "hub.ui.28c52244f908d578": {
+      "value": "このエージェントに何を達成させますか？",
+      "reviewed": true
+    },
+    "hub.ui.0ebb434f3189ef53": {
+      "value": "作業中セクション",
+      "reviewed": true
     }
   }
 }

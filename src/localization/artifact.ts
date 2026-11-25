@@ -206,7 +206,15 @@ function decodeDomIndex(value: unknown, locale: string): DomIndex {
       translation: string(entry.translation, 'index.template.translation'),
     };
   });
-  return { schemaVersion: 1, locale, exact, templates };
+  let dynamic: Record<string, string> | undefined;
+  if (raw.dynamic !== undefined) {
+    const dynamicRaw = object(raw.dynamic, 'index.dynamic');
+    dynamic = Object.create(null) as Record<string, string>;
+    for (const [id, translation] of Object.entries(dynamicRaw)) {
+      dynamic[id] = string(translation, `index.dynamic.${id}`);
+    }
+  }
+  return { schemaVersion: 1, locale, exact, templates, ...(dynamic ? { dynamic } : {}) };
 }
 
 /** Verifies every manifest-owned file before an artifact is selected or delivered. */

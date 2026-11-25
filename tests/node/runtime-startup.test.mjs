@@ -520,3 +520,77 @@ test('a tampered native catalog is refused and helpers keep the original text', 
   assert.equal(nativeText('session.quit', 'Quit'), 'Quit');
   assert.equal(nativeAgentsRunning(2), '2 agents running');
 });
+
+test('refreshHostLocalization rejects invalid or deleted selections without dropping the active binding', (t) => {
+  const root = temporary(t);
+  const first = buildDomArtifact(root, { locale: 'zh-Hant-TW' });
+  const second = buildDomArtifact(root, { locale: 'ja-JP' });
+  const installationId = digest(Buffer.from(path.join(root, 'app.asar')));
+  const { configDir } = installSelection(root, first, { installationId });
+  const runtimeCopy = path.join(configDir, 'host-engine.cjs');
+  fs.copyFileSync('dist/localization/bundle/host-engine.cjs', runtimeCopy);
+  const domEnginePath = path.join(configDir, 'dom-engine.js');
+  const engineBytes = fs.readFileSync('dist/localization/bundle/dom-engine.js');
+  fs.writeFileSync(domEnginePath, engineBytes);
+  const realEngineSha = digest(engineBytes);
+  for (const item of [first, second]) {
+    const mPath = path.join(item.stateRoot, 'artifacts', item.artifactId, 'manifest.json');
+    const m = JSON.parse(fs.readFileSync(mPath, 'utf8'));
+    m.engineSha256 = realEngineSha;
+    fs.writeFileSync(mPath, JSON.stringify(m));
+  }
+  const Module = globalThis.process.getBuiltinModule('node:module');
+  const origLoad = Module._load;
+  Module._load = function (request, parent, isMain) {
+    if (request === 'electron') {
+      return {
+        app: { once() {}, removeListener() {} },
+        ipcMain: { handle() {}, removeHandler() {} },
+      };
+    }
+    return origLoad.call(this, request, parent, isMain);
+  };
+  t.after(() => {
+    Module._load = origLoad;
+  });
+  const req = Module.createRequire(import.meta.url);
+  const hostRuntime = req(runtimeCopy);
+  t.after(() => hostRuntime.closeRuntimePersistence());
+  const initial = hostRuntime.initializeHostRuntime();
+  assert.equal(initial?.locale, 'zh-Hant-TW');
+
+  const selectionPath = path.join(
+    first.stateRoot,
+    'installations',
+    installationId,
+    'selection.json',
+  );
+  fs.rmSync(selectionPath);
+  const afterDelete = hostRuntime.refreshHostLocalization();
+  assert.equal(afterDelete.changed, false);
+  assert.equal(afterDelete.locale, 'zh-Hant-TW');
+  assert.equal(afterDelete.code, 'SELECTION_MISSING');
+
+  fs.writeFileSync(selectionPath, '{ bad json');
+  const afterBroken = hostRuntime.refreshHostLocalization();
+  assert.equal(afterBroken.changed, false);
+  assert.equal(afterBroken.locale, 'zh-Hant-TW');
+  assert.equal(afterBroken.code, 'SELECTION_INVALID');
+
+  fs.writeFileSync(
+    selectionPath,
+    JSON.stringify({
+      schemaVersion: 1,
+      installationId,
+      artifactId: second.artifactId,
+      locale: second.locale,
+      selectedAt: new Date().toISOString(),
+    }),
+  );
+  const afterSwitch = hostRuntime.refreshHostLocalization();
+  assert.deepEqual(afterSwitch, {
+    changed: true,
+    locale: 'ja-JP',
+    artifactId: second.artifactId,
+  });
+});

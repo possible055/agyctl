@@ -16285,6 +16285,3326 @@
     "microphone.web.captureEnded": {
       "value": "麦克风采集意外结束。",
       "reviewed": true
+    },
+    "hub.ui.b81aa3299dae3647": {
+      "value": "项目之外会话的智能体设置与权限。",
+      "reviewed": true
+    },
+    "hub.ui.5016e54430e66d62": {
+      "value": "继承全局",
+      "reviewed": true
+    },
+    "hub.ui.9dd1810322529357": {
+      "value": "管理项目文件夹、智能体设置与权限。",
+      "reviewed": true
+    },
+    "hub.ui.86c5d8967ce412d3": {
+      "value": "要修改编辑器设置，请在编辑器窗口中打开设置。",
+      "reviewed": true
+    },
+    "hub.ui.63b717f7649733fa": {
+      "value": "会话设置",
+      "reviewed": true
+    },
+    "hub.ui.269cc00340008ef5": {
+      "value": "禁用所有浏览器 JavaScript 执行。",
+      "reviewed": true
+    },
+    "hub.ui.fea49cd464cbfd2d": {
+      "value": "手动自定义单项设置。",
+      "reviewed": true
+    },
+    "hub.ui.4b873161f7a23f7e": {
+      "value": "终端命令黑名单",
+      "reviewed": true
+    },
+    "hub.ui.c4d6bb200f4c058a": {
+      "value": "文件夹",
+      "reviewed": true
+    },
+    "hub.ui.a3e1386bbabf13ff": {
+      "value": "功能建议",
+      "reviewed": true
+    },
+    "hub.ui.9a70d0007209f453": {
+      "value": "禁用所有安全屏障以获得最大迭代速度。",
+      "reviewed": true
+    },
+    "hub.ui.c1ab9f877b8d6c16": {
+      "value": "缺陷报告",
+      "reviewed": true
+    },
+    "hub.ui.a4d5a599ce8510a5": {
+      "value": "显示选择操作",
+      "reviewed": true
+    },
+    "hub.ui.53b42090b267e68c": {
+      "value": "完整机器权限",
+      "reviewed": true
+    },
+    "hub.ui.83fdca3fffdc303b": {
+      "value": "所有终端命令均需审查。智能体可以读写机器上的任意文件。",
+      "reviewed": true
+    },
+    "hub.ui.6dad5052383d5030": {
+      "value": "切换开发者工具",
+      "reviewed": true
+    },
+    "hub.ui.4997b635e053fc1d": {
+      "value": "Chrome/Chromium 可执行文件路径；留空则自动检测。",
+      "reviewed": true
+    },
+    "hub.ui.6bf180c1b0f744d4": {
+      "value": "浏览器用户配置路径",
+      "reviewed": true
+    },
+    "hub.ui.92ca9c9d123c42d7": {
+      "value": "下一个面板标签页",
+      "reviewed": true
+    },
+    "hub.ui.95215b435d5a56ca": {
+      "value": "上一个面板标签页",
+      "reviewed": true
+    },
+    "hub.ui.629337dc2b9c9a12": {
+      "value": "在编辑器中选择文本时，显示“编辑”和“聊天”按钮。",
+      "reviewed": true
+    },
+    "hub.ui.3ac14c5b5c7f9b8c": {
+      "value": "身份验证与计费",
+      "reviewed": true
+    },
+    "hub.ui.9003e1b7e7c2912b": {
+      "value": "永久删除",
+      "reviewed": true
+    },
+    "hub.ui.a13b6ae655c929ed": {
+      "value": "思维过程",
+      "reviewed": true
+    },
+    "hub.ui.f1da1790c30522ed": {
+      "value": "打开编辑器设置",
+      "reviewed": true
+    },
+    "hub.ui.dcdcde120ec79563": {
+      "value": "需要对工作文件夹外的所有终端命令和文件访问进行人工审查。",
+      "reviewed": true
+    },
+    "hub.ui.1d2f1b7b7cea4125": {
+      "value": "远程控制问题",
+      "reviewed": true
+    },
+    "hub.ui.23a06914f4610215": {
+      "value": "常规反馈",
+      "reviewed": true
+    },
+    "settings.appearance.defaultLight": {
+      "value": "默认浅色",
+      "reviewed": true
+    },
+    "hub.ui.a234d1aa1451b651": {
+      "value": "可在对话框中输入 /browser 来调用浏览器子代理。",
+      "reviewed": true
+    },
+    "hub.ui.c1af8370c5f68986": {
+      "value": "搜索任务…",
+      "reviewed": true
+    },
+    "hub.ui.6123645767d50771": {
+      "value": "市场展示厅 URL",
+      "reviewed": true
+    },
+    "hub.ui.b94ab56aaca86273": {
+      "value": "Chrome 程序路径",
+      "reviewed": true
+    },
+    "hub.ui.7fb90de3a33cab49": {
+      "value": "在运行浏览器脚本前请求批准。",
+      "reviewed": true
+    },
+    "hub.ui.b8c209cdead61a09": {
+      "value": "询问",
+      "reviewed": true
+    },
+    "hub.ui.079d1d54f3c6269b": {
+      "value": "严格模式",
+      "reviewed": true
+    },
+    "hub.ui.68324d2dc5b5ceff": {
+      "value": "允许执行完整浏览器脚本且不提示。",
+      "reviewed": true
+    },
+    "hub.ui.cea1a4d5477bdc50": {
+      "value": "浏览器 CDP 端口",
+      "reviewed": true
+    },
+    "hub.ui.728cb3db7cc78a96": {
+      "value": "切换辅助面板",
+      "reviewed": true
+    },
+    "hub.ui.54421810157a0868": {
+      "value": "Chrome DevTools Protocol 远程调试端口号；留空则使用默认值（9222）。",
+      "reviewed": true
+    },
+    "hub.ui.7923d4b84c2a1cc8": {
+      "value": "编辑器设置",
+      "reviewed": true
+    },
+    "hub.ui.dcb3e1c00e79236d": {
+      "value": "知识库",
+      "reviewed": true
+    },
+    "hub.ui.275326389234f6ab": {
+      "value": "极速模式",
+      "reviewed": true
+    },
+    "hub.ui.25286f1757c4993e": {
+      "value": "市场项目 URL",
+      "reviewed": true
+    },
+    "hub.ui.6733cfdb6d49dd93": {
+      "value": "需要审查",
+      "reviewed": true
+    },
+    "hub.ui.6c582b62e0e5aa05": {
+      "value": "快速",
+      "reviewed": true
+    },
+    "hub.ui.6ec427879b4bf05a": {
+      "value": "终端命令白名单",
+      "reviewed": true
+    },
+    "hub.ui.e1a74102e0b60d9a": {
+      "value": "自定义浏览器用户配置目录路径；留空则使用默认路径（~/.gemini/antigravity-browser-profile）。",
+      "reviewed": true
+    },
+    "hub.ui.dbcd5e7bb7a0f538": {
+      "value": "浅色",
+      "reviewed": true
+    },
+    "hub.ui.60acc53f13a5d1bf": {
+      "value": "深色",
+      "reviewed": true
+    },
+    "hub.ui.6725e7bbcd28f3a8": {
+      "value": "系统",
+      "reviewed": true
+    },
+    "hub.ui.f7ca95a868431b32": {
+      "value": "与 GitHub 交互的指南，以及当命令因智能体环境限制失败时向用户申请权限。",
+      "reviewed": true
+    },
+    "hub.ui.1ac1468563107940": {
+      "value": "搜索或输入网址",
+      "reviewed": true
+    },
+    "hub.ui.3c71e0e8a88fc860": {
+      "value": "已运行命令",
+      "reviewed": true
+    },
+    "hub.ui.31d7dceb897d35cd": {
+      "value": "专为常见工作流和角色精选的插件套装。",
+      "reviewed": true
+    },
+    "hub.ui.b0f8a3973cf69f50": {
+      "value": "规则 token 预算已超出，大型规则已降级为路径指针。",
+      "reviewed": true
+    },
+    "hub.ui.515bf8644de9ceb0": {
+      "value": "你的“本机”设置",
+      "reviewed": true
+    },
+    "hub.ui.ea61bc15688d1e48": {
+      "value": "已复制！",
+      "reviewed": true
+    },
+    "hub.ui.55d23266c29b948f": {
+      "value": "未选择模型",
+      "reviewed": true
+    },
+    "hub.ui.3ea9f6a0c2f684b2": {
+      "value": "随意提问，@ 提及，/ 执行操作",
+      "reviewed": true
+    },
+    "hub.ui.1c8ac867f052ea4a": {
+      "value": "访问",
+      "reviewed": true
+    },
+    "hub.ui.d6b8b1dd14bb372d": {
+      "value": "智能体语音播报的音量大小。",
+      "reviewed": true
+    },
+    "hub.ui.0c153843dfe32656": {
+      "value": "当前对话的遥测已关闭。",
+      "reviewed": true
+    },
+    "hub.ui.bca82adc9f9b3bc7": {
+      "value": "已分析",
+      "reviewed": true
+    },
+    "hub.ui.bc1ebaff8e758e06": {
+      "value": "调用后（Post Invocation）",
+      "reviewed": true
+    },
+    "hub.ui.033efc9dfbbace40": {
+      "value": "更改…",
+      "reviewed": true
+    },
+    "hub.ui.b9e07681e1f99f81": {
+      "value": "暂未添加任何资源。",
+      "reviewed": true
+    },
+    "hub.ui.558be6c04c73108a": {
+      "value": "复制登录链接",
+      "reviewed": true
+    },
+    "hub.ui.e4e0bdae470984c7": {
+      "value": "工作树是一项 Git 功能，此文件夹将按原样共享。",
+      "reviewed": true
+    },
+    "hub.ui.fb7e81225d4f45ed": {
+      "value": "搜索历史工作树…",
+      "reviewed": true
+    },
+    "hub.ui.348daf908778b4ce": {
+      "value": "浏览插件市场",
+      "reviewed": true
+    },
+    "hub.ui.a2a9753211e5c0db": {
+      "value": "管理项目文件夹和设置。",
+      "reviewed": true
+    },
+    "hub.ui.060603f5304eac8b": {
+      "value": "工具调用后（Post Tool Use）",
+      "reviewed": true
+    },
+    "hub.ui.c4191aa89479b4e5": {
+      "value": "基于 Google 开发者平台构建，包含 Android、Chrome、Gemini 和 Google Cloud。",
+      "reviewed": true
+    },
+    "hub.ui.dd10e856b9b9a033": {
+      "value": "行内操作",
+      "reviewed": true
+    },
+    "hub.ui.463816d07097e1a7": {
+      "value": "正在读取",
+      "reviewed": true
+    },
+    "hub.ui.43d2d4466a96a5c0": {
+      "value": "收起明细",
+      "reviewed": true
+    },
+    "hub.ui.ef97432a7589a59c": {
+      "value": "配置 Tab 补全、代码建议和导航行为。",
+      "reviewed": true
+    },
+    "hub.ui.cc849385646ba0d6": {
+      "value": "在访达中显示",
+      "reviewed": true
+    },
+    "hub.ui.e23f3cc44a50a5e3": {
+      "value": "置顶操作",
+      "reviewed": true
+    },
+    "hub.ui.76f68a75f01ed76f": {
+      "value": "商业与运营",
+      "reviewed": true
+    },
+    "hub.ui.d97cf74f8deeb850": {
+      "value": "规划工作、跟踪问题、签署文档并管理笔记和文件。",
+      "reviewed": true
+    },
+    "hub.ui.47a8a543f5081899": {
+      "value": "排序工作区",
+      "reviewed": true
+    },
+    "hub.ui.7616b5ee647397d4": {
+      "value": "你在此模型上的配额即将耗尽。",
+      "reviewed": true
+    },
+    "hub.ui.0c2504c9358e60f9": {
+      "value": "其他自定义项",
+      "reviewed": true
+    },
+    "hub.ui.980b4edd7eeb1b2e": {
+      "value": "配置链接打开方式和内置浏览器偏好设置。",
+      "reviewed": true
+    },
+    "hub.ui.386fffa765c6794a": {
+      "value": "强制启用防止智能体自主运行针对性利用的设置，并要求对所有智能体操作进行人工审查。详情请访问 antigravity.google/docs/strict-mode。",
+      "reviewed": true
+    },
+    "hub.ui.85c1562cd9ce8d74": {
+      "value": "开发者工具",
+      "reviewed": true
+    },
+    "hub.ui.36655f7c71e4013d": {
+      "value": "正在检查本地克隆",
+      "reviewed": true
+    },
+    "hub.ui.96392f91a0b70a07": {
+      "value": "已复制版本详情",
+      "reviewed": true
+    },
+    "hub.ui.d37078fe6a1faa15": {
+      "value": "已复制到剪贴板",
+      "reviewed": true
+    },
+    "hub.ui.ef1382fd87c0a51c": {
+      "value": "录制语音备忘录",
+      "reviewed": true
+    },
+    "hub.ui.cf924a0ffe4b617d": {
+      "value": "表格选项",
+      "reviewed": true
+    },
+    "hub.ui.84fd2c260db5c3a4": {
+      "value": "自动化凭据已过期",
+      "reviewed": true
+    },
+    "hub.ui.58c3de40566b874e": {
+      "value": "你的“远程”设置",
+      "reviewed": true
+    },
+    "hub.ui.f85d082224b7a307": {
+      "value": "旁支问题已回答。",
+      "reviewed": true
+    },
+    "hub.ui.2afb17673ff90662": {
+      "value": "正在运行命令",
+      "reviewed": true
+    },
+    "hub.ui.7f9d4ae9238f4593": {
+      "value": "可在侧边栏的“显示选项”菜单中查看已归档项目。",
+      "reviewed": true
+    },
+    "hub.ui.f8fe0f2b0d52aaf4": {
+      "value": "在沙箱中继续",
+      "reviewed": true
+    },
+    "hub.ui.97bd37991bf15a1e": {
+      "value": "未在本地克隆",
+      "reviewed": true
+    },
+    "hub.ui.00a9bf84a0a13922": {
+      "value": "自动化已保存",
+      "reviewed": true
+    },
+    "hub.ui.93483c938871b25a": {
+      "value": "每周限额",
+      "reviewed": true
+    },
+    "hub.ui.49a0053f3b0d5045": {
+      "value": "复制代码",
+      "reviewed": true
+    },
+    "hub.ui.408801cff5d42adb": {
+      "value": "侧边栏",
+      "reviewed": true
+    },
+    "hub.ui.f19611c61ca5f369": {
+      "value": "完全访问权限",
+      "reviewed": true
+    },
+    "hub.ui.af7a94b91a7493fa": {
+      "value": "等待你的批准",
+      "reviewed": true
+    },
+    "hub.ui.207207acea5b0f4d": {
+      "value": "排序项目",
+      "reviewed": true
+    },
+    "hub.ui.53e63ed06152028c": {
+      "value": "切换全屏",
+      "reviewed": true
+    },
+    "hub.ui.4cc78da18efee791": {
+      "value": "调用前（Pre Invocation）",
+      "reviewed": true
+    },
+    "hub.ui.2e1a4c07ce94cb0c": {
+      "value": "严格",
+      "reviewed": true
+    },
+    "hub.ui.582971124d69444b": {
+      "value": "搜索历史工作区…",
+      "reviewed": true
+    },
+    "hub.ui.9705d4a8953c30ec": {
+      "value": "暂无置顶对话",
+      "reviewed": true
+    },
+    "hub.ui.09c6f7bf8cdf5ee5": {
+      "value": "Project 4K",
+      "reviewed": true
+    },
+    "hub.ui.f395ae5e32b4cc24": {
+      "value": "在编辑器中打开",
+      "reviewed": true
+    },
+    "hub.ui.2cd57109145ab1cb": {
+      "value": "详细",
+      "reviewed": true
+    },
+    "hub.ui.8e25832407ee8bec": {
+      "value": "工作区设置",
+      "reviewed": true
+    },
+    "hub.ui.4e35d30cb97d27b7": {
+      "value": "仅回滚对话内容，此文件夹中的文件保持当前状态。",
+      "reviewed": true
+    },
+    "hub.ui.280d70385991efbf": {
+      "value": "提交评论",
+      "reviewed": true
+    },
+    "hub.ui.02d543906827f91b": {
+      "value": "自定义设置 token 预算已超出，大型自定义项已从上下文中排除。",
+      "reviewed": true
+    },
+    "hub.ui.cfcf8cc115650a14": {
+      "value": "没有更早的消息了",
+      "reviewed": true
+    },
+    "hub.ui.7636275303de3a4a": {
+      "value": "此项目不支持工作树",
+      "reviewed": true
+    },
+    "hub.ui.106c3af60039fb12": {
+      "value": "自主模式",
+      "reviewed": true
+    },
+    "hub.ui.5ca9b7ef41d27b22": {
+      "value": "工作树分支",
+      "reviewed": true
+    },
+    "hub.ui.994554867c4456e5": {
+      "value": "标记为已读",
+      "reviewed": true
+    },
+    "hub.ui.41d70bb0060eec16": {
+      "value": "滚动到底部",
+      "reviewed": true
+    },
+    "hub.ui.ccd136641c56c741": {
+      "value": "云端托管与部署",
+      "reviewed": true
+    },
+    "hub.ui.b749e205302cc219": {
+      "value": "复制到剪贴板",
+      "reviewed": true
+    },
+    "hub.ui.d70b9e24bca26b40": {
+      "value": "已创建",
+      "reviewed": true
+    },
+    "hub.ui.2454b121ba74a55c": {
+      "value": "选择分支",
+      "reviewed": true
+    },
+    "hub.ui.2e9b4b7b2f1a986b": {
+      "value": "收起明细",
+      "reviewed": true
+    },
+    "hub.ui.03b44986f928aece": {
+      "value": "未知环境",
+      "reviewed": true
+    },
+    "hub.ui.e568522d25967dcd": {
+      "value": "Git 仓库可使用工作树",
+      "reviewed": true
+    },
+    "hub.ui.7cff9649e26cce59": {
+      "value": "智能体始终会请求审查。",
+      "reviewed": true
+    },
+    "hub.ui.b090562f538c288d": {
+      "value": "删除插件",
+      "reviewed": true
+    },
+    "hub.ui.f565318d124534cf": {
+      "value": "取消归档",
+      "reviewed": true
+    },
+    "hub.ui.65659145569b894b": {
+      "value": "注意",
+      "reviewed": true
+    },
+    "hub.ui.417c4041593abe91": {
+      "value": "5 小时限额",
+      "reviewed": true
+    },
+    "hub.ui.a1e3ce6dfde9d3dc": {
+      "value": "你的 AI 积分余额不足，无法继续。",
+      "reviewed": true
+    },
+    "hub.ui.7dc3eb8bf3386f32": {
+      "value": "配置分支",
+      "reviewed": true
+    },
+    "hub.ui.b6a7c95e785f14dd": {
+      "value": "已运行",
+      "reviewed": true
+    },
+    "hub.ui.b64ac05f17e64d03": {
+      "value": "实时",
+      "reviewed": true
+    },
+    "hub.ui.ee3c716130546a45": {
+      "value": "取消置顶",
+      "reviewed": true
+    },
+    "hub.ui.e6f7e0a0c966f815": {
+      "value": "取消 (Ctrl+D)",
+      "reviewed": true
+    },
+    "hub.ui.cc1878584858a31e": {
+      "value": "上下文菜单",
+      "reviewed": true
+    },
+    "hub.ui.827c420d6a254e1d": {
+      "value": "尚未添加文件夹。",
+      "reviewed": true
+    },
+    "hub.ui.0061577bc222d862": {
+      "value": "隐藏工具",
+      "reviewed": true
+    },
+    "hub.ui.2f5e378b09e33110": {
+      "value": "在输入框下方的模式下拉菜单中添加“自主模式”开关。开启后发送的轮次将以非交互方式运行：智能体不会提问或请求新权限。",
+      "reviewed": true
+    },
+    "hub.ui.74bed7b49a5d8b99": {
+      "value": "选择一个文件夹",
+      "reviewed": true
+    },
+    "hub.ui.7c785df990653861": {
+      "value": "在此项目中工作时继承你的全局权限。",
+      "reviewed": true
+    },
+    "hub.ui.39c32394761c042b": {
+      "value": "正在探索",
+      "reviewed": true
+    },
+    "hub.ui.906a7a8ae8264f28": {
+      "value": "最大化宽度",
+      "reviewed": true
+    },
+    "hub.ui.c840ba4da80e9014": {
+      "value": "侧边栏预览",
+      "reviewed": true
+    },
+    "hub.ui.5e656a1621785289": {
+      "value": "设计、创意和媒体工具。",
+      "reviewed": true
+    },
+    "hub.ui.0098030c2a671521": {
+      "value": "工具调用前（Pre Tool Use）",
+      "reviewed": true
+    },
+    "hub.ui.3bc27f3aa8aed4f0": {
+      "value": "搜索标签页、文件等",
+      "reviewed": true
+    },
+    "hub.ui.ea5ba511ca19b3d2": {
+      "value": "连接到 WSL",
+      "reviewed": true
+    },
+    "hub.ui.87568475f506dde7": {
+      "value": "已继续执行",
+      "reviewed": true
+    },
+    "hub.ui.298ff31c3b73af59": {
+      "value": "切换最大化辅助面板",
+      "reviewed": true
+    },
+    "hub.ui.e12154eb4ca97411": {
+      "value": "Google Workspace",
+      "reviewed": true
+    },
+    "hub.ui.211684e1513468b5": {
+      "value": "详细智能体对话输出",
+      "reviewed": true
+    },
+    "hub.ui.adfb42a3c90b287c": {
+      "value": "已探索",
+      "reviewed": true
+    },
+    "hub.ui.6f6817d96e83edf2": {
+      "value": "文件查看器",
+      "reviewed": true
+    },
+    "hub.ui.0692c6b24634b2ce": {
+      "value": "已在设置中关闭遥测",
+      "reviewed": true
+    },
+    "hub.ui.13fb26ccfd97853a": {
+      "value": "无标题对话",
+      "reviewed": true
+    },
+    "hub.ui.fab4539d26e078ca": {
+      "value": "正在编辑",
+      "reviewed": true
+    },
+    "hub.ui.86fc6393188e136d": {
+      "value": "远程权限",
+      "reviewed": true
+    },
+    "hub.ui.74273989b0966e23": {
+      "value": "重做",
+      "reviewed": true
+    },
+    "hub.ui.a4948f756e38153b": {
+      "value": "自动化凭据即将过期",
+      "reviewed": true
+    },
+    "hub.ui.701986f254d7ef57": {
+      "value": "复制错误信息",
+      "reviewed": true
+    },
+    "hub.ui.8829b3ac6b144654": {
+      "value": "修改文件和终端工具的权限。",
+      "reviewed": true
+    },
+    "hub.ui.d276044dad968742": {
+      "value": "在文件管理器中显示",
+      "reviewed": true
+    },
+    "hub.ui.ec0788b50818dd5d": {
+      "value": "所有对话的遥测均已关闭。",
+      "reviewed": true
+    },
+    "hub.ui.bb28e6a970682e29": {
+      "value": "设计、创意与媒体",
+      "reviewed": true
+    },
+    "hub.ui.f34df942bf09868f": {
+      "value": "正在刷新凭据…",
+      "reviewed": true
+    },
+    "hub.ui.55f92dca00f59521": {
+      "value": "部署并托管你的应用、网站及其后端服务。",
+      "reviewed": true
+    },
+    "hub.ui.08661dab88fd1708": {
+      "value": "用于构建、测试、保护和运行应用的 API、服务和工具。",
+      "reviewed": true
+    },
+    "hub.ui.4348f529fdcbcaa2": {
+      "value": "复制版本详情",
+      "reviewed": true
+    },
+    "hub.ui.7117f0807129493f": {
+      "value": "已编辑",
+      "reviewed": true
+    },
+    "hub.ui.f81280bf42a80c31": {
+      "value": "生产力与项目管理",
+      "reviewed": true
+    },
+    "hub.ui.7bc9dc25dd46db5d": {
+      "value": "规则与自定义 token 预算已超出，大型规则已降级为路径指针，大型自定义项已从上下文中排除。",
+      "reviewed": true
+    },
+    "hub.ui.e9ade4d71613789a": {
+      "value": "开启语音模式",
+      "reviewed": true
+    },
+    "hub.ui.cafd4f1ace3f2d94": {
+      "value": "智能体说话时使用的语音。",
+      "reviewed": true
+    },
+    "hub.ui.8cb1eb7714ff54de": {
+      "value": "初始化脚本",
+      "reviewed": true
+    },
+    "hub.ui.80028baf013c0dc2": {
+      "value": "验证超时。",
+      "reviewed": true
+    },
+    "hub.ui.0cef8306c956e80f": {
+      "value": "+ 添加文件夹",
+      "reviewed": true
+    },
+    "hub.ui.22a970d2e5b1cc23": {
+      "value": "已完成",
+      "reviewed": true
+    },
+    "hub.ui.c7c13c5a73428638": {
+      "value": "显示并保留中间思考步骤。",
+      "reviewed": true
+    },
+    "hub.ui.2e4112bc7e968734": {
+      "value": "工作区文件资源管理器",
+      "reviewed": true
+    },
+    "hub.ui.125c7a44e8f5808c": {
+      "value": "无法还原到为节省空间而清除的消息",
+      "reviewed": true
+    },
+    "hub.ui.13ca2ee2499310d9": {
+      "value": "已取消",
+      "reviewed": true
+    },
+    "hub.ui.bab37d62472990c0": {
+      "value": "查看更多",
+      "reviewed": true
+    },
+    "hub.ui.94ea9b1d33a02975": {
+      "value": "收起",
+      "reviewed": true
+    },
+    "hub.ui.a92f0449a9f7235b": {
+      "value": "工作中",
+      "reviewed": true
+    },
+    "hub.ui.c4939c3f7df96847": {
+      "value": "所有文件",
+      "reviewed": true
+    },
+    "hub.ui.8c17ab4415e05f3e": {
+      "value": "无法撤回在智能体运行期间发送的消息",
+      "reviewed": true
+    },
+    "hub.ui.440af5f903368e9d": {
+      "value": "支付、CRM、会计、数据、身份认证、客户支持、营销和工作流自动化。",
+      "reviewed": true
+    },
+    "hub.ui.f17671d83db0da48": {
+      "value": "加载较旧消息",
+      "reviewed": true
+    },
+    "hub.ui.ac628ed29ae79f0d": {
+      "value": "主智能体",
+      "reviewed": true
+    },
+    "hub.ui.5ec6578c52984f37": {
+      "value": "允许的域名",
+      "reviewed": true
+    },
+    "hub.ui.1aaa0800292194e0": {
+      "value": "多模型优选（Best of N）",
+      "reviewed": true
+    },
+    "hub.ui.58e663dc8898e9f4": {
+      "value": "取消置顶对话",
+      "reviewed": true
+    },
+    "hub.ui.965673916b978246": {
+      "value": "无法撤回此消息",
+      "reviewed": true
+    },
+    "hub.ui.db82efcc4eb76eda": {
+      "value": "已降级",
+      "reviewed": true
+    },
+    "hub.ui.1e1270a58101c25e": {
+      "value": "打断智能体并立即发送",
+      "reviewed": true
+    },
+    "hub.ui.003517e17cf1b6fe": {
+      "value": "已由组织策略禁用",
+      "reviewed": true
+    },
+    "hub.ui.5c5d7f06c38c7f55": {
+      "value": "已通过企业网关认证",
+      "reviewed": true
+    },
+    "hub.ui.9b84a51f099a2d80": {
+      "value": "在这些对话中工作时继承你的全局权限。",
+      "reviewed": true
+    },
+    "hub.ui.acbdf18882d79a9f": {
+      "value": "此项目会覆盖你的全局权限设置。",
+      "reviewed": true
+    },
+    "hub.ui.2ee4eba29d32dd4c": {
+      "value": "配置编辑器专属行为与快捷键。",
+      "reviewed": true
+    },
+    "hub.ui.1e4ce9cd955f07b1": {
+      "value": "每日限额",
+      "reviewed": true
+    },
+    "hub.ui.aeffb9182e3d7f3d": {
+      "value": "已触发",
+      "reviewed": true
+    },
+    "hub.ui.d70604e843046137": {
+      "value": "推荐",
+      "reviewed": true
+    },
+    "hub.ui.c23ef99fa27a249d": {
+      "value": "最小化宽度",
+      "reviewed": true
+    },
+    "hub.ui.b2e91e9ba07e98bc": {
+      "value": "连接到 Google Workspace，包括 Docs、Sheets、Slides、Drive 和 Calendar。",
+      "reviewed": true
+    },
+    "hub.ui.51add8fabbd9c568": {
+      "value": "回退到此节点",
+      "reviewed": true
+    },
+    "hub.ui.37511d821be14cdd": {
+      "value": "排队等待当前轮次结束后发送",
+      "reviewed": true
+    },
+    "hub.ui.bdaeec33ca6d1e39": {
+      "value": "你的方案",
+      "reviewed": true
+    },
+    "hub.ui.602cc4da981d5dad": {
+      "value": "删除智能体",
+      "reviewed": true
+    },
+    "hub.ui.04342fbd5d112bac": {
+      "value": "最大化面板",
+      "reviewed": true
+    },
+    "hub.ui.bed2cb4c0a5d3481": {
+      "value": "远程控制链接",
+      "reviewed": true
+    },
+    "hub.ui.e4eef78c75e37d58": {
+      "value": "描述你遇到的缺陷…",
+      "reviewed": true
+    },
+    "hub.ui.d9f05495672f9049": {
+      "value": "终止任务失败",
+      "reviewed": true
+    },
+    "hub.ui.fcfae2d191747fa0": {
+      "value": "当前文件超过 64 KB，正在显示上一版有效的 view.json。",
+      "reviewed": true
+    },
+    "hub.ui.9fc7f11668697dc6": {
+      "value": "已搜索",
+      "reviewed": true
+    },
+    "hub.ui.6dcafdb1cd3e8ed9": {
+      "value": "重试解说员页面",
+      "reviewed": true
+    },
+    "hub.ui.cfed3e4fe486006b": {
+      "value": "正在检查可用性…",
+      "reviewed": true
+    },
+    "hub.ui.1b8bfb0ebb5a0e65": {
+      "value": "无法加载 Cookie。",
+      "reviewed": true
+    },
+    "hub.ui.3a798489a35c1a5b": {
+      "value": "中断智能体",
+      "reviewed": true
+    },
+    "hub.ui.8e321eeec3364748": {
+      "value": "此对话将启用遥测；点击可停用。",
+      "reviewed": true
+    },
+    "hub.ui.4820fb31c3757a49": {
+      "value": "分支，当前：选择分支",
+      "reviewed": true
+    },
+    "hub.ui.7f39bc1169c62474": {
+      "value": "正在等待协作群",
+      "reviewed": true
+    },
+    "hub.ui.1da2219d1620c74a": {
+      "value": "对战模式期间无法升级，请先结束对战",
+      "reviewed": true
+    },
+    "hub.ui.e6db5f3cc2f975b9": {
+      "value": "配置内置浏览器、链接打开方式和浏览器子代理偏好设置",
+      "reviewed": true
+    },
+    "hub.ui.e6b5af21d69528a6": {
+      "value": "Cookie 和其他网站数据",
+      "reviewed": true
+    },
+    "hub.ui.0c07dbf15254ae90": {
+      "value": "已探索文件和产物",
+      "reviewed": true
+    },
+    "hub.ui.a0a266427c81e32c": {
+      "value": "迄今最先进的模型。",
+      "reviewed": true
+    },
+    "hub.ui.3291f7627e7279f9": {
+      "value": "匀速播放",
+      "reviewed": true
+    },
+    "hub.ui.711930ab05487872": {
+      "value": "暂停回放",
+      "reviewed": true
+    },
+    "hub.ui.9954909af1d5f27b": {
+      "value": "对话工作区",
+      "reviewed": true
+    },
+    "hub.ui.6312b4b9baf12770": {
+      "value": "云端硬盘",
+      "reviewed": true
+    },
+    "hub.ui.05b1481f666050d1": {
+      "value": "内置浏览器下载文件的保存文件夹",
+      "reviewed": true
+    },
+    "hub.ui.ec4900b2df233ab5": {
+      "value": "等待首次更新",
+      "reviewed": true
+    },
+    "hub.ui.d6dae66b2a4bb3a0": {
+      "value": "此环境不支持终端沙盒",
+      "reviewed": true
+    },
+    "hub.ui.4bcab793306aca46": {
+      "value": "上一个工作区",
+      "reviewed": true
+    },
+    "hub.ui.db5d332e8da1c25d": {
+      "value": "在手机或任意浏览器中继续此远程对话。扫描二维码或打开下方链接。",
+      "reviewed": true
+    },
+    "hub.ui.7f98b07841ce7b81": {
+      "value": "很高兴见到你，接下来做什么？",
+      "reviewed": true
+    },
+    "hub.ui.4a4703d804b0df4b": {
+      "value": "终止任务",
+      "reviewed": true
+    },
+    "hub.ui.eda81d2d8b458754": {
+      "value": "Antigravity（AGY）风格",
+      "reviewed": true
+    },
+    "hub.ui.073ffa9558f46084": {
+      "value": "麦克风问题",
+      "reviewed": true
+    },
+    "hub.ui.b3d390ffe923a8bb": {
+      "value": "比较前后变化",
+      "reviewed": true
+    },
+    "hub.ui.c05668bd926aafbf": {
+      "value": "向左分屏",
+      "reviewed": true
+    },
+    "hub.ui.56c92521cdc682e1": {
+      "value": "显示或隐藏各成员的帖子",
+      "reviewed": true
+    },
+    "hub.ui.dd66507d03f47a4e": {
+      "value": "已从看板隐藏；点击即可显示",
+      "reviewed": true
+    },
+    "hub.ui.6f675373d52bed1e": {
+      "value": "单一目标",
+      "reviewed": true
+    },
+    "hub.ui.edbc30549728d91e": {
+      "value": "配置智能体在本地和远程对话中可执行的操作",
+      "reviewed": true
+    },
+    "hub.ui.d9291fcc9b28b0f8": {
+      "value": "已保存初始化例程",
+      "reviewed": true
+    },
+    "hub.ui.6a1da8454fa179f5": {
+      "value": "不含开发者工具的 Project 4K 界面",
+      "reviewed": true
+    },
+    "hub.ui.4d87504d72bd3b43": {
+      "value": "授权码被拒绝，请粘贴新的授权码后重试。",
+      "reviewed": true
+    },
+    "hub.ui.250e25c05efc495b": {
+      "value": "智能体工作中",
+      "reviewed": true
+    },
+    "hub.ui.b3eb37acb66ba4bb": {
+      "value": "退出",
+      "reviewed": true
+    },
+    "hub.ui.a591fc35d74e39e8": {
+      "value": "按键盘 Enter 键发送消息，而不是换行",
+      "reviewed": true
+    },
+    "hub.ui.d3051b2c6314ac54": {
+      "value": "添加前先查看组合包",
+      "reviewed": true
+    },
+    "hub.ui.038805d33ddaaa5d": {
+      "value": "解说员的 view.json 超过 64 KB，因此未显示。",
+      "reviewed": true
+    },
+    "hub.ui.e572d4e5551a4c41": {
+      "value": "拖动浏览看板帖子",
+      "reviewed": true
+    },
+    "hub.ui.cf959c2dbbf16bfa": {
+      "value": "命令面板…",
+      "reviewed": true
+    },
+    "hub.ui.caed3072fd76a4b6": {
+      "value": "限时",
+      "reviewed": true
+    },
+    "hub.ui.556ec949035d8d21": {
+      "value": "在图表中隐藏已终止和未活跃成员",
+      "reviewed": true
+    },
+    "hub.ui.7a1896edb46dc9f6": {
+      "value": "工作区设置",
+      "reviewed": true
+    },
+    "hub.ui.e0839b7377716d94": {
+      "value": "通过 @all",
+      "reviewed": true
+    },
+    "hub.ui.eb6906c0c0694f63": {
+      "value": "智能体说",
+      "reviewed": true
+    },
+    "hub.ui.f05fefe200f27914": {
+      "value": "等待输出…",
+      "reviewed": true
+    },
+    "hub.ui.e7409e100d5cf6dd": {
+      "value": "负责执行计划：搜索、编辑、构建和测试。建议选择更快、更经济的模型。",
+      "reviewed": true
+    },
+    "hub.ui.a15deca13ddc0290": {
+      "value": "针对屏幕阅读器优化界面和终端输出",
+      "reviewed": true
+    },
+    "hub.ui.a7d8725f044617b5": {
+      "value": "语音模式使用的声音，由 Gemini Live 提供支持",
+      "reviewed": true
+    },
+    "hub.ui.e1262e1ea1207316": {
+      "value": "在 WSL 中重新打开文件夹",
+      "reviewed": true
+    },
+    "hub.ui.daa85534fa9b1400": {
+      "value": "编排器模型",
+      "reviewed": true
+    },
+    "hub.ui.64278e81eb37aa53": {
+      "value": "上一条帖子（←）",
+      "reviewed": true
+    },
+    "hub.ui.8d977231d6a77cb2": {
+      "value": "停止此智能体",
+      "reviewed": true
+    },
+    "hub.ui.afb118fcb16c3727": {
+      "value": "正在重新连接",
+      "reviewed": true
+    },
+    "hub.ui.e5342b07fb755d3d": {
+      "value": "所有频道的帖子",
+      "reviewed": true
+    },
+    "hub.ui.4b135377375c438f": {
+      "value": "“默认”和“自动”模式需要终端沙盒，但此主机不可用。",
+      "reviewed": true
+    },
+    "hub.ui.97aec9f94bee6814": {
+      "value": "正在加载子智能体记录…",
+      "reviewed": true
+    },
+    "hub.ui.cb7daa53627cb62f": {
+      "value": "每条命令都需要批准",
+      "reviewed": true
+    },
+    "hub.ui.07189207790a7aa3": {
+      "value": "显示已终止项",
+      "reviewed": true
+    },
+    "hub.ui.2623454e20f8f6a3": {
+      "value": "已清除内置浏览器数据",
+      "reviewed": true
+    },
+    "hub.ui.1d36da8581e01919": {
+      "value": "完全访问",
+      "reviewed": true
+    },
+    "hub.ui.a3894d9516e2500f": {
+      "value": "播放回放",
+      "reviewed": true
+    },
+    "hub.ui.fd8a2d6ab7495e08": {
+      "value": "Antigravity 语音的音量大小",
+      "reviewed": true
+    },
+    "hub.ui.4a8123475e0fea9f": {
+      "value": "丢弃评论草稿",
+      "reviewed": true
+    },
+    "hub.ui.34963f22f31f3e6b": {
+      "value": "“默认”模式需要终端沙盒，但此主机不可用。",
+      "reviewed": true
+    },
+    "hub.ui.012a283b46ca4f34": {
+      "value": "团队成员",
+      "reviewed": true
+    },
+    "hub.ui.cdc517667d9ab31a": {
+      "value": "各自领取一项任务并并行运行。",
+      "reviewed": true
+    },
+    "hub.ui.d434e617211f4c89": {
+      "value": "输入框",
+      "reviewed": true
+    },
+    "hub.ui.086e97efcffff894": {
+      "value": "发布且未提及对象",
+      "reviewed": true
+    },
+    "hub.ui.1edf0870cbf8fd40": {
+      "value": "自动决定是否运行命令",
+      "reviewed": true
+    },
+    "hub.ui.36233f1f1232ab55": {
+      "value": "main：整个协作群均可读取",
+      "reviewed": true
+    },
+    "hub.ui.db114adc75c87150": {
+      "value": "无分支",
+      "reviewed": true
+    },
+    "hub.ui.a02f1cea3c1d6c6e": {
+      "value": "正在思考…",
+      "reviewed": true
+    },
+    "hub.ui.8730d3c2022abf1f": {
+      "value": "最新",
+      "reviewed": true
+    },
+    "hub.ui.2ced179124da0d23": {
+      "value": "已探索文件",
+      "reviewed": true
+    },
+    "hub.ui.15007ce23e9a075b": {
+      "value": "选择终端会话的显示位置",
+      "reviewed": true
+    },
+    "hub.ui.6f086cd4dddc6fd6": {
+      "value": "系统提醒",
+      "reviewed": true
+    },
+    "hub.ui.1fe61a24aa487fc1": {
+      "value": "二进制文件 — 无法显示差异",
+      "reviewed": true
+    },
+    "hub.ui.e4280da225fbc414": {
+      "value": "向上分屏",
+      "reviewed": true
+    },
+    "hub.ui.689c05994987626f": {
+      "value": "@all 帖子（由展开 @all 绘制）",
+      "reviewed": true
+    },
+    "hub.ui.f8ee93b32b90c16b": {
+      "value": "账号连接未完成。",
+      "reviewed": true
+    },
+    "hub.ui.28e4c2eede7b680d": {
+      "value": "已编辑文件和产物",
+      "reviewed": true
+    },
+    "hub.ui.c11430e8ff9deea0": {
+      "value": "等待中：轮次已结束，在看板休眠直到帖子唤醒",
+      "reviewed": true
+    },
+    "hub.ui.3d5aa057ac428944": {
+      "value": "显示单个频道的帖子",
+      "reviewed": true
+    },
+    "hub.ui.e20faafe8ba216d3": {
+      "value": "选择分支…",
+      "reviewed": true
+    },
+    "hub.ui.bd35427cd5861c65": {
+      "value": "随意提问，@ 引用上下文，/ 执行命令",
+      "reviewed": true
+    },
+    "hub.ui.ba17ee9e6b1c0ed1": {
+      "value": "正在对话中等待你的回复",
+      "reviewed": true
+    },
+    "hub.ui.4693afe8a90f7fd4": {
+      "value": "由应用程序菜单管理",
+      "reviewed": true
+    },
+    "hub.ui.03da0c9d4a8cbbb5": {
+      "value": "上一条帖子",
+      "reviewed": true
+    },
+    "hub.ui.d0652ad307845171": {
+      "value": "仍然添加",
+      "reviewed": true
+    },
+    "hub.ui.aa335ed5df95b08a": {
+      "value": "无法保存更改",
+      "reviewed": true
+    },
+    "hub.ui.5b7163071efc1236": {
+      "value": "在其他设备上打开",
+      "reviewed": true
+    },
+    "hub.ui.542799c3970ebc42": {
+      "value": "正在克隆…",
+      "reviewed": true
+    },
+    "hub.ui.8feeb0e7a890e145": {
+      "value": "已终止：已从协作群移除",
+      "reviewed": true
+    },
+    "hub.ui.0f5bd88ff2c406f6": {
+      "value": "请尝试其他搜索条件或成员筛选。",
+      "reviewed": true
+    },
+    "hub.ui.8739c5611f4f89ec": {
+      "value": "选择要从内置浏览器清除的项目。此操作无法撤销。",
+      "reviewed": true
+    },
+    "hub.ui.c39059141ced2ea7": {
+      "value": "审查中",
+      "reviewed": true
+    },
+    "hub.ui.26210cf48f281729": {
+      "value": "你已订阅最高级别的 Google AI 方案。",
+      "reviewed": true
+    },
+    "hub.ui.b7a7f060859023d1": {
+      "value": "包含编码、开发者工具和管理智能体的完整界面",
+      "reviewed": true
+    },
+    "hub.ui.6b8d475a99708ae5": {
+      "value": "选择对话期间显示的详细程度",
+      "reviewed": true
+    },
+    "hub.ui.6859fe418483a0b7": {
+      "value": "访问过的网址和自动补全建议。",
+      "reviewed": true
+    },
+    "hub.ui.836f66e8ff741f57": {
+      "value": "在设置中打开",
+      "reviewed": true
+    },
+    "hub.ui.e14697c1360b9f71": {
+      "value": "断开与 WSL 的连接",
+      "reviewed": true
+    },
+    "hub.ui.d3f7409ad75e6d96": {
+      "value": "全部停止",
+      "reviewed": true
+    },
+    "hub.ui.cd7f398b1d6528f2": {
+      "value": "仅此对话使用此预设。",
+      "reviewed": true
+    },
+    "hub.ui.b69e85808d28a009": {
+      "value": "添加组合包",
+      "reviewed": true
+    },
+    "hub.ui.6f23d4aded053b66": {
+      "value": "从项目中移除文件夹",
+      "reviewed": true
+    },
+    "hub.ui.0bb044f8c34d16d6": {
+      "value": "跳到开头",
+      "reviewed": true
+    },
+    "hub.ui.f6259b0cb438a5ac": {
+      "value": "打开协调器对话",
+      "reviewed": true
+    },
+    "hub.ui.0095f46dee42e405": {
+      "value": "完整开发者体验",
+      "reviewed": true
+    },
+    "hub.ui.08022c83e260caa9": {
+      "value": "VS Code 默认",
+      "reviewed": true
+    },
+    "hub.ui.11d915cb27c42da0": {
+      "value": "协调器正在等待你的回复",
+      "reviewed": true
+    },
+    "hub.ui.1c944dbe28bc0267": {
+      "value": "无法创建协调器，请重试。",
+      "reviewed": true
+    },
+    "hub.ui.a8141a7ce1af6ce2": {
+      "value": "解说员页面 · AI 生成",
+      "reviewed": true
+    },
+    "hub.ui.fc87062a130bf496": {
+      "value": "正在等待子智能体",
+      "reviewed": true
+    },
+    "hub.ui.f4ad4438c6066f9c": {
+      "value": "解说员正在更新概览",
+      "reviewed": true
+    },
+    "hub.ui.7898935d79f2f9b2": {
+      "value": "新工作树的基础分支",
+      "reviewed": true
+    },
+    "hub.ui.c66feb5eb8f217c7": {
+      "value": "上移",
+      "reviewed": true
+    },
+    "hub.ui.fd42f0ca49a7a3cc": {
+      "value": "解说员的 view.json 尚不是有效的 JSON。",
+      "reviewed": true
+    },
+    "hub.ui.5a88a386243dab24": {
+      "value": "项目设置",
+      "reviewed": true
+    },
+    "hub.ui.ee965b4001806213": {
+      "value": "谁 @提及了谁",
+      "reviewed": true
+    },
+    "hub.ui.451858a31d14c103": {
+      "value": "刚刚看过",
+      "reviewed": true
+    },
+    "hub.ui.1ae7acdc50a4bc8c": {
+      "value": "语音模式和听写的输入设备",
+      "reviewed": true
+    },
+    "hub.ui.3392bcc1d1c9f6d0": {
+      "value": "主分支",
+      "reviewed": true
+    },
+    "hub.ui.76995012dc174269": {
+      "value": "搜索网站",
+      "reviewed": true
+    },
+    "hub.ui.31022ba3ee5fcf3a": {
+      "value": "此处不允许打开该链接。",
+      "reviewed": true
+    },
+    "hub.ui.1f3202cb49e7679a": {
+      "value": "隐藏未活跃项",
+      "reviewed": true
+    },
+    "hub.ui.b0077176149e1431": {
+      "value": "管理 Antigravity Insiders 应用设置",
+      "reviewed": true
+    },
+    "hub.ui.d8d648e0074a2a26": {
+      "value": "选择操作",
+      "reviewed": true
+    },
+    "hub.ui.e6c6415f27e4dcef": {
+      "value": "正在加载差异…",
+      "reviewed": true
+    },
+    "hub.ui.3122a92a6ad9dec5": {
+      "value": "单一看板",
+      "reviewed": true
+    },
+    "hub.ui.a205cfd78d0ce0c6": {
+      "value": "从子智能体对话发起",
+      "reviewed": true
+    },
+    "hub.ui.a9702fe1ed12bb8b": {
+      "value": "暂停此智能体，保留当前位置与流式状态；恢复即可继续。",
+      "reviewed": true
+    },
+    "hub.ui.e14ee2e295b416bd": {
+      "value": "正在聆听，请随时提问。",
+      "reviewed": true
+    },
+    "hub.ui.c5f3e9c14d36d1f0": {
+      "value": "删除产物",
+      "reviewed": true
+    },
+    "hub.ui.e7be8f386a8ea08a": {
+      "value": "已探索文件",
+      "reviewed": true
+    },
+    "hub.ui.532f8e608cd23f4f": {
+      "value": "数据科学与分析",
+      "reviewed": true
+    },
+    "hub.ui.00edcb7e7c928c3f": {
+      "value": "从你的第一条消息创建新工作区。",
+      "reviewed": true
+    },
+    "hub.ui.8275703863ba3d42": {
+      "value": "搜索网站…",
+      "reviewed": true
+    },
+    "hub.ui.f6a86fc1937a359a": {
+      "value": "输入联想菜单",
+      "reviewed": true
+    },
+    "hub.ui.7dce90a4444351f1": {
+      "value": "询问 /btw",
+      "reviewed": true
+    },
+    "hub.ui.b323f4c9f1d1f153": {
+      "value": "停止转录",
+      "reviewed": true
+    },
+    "hub.ui.33c9455e4beb248c": {
+      "value": "@提及，宽度 = 次数",
+      "reviewed": true
+    },
+    "hub.ui.f2620a7746fcc032": {
+      "value": "解说员已终止；概览不再更新",
+      "reviewed": true
+    },
+    "hub.ui.2019e8abe390989e": {
+      "value": "发给任何人",
+      "reviewed": true
+    },
+    "hub.ui.b0f0cb2af6aa5a59": {
+      "value": "停用或移除此组合包不会影响它。",
+      "reviewed": true
+    },
+    "hub.ui.c8dae6371b33b8d6": {
+      "value": "回放",
+      "reviewed": true
+    },
+    "hub.ui.5cb5697e76a45813": {
+      "value": "等待第一条帖子。",
+      "reviewed": true
+    },
+    "hub.ui.c094e0503c14431b": {
+      "value": "正在保存初始化例程",
+      "reviewed": true
+    },
+    "hub.ui.c62f5c57134b8957": {
+      "value": "正在删除初始化例程",
+      "reviewed": true
+    },
+    "hub.ui.6f16f0e0522499e1": {
+      "value": "在 IDE 中打开",
+      "reviewed": true
+    },
+    "hub.ui.4aff15de2f313404": {
+      "value": "随时提问",
+      "reviewed": true
+    },
+    "hub.ui.1cc3814be75f8f7f": {
+      "value": "空闲对话",
+      "reviewed": true
+    },
+    "hub.ui.ab9152c5fc393972": {
+      "value": "按网站查看 Cookie",
+      "reviewed": true
+    },
+    "hub.ui.bf327cf9bcdd7f4e": {
+      "value": "从主对话发起",
+      "reviewed": true
+    },
+    "hub.ui.8572a21a58c516bd": {
+      "value": "主工作区",
+      "reviewed": true
+    },
+    "hub.ui.132bfcfcfde4f6b1": {
+      "value": "实时间隔",
+      "reviewed": true
+    },
+    "hub.ui.7745bcb6f710f75e": {
+      "value": "筛选器（已启用）",
+      "reviewed": true
+    },
+    "hub.ui.e031b98d9176f84a": {
+      "value": "配置浏览器子代理。它需要",
+      "reviewed": true
+    },
+    "hub.ui.e40675c144472dcf": {
+      "value": "解说员尚未发布概览。",
+      "reviewed": true
+    },
+    "hub.ui.fff067cf75d62697": {
+      "value": "解说员页面",
+      "reviewed": true
+    },
+    "hub.ui.6f176c42c1449566": {
+      "value": "通用效率",
+      "reviewed": true
+    },
+    "hub.ui.84da9ed85dcf1b5d": {
+      "value": "切换虚拟机",
+      "reviewed": true
+    },
+    "hub.ui.0929b4da291d10af": {
+      "value": "若要立即继续使用此模型，请启用 AI 积分超额用量。",
+      "reviewed": true
+    },
+    "hub.ui.88701a9136315238": {
+      "value": "可将常规步骤分流到 Hydrogen 的 Argon 模型。同等 Argon 级质量，消耗更少 token。",
+      "reviewed": true
+    },
+    "hub.ui.9b1a065a734a91ec": {
+      "value": "正在从队列中移除消息…",
+      "reviewed": true
+    },
+    "hub.ui.f73c4a5a85c3d4e5": {
+      "value": "无受阻项",
+      "reviewed": true
+    },
+    "hub.ui.d41aecde8d271b58": {
+      "value": "产品管理",
+      "reviewed": true
+    },
+    "hub.ui.59f774d529faaef3": {
+      "value": "等待 @coordinator 响应",
+      "reviewed": true
+    },
+    "hub.ui.154c29a6b8b8e289": {
+      "value": "此协作群没有解说员。请协调器添加一位。",
+      "reviewed": true
+    },
+    "hub.ui.c508c7705103d9ca": {
+      "value": "显示更早帖子",
+      "reviewed": true
+    },
+    "hub.ui.db8660ddbb3ad302": {
+      "value": "语音听写不可用",
+      "reviewed": true
+    },
+    "hub.ui.57b955600c578410": {
+      "value": "无法清除浏览数据，请重试。",
+      "reviewed": true
+    },
+    "hub.ui.606df31b1e0a3657": {
+      "value": "已编辑文件和产物",
+      "reviewed": true
+    },
+    "hub.ui.c7dc9da11a038c05": {
+      "value": "无运行中项",
+      "reviewed": true
+    },
+    "hub.ui.858a8c6112517768": {
+      "value": "欢迎回来。我们要从哪里继续？",
+      "reviewed": true
+    },
+    "hub.ui.1d162999e438850a": {
+      "value": "管理按键绑定方案并在 VS Code 中自定义快捷键。",
+      "reviewed": true
+    },
+    "hub.ui.c32e15cd136b82a5": {
+      "value": "点击视图中的链接即可打开。",
+      "reviewed": true
+    },
+    "hub.ui.ba4b81d43a709c90": {
+      "value": "未选择对话",
+      "reviewed": true
+    },
+    "hub.ui.f6199870f20b258e": {
+      "value": "清除内置浏览器中访问过的网址和自动补全建议",
+      "reviewed": true
+    },
+    "hub.ui.75682a8299d2eb97": {
+      "value": "继续编辑 1 条评论草稿",
+      "reviewed": true
+    },
+    "hub.ui.46f771858da82361": {
+      "value": "单独安装",
+      "reviewed": true
+    },
+    "hub.ui.45b790ac8c7d918c": {
+      "value": "含 Cookie 的网站",
+      "reviewed": true
+    },
+    "hub.ui.18be8ade995e7f84": {
+      "value": "重试解说员视图",
+      "reviewed": true
+    },
+    "hub.ui.0e580041e77771f2": {
+      "value": "view.html 超过 64 KB",
+      "reviewed": true
+    },
+    "hub.ui.6da694f779f448af": {
+      "value": "清除内置浏览器的历史记录、Cookie 和网站数据，或管理各个网站的 Cookie。",
+      "reviewed": true
+    },
+    "hub.ui.6d9a9843b73f4e7a": {
+      "value": "取消归档本地项目失败",
+      "reviewed": true
+    },
+    "hub.ui.5775a093a4ef1a85": {
+      "value": "营销与内容",
+      "reviewed": true
+    },
+    "hub.ui.b4a5396200f9185c": {
+      "value": "正在终止",
+      "reviewed": true
+    },
+    "hub.ui.32ab018fd38a7b42": {
+      "value": "图表",
+      "reviewed": true
+    },
+    "hub.ui.78797afdac993780": {
+      "value": "已列出",
+      "reviewed": true
+    },
+    "hub.ui.8c13f73ba145c626": {
+      "value": "协作群",
+      "reviewed": true
+    },
+    "hub.ui.d5203617aee0cd9b": {
+      "value": "加载对话记录失败",
+      "reviewed": true
+    },
+    "hub.ui.c98d7fd85705ac6d": {
+      "value": "不关联工作区直接开始，适合一般提问。",
+      "reviewed": true
+    },
+    "hub.ui.17f48909e9ba086a": {
+      "value": "已编辑产物",
+      "reviewed": true
+    },
+    "hub.ui.e7c7bb84611a6275": {
+      "value": "内置浏览器中没有网站保存 Cookie。",
+      "reviewed": true
+    },
+    "hub.ui.9a55d464d063262f": {
+      "value": "当前对话",
+      "reviewed": true
+    },
+    "hub.ui.425fd9623996e1e8": {
+      "value": "移除组合包",
+      "reviewed": true
+    },
+    "hub.ui.641d1ef657bdfd9f": {
+      "value": "跟随",
+      "reviewed": true
+    },
+    "hub.ui.1ce37f395d7aa7aa": {
+      "value": "选择分支",
+      "reviewed": true
+    },
+    "hub.ui.aafd83fdb0f4d88c": {
+      "value": "配置链接打开方式和内置浏览器偏好设置",
+      "reviewed": true
+    },
+    "hub.ui.ebfbcc931abea370": {
+      "value": "点击即可从看板隐藏",
+      "reviewed": true
+    },
+    "hub.ui.5d9a85d72cd7f978": {
+      "value": "已编辑文件",
+      "reviewed": true
+    },
+    "hub.ui.33278c7fd7903628": {
+      "value": "显示点名特定成员的帖子",
+      "reviewed": true
+    },
+    "hub.ui.a1f1c821368c0a42": {
+      "value": "协作群正在启动",
+      "reviewed": true
+    },
+    "hub.ui.af932925c88c6df3": {
+      "value": "配置工作区专属的权限、资源和自定义项",
+      "reviewed": true
+    },
+    "hub.ui.7850ecd61123f3f7": {
+      "value": "播放／暂停回放（空格键）",
+      "reviewed": true
+    },
+    "hub.ui.f017cad972f500e5": {
+      "value": "请先取消归档主对话再插入",
+      "reviewed": true
+    },
+    "hub.ui.3f5aadfe15bfc9d6": {
+      "value": "敏感操作前询问",
+      "reviewed": true
+    },
+    "hub.ui.a9c0bc84dbcf9456": {
+      "value": "旁支问题运行期间无法升级",
+      "reviewed": true
+    },
+    "hub.ui.b6f7e5a48677228a": {
+      "value": "打开浏览器截图",
+      "reviewed": true
+    },
+    "hub.ui.92d78d88918e2a9e": {
+      "value": "可滚动表格",
+      "reviewed": true
+    },
+    "hub.ui.031a8f0f659df890": {
+      "value": "失败",
+      "reviewed": true
+    },
+    "hub.ui.d353a99eb4556847": {
+      "value": "已取消",
+      "reviewed": true
+    },
+    "hub.ui.79670c9b5d43b33b": {
+      "value": "尚未完成任何任务。",
+      "reviewed": true
+    },
+    "hub.ui.81bc5ae8d5396fd2": {
+      "value": "多个工作智能体",
+      "reviewed": true
+    },
+    "hub.ui.d0027313dd37fa69": {
+      "value": "正在加载工作树…",
+      "reviewed": true
+    },
+    "hub.ui.fdc17f3c2d727096": {
+      "value": "取消 (Cmd+D)",
+      "reviewed": true
+    },
+    "hub.ui.0436231679a0cb2b": {
+      "value": "正在退出登录…",
+      "reviewed": true
+    },
+    "hub.ui.6f056e849aac8015": {
+      "value": "按接收者筛选",
+      "reviewed": true
+    },
+    "hub.ui.1b9f384c1436f607": {
+      "value": "未读",
+      "reviewed": true
+    },
+    "hub.ui.fb25ca9eb9b5fd8a": {
+      "value": "新建 WSL 窗口",
+      "reviewed": true
+    },
+    "hub.ui.c46791ab7c246438": {
+      "value": "主对话的输入框当前不可用。",
+      "reviewed": true
+    },
+    "hub.ui.9eec7960bbcd6a9d": {
+      "value": "发起旁支问题",
+      "reviewed": true
+    },
+    "hub.ui.3041783c48f11a4c": {
+      "value": "已删除初始化例程",
+      "reviewed": true
+    },
+    "hub.ui.bd1b33591a4a4415": {
+      "value": "自定义快捷键",
+      "reviewed": true
+    },
+    "hub.ui.f22b7b511b4f4ae8": {
+      "value": "响应操作",
+      "reviewed": true
+    },
+    "hub.ui.9750859eb53a8aca": {
+      "value": "取消 (Ctrl+C)",
+      "reviewed": true
+    },
+    "hub.ui.3a0d81c0bf5fc791": {
+      "value": "在主对话期间发起",
+      "reviewed": true
+    },
+    "hub.ui.e9ce531d30ab7e59": {
+      "value": "待命中",
+      "reviewed": true
+    },
+    "hub.ui.78f9f70c4b80d633": {
+      "value": "插入主对话",
+      "reviewed": true
+    },
+    "hub.ui.40bb50da160cdc21": {
+      "value": "下移",
+      "reviewed": true
+    },
+    "hub.ui.afde8770baee81bd": {
+      "value": "已编辑产物",
+      "reviewed": true
+    },
+    "hub.ui.32fd144c1f4b399d": {
+      "value": "关闭窗口",
+      "reviewed": true
+    },
+    "hub.ui.94d2ee3da6dbc6a4": {
+      "value": "远程模式仅包含 GitHub 仓库",
+      "reviewed": true
+    },
+    "hub.ui.29867e83bc53ef14": {
+      "value": "计时",
+      "reviewed": true
+    },
+    "hub.ui.0d2685c5f8107a18": {
+      "value": "在不冲突的 VS Code 默认按键或独立的 Antigravity 组合键之间选择。",
+      "reviewed": true
+    },
+    "hub.ui.918d8c3f402c6163": {
+      "value": "已探索产物",
+      "reviewed": true
+    },
+    "hub.ui.b063c889bc90a1db": {
+      "value": "在此对话中启动的协作群会自动显示在此处，包括看板、成员和 @提及关系图。启动方式：",
+      "reviewed": true
+    },
+    "hub.ui.18bc7d05be58400c": {
+      "value": "已探索文件和产物",
+      "reviewed": true
+    },
+    "hub.ui.4f04a5f84f36e0dd": {
+      "value": "正在克隆到本地…",
+      "reviewed": true
+    },
+    "hub.ui.24db14082e125a84": {
+      "value": "发给 @all",
+      "reviewed": true
+    },
+    "hub.ui.53c4accd5d05336b": {
+      "value": "此对话将停用遥测；点击可启用。",
+      "reviewed": true
+    },
+    "hub.ui.ae3f6ca3c043f874": {
+      "value": "已探索文件和产物",
+      "reviewed": true
+    },
+    "hub.ui.a2a0a3533474bdc3": {
+      "value": "此对话没有协作群",
+      "reviewed": true
+    },
+    "hub.ui.59fe0b6e8ad0a526": {
+      "value": "沿用你上一个工作区。",
+      "reviewed": true
+    },
+    "hub.ui.5051902c7b6a368b": {
+      "value": "切换分支",
+      "reviewed": true
+    },
+    "hub.ui.4c8906cf76f5740a": {
+      "value": "频道",
+      "reviewed": true
+    },
+    "hub.ui.f79b2ae22d4dec0b": {
+      "value": "仅在按状态分组时生效",
+      "reviewed": true
+    },
+    "hub.ui.71bf03ad1f6ba119": {
+      "value": "选择分支",
+      "reviewed": true
+    },
+    "hub.ui.a0c984e85b278a86": {
+      "value": "打开此项目的“新建对话”界面",
+      "reviewed": true
+    },
+    "hub.ui.947d67b5d278505c": {
+      "value": "按频道筛选",
+      "reviewed": true
+    },
+    "hub.ui.7179ea0035fca783": {
+      "value": "清除筛选器",
+      "reviewed": true
+    },
+    "hub.ui.579bfb1ea99b650e": {
+      "value": "选择编排器使用的模型。用更强大的编排模型搭配更快、更经济的执行模型，可以用更少 token 获得高质量结果。",
+      "reviewed": true
+    },
+    "hub.ui.fa5f38f044c49ab3": {
+      "value": "管理 Antigravity Insiders 应用设置。",
+      "reviewed": true
+    },
+    "hub.ui.499a014e50ca0245": {
+      "value": "所有工作智能体",
+      "reviewed": true
+    },
+    "hub.ui.23cf109ef68f54a0": {
+      "value": "此对话无法使用此旁支问题。",
+      "reviewed": true
+    },
+    "hub.ui.2eee037c67fbe81b": {
+      "value": "分支",
+      "reviewed": true
+    },
+    "hub.ui.72c1b406f0f97b6f": {
+      "value": "配置浏览器子代理允许或拒绝访问的网址。它在内置浏览器中运行，无需额外安装浏览器",
+      "reviewed": true
+    },
+    "hub.ui.fc7f1aa2054c2283": {
+      "value": "正在列出",
+      "reviewed": true
+    },
+    "hub.ui.84f2b4ae34d68e15": {
+      "value": "拖动查看进度",
+      "reviewed": true
+    },
+    "hub.ui.6497fc6f84000b29": {
+      "value": "搜索成员",
+      "reviewed": true
+    },
+    "hub.ui.01345dbfd6e59bbc": {
+      "value": "协作群视图",
+      "reviewed": true
+    },
+    "hub.ui.c26cc71664beb87f": {
+      "value": "无等待项",
+      "reviewed": true
+    },
+    "hub.ui.587c2564c1c53415": {
+      "value": "在手机上打开",
+      "reviewed": true
+    },
+    "hub.ui.9c9806d2d6a70337": {
+      "value": "成员交流时，发布到协作群看板的帖子会显示在此处。",
+      "reviewed": true
+    },
+    "hub.ui.40693055fb81c106": {
+      "value": "回放位置",
+      "reviewed": true
+    },
+    "hub.ui.2ee11474fabca6e8": {
+      "value": "已清除内置浏览器历史记录",
+      "reviewed": true
+    },
+    "hub.ui.f2bd677095e47a53": {
+      "value": "暂无帖子",
+      "reviewed": true
+    },
+    "hub.ui.3c8cff6e2a8e52bd": {
+      "value": "已编辑文件和产物",
+      "reviewed": true
+    },
+    "hub.ui.7c5b2da19293eb98": {
+      "value": "当前分支",
+      "reviewed": true
+    },
+    "hub.ui.81219e5771466627": {
+      "value": "当前文件不是有效的 JSON，正在显示上一版有效的 view.json。",
+      "reviewed": true
+    },
+    "hub.ui.e6ce4eb862b0fecd": {
+      "value": "解说员视图（AI 生成）",
+      "reviewed": true
+    },
+    "hub.ui.fce263d326818c62": {
+      "value": "无工作区",
+      "reviewed": true
+    },
+    "hub.ui.54994d8eb3c61f6e": {
+      "value": "此工作区会覆盖你的全局权限设置。",
+      "reviewed": true
+    },
+    "hub.ui.0430fbfc3d68bf6f": {
+      "value": "在发送按钮旁显示上下文窗口使用量。点击可查看明细与模型配额",
+      "reviewed": true
+    },
+    "hub.ui.dd2eda63fc09ebb2": {
+      "value": "没有匹配的帖子",
+      "reviewed": true
+    },
+    "hub.ui.ac1aa2fbc8cd0737": {
+      "value": "浏览数据",
+      "reviewed": true
+    },
+    "hub.ui.820ccbef36f60b83": {
+      "value": "已编辑文件和产物",
+      "reviewed": true
+    },
+    "hub.ui.a5f69d1841cbbd17": {
+      "value": "添加指令",
+      "reviewed": true
+    },
+    "hub.ui.2c8c3c0c4ac4aeec": {
+      "value": "打开文件需要应用程序支持。",
+      "reviewed": true
+    },
+    "hub.ui.a8c8453cc5e255f2": {
+      "value": "活跃中：轮次进行中（思考、运行工具或等待模型）",
+      "reviewed": true
+    },
+    "hub.ui.2ddaa716790258bb": {
+      "value": "在 Google 文档中打开",
+      "reviewed": true
+    },
+    "hub.ui.87b007261779ec1a": {
+      "value": "不在名单中",
+      "reviewed": true
+    },
+    "hub.ui.128374b53cc69c01": {
+      "value": "不指定接收者",
+      "reviewed": true
+    },
+    "hub.ui.63ddfca0b46b10a9": {
+      "value": "选择分支…",
+      "reviewed": true
+    },
+    "hub.ui.f7f231a086863614": {
+      "value": "无限制运行所有命令",
+      "reviewed": true
+    },
+    "hub.ui.a8b0918b9f6cbd95": {
+      "value": "继续编辑评论草稿",
+      "reviewed": true
+    },
+    "hub.ui.4816cbfd74aa8297": {
+      "value": "看板",
+      "reviewed": true
+    },
+    "hub.ui.e08c777302863717": {
+      "value": "协调器会将其拆分为多个任务。",
+      "reviewed": true
+    },
+    "hub.ui.c5746e21a956afd1": {
+      "value": "已取消删除初始化例程",
+      "reviewed": true
+    },
+    "hub.ui.b55b2166f1aef053": {
+      "value": "展开 @all",
+      "reviewed": true
+    },
+    "hub.ui.8bb53aacb2ac94a3": {
+      "value": "规划工作、做出设计决策并审查结果。请选择顶级模型，也可在模型菜单的“编排器”行为每个对话单独指定。",
+      "reviewed": true
+    },
+    "hub.ui.587f856d5431a721": {
+      "value": "切换自动换行",
+      "reviewed": true
+    },
+    "hub.ui.a02d10ca8dbfb12f": {
+      "value": "正在查找此对话的协作群…",
+      "reviewed": true
+    },
+    "hub.ui.4354d8358fff218a": {
+      "value": "暂无需处理",
+      "reviewed": true
+    },
+    "hub.ui.3aa96fcc6a8c70f2": {
+      "value": "保持最新帖子在视野内",
+      "reviewed": true
+    },
+    "hub.ui.7d68e6842e7a8595": {
+      "value": "已停止：未加载，当帖子提及时会自动唤醒",
+      "reviewed": true
+    },
+    "hub.ui.a4b64f5ec3537957": {
+      "value": "编辑对话标题",
+      "reviewed": true
+    },
+    "hub.ui.50d6e49caa8924a3": {
+      "value": "没有可用的组合包。",
+      "reviewed": true
+    },
+    "hub.ui.a8ae773d7501ed8c": {
+      "value": "选择分支…",
+      "reviewed": true
+    },
+    "hub.ui.3b0e634a120a78b8": {
+      "value": "查看内容",
+      "reviewed": true
+    },
+    "hub.ui.8b9dbcf918e6fbdd": {
+      "value": "在移动设备上会显示较大",
+      "reviewed": true
+    },
+    "hub.ui.432890c32353a375": {
+      "value": "未记录任何浏览器步骤",
+      "reviewed": true
+    },
+    "hub.ui.5aba452b19a5e234": {
+      "value": "系统界面",
+      "reviewed": true
+    },
+    "hub.ui.233f644f36b81ad0": {
+      "value": "访问受限",
+      "reviewed": true
+    },
+    "hub.ui.f4838b20ab8c7e22": {
+      "value": "底部面板",
+      "reviewed": true
+    },
+    "hub.ui.6a51cc98a237e225": {
+      "value": "工作树分支",
+      "reviewed": true
+    },
+    "hub.ui.772887b6d0252c7e": {
+      "value": "你可以升级到更高级别的 Google AI Ultra 方案以获得最高速率限额。",
+      "reviewed": true
+    },
+    "hub.ui.44a1eca6ca25c186": {
+      "value": "解说员正在等待新的看板帖子",
+      "reviewed": true
+    },
+    "hub.ui.ba69e64b0a570836": {
+      "value": "开始／停止语音录制",
+      "reviewed": true
+    },
+    "hub.ui.0f68a6fd26e95b48": {
+      "value": "在子智能体对话期间发起",
+      "reviewed": true
+    },
+    "hub.ui.6f77831e5bf57aa5": {
+      "value": "无法升级子智能体的旁支问题",
+      "reviewed": true
+    },
+    "hub.ui.a34868c7b2cf6596": {
+      "value": "请先在主对话发送消息再发起旁支问题",
+      "reviewed": true
+    },
+    "hub.ui.4e427ad73b23a489": {
+      "value": "显示全部并实时跟随",
+      "reviewed": true
+    },
+    "hub.ui.f102a103cb38fe1d": {
+      "value": "创建分支",
+      "reviewed": true
+    },
+    "hub.ui.000eab90c46120bf": {
+      "value": "CLI 项目",
+      "reviewed": true
+    },
+    "hub.ui.9baac58ce586ea76": {
+      "value": "执行器模型",
+      "reviewed": true
+    },
+    "hub.ui.5cf5c04954572e98": {
+      "value": "正在加载组合包…",
+      "reviewed": true
+    },
+    "hub.ui.79b4368e570c6772": {
+      "value": "移除指令",
+      "reviewed": true
+    },
+    "hub.ui.354ff2bd47ea952c": {
+      "value": "远程分支",
+      "reviewed": true
+    },
+    "hub.ui.80905baf3aaec87b": {
+      "value": "已运行命令",
+      "reviewed": true
+    },
+    "hub.ui.3fd256357792ad9f": {
+      "value": "中键点击",
+      "reviewed": true
+    },
+    "hub.ui.93a54cd5a417ae5e": {
+      "value": "回放节奏",
+      "reviewed": true
+    },
+    "hub.ui.e39f748785ba64e6": {
+      "value": "检查更新…",
+      "reviewed": true
+    },
+    "hub.ui.ddd9e8095da873fe": {
+      "value": "从暂停处继续此智能体",
+      "reviewed": true
+    },
+    "hub.ui.d237a0cbaa6dcf37": {
+      "value": "已取消保存初始化例程",
+      "reviewed": true
+    },
+    "hub.ui.ba35f0c47d862763": {
+      "value": "尚未开始",
+      "reviewed": true
+    },
+    "hub.ui.9e8488c2d204140b": {
+      "value": "想调整此视图？告诉协调器即可。",
+      "reviewed": true
+    },
+    "hub.ui.c52f575884d08440": {
+      "value": "每月限额",
+      "reviewed": true
+    },
+    "hub.ui.f8fa839eb7db8316": {
+      "value": "已探索文件和产物",
+      "reviewed": true
+    },
+    "hub.ui.41e10dbc5f08cd5d": {
+      "value": "取消 (⌘D)",
+      "reviewed": true
+    },
+    "hub.ui.7d52ed5b19430d45": {
+      "value": "麦克风无声",
+      "reviewed": true
+    },
+    "hub.ui.264c28cbf01ce9fa": {
+      "value": "思考力度",
+      "reviewed": true
+    },
+    "hub.ui.50209c56159fa247": {
+      "value": "注意：更改此设置仅对发送给智能体的新消息生效。进行中的响应仍会使用之前的设置值。",
+      "reviewed": true
+    },
+    "hub.ui.bee5d9b4adecbd8c": {
+      "value": "正在加载解说员视图",
+      "reviewed": true
+    },
+    "hub.ui.25cb3f2d0e7d36b9": {
+      "value": "克隆到本地文件夹",
+      "reviewed": true
+    },
+    "hub.ui.cf30b3333062034a": {
+      "value": "加载子智能体失败",
+      "reviewed": true
+    },
+    "hub.ui.d9f2a06e971e7dd5": {
+      "value": "请在 /btw 后输入旁支问题",
+      "reviewed": true
+    },
+    "hub.ui.b22dc3f2f72bf571": {
+      "value": "终端与工具",
+      "reviewed": true
+    },
+    "hub.ui.1df59a44a7f398b3": {
+      "value": "下一条帖子（→）",
+      "reviewed": true
+    },
+    "hub.ui.4b33d5e03e53e655": {
+      "value": "所有频道",
+      "reviewed": true
+    },
+    "hub.ui.132d124d6bb3d811": {
+      "value": "已中断",
+      "reviewed": true
+    },
+    "hub.ui.559ced802dfb6ad4": {
+      "value": "显示自动化对话",
+      "reviewed": true
+    },
+    "hub.ui.835918024f55a92c": {
+      "value": "没有卡住的项目",
+      "reviewed": true
+    },
+    "hub.ui.2daa5e6bd2fd2258": {
+      "value": "按键绑定方案",
+      "reviewed": true
+    },
+    "hub.ui.90967f573a5b5c84": {
+      "value": "编排器设置",
+      "reviewed": true
+    },
+    "hub.ui.67b6ffc1ed06f760": {
+      "value": "始终打开",
+      "reviewed": true
+    },
+    "hub.ui.661877634527357a": {
+      "value": "所有生效的 Antigravity 快捷键和用户按键覆盖均直接由 VS Code 管理。",
+      "reviewed": true
+    },
+    "hub.ui.ee695b0426154cf0": {
+      "value": "可将常规步骤分流到 Hydrogen 的 Carbon 模型。同等 Carbon 级质量，消耗更少 token。",
+      "reviewed": true
+    },
+    "hub.ui.2f810cde244fb29c": {
+      "value": "搜索帖子",
+      "reviewed": true
+    },
+    "hub.ui.f96054ce6f1f0951": {
+      "value": "本地克隆项目失败",
+      "reviewed": true
+    },
+    "hub.ui.674b604c36fefd3c": {
+      "value": "未命名协作群",
+      "reviewed": true
+    },
+    "hub.ui.314bbd6a54a7dd7a": {
+      "value": "从对话中打开此面板即可查看其协作群。在其中启动的协作群会自动显示在此处；启动方式：",
+      "reviewed": true
+    },
+    "hub.ui.111684f49899846d": {
+      "value": "打开完整时间轴",
+      "reviewed": true
+    },
+    "hub.ui.dea3a1af785674a0": {
+      "value": "管理 Antigravity 应用设置",
+      "reviewed": true
+    },
+    "hub.ui.822533d4403f83dd": {
+      "value": "显示单个成员的帖子",
+      "reviewed": true
+    },
+    "hub.ui.31f72d3334c676ea": {
+      "value": "与当前比较",
+      "reviewed": true
+    },
+    "hub.ui.328ece1bff2fae6a": {
+      "value": "按工作智能体筛选",
+      "reviewed": true
+    },
+    "hub.ui.1efabe1a2b824fd1": {
+      "value": "显示插件对话",
+      "reviewed": true
+    },
+    "hub.ui.5f04ae9ed6a865bb": {
+      "value": "正在连接…",
+      "reviewed": true
+    },
+    "hub.ui.fc9a05b835a43412": {
+      "value": "更新会汇总在此处，仅在需要时由你介入。",
+      "reviewed": true
+    },
+    "hub.ui.a08705780ae4124f": {
+      "value": "概览 · 来自解说员笔记",
+      "reviewed": true
+    },
+    "hub.ui.507e92b772182dbd": {
+      "value": "后续计划",
+      "reviewed": true
+    },
+    "hub.ui.dd3c7c60b806c8f3": {
+      "value": "控制远程对话的权限",
+      "reviewed": true
+    },
+    "hub.ui.7486904e635f5a52": {
+      "value": "下一条帖子",
+      "reviewed": true
+    },
+    "hub.ui.0b25e7dc5e81a7a7": {
+      "value": "隐藏比较",
+      "reviewed": true
+    },
+    "hub.ui.0dbee6abe543258f": {
+      "value": "没有可用的文件差异",
+      "reviewed": true
+    },
+    "hub.ui.6a27b943f49b36bc": {
+      "value": "浏览器截图",
+      "reviewed": true
+    },
+    "hub.ui.afb9fcaf7a075949": {
+      "value": "纯文本视图",
+      "reviewed": true
+    },
+    "hub.ui.2633673daf17be25": {
+      "value": "VS Code 键盘快捷键",
+      "reviewed": true
+    },
+    "hub.ui.976d16df278c3b98": {
+      "value": "退出 Antigravity",
+      "reviewed": true
+    },
+    "hub.ui.dda839b136174edf": {
+      "value": "下载为 zip",
+      "reviewed": true
+    },
+    "hub.ui.3a80e9b087ac4c4f": {
+      "value": "没有录音",
+      "reviewed": true
+    },
+    "hub.ui.2215dbb2237a26b4": {
+      "value": "取消 (⌃C)",
+      "reviewed": true
+    },
+    "hub.ui.fdc11f0b3af55e46": {
+      "value": "已阻止：不允许的文件类型",
+      "reviewed": true
+    },
+    "hub.ui.7fb2fa8e350812bb": {
+      "value": "暂无计划",
+      "reviewed": true
+    },
+    "hub.ui.1baac8b2cd3685c1": {
+      "value": "没有运行中的智能体",
+      "reviewed": true
+    },
+    "hub.ui.546ebb8eb993ea56": {
+      "value": "筛选器",
+      "reviewed": true
+    },
+    "hub.ui.74b6abdf59690fdf": {
+      "value": "需要你处理",
+      "reviewed": true
+    },
+    "hub.ui.bcdc99ce8cf9a9c3": {
+      "value": "仅限开发者使用的工具。这些设置不会影响其他用户",
+      "reviewed": true
+    },
+    "hub.ui.3f167bec714df4ec": {
+      "value": "系统默认应用",
+      "reviewed": true
+    },
+    "hub.ui.e1c99559b56a753f": {
+      "value": "正在运行命令",
+      "reviewed": true
+    },
+    "hub.ui.d1a8f44ad7dda012": {
+      "value": "将 @all 绘制为指向每位成员的连线",
+      "reviewed": true
+    },
+    "hub.ui.8fc63c7a8bff7d2c": {
+      "value": "创建在此计算机上运行的本地自动化",
+      "reviewed": true
+    },
+    "hub.ui.ef37f4e061bb04ce": {
+      "value": "实际大小",
+      "reviewed": true
+    },
+    "hub.ui.eac2679c0452b2af": {
+      "value": "暂无 view.html",
+      "reviewed": true
+    },
+    "hub.ui.62f8f7c6feabd968": {
+      "value": "编辑项目名称",
+      "reviewed": true
+    },
+    "hub.ui.705975faaaf54eb4": {
+      "value": "正在检查访问权限…",
+      "reviewed": true
+    },
+    "hub.ui.335dd52922b134d3": {
+      "value": "连接到 WSL…",
+      "reviewed": true
+    },
+    "hub.ui.c69022b396caebdd": {
+      "value": "适合研究、写作和日常任务的精简界面",
+      "reviewed": true
+    },
+    "hub.ui.1622448aacd3a75a": {
+      "value": "来自任何人",
+      "reviewed": true
+    },
+    "hub.ui.64f4b4a47f30f6b1": {
+      "value": "你好，今天打算构建什么？",
+      "reviewed": true
+    },
+    "hub.ui.8c5831d9fd3efdd1": {
+      "value": "启用浏览器智能体",
+      "reviewed": true
+    },
+    "hub.ui.fa6fe5441d2eee39": {
+      "value": "导出 GIF",
+      "reviewed": true
+    },
+    "hub.ui.fd405c7fe3914bba": {
+      "value": "协调器 · 工作中",
+      "reviewed": true
+    },
+    "hub.ui.aa209354500fe67b": {
+      "value": "已编辑文件",
+      "reviewed": true
+    },
+    "hub.ui.3c4c32df4b2946e6": {
+      "value": "自动更新",
+      "reviewed": true
+    },
+    "hub.ui.78ea8af1da894353": {
+      "value": "未知工作树",
+      "reviewed": true
+    },
+    "hub.ui.1778c02c07caafed": {
+      "value": "请在协调器对话中回答。",
+      "reviewed": true
+    },
+    "hub.ui.dc32410e394479aa": {
+      "value": "已探索产物",
+      "reviewed": true
+    },
+    "hub.ui.037f4d22834dd26a": {
+      "value": "与协作群 sidecar 失去连接；正在重试",
+      "reviewed": true
+    },
+    "hub.ui.5b50e7a693fee952": {
+      "value": "复制失败",
+      "reviewed": true
+    },
+    "hub.ui.512bad71f6e6300d": {
+      "value": "在此对话中启动的协作群会自动显示在此处，包括看板、成员和 @提及关系图。",
+      "reviewed": true
+    },
+    "hub.ui.2bd6828d27089005": {
+      "value": "配置浏览器子代理（使用 /browser 调用）允许与拒绝的网址。需要",
+      "reviewed": true
+    },
+    "hub.ui.a20aff1be6532f5c": {
+      "value": "回放速度",
+      "reviewed": true
+    },
+    "hub.ui.b4c52af02cc00bd5": {
+      "value": "按发布者筛选",
+      "reviewed": true
+    },
+    "hub.ui.b468fd71c13fd4bc": {
+      "value": "应用程序菜单",
+      "reviewed": true
+    },
+    "hub.ui.99af6606ff9d6cd5": {
+      "value": "菜单",
+      "reviewed": true
+    },
+    "hub.ui.2bd873d6c734e63e": {
+      "value": "面包屑导航",
+      "reviewed": true
+    },
+    "hub.ui.73667278486b9c9d": {
+      "value": "面包屑导航",
+      "reviewed": true
+    },
+    "hub.ui.7a8a2fd67a09c4f2": {
+      "value": "文件查看器标题栏",
+      "reviewed": true
+    },
+    "hub.ui.3c48ed51411bb08e": {
+      "value": "最大化侧边栏",
+      "reviewed": true
+    },
+    "hub.ui.99d679f391b50ce2": {
+      "value": "背景颜色选择器",
+      "reviewed": true
+    },
+    "hub.ui.633dda19171c3122": {
+      "value": "前景颜色选择器",
+      "reviewed": true
+    },
+    "hub.ui.4d95fe82a6689d33": {
+      "value": "强调色选择器",
+      "reviewed": true
+    },
+    "hub.ui.07b6641e599000ef": {
+      "value": "选择在对话输入框中用于发送消息的按键。",
+      "reviewed": true
+    },
+    "hub.ui.11c3beefc7432c39": {
+      "value": "按 Enter 发送，Shift+Enter 换行。",
+      "reviewed": true
+    },
+    "hub.ui.254a5f4f76406996": {
+      "value": "按 Ctrl+Enter 发送，Enter 换行。",
+      "reviewed": true
+    },
+    "hub.ui.590514cf2fc8b187": {
+      "value": "按 Cmd+Enter 发送，Enter 换行。",
+      "reviewed": true
+    },
+    "hub.ui.ab1173eed1d477d9": {
+      "value": "插件",
+      "reviewed": true
+    },
+    "hub.ui.14bde5dd1e3cb3c8": {
+      "value": "连接到 Google Workspace，包括 Docs、Sheets、Slides、Drive、Calendar 和 Gmail。",
+      "reviewed": true
+    },
+    "hub.ui.d66f8d268f3962f2": {
+      "value": "用于科学研究的智能体技能、数据库和交互式查看器。",
+      "reviewed": true
+    },
+    "web.dynamic.filesChangedCount": {
+      "value": "{0} 个文件已更改",
+      "reviewed": true
+    },
+    "web.dynamic.fileChangedCount": {
+      "value": "{0} 个文件已更改",
+      "reviewed": true
+    },
+    "web.dynamic.toolsExcludedCount": {
+      "value": "已排除 {0} 个工具",
+      "reviewed": true
+    },
+    "web.dynamic.toolExcludedCount": {
+      "value": "已排除 {0} 个工具",
+      "reviewed": true
+    },
+    "web.dynamic.updatesCount": {
+      "value": "{0} 次更新",
+      "reviewed": true
+    },
+    "web.dynamic.updateCount": {
+      "value": "{0} 次更新",
+      "reviewed": true
+    },
+    "web.dynamic.hideBreakdowns": {
+      "value": "隐藏 {0} 项明细{1, select, s {} other {}}",
+      "reviewed": true
+    },
+    "web.dynamic.stepsSlashProgress": {
+      "value": "{0}/{1} 步",
+      "reviewed": true
+    },
+    "web.dynamic.limitResetsIn": {
+      "value": "{0} 限额，将在 {1} 后重置",
+      "reviewed": true
+    },
+    "web.dynamic.modelPeriodLimit": {
+      "value": "{0} {1}限额",
+      "reviewed": true
+    },
+    "web.dynamic.startedFromQuoted": {
+      "value": "从“{0}”发起",
+      "reviewed": true
+    },
+    "web.dynamic.startedDuringQuoted": {
+      "value": "在“{0}”期间发起",
+      "reviewed": true
+    },
+    "web.dynamic.sendFeedbackAs": {
+      "value": "以 {0} 身份发送反馈",
+      "reviewed": true
+    },
+    "web.dynamic.selectModelCurrent": {
+      "value": "选择模型，当前：{0}",
+      "reviewed": true
+    },
+    "web.dynamic.modelLockedRunning": {
+      "value": "模型：{0}，智能体运行期间无法更改模型",
+      "reviewed": true
+    },
+    "web.dynamic.permLockedRunning": {
+      "value": "代理权限预设：{0}，智能体运行期间无法更改权限",
+      "reviewed": true
+    },
+    "web.dynamic.thoughtForDuration": {
+      "value": "思考了 {0}",
+      "reviewed": true
+    },
+    "web.dynamic.thinkingForDuration": {
+      "value": "已思考 {0}",
+      "reviewed": true
+    },
+    "web.dynamic.exitedWithCodeInline": {
+      "value": "{0} · 已退出，退出码 {1}",
+      "reviewed": true
+    },
+    "hub.ui.0fcfb12dfad07ba0": {
+      "value": "需要身份验证",
+      "reviewed": true
+    },
+    "hub.ui.016cf78cca62bd53": {
+      "value": "自动检查更新",
+      "reviewed": true
+    },
+    "hub.ui.ff81f1d41dfd7f18": {
+      "value": "浏览器 JavaScript 执行策略",
+      "reviewed": true
+    },
+    "hub.ui.3967283c635218cf": {
+      "value": "浏览器操作规则",
+      "reviewed": true
+    },
+    "hub.ui.6a6571b243b67aa0": {
+      "value": "浏览数据",
+      "reviewed": true
+    },
+    "hub.ui.ad438ef1a7674f26": {
+      "value": "浏览历史",
+      "reviewed": true
+    },
+    "hub.ui.291e2a11434cfd2b": {
+      "value": "Build With Google 插件",
+      "reviewed": true
+    },
+    "hub.ui.3c20ca49e345461a": {
+      "value": "CitC 工作区类型",
+      "reviewed": true
+    },
+    "hub.ui.06445eb2e676b81e": {
+      "value": "命令设置脚本",
+      "reviewed": true
+    },
+    "hub.ui.230515513f6092a8": {
+      "value": "沙箱外执行命令",
+      "reviewed": true
+    },
+    "hub.ui.a173dde0775e6c90": {
+      "value": "上下文与配额指示器",
+      "reviewed": true
+    },
+    "hub.ui.a44d4f0162516f40": {
+      "value": "对话步骤",
+      "reviewed": true
+    },
+    "hub.ui.dfeb364deafde7a3": {
+      "value": "对话宽度",
+      "reviewed": true
+    },
+    "hub.ui.3cb27ae0fbca8ae3": {
+      "value": "复制图片",
+      "reviewed": true
+    },
+    "hub.ui.dbf362d4f210c780": {
+      "value": "复制链接",
+      "reviewed": true
+    },
+    "hub.ui.38e1786909ac3783": {
+      "value": "自定义右键菜单",
+      "reviewed": true
+    },
+    "hub.ui.9df8cadeb2f8fbad": {
+      "value": "默认 Cog 分支 / 引用",
+      "reviewed": true
+    },
+    "hub.ui.e585a6abc3d15b3b": {
+      "value": "默认 Cog 仓库",
+      "reviewed": true
+    },
+    "hub.ui.cdb50c4eb4d2585f": {
+      "value": "默认工作区版本控制 (VCS)",
+      "reviewed": true
+    },
+    "hub.ui.9f4173a91945f285": {
+      "value": "删除所有远程智能体数据",
+      "reviewed": true
+    },
+    "hub.ui.155106be1173d757": {
+      "value": "设备名称",
+      "reviewed": true
+    },
+    "hub.ui.c58e8815a57346ff": {
+      "value": "下载位置",
+      "reviewed": true
+    },
+    "hub.ui.223541cde6b049db": {
+      "value": "启用 AI 点数超额使用",
+      "reviewed": true
+    },
+    "hub.ui.938e28640f6e2c01": {
+      "value": "启用浏览器智能体",
+      "reviewed": true
+    },
+    "hub.ui.494bac6b39b86701": {
+      "value": "启用智能体通知",
+      "reviewed": true
+    },
+    "hub.ui.64e9a353ec4fdecd": {
+      "value": "启用沙盒模式",
+      "reviewed": true
+    },
+    "hub.ui.72f537a5a00af678": {
+      "value": "启用智能体通知音",
+      "reviewed": true
+    },
+    "hub.ui.115cf3dddfdbad7b": {
+      "value": "启用遥测",
+      "reviewed": true
+    },
+    "hub.ui.fc4e8890fc9e2fc3": {
+      "value": "启用终端沙盒",
+      "reviewed": true
+    },
+    "hub.ui.03c539e810e07010": {
+      "value": "按 Enter 发送",
+      "reviewed": true
+    },
+    "hub.ui.2befb23f7053dc26": {
+      "value": "文件访问规则",
+      "reviewed": true
+    },
+    "hub.ui.f79e34f8f5af8f6e": {
+      "value": "文件读取",
+      "reviewed": true
+    },
+    "hub.ui.a45c787e9ac5e0a1": {
+      "value": "文件写入",
+      "reviewed": true
+    },
+    "hub.ui.6d784d95c63833e6": {
+      "value": "字体大小",
+      "reviewed": true
+    },
+    "hub.ui.ffff4354ccdf844e": {
+      "value": "Google One 推荐计划",
+      "reviewed": true
+    },
+    "hub.ui.52af1dbc2b1c0c52": {
+      "value": "宿主应用环境",
+      "reviewed": true
+    },
+    "hub.ui.433616d904123cf9": {
+      "value": "包含 Jetski 默认自定义项",
+      "reviewed": true
+    },
+    "hub.ui.cc55a21bff081e86": {
+      "value": "保留在菜单栏",
+      "reviewed": true
+    },
+    "hub.ui.b89124c79d1cf237": {
+      "value": "正在加载主机…",
+      "reviewed": true
+    },
+    "hub.ui.92a37087b73b3538": {
+      "value": "管理钩子",
+      "reviewed": true
+    },
+    "hub.ui.2630ba4d3bbf1847": {
+      "value": "管理权限",
+      "reviewed": true
+    },
+    "hub.ui.d0f678009d973cd7": {
+      "value": "Markdown 产物宽度",
+      "reviewed": true
+    },
+    "hub.ui.5a3e33bcdf2616ed": {
+      "value": "营销邮件",
+      "reviewed": true
+    },
+    "hub.ui.b58330ac25057a44": {
+      "value": "下移",
+      "reviewed": true
+    },
+    "hub.ui.1359626e7b696434": {
+      "value": "上移",
+      "reviewed": true
+    },
+    "hub.ui.0815d664aa819b07": {
+      "value": "网络访问规则",
+      "reviewed": true
+    },
+    "hub.ui.9bf624ac6138cba7": {
+      "value": "新建会话按钮",
+      "reviewed": true
+    },
+    "hub.ui.855d682f94819266": {
+      "value": "没有可用的插件",
+      "reviewed": true
+    },
+    "hub.ui.491fc91cd76e5157": {
+      "value": "尚未登录",
+      "reviewed": true
+    },
+    "hub.ui.63568f0582af1e88": {
+      "value": "通知设置",
+      "reviewed": true
+    },
+    "hub.ui.a65291255d71c726": {
+      "value": "链接打开位置",
+      "reviewed": true
+    },
+    "hub.ui.0fcabfe6e097cd40": {
+      "value": "操作系统",
+      "reviewed": true
+    },
+    "hub.ui.44269ea744639d68": {
+      "value": "权限预设",
+      "reviewed": true
+    },
+    "hub.ui.38d492d7e7982ed9": {
+      "value": "防止休眠",
+      "reviewed": true
+    },
+    "hub.ui.1a3b23c70d280f4b": {
+      "value": "拉取请求 (PR)",
+      "reviewed": true
+    },
+    "hub.ui.3464cd5908e5fa72": {
+      "value": "屏幕阅读器模式",
+      "reviewed": true
+    },
+    "hub.ui.e7ade7489317b0cf": {
+      "value": "安全预设",
+      "reviewed": true
+    },
+    "hub.ui.d989893356eeff0f": {
+      "value": "查看套餐方案",
+      "reviewed": true
+    },
+    "hub.ui.0fe0571facd9435c": {
+      "value": "发送消息",
+      "reviewed": true
+    },
+    "hub.ui.af363a0fa1974e86": {
+      "value": "初始化脚本",
+      "reviewed": true
+    },
+    "hub.ui.0264d7b0ccb8d48b": {
+      "value": "收起",
+      "reviewed": true
+    },
+    "hub.ui.2150d8df37e48957": {
+      "value": "显示全部",
+      "reviewed": true
+    },
+    "hub.ui.f10fd614835924d0": {
+      "value": "正在退出登录…",
+      "reviewed": true
+    },
+    "hub.ui.3d591e826d545919": {
+      "value": "停止录音",
+      "reviewed": true
+    },
+    "hub.ui.954a7ace4e929466": {
+      "value": "将 JJ 工作树同步到 Head",
+      "reviewed": true
+    },
+    "hub.ui.a7016ea3c777fa3e": {
+      "value": "终端命令自动执行",
+      "reviewed": true
+    },
+    "hub.ui.142fa9db5f3c9aff": {
+      "value": "终端命令",
+      "reviewed": true
+    },
+    "hub.ui.bb42027e6c798677": {
+      "value": "终端位置",
+      "reviewed": true
+    },
+    "hub.ui.a7b0060623380e53": {
+      "value": "工具权限",
+      "reviewed": true
+    },
+    "hub.ui.f9eccf1bd6db5c6f": {
+      "value": "用户类型",
+      "reviewed": true
+    },
+    "hub.ui.348c701c62ec6f92": {
+      "value": "VS Code 键盘快捷键",
+      "reviewed": true
+    },
+    "hub.ui.d9ab76c650a66141": {
+      "value": "你的方案",
+      "reviewed": true
+    },
+    "hub.ui.4b0fd84a7499960f": {
+      "value": "您的方案： ",
+      "reviewed": true
+    },
+    "hub.ui.12ea12eace7d655f": {
+      "value": "更改",
+      "reviewed": true
+    },
+    "hub.ui.d0b4ba2311b3e849": {
+      "value": "更改",
+      "reviewed": true
+    },
+    "hub.ui.e6bb5689beec52c4": {
+      "value": "深色",
+      "reviewed": true
+    },
+    "hub.ui.034a0062488256f1": {
+      "value": "文件夹",
+      "reviewed": true
+    },
+    "hub.ui.5e689e2b01672bf3": {
+      "value": "插件",
+      "reviewed": true
+    },
+    "hub.ui.92cd10e6b8b068a9": {
+      "value": "插件",
+      "reviewed": true
+    },
+    "hub.ui.cde0fb0dec1400c5": {
+      "value": "设置",
+      "reviewed": true
+    },
+    "hub.ui.34a04005bcaf206e": {
+      "value": "目标",
+      "reviewed": true
+    },
+    "hub.ui.4e686af7bdcc5ae0": {
+      "value": "终端",
+      "reviewed": true
+    },
+    "hub.ui.b23a6a8439c0dde5": {
+      "value": "未知",
+      "reviewed": true
+    },
+    "hub.ui.360719440e92c924": {
+      "value": "3 天",
+      "reviewed": true
+    },
+    "hub.ui.92340695899bd2d8": {
+      "value": "活跃",
+      "reviewed": true
+    },
+    "hub.ui.a658498e45232aad": {
+      "value": "添加目标",
+      "reviewed": true
+    },
+    "hub.ui.b64d6717b6fb60da": {
+      "value": "智能体目标",
+      "reviewed": true
+    },
+    "hub.ui.1cfb21871a035769": {
+      "value": "智能体名称",
+      "reviewed": true
+    },
+    "hub.ui.947c413740b60175": {
+      "value": "由你允许",
+      "reviewed": true
+    },
+    "hub.ui.0c79a9c222840ed0": {
+      "value": "已应用",
+      "reviewed": true
+    },
+    "hub.ui.e5203b2e3b16b98c": {
+      "value": "自动解决",
+      "reviewed": true
+    },
+    "hub.ui.a0043bdd1a823a86": {
+      "value": "自动检测（浏览器默认）",
+      "reviewed": true
+    },
+    "hub.ui.a0ef17612924548d": {
+      "value": "发送消息时自动置顶对话。可按需取消置顶以保持置顶列表精简。",
+      "reviewed": true
+    },
+    "hub.ui.d58a6527f624317f": {
+      "value": "可用的语音听写语言",
+      "reviewed": true
+    },
+    "hub.ui.5ef24ba91771824c": {
+      "value": "插件无需询问即可进行的更改。",
+      "reviewed": true
+    },
+    "hub.ui.c6da331eadbee0e2": {
+      "value": "已选择",
+      "reviewed": true
+    },
+    "hub.ui.0890638dc39b634b": {
+      "value": "点击项目以多选 · 拖动或使用 ‹/› 标签重新排序",
+      "reviewed": true
+    },
+    "hub.ui.5aface4325015b89": {
+      "value": "从远程克隆",
+      "reviewed": true
+    },
+    "hub.ui.86bcb96c6ffc2039": {
+      "value": "从此电脑克隆",
+      "reviewed": true
+    },
+    "hub.ui.aab1d35d32e3be24": {
+      "value": "云端对话",
+      "reviewed": true
+    },
+    "hub.ui.439ff656ae62d179": {
+      "value": "云端对话",
+      "reviewed": true
+    },
+    "hub.ui.57a58225257d2d68": {
+      "value": "按优先级顺序将语音听写限制为所选语言。留空则自动检测。",
+      "reviewed": true
+    },
+    "hub.ui.ae1e7e1fec8d9bc9": {
+      "value": "作为新对话继续",
+      "reviewed": true
+    },
+    "hub.ui.05db0d5bfdb65f39": {
+      "value": "内置浏览器为各网站存储的 Cookie。删除网站的 Cookie 通常会使你退出登录该网站。其他网站数据（本地存储、IndexedDB、缓存）仅通过“浏览数据 → 清除”一并清除。",
+      "reviewed": true
+    },
+    "hub.ui.dc9a3bc19b6af643": {
+      "value": "协调器选项",
+      "reviewed": true
+    },
+    "hub.ui.5a614e73e098159b": {
+      "value": "创建智能体",
+      "reviewed": true
+    },
+    "hub.ui.44ebb03bb18fa786": {
+      "value": "默认 (Gemini Pro)",
+      "reviewed": true
+    },
+    "hub.ui.61f9adfcec68fb19": {
+      "value": "“默认”使用服务器管理的路由和编排器配额；“自定义”可为编排和执行指定固定模型。",
+      "reviewed": true
+    },
+    "hub.ui.eb6bb48625737637": {
+      "value": "语音听写语言选项",
+      "reviewed": true
+    },
+    "hub.ui.85ab04aa89e3b764": {
+      "value": "语音听写语言",
+      "reviewed": true
+    },
+    "hub.ui.ce3b6bfbc8f88d82": {
+      "value": "个人使用",
+      "reviewed": true
+    },
+    "hub.ui.256d89e543910e20": {
+      "value": "团队使用",
+      "reviewed": true
+    },
+    "hub.ui.1a9688e35e0fdb51": {
+      "value": "从初始提示创建新 Cog 工作区时使用的 Git-on-Borg 仓库（例如 chromium/chromium/src 或 android/platform/superproject）。",
+      "reviewed": true
+    },
+    "hub.ui.94835ea2fcf775cd": {
+      "value": "收件箱",
+      "reviewed": true
+    },
+    "hub.ui.4e8302555c909327": {
+      "value": "收件箱模式",
+      "reviewed": true
+    },
+    "hub.ui.47bab32fd916ab52": {
+      "value": "随插件附带",
+      "reviewed": true
+    },
+    "hub.ui.2106e6308e0b3aa7": {
+      "value": "将运行中的对话保留在单独的“进行中”部分，而不是留在收件箱中。",
+      "reviewed": true
+    },
+    "hub.ui.2d51e620ab468d3e": {
+      "value": "需要许可证",
+      "reviewed": true
+    },
+    "hub.ui.3a496d425b0f4530": {
+      "value": "正在加载消息…",
+      "reviewed": true
+    },
+    "hub.ui.168a9b854c6a874b": {
+      "value": "正在加载较新消息…",
+      "reviewed": true
+    },
+    "hub.ui.5f8d56ee81924cbe": {
+      "value": "按状态分组时已锁定",
+      "reviewed": true
+    },
+    "hub.ui.b21fe2228fc0d717": {
+      "value": "匹配此自动化的当前身份。",
+      "reviewed": true
+    },
+    "hub.ui.bedc71237cfb741d": {
+      "value": "模型选择",
+      "reviewed": true
+    },
+    "hub.ui.6ecc3df6bffdd06c": {
+      "value": "移动",
+      "reviewed": true
+    },
+    "hub.ui.96035e9a1eea2076": {
+      "value": "移动对话",
+      "reviewed": true
+    },
+    "hub.ui.c7e8ea9bfef01143": {
+      "value": "在选定时间后，自动将空闲的收件箱对话移至“已解决”。",
+      "reviewed": true
+    },
+    "hub.ui.c76c65bbcf329771": {
+      "value": "名称不可用",
+      "reviewed": true
+    },
+    "hub.ui.6300ef800bb88429": {
+      "value": "从不",
+      "reviewed": true
+    },
+    "hub.ui.c548aab130f7e7dd": {
+      "value": "新建智能体",
+      "reviewed": true
+    },
+    "hub.ui.98a23e6db3431d16": {
+      "value": "新建智能体",
+      "reviewed": true
+    },
+    "hub.ui.4c47f095edec7512": {
+      "value": "暂无智能体",
+      "reviewed": true
+    },
+    "hub.ui.b3839e7c0b517bcd": {
+      "value": "已不再活跃",
+      "reviewed": true
+    },
+    "hub.ui.415446384c71044d": {
+      "value": "未设置始终允许。此插件在进行更改前会先询问你。",
+      "reviewed": true
+    },
+    "hub.ui.9ef5bb4bd8f2a7f3": {
+      "value": "编排器模型选择",
+      "reviewed": true
+    },
+    "hub.ui.229efc8f526335f1": {
+      "value": "权限",
+      "reviewed": true
+    },
+    "hub.ui.39ff0591d35ae888": {
+      "value": "以你的身份运行的个人智能体",
+      "reviewed": true
+    },
+    "hub.ui.45b8612da93f60d7": {
+      "value": "插件权限",
+      "reviewed": true
+    },
+    "hub.ui.1c2226d4a5c66ac1": {
+      "value": "需要项目",
+      "reviewed": true
+    },
+    "hub.ui.c2b1b8e2e03928e2": {
+      "value": "正在配置",
+      "reviewed": true
+    },
+    "hub.ui.6ff92452330e76c8": {
+      "value": "重置为自动",
+      "reviewed": true
+    },
+    "hub.ui.c8f193b315c86f3a": {
+      "value": "解决",
+      "reviewed": true
+    },
+    "hub.ui.51138020a0e510d3": {
+      "value": "解决对话",
+      "reviewed": true
+    },
+    "hub.ui.5be3c2c8354e1eb9": {
+      "value": "已解决",
+      "reviewed": true
+    },
+    "hub.ui.41f1736f8ba771eb": {
+      "value": "移回收件箱",
+      "reviewed": true
+    },
+    "hub.ui.c6847a4b8d9995c4": {
+      "value": "全部撤销",
+      "reviewed": true
+    },
+    "hub.ui.a7c4e215d2d3dcfd": {
+      "value": "搜索仓库…",
+      "reviewed": true
+    },
+    "hub.ui.82bb9d99f6f685ea": {
+      "value": "按名称或用户名搜索",
+      "reviewed": true
+    },
+    "hub.ui.9da7435c6b6ce648": {
+      "value": "搜索身份",
+      "reviewed": true
+    },
+    "hub.ui.8838cea2f697382f": {
+      "value": "搜索要添加的语言（例如 English、Spanish、中文、yue）...",
+      "reviewed": true
+    },
+    "hub.ui.331c4309f3f889ee": {
+      "value": "已选语音听写语言",
+      "reviewed": true
+    },
+    "hub.ui.85bc0f95858d7572": {
+      "value": "自己",
+      "reviewed": true
+    },
+    "hub.ui.b5fbe59c68b31599": {
+      "value": "自我监视目标预设",
+      "reviewed": true
+    },
+    "hub.ui.164729bdb1eda4b4": {
+      "value": "面向团队的共享智能体",
+      "reviewed": true
+    },
+    "hub.ui.fa70650bebc3d864": {
+      "value": "显示自动化",
+      "reviewed": true
+    },
+    "hub.ui.61ce40fe56f5642a": {
+      "value": "显示插件",
+      "reviewed": true
+    },
+    "hub.ui.2b8cbe0b6084ddeb": {
+      "value": "已停滞",
+      "reviewed": true
+    },
+    "hub.ui.383cd6c0b871980d": {
+      "value": "副标题",
+      "reviewed": true
+    },
+    "hub.ui.b4bbc6ce8da87847": {
+      "value": "这些权限随插件附带，无法撤销。",
+      "reviewed": true
+    },
+    "hub.ui.5d65bf1144a6eeb8": {
+      "value": "切换语言列表",
+      "reviewed": true
+    },
+    "hub.ui.55919e2f60c16e21": {
+      "value": "输入你自己的回答",
+      "reviewed": true
+    },
+    "hub.ui.0b5260e1b4054f46": {
+      "value": "正在更新",
+      "reviewed": true
+    },
+    "hub.ui.28c52244f908d578": {
+      "value": "这个智能体应该完成什么任务？",
+      "reviewed": true
+    },
+    "hub.ui.0ebb434f3189ef53": {
+      "value": "进行中部分",
+      "reviewed": true
     }
   }
 }
